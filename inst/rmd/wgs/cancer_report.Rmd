@@ -1,0 +1,102 @@
+---
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
+output:
+  html_document:
+    theme: flatly # cosmo # simplex
+    toc: false
+    code_download: true
+    css: style.css
+  rmdformats::material:
+    highlight: kate
+params:
+  name: "SEQCII"
+  in_dir: "/path/to/umccrised/results"
+  out_dir: "/path/to/output/"
+title: "`r glue::glue('DRAGEN Results for {params$name}')`"
+description: "Results from DRAGEN analysis"
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 2000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+```{r load_knitr, include=F}
+require(knitr)
+knitr::opts_chunk$set(
+  echo = FALSE
+)
+```
+
+```{r render_report_interactively, eval=F, echo=F}
+params <- function(x) {
+  paths <- list(
+    local = list(
+      name = "SEQCII",
+      in_dir = normalizePath(here::here("nogit/SEQCII")),
+      out_dir = normalizePath(here::here("nogit/SEQCII/gpgr")))
+  )
+  paths[[x]]
+}
+params <- params("local")
+
+render_me <- function() {
+  rmarkdown::render(
+    input = here::here("inst/rmd/wgs/cancer_report.Rmd"),
+    params = params)
+}
+render_me()
+```
+
+```{r load_pkgs, message=F, warning=F}
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(dracarys))
+suppressPackageStartupMessages(library(DT))
+suppressPackageStartupMessages(library(fs))
+suppressPackageStartupMessages(library(glue))
+suppressPackageStartupMessages(library(jsonlite))
+suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(patchwork))
+suppressPackageStartupMessages(library(purrr))
+suppressPackageStartupMessages(library(readr))
+suppressPackageStartupMessages(library(rock))
+suppressPackageStartupMessages(library(tidyr))
+```
+
+```{r var_setup}
+in_dir <- params$in_dir
+out_dir <- params$out_dir
+
+replay <- list.files(in_dir, pattern = "-replay.json", full.names = TRUE, recursive = TRUE)
+v <- purrr::map(replay, dracarys::setup_vars)
+
+eval_steps <- list(
+  sv = v[[1]][["info"]][["sv"]],
+  varcall = v[[1]][["info"]][["vc"]]
+)
+```
+
+### R Session Info
+```{r session_info, eval=T}
+si <- devtools::session_info(include_base = TRUE)
+unclass(si$packages) %>%
+  dplyr::as_tibble() %>%
+  dplyr::mutate(main_pkgs = ifelse(package %in% c("woofr", "rock", "base"), "A", "B")) %>%
+  dplyr::arrange(main_pkgs, package) %>%
+  dplyr::select(package, version = ondiskversion, path, datestamp = date) %>%
+  knitr::kable(format = "html") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left",
+                            bootstrap_options = c("striped", "bordered",
+                                                  "condensed", "hover")) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::scroll_box(height = "200px")
+```
+
+***
+
+<p>&nbsp;</p>
