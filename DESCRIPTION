@@ -1,0 +1,39 @@
+Package: gpgr
+Title: Genomics Platform Group Reporting
+Version: 0.0.1
+Description: Reports and functions used in the Genomics Platform Group
+             at the University of Melbourne Centre for Cancer Research.
+Authors@R: 
+    person(given = "Peter",
+           family = "Diakumis",
+           role = c("aut", "cre"),
+           email = "peterdiakumis@gmail.com",
+           comment = c(ORCID = "0000-0002-7502-7545"))
+URL: https://github.com/umccr/gpgr
+BugReports: https://github.com/umccr/gpgr/issues
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+ByteCompile: true
+Depends:
+    R (>= 3.5)
+Imports:
+    assertthat,
+    dplyr,
+    ggplot2,
+    glue,
+    gtools,
+    jsonlite,
+    purrr,
+    readr,
+    rlang,
+    scales,
+    tibble,
+    tidyr,
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat,
+VignetteBuilder: knitr
