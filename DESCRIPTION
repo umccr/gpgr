@@ -30,8 +30,9 @@ Imports:
     scales,
     tibble,
     tidyr,
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE,
+              roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
+RoxygenNote: 7.1.0
 Suggests: 
     knitr,
     rmarkdown,
