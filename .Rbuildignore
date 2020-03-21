@@ -1,7 +1,8 @@
 ^bump\.sh$
+^data-raw$
 ^deploy$
+^gpgr\.Rproj$
 ^LICENSE\.md$
 ^nogit$
 ^README\.Rmd$
 ^\.Rproj\.user$
-^gpgr\.Rproj$

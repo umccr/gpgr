@@ -4,15 +4,15 @@
 \alias{read_purple_cnv_gene}
 \title{Read PURPLE CNV Gene File}
 \usage{
-read_purple_cnv_gene(x, v)
+read_purple_cnv_gene(x, v = "2.39")
 }
 \arguments{
 \item{x}{Path to \code{purple.cnv.gene.tsv} file.}
 
-\item{v}{PURPLE version. Used to determine the column names.}
+\item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
-The input file in a tibble.
+The input file as a tibble.
 }
 \description{
 Reads the \code{purple.cnv.gene.tsv} file, which summarises copy number
@@ -21,6 +21,7 @@ alterations of each gene in the HMF panel
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
-read_purple_cnv_gene(x, "2.39")
+p <- read_purple_cnv_gene(x, "2.39")
+p
 
 }
