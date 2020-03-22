@@ -298,3 +298,33 @@ process_purple_cnv_germline <- function(x, v = "2.39") {
   processed_purple_cnv_germline <- process_purple_cnv_somatic(x, v)
   processed_purple_cnv_germline
 }
+
+
+#' Read PURPLE version file
+#'
+#' Reads the `purple.version` file containing the PURPLE version and build date.
+#'
+#' @param x Path to the `purple.version` file.
+#'
+#' @return A list with the elements:
+#' * `version`: The version of PURPLE as character.
+#' * `build_date`: The build date of the PURPLE version.
+#'
+#' @examples
+#' x <- system.file("extdata/purple/v2.39/purple.version", package = "gpgr")
+#' v <- read_purple_version(x)
+#' v
+#'
+#' @testexamples
+#' expect_equal(length(v), 2)
+#' expect_equal(names(v), c("version", "build_date"))
+#' expect_equal(v$version, "2.39")
+#'
+#' @export
+read_purple_version <- function(x) {
+  tab <- readr::read_delim(x, delim = "=", col_names = c("key", "value"), col_types = "cc")
+  assertthat::assert_that(nrow(tab) == 2, all(tab$key == c("version", "build.date")))
+
+  list(version = tab$value[tab$key == "version"],
+       build_date = tab$value[tab$key == "build.date"])
+}
