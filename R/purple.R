@@ -157,3 +157,43 @@ read_purple_cnv_somatic <- function(x, v = "2.39") {
   assertthat::assert_that(all(colnames(purple_cnv_somatic) == conf$nm))
   purple_cnv_somatic
 }
+
+#' Process PURPLE CNV Somatic File for UMCCRISE
+#'
+#' Processes the `purple.cnv.somatic.tsv` file.
+#' and selects columns of interest.
+#'
+#' @param x Path to `purple.cnv.somatic.tsv` file.
+#' @param v PURPLE version (default: 2.39). Used to determine the column names.
+#'
+#' @return Tibble with more condensed columns.
+#'
+#' @examples
+#' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+#' pp <- process_purple_cnv_somatic(x)
+#'
+#' @testexamples
+#' expect_equal(colnames(pp)[ncol(pp)], "GC (windowCount)")
+#' expect_error(process_purple_cnv_somatic(x, "2.38"))
+#'
+#' @export
+process_purple_cnv_somatic <- function(x, v = "2.39") {
+
+  purple_cnv_somatic <- read_purple_cnv_somatic(x, v)
+  purple_cnv_somatic %>%
+    dplyr::mutate(
+      Chr = as.factor(.data$chromosome),
+      minorAllelePloidy = round(.data$minorAllelePloidy, 1),
+      majorAllelePloidy = round(.data$majorAllelePloidy, 1),
+      `Ploidy Min+Maj` = paste0(.data$minorAllelePloidy, "+", .data$majorAllelePloidy),
+      copyNumber = round(.data$copyNumber, 1),
+      bafAdj = round(.data$baf, 2),
+      gcContent = round(.data$gcContent, 2),
+      `Start/End SegSupport` = paste0(.data$segmentStartSupport, "-", .data$segmentEndSupport),
+      `BAF (count)` = paste0(.data$bafAdj, " (", .data$bafCount, ")"),
+      `GC (windowCount)` = paste0(.data$gcContent, " (", .data$depthWindowCount, ")")) %>%
+    dplyr::select(
+      .data$Chr, Start = .data$start, End = .data$end, CN = .data$copyNumber,
+      .data$`Ploidy Min+Maj`, .data$`Start/End SegSupport`, Method = .data$method,
+      .data$`BAF (count)`, .data$`GC (windowCount)`)
+}
