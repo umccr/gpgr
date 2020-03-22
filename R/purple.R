@@ -23,15 +23,18 @@ read_purple_cnv_gene <- function(x, v = "2.39") {
 
   config <- function(v) {
     current <- list(
-      nm = c("chromosome", "start", "end", "gene", "minCopyNumber", "maxCopyNumber",
-             "unused", "somaticRegions", "germlineHomDeletionRegions", "germlineHetToHomDeletionRegions",
-             "transcriptId", "transcriptVersion", "chromosomeBand", "minRegions",
-             "minRegionStart", "minRegionEnd", "minRegionStartSupport", "minRegionEndSupport",
-             "minRegionMethod", "minMinorAllelePloidy"),
-      type = "ciicddcdddcccdiicccd")
+      nm = c("chromosome" = "c", "start" = "i", "end" = "i", "gene" = "c",
+             "minCopyNumber" = "d", "maxCopyNumber" = "d",
+             "unused" = "c", "somaticRegions" = "d", "germlineHomDeletionRegions" = "d",
+             "germlineHetToHomDeletionRegions" = "d",
+             "transcriptId" = "c", "transcriptVersion" = "c", "chromosomeBand" = "c",
+             "minRegions" = "d", "minRegionStart" = "i", "minRegionEnd" = "i",
+             "minRegionStartSupport" = "c", "minRegionEndSupport" = "c",
+             "minRegionMethod" = "c", "minMinorAllelePloidy" = "d"))
+
     l <- list(
       "2.39" = current,
-      "2.45" = list(nm = c(current$nm, "foo", "bar"), type = paste0(current$type, "cc"))
+      "2.45" = list(nm = c(current$nm, "foo" = "c", "bar" = "c"))
     )
     if (numeric_version(v) >= numeric_version("2.45")) {
       return(l[["2.45"]])
@@ -43,9 +46,10 @@ read_purple_cnv_gene <- function(x, v = "2.39") {
     }
   }
   conf <- config(v)
-  purple_cnv_gene <- readr::read_tsv(x, col_types = conf$type)
+  ctypes <- paste(conf$nm, collapse = "")
+  purple_cnv_gene <- readr::read_tsv(x, col_types = ctypes)
   assertthat::assert_that(ncol(purple_cnv_gene) == length(conf$nm))
-  assertthat::assert_that(all(colnames(purple_cnv_gene) == conf$nm))
+  assertthat::assert_that(all(colnames(purple_cnv_gene) == names(conf$nm)))
   purple_cnv_gene
 }
 
@@ -150,18 +154,18 @@ process_purple_cnv_gene <- function(x, g = NULL, v = "2.39") {
 #'
 #' @export
 read_purple_cnv_somatic <- function(x, v = "2.39") {
-
   config <- function(v) {
     current <- list(
-      nm = c("chromosome", "start", "end", "copyNumber", "bafCount", "observedBAF",
-             "baf", "segmentStartSupport", "segmentEndSupport", "method",
-             "depthWindowCount", "gcContent", "minStart", "maxStart", "minorAllelePloidy",
-             "majorAllelePloidy"),
-      type = "ciididdcccdddddd")
+      nm = c("chromosome" = "c", "start" = "i", "end" = "i",
+             "copyNumber" = "d", "bafCount" = "d", "observedBAF" = "d",
+             "baf" = "d", "segmentStartSupport" = "c", "segmentEndSupport" = "c",
+             "method" = "c", "depthWindowCount" = "i", "gcContent" = "d",
+             "minStart" = "i", "maxStart" = "i", "minorAllelePloidy" = "d",
+             "majorAllelePloidy" = "d"))
     l <- list(
       "2.39" = current,
-      "2.45" = list(nm = c(current$nm, "foo", "bar"),
-                    type = paste0(current$type, "cc")))
+      "2.45" = list(nm = c(current$nm, "foo" = "c", "bar" = "c"))
+    )
     if (numeric_version(v) >= numeric_version("2.45")) {
       return(l[["2.45"]])
     } else if (numeric_version(v) >= numeric_version("2.39")) {
@@ -171,10 +175,12 @@ read_purple_cnv_somatic <- function(x, v = "2.39") {
                       "Please update to newer PURPLE version."))
     }
   }
+
   conf <- config(v)
-  purple_cnv_somatic <- readr::read_tsv(x, col_types = conf$type)
+  ctypes <- paste(conf$nm, collapse = "")
+  purple_cnv_somatic <- readr::read_tsv(x, col_types = ctypes)
   assertthat::assert_that(ncol(purple_cnv_somatic) == length(conf$nm))
-  assertthat::assert_that(all(colnames(purple_cnv_somatic) == conf$nm))
+  assertthat::assert_that(all(colnames(purple_cnv_somatic) == names(conf$nm)))
   purple_cnv_somatic
 }
 
@@ -236,10 +242,59 @@ process_purple_cnv_somatic <- function(x, v = "2.39") {
                      "LONG_ARM (inferred from the long arm), GERMLINE_AMPLIFICATION ",
                      "(inferred using special logic to handle regions of germline amplification)"),
     "BAF (count)", "Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf points covered by this segment)",
-    "GC", "Proportion of segment that is G or C",
-    "windowCount", "Count of COBALT windows covered by this segment"
+    "GC (windowCount)", "Proportion of segment that is G or C (Count of COBALT windows covered by this segment)"
   )
 
   list(tab = purple_cnv_somatic,
        descr = col_description)
+}
+
+#' Read PURPLE CNV Germline File
+#'
+#' Reads the `purple.cnv.germline.tsv` file.
+#'
+#' @param x Path to `purple.cnv.germline.tsv` file.
+#' @param v PURPLE version (default: 2.39). Used to determine the column names.
+#'
+#' @return The input file as a tibble.
+#'
+#' @examples
+#' x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
+#' p <- read_purple_cnv_germline(x, "2.39")
+#' p
+#'
+#' @testexamples
+#' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
+#' expect_error(read_purple_cnv_somatic(x, "2.38"))
+#'
+#' @export
+read_purple_cnv_germline <- function(x, v = "2.39") {
+  purple_cnv_germline <- read_purple_cnv_somatic(x, v)
+  purple_cnv_germline
+}
+
+#' Process PURPLE CNV germline File for UMCCRISE
+#'
+#' Processes the `purple.cnv.germline.tsv` file.
+#' and selects columns of interest.
+#'
+#' @param x Path to `purple.cnv.germline.tsv` file.
+#' @param v PURPLE version (default: 2.39). Used to determine the column names.
+#'
+#' @return List with two elements:
+#' * `tab`: Tibble with more condensed columns.
+#' * `descr`: Description of tibble columns.
+#'
+#' @examples
+#' x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
+#' pp <- process_purple_cnv_germline(x)$tab
+#'
+#' @testexamples
+#' expect_equal(colnames(pp)[ncol(pp)], "GC (windowCount)")
+#' expect_error(process_purple_cnv_germline(x, "2.38"))
+#'
+#' @export
+process_purple_cnv_germline <- function(x, v = "2.39") {
+  processed_purple_cnv_germline <- process_purple_cnv_somatic(x, v)
+  processed_purple_cnv_germline
 }

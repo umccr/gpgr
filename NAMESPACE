@@ -2,8 +2,10 @@
 
 export("%>%")
 export(process_purple_cnv_gene)
+export(process_purple_cnv_germline)
 export(process_purple_cnv_somatic)
 export(read_purple_cnv_gene)
+export(read_purple_cnv_germline)
 export(read_purple_cnv_somatic)
 importFrom(dplyr,"%>%")
 importFrom(rlang,.data)
