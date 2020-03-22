@@ -328,3 +328,30 @@ read_purple_version <- function(x) {
   list(version = tab$value[tab$key == "version"],
        build_date = tab$value[tab$key == "build.date"])
 }
+
+#' Read PURPLE QC file
+#'
+#' Reads the `purple.qc` file containing.
+#'
+#' @param x Path to the `purple.qc` file.
+#'
+#' @return A named character vector containing QC values for several PURPLE
+#'         metrics.
+#'
+#' @examples
+#' x <- system.file("extdata/purple/v2.39/purple.qc", package = "gpgr")
+#' p <- read_purple_qc(x)
+#' p
+#'
+#' @testexamples
+#' expect_equal(class(p), "character")
+#'
+#' @export
+read_purple_qc <- function(x) {
+  purple_qc <-
+    readr::read_tsv(x, col_names = c("key", "value"), col_types = "cc") %>%
+    dplyr::mutate(value = toupper(.data$value))
+  # turn into named vector
+  purple_qc <- structure(purple_qc$value, names = purple_qc$key)
+  purple_qc
+}
