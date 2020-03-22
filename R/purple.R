@@ -331,7 +331,7 @@ read_purple_version <- function(x) {
 
 #' Read PURPLE QC file
 #'
-#' Reads the `purple.qc` file containing.
+#' Reads the `purple.qc` file.
 #'
 #' @param x Path to the `purple.qc` file.
 #'
@@ -354,4 +354,57 @@ read_purple_qc <- function(x) {
   # turn into named vector
   purple_qc <- structure(purple_qc$value, names = purple_qc$key)
   purple_qc
+}
+
+#' Read PURPLE Purity file
+#'
+#' Reads the `purple.purity.tsv` file containing a summary of the purity fit.
+#'
+#' @param x Path to the `purple.purity.tsv` file.
+#' @param v PURPLE version (default: 2.39). Used to determine the column names.
+#'
+#' @return A named character vector containing a summary of the purity fit.
+#'
+#' @examples
+#' x <- system.file("extdata/purple/v2.39/purple.purity.tsv", package = "gpgr")
+#' p <- read_purple_purity(x)
+#' p
+#'
+#' @testexamples
+#' expect_equal(colnames(p)[ncol(p)], "tmbStatus")
+#' expect_error(read_purple_purity(x, "2.38"))
+#'
+#' @export
+read_purple_purity <- function(x, v = "2.39") {
+  config <- function(v) {
+    current <- list(
+      nm = c(
+        "purity" = "d", "normFactor" = "d", "score" = "d",
+        "diploidProportion" = "d", "ploidy" = "d",  "gender" = "c",
+        "status" = "c", "polyclonalProportion" = "d", "minPurity" = "d",
+        "maxPurity" = "d",  "minPloidy" = "d", "maxPloidy" = "d",
+        "minDiploidProportion" = "d", "maxDiploidProportion" = "d", "version" = "c",
+        "somaticPenalty" = "d", "wholeGenomeDuplication" = "c",
+        "msIndelsPerMb" = "d", "msStatus" = "c",
+        "tml" = "d", "tmlStatus"  = "c", "tmbPerMb" = "d", "tmbStatus" = "c"))
+
+    l <- list(
+      "2.39" = current,
+      "2.45" = list(nm = c(current$nm, "foo" = "c", "bar" = "c"))
+    )
+    if (numeric_version(v) >= numeric_version("2.45")) {
+      return(l[["2.45"]])
+    } else if (numeric_version(v) >= numeric_version("2.39")) {
+      return(l[["2.39"]])
+    } else {
+      stop(glue::glue("You've specified PURPLE version {v}, which is older than 2.39.",
+                      "Please update to newer PURPLE version."))
+    }
+  }
+  conf <- config(v)
+  ctypes <- paste(conf$nm, collapse = "")
+  purple_purity <- readr::read_tsv(x, col_types = ctypes)
+  assertthat::assert_that(ncol(purple_purity) == length(conf$nm))
+  assertthat::assert_that(all(colnames(purple_purity) == names(conf$nm)))
+  purple_purity
 }
