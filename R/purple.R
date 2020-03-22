@@ -63,12 +63,14 @@ read_purple_cnv_gene <- function(x, v = "2.39") {
 #' * `oncogene`: is this gene an oncogene (TRUE/FALSE).
 #' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
-#' @return Tibble filtered to genes found in  `g`.
+#' @return List with two elements:
+#' * `tab`: Tibble filtered to genes found in  `g`.
+#' * `descr`: Description of tibble columns.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
 #' g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
-#' pp <- process_purple_cnv_gene(x, g)
+#' pp <- process_purple_cnv_gene(x, g)$tab
 #'
 #' @testexamples
 #' expect_equal(colnames(pp)[ncol(pp)], "minRegSupportStartEndMethod")
@@ -85,7 +87,7 @@ process_purple_cnv_gene <- function(x, g = NULL, v = "2.39") {
   oncogenes <- genes %>% dplyr::filter(.data$oncogene) %>% dplyr::pull(.data$symbol)
   tsgenes <- genes %>% dplyr::filter(.data$tumorsuppressor) %>% dplyr::pull(.data$symbol)
 
-  purple_cnv_gene %>%
+  purple_cnv_gene <- purple_cnv_gene %>%
     dplyr::filter(.data$gene %in% genes$symbol) %>%
     dplyr::mutate(
       chromosome = as.factor(.data$chromosome),
@@ -106,6 +108,24 @@ process_purple_cnv_gene <- function(x, g = NULL, v = "2.39") {
                   chrBand = .data$chromosomeBand, .data$onco_or_ts, .data$transcriptID, .data$minMinorAllelePloidy,
                   somReg = .data$somaticRegions, .data$germDelReg, minReg = .data$minRegions,
                   .data$minRegStartEnd, .data$minRegSupportStartEndMethod)
+
+  col_description <- dplyr::tribble(
+    ~Column, ~Description,
+    "gene", "Name of gene",
+    "minCN/maxCN", "Min/Max copy number found in gene exons",
+    "chrom/start/end", "Chromosome/start/end location of gene transcript",
+    "chrBand", "Chromosome band of the gene",
+    "onco_or_ts", "oncogene ('oncogene'), tumor suppressor ('tsgene'), or both ('onco+ts'), as reported by [Cancermine](https://github.com/jakelever/cancermine)",
+    "transcriptID", "Ensembl transcript ID (dot version)",
+    "minMinorAllelePloidy", "Minimum allele ploidy found over the gene exons - useful for identifying LOH events",
+    "somReg (somaticRegions)", "Count of somatic copy number regions this gene spans",
+    "germDelReg (germlineHomDeletionRegions / germlineHetToHomDeletionRegions)", "Number of regions spanned by this gene that are (homozygously deleted in the germline / both heterozygously deleted in the germline and homozygously deleted in the tumor)",
+    "minReg (minRegions)", "Number of somatic regions inside the gene that share the min copy number",
+    "minRegStartEnd", "Start/End base of the copy number region overlapping the gene with the minimum copy number",
+    "minRegSupportStartEndMethod", "Start/end support of the CN region overlapping the gene with the min CN (plus determination method)")
+
+  list(tab = purple_cnv_gene,
+       descr = col_description)
 }
 
 #' Read PURPLE CNV Somatic File
@@ -166,11 +186,13 @@ read_purple_cnv_somatic <- function(x, v = "2.39") {
 #' @param x Path to `purple.cnv.somatic.tsv` file.
 #' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
-#' @return Tibble with more condensed columns.
+#' @return List with two elements:
+#' * `tab`: Tibble with more condensed columns.
+#' * `descr`: Description of tibble columns.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
-#' pp <- process_purple_cnv_somatic(x)
+#' pp <- process_purple_cnv_somatic(x)$tab
 #'
 #' @testexamples
 #' expect_equal(colnames(pp)[ncol(pp)], "GC (windowCount)")
@@ -180,7 +202,7 @@ read_purple_cnv_somatic <- function(x, v = "2.39") {
 process_purple_cnv_somatic <- function(x, v = "2.39") {
 
   purple_cnv_somatic <- read_purple_cnv_somatic(x, v)
-  purple_cnv_somatic %>%
+  purple_cnv_somatic <- purple_cnv_somatic %>%
     dplyr::mutate(
       Chr = as.factor(.data$chromosome),
       minorAllelePloidy = round(.data$minorAllelePloidy, 1),
@@ -196,4 +218,28 @@ process_purple_cnv_somatic <- function(x, v = "2.39") {
       .data$Chr, Start = .data$start, End = .data$end, CN = .data$copyNumber,
       .data$`Ploidy Min+Maj`, .data$`Start/End SegSupport`, Method = .data$method,
       .data$`BAF (count)`, .data$`GC (windowCount)`)
+
+
+  col_description <- dplyr::tribble(
+    ~Column, ~Description,
+    "Chr/Start/End", "Coordinates of copy number segment",
+    "CN", "Fitted absolute copy number of segment adjusted for purity and ploidy",
+    "Ploidy Min+Maj", "Ploidy of minor + major allele adjusted for purity",
+    "Start/End SegSupport", paste0("Type of SV support for the CN breakpoint at ",
+                                   "start/end of region. Allowed values: ",
+                                   "CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), ",
+                                   "SGL (single breakend SV support), NONE (no SV support for CN breakpoint), ",
+                                   "MULT (multiple SV support at exact breakpoint)"),
+    "Method", paste0("Method used to determine the CN of the region. Allowed values: ",
+                     "BAF_WEIGHTED (avg of all depth windows for the region), ",
+                     "STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), ",
+                     "LONG_ARM (inferred from the long arm), GERMLINE_AMPLIFICATION ",
+                     "(inferred using special logic to handle regions of germline amplification)"),
+    "BAF (count)", "Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf points covered by this segment)",
+    "GC", "Proportion of segment that is G or C",
+    "windowCount", "Count of COBALT windows covered by this segment"
+  )
+
+  list(tab = purple_cnv_somatic,
+       descr = col_description)
 }

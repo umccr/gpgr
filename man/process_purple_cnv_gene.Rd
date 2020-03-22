@@ -19,7 +19,11 @@ process_purple_cnv_gene(x, g = NULL, v = "2.39")
 \item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
-Tibble filtered to genes found in  \code{g}.
+List with two elements:
+\itemize{
+\item \code{tab}: Tibble filtered to genes found in  \code{g}.
+\item \code{descr}: Description of tibble columns.
+}
 }
 \description{
 Processes the \code{purple.cnv.gene.tsv} file. Keeps genes that are in the
@@ -29,6 +33,6 @@ and selects columns of interest.
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
 g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
-pp <- process_purple_cnv_gene(x, g)
+pp <- process_purple_cnv_gene(x, g)$tab
 
 }
