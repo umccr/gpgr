@@ -58,9 +58,9 @@ read_purple_cnv_gene <- function(x, v = "2.39") {
 #'
 #' @param x Path to `purple.cnv.gene.tsv` file.
 #' @param g Path to gene file containing at least three columns:
-#'        - `symbol`: gene name (character).
-#'        - `tumorsuppressor`: is this gene a tumor suppressor (logical).
-#'        - `oncogene`: is this gene an oncogene (logical).
+#' * `symbol`: gene name (character).
+#' * `tumorsuppressor`: is this gene a tumor suppressor (TRUE/FALSE).
+#' * `oncogene`: is this gene an oncogene (TRUE/FALSE).
 #' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return Tibble filtered to genes found in  `g`.
@@ -106,4 +106,54 @@ process_purple_cnv_gene <- function(x, g = NULL, v = "2.39") {
                   chrBand = .data$chromosomeBand, .data$onco_or_ts, .data$transcriptID, .data$minMinorAllelePloidy,
                   somReg = .data$somaticRegions, .data$germDelReg, minReg = .data$minRegions,
                   .data$minRegStartEnd, .data$minRegSupportStartEndMethod)
+}
+
+#' Read PURPLE CNV Somatic File
+#'
+#' Reads the `purple.cnv.somatic.tsv` file, which contains the copy number
+#' profile of all (contiguous) segments of the tumor sample
+#' (see [this table](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator#copy-number-file)).
+#'
+#' @param x Path to `purple.cnv.somatic.tsv` file.
+#' @param v PURPLE version (default: 2.39). Used to determine the column names.
+#'
+#' @return The input file as a tibble.
+#'
+#' @examples
+#' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+#' p <- read_purple_cnv_somatic(x, "2.39")
+#' p
+#'
+#' @testexamples
+#' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
+#' expect_error(read_purple_cnv_somatic(x, "2.38"))
+#'
+#' @export
+read_purple_cnv_somatic <- function(x, v = "2.39") {
+
+  config <- function(v) {
+    current <- list(
+      nm = c("chromosome", "start", "end", "copyNumber", "bafCount", "observedBAF",
+             "baf", "segmentStartSupport", "segmentEndSupport", "method",
+             "depthWindowCount", "gcContent", "minStart", "maxStart", "minorAllelePloidy",
+             "majorAllelePloidy"),
+      type = "ciididdcccdddddd")
+    l <- list(
+      "2.39" = current,
+      "2.45" = list(nm = c(current$nm, "foo", "bar"),
+                    type = paste0(current$type, "cc")))
+    if (numeric_version(v) >= numeric_version("2.45")) {
+      return(l[["2.45"]])
+    } else if (numeric_version(v) >= numeric_version("2.39")) {
+      return(l[["2.39"]])
+    } else {
+      stop(glue::glue("You've specified PURPLE version {v}, which is older than 2.39.",
+                      "Please update to newer PURPLE version."))
+    }
+  }
+  conf <- config(v)
+  purple_cnv_somatic <- readr::read_tsv(x, col_types = conf$type)
+  assertthat::assert_that(ncol(purple_cnv_somatic) == length(conf$nm))
+  assertthat::assert_that(all(colnames(purple_cnv_somatic) == conf$nm))
+  purple_cnv_somatic
 }

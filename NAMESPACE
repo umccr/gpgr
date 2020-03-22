@@ -3,5 +3,6 @@
 export("%>%")
 export(process_purple_cnv_gene)
 export(read_purple_cnv_gene)
+export(read_purple_cnv_somatic)
 importFrom(dplyr,"%>%")
 importFrom(rlang,.data)

@@ -10,9 +10,11 @@ process_purple_cnv_gene(x, g = NULL, v = "2.39")
 \item{x}{Path to \code{purple.cnv.gene.tsv} file.}
 
 \item{g}{Path to gene file containing at least three columns:
-- \code{symbol}: gene name (character).
-- \code{tumorsuppressor}: is this gene a tumor suppressor (logical).
-- \code{oncogene}: is this gene an oncogene (logical).}
+\itemize{
+\item \code{symbol}: gene name (character).
+\item \code{tumorsuppressor}: is this gene a tumor suppressor (TRUE/FALSE).
+\item \code{oncogene}: is this gene an oncogene (TRUE/FALSE).
+}}
 
 \item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
