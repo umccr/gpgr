@@ -28,6 +28,7 @@ Imports:
     readr,
     rlang,
     scales,
+    stringr,
     tibble,
     tidyr,
 Roxygen: list(markdown = TRUE,

@@ -16,7 +16,7 @@ NULL
 #'
 #' @name tidyeval
 #' @keywords internal
-#' @importFrom rlang .data
+#' @importFrom rlang .data :=
 NULL
 
 
