@@ -1,6 +1,6 @@
 ---
 author: "University of Melbourne Centre for Cancer Research"
-date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
+date: "`r as.character(paste(Sys.time(), Sys.timezone()))`"
 output:
   html_document:
     theme: flatly # cosmo # simplex
@@ -10,11 +10,11 @@ output:
   rmdformats::material:
     highlight: kate
 params:
-  name: "SEQCII"
-  in_dir: "/path/to/umccrised/results"
-  out_dir: "/path/to/output/"
-title: "`r glue::glue('DRAGEN Results for {params$name}')`"
-description: "Results from DRAGEN analysis"
+  name: "SEQCII_100"
+  indir: "/path/to/umccrised/results"
+  outdir: "/path/to/output/"
+title: "`r glue::glue('Cancer Report for {params$name}')`"
+description: "Results from umccrise post-processing"
 ---
 
 <style type="text/css">
@@ -37,9 +37,9 @@ knitr::opts_chunk$set(
 params <- function(x) {
   paths <- list(
     local = list(
-      name = "SEQCII",
-      in_dir = normalizePath(here::here("nogit/SEQCII")),
-      out_dir = normalizePath(here::here("nogit/SEQCII/gpgr")))
+      name = "SEQCII_100",
+      indir = normalizePath(here::here("nogit/SEQCII_100")),
+      outdir = normalizePath(here::here("nogit/SEQCII_100/gpgr")))
   )
   paths[[x]]
 }
@@ -53,9 +53,8 @@ render_me <- function() {
 render_me()
 ```
 
-```{r load_pkgs, message=F, warning=F}
+```{r load_pkgs}
 suppressPackageStartupMessages(library(dplyr))
-suppressPackageStartupMessages(library(dracarys))
 suppressPackageStartupMessages(library(DT))
 suppressPackageStartupMessages(library(fs))
 suppressPackageStartupMessages(library(glue))
@@ -64,16 +63,16 @@ suppressPackageStartupMessages(library(kableExtra))
 suppressPackageStartupMessages(library(patchwork))
 suppressPackageStartupMessages(library(purrr))
 suppressPackageStartupMessages(library(readr))
-suppressPackageStartupMessages(library(rock))
 suppressPackageStartupMessages(library(tidyr))
 ```
 
 ```{r var_setup}
-in_dir <- params$in_dir
-out_dir <- params$out_dir
+indir <- params$indir
+outdir <- params$outdir
+name <- params$name
 
-replay <- list.files(in_dir, pattern = "-replay.json", full.names = TRUE, recursive = TRUE)
-v <- purrr::map(replay, dracarys::setup_vars)
+lf <- list.files(in_dir, full.names = TRUE, recursive = TRUE)
+v <- gpgr::setup_vars(lf)
 
 eval_steps <- list(
   sv = v[[1]][["info"]][["sv"]],
