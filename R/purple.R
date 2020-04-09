@@ -11,8 +11,7 @@
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
-#' p <- read_purple_cnv_gene(x, "2.39")
-#' p
+#' (p <- read_purple_cnv_gene(x, "2.39"))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "minMinorAllelePloidy")
@@ -74,7 +73,7 @@ read_purple_cnv_gene <- function(x, v = "2.39") {
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
 #' g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
-#' pp <- process_purple_cnv_gene(x, g)$tab
+#' (pp <- process_purple_cnv_gene(x, g)$tab)
 #'
 #' @testexamples
 #' expect_equal(colnames(pp)[ncol(pp)], "minRegSupportStartEndMethod")
@@ -145,8 +144,7 @@ process_purple_cnv_gene <- function(x, g = NULL, v = "2.39") {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
-#' p <- read_purple_cnv_somatic(x, "2.39")
-#' p
+#' (p <- read_purple_cnv_somatic(x, "2.39"))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
@@ -198,7 +196,7 @@ read_purple_cnv_somatic <- function(x, v = "2.39") {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
-#' pp <- process_purple_cnv_somatic(x)$tab
+#' (pp <- process_purple_cnv_somatic(x)$tab)
 #'
 #' @testexamples
 #' expect_equal(colnames(pp)[ncol(pp)], "GC (windowCount)")
@@ -260,8 +258,7 @@ process_purple_cnv_somatic <- function(x, v = "2.39") {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
-#' p <- read_purple_cnv_germline(x, "2.39")
-#' p
+#' (p <- read_purple_cnv_germline(x, "2.39"))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
@@ -287,7 +284,7 @@ read_purple_cnv_germline <- function(x, v = "2.39") {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
-#' pp <- process_purple_cnv_germline(x)$tab
+#' (pp <- process_purple_cnv_germline(x)$tab)
 #'
 #' @testexamples
 #' expect_equal(colnames(pp)[ncol(pp)], "GC (windowCount)")
@@ -312,8 +309,7 @@ process_purple_cnv_germline <- function(x, v = "2.39") {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.version", package = "gpgr")
-#' v <- read_purple_version(x)
-#' v
+#' (v <- read_purple_version(x))
 #'
 #' @testexamples
 #' expect_equal(length(v), 2)
@@ -334,26 +330,52 @@ read_purple_version <- function(x) {
 #' Reads the `purple.qc` file.
 #'
 #' @param x Path to the `purple.qc` file.
+#' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return A named character vector containing QC values for several PURPLE
 #'         metrics.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.qc", package = "gpgr")
-#' p <- read_purple_qc(x)
-#' p
+#' (p <- read_purple_qc(x))
 #'
 #' @testexamples
-#' expect_equal(class(p), "character")
+#' expect_true(inherits(p, "tbl_df"))
 #'
 #' @export
-read_purple_qc <- function(x) {
+read_purple_qc <- function(x, v = "2.39") {
   purple_qc <-
     readr::read_tsv(x, col_names = c("key", "value"), col_types = "cc") %>%
     dplyr::mutate(value = toupper(.data$value))
   # turn into named vector
-  purple_qc <- structure(purple_qc$value, names = purple_qc$key)
-  purple_qc
+  # purple_qc <- tibble::tibble(purple_qc$value, names = purple_qc$key) %>%
+
+  config <- function(v) {
+    current <- list(
+      nm = c(
+        "QCStatus" = "c", "SegmentPass" = "c", "GenderPass" = "c",
+        "DeletedGenesPass" = "c", "SegmentScore" = "d", "UnsupportedSegments" = "d",
+        "Ploidy" = "d", "AmberGender" = "c", "CobaltGender" = "c", "DeletedGenes" = "d"
+      )
+    )
+
+    l <- list(
+      "2.39" = current,
+      "2.45" = list(nm = c(current$nm, "foo" = "c", "bar" = "c"))
+    )
+    if (numeric_version(v) >= numeric_version("2.45")) {
+      return(l[["2.45"]])
+    } else if (numeric_version(v) >= numeric_version("2.39")) {
+      return(l[["2.39"]])
+    } else {
+      stop(glue::glue("You've specified PURPLE version {v}, which is older than 2.39.",
+                      "Please update to newer PURPLE version."))
+    }
+  }
+  conf <- config(v)
+  assertthat::assert_that(all(purple_qc$key == names(conf$nm)))
+  purple_qc %>%
+    dplyr::mutate(type = conf$nm)
 }
 
 #' Read PURPLE Purity file
@@ -367,8 +389,7 @@ read_purple_qc <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.purity.tsv", package = "gpgr")
-#' p <- read_purple_purity(x)
-#' p
+#' (p <- read_purple_purity(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "tmbStatus")
