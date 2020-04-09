@@ -24,6 +24,6 @@ and selects columns of interest.
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
-pp <- process_purple_cnv_somatic(x)$tab
+(pp <- process_purple_cnv_somatic(x)$tab)
 
 }

@@ -4,10 +4,12 @@
 \alias{read_purple_qc}
 \title{Read PURPLE QC file}
 \usage{
-read_purple_qc(x)
+read_purple_qc(x, v = "2.39")
 }
 \arguments{
 \item{x}{Path to the \code{purple.qc} file.}
+
+\item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
 A named character vector containing QC values for several PURPLE
@@ -18,7 +20,6 @@ Reads the \code{purple.qc} file.
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.qc", package = "gpgr")
-p <- read_purple_qc(x)
-p
+(p <- read_purple_qc(x))
 
 }

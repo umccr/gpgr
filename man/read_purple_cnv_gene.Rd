@@ -21,7 +21,6 @@ alterations of each gene in the HMF panel
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
-p <- read_purple_cnv_gene(x, "2.39")
-p
+(p <- read_purple_cnv_gene(x, "2.39"))
 
 }

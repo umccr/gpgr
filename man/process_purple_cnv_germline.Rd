@@ -24,6 +24,6 @@ and selects columns of interest.
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
-pp <- process_purple_cnv_germline(x)$tab
+(pp <- process_purple_cnv_germline(x)$tab)
 
 }
