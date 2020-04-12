@@ -66,6 +66,55 @@ count_pieces <- function(x, sep) {
   ifelse(nchar(x) == 0, 0, stringr::str_count(x, sep) + 1)
 }
 
+#' Read SV TSV
+#'
+#' Reads the TSV file output by umccrise.
+#'
+#' @param x Path to `manta.tsv` output by umccrise.
+#' @param v umccrise version (default: 0.18). Used to verify the column names.
+#'
+#' @return A tibble
+#'
+#' @examples
+#' x <- system.file("extdata/umccrise/v0.18/sv/manta.tsv", package = "gpgr")
+#' (sv <- read_sv_tsv(x))
+#'
+#' @testexamples
+#' expect_equal(colnames(sv)[ncol(sv)], "MATEID")
+#' expect_error(read_sv_tsv(x, v = "0.17"))
+#'
+#' @export
+read_sv_tsv <- function(x, v = "0.18") {
+  config <- function(v) {
+    current <- list(
+      nm = c("caller" = "c", "sample" = "c", "chrom" = "c", "start" = "i", "end" = "i", "svtype" = "c",
+             "split_read_support" = "c", "paired_support_PE" = "c", "paired_support_PR" = "c",
+             "AF_BPI" = "c", "somaticscore" = "i", "tier" = "c", "annotation" = "c",
+             "AF_PURPLE" = "c", "CN_PURPLE" = "c", "CN_change_PURPLE" = "c", "Ploidy_PURPLE" = "d",
+             "PURPLE_status" = "c", "START_BPI" = "i", "END_BPI" = "i", "ID" = "c",
+             "MATEID" = "c"))
+
+    l <- list(
+      "0.18" = current,
+      "0.20" = list(nm = c(current$nm, "foo" = "c", "bar" = "c"))
+    )
+    if (numeric_version(v) >= numeric_version("0.20")) {
+      return(l[["0.20"]])
+    } else if (numeric_version(v) >= numeric_version("0.18")) {
+      return(l[["0.18"]])
+    } else {
+      stop(glue::glue("You've specified umccrise version {v}, which is older than 0.18.",
+                      "Please update to newer umccrise version."))
+    }
+  }
+  conf <- config(v)
+  ctypes <- paste(conf$nm, collapse = "")
+  somatic_sv_tsv <- readr::read_tsv(x, col_names = TRUE, col_types = ctypes)
+  assertthat::assert_that(ncol(somatic_sv_tsv) == length(conf$nm))
+  assertthat::assert_that(all(colnames(somatic_sv_tsv) == names(conf$nm)))
+  somatic_sv_tsv
+}
+
 effect_abbreviations <- c(
   "3_prime_UTR_truncation" = "3UTRtrunc", "3_prime_UTR_variant" = "3UTRvar",
   "5_prime_UTR_truncation" = "5UTRtrunc",  "5_prime_UTR_variant" = "5UTRvar",
