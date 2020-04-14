@@ -4,24 +4,23 @@
 \alias{split_double_col}
 \title{Split Two-Field Column}
 \usage{
-split_double_col(.data, col, is_pct = FALSE)
+split_double_col(d, nms)
 }
 \arguments{
-\item{.data}{Input tibble data.}
+\item{d}{Input tibble data.}
 
-\item{col}{Column to split.}
-
-\item{is_pct}{Multiply by 100 (logical).}
+\item{nms}{A character vector of columns to split.}
 }
 \value{
-A modified tibble with two columns.
+A modified tibble with the original columns averaged and split nicely.
 }
 \description{
 Splits a column with 2 comma-separated fields into
 two columns.
 }
 \examples{
-x <- tibble::tibble(a = letters[1:10], b = paste0(round(runif(10), 2), ",", round(runif(10), 2)))
-(s <- gpgr:::split_double_col(x, b))
+x <- tibble::tibble(a = letters[1:11],
+                    b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))))
+(s <- gpgr:::split_double_col(x, "b"))
 
 }
