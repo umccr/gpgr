@@ -195,15 +195,15 @@ process_sv <- function(x, v = "0.18") {
 
   if (!nrow(sv) > 0) {
     return(list(
-      unmelted = NULL,
-      melted = NULL
+      unmelted = unmelted,
+      melted = melted
     ))
   }
 
   cols_to_split <- c("AF_BPI", "AF_PURPLE", "CN_PURPLE", "CN_change_PURPLE")
   double_cols <- split_double_col(sv, cols_to_split)
   unmelted <- sv %>%
-    dplyr::select(-c(cols_to_split, "caller", "sample")) %>%
+    dplyr::select(-dplyr::all_of(c(cols_to_split, "caller", "sample"))) %>%
     dplyr::bind_cols(double_cols) %>%
     tidyr::separate(.data$split_read_support, c("SR_ref", "SR_alt"), ",", convert = TRUE) %>%
     tidyr::separate(.data$paired_support_PR, c("PR_ref", "PR_alt"), ",", convert = TRUE) %>%
@@ -227,13 +227,18 @@ process_sv <- function(x, v = "0.18") {
     dplyr::group_by(.data$BND_group) %>%
     dplyr::mutate(
       # index per group 1, 2, 3..
-      BND_ID = dplyr::group_indices(),
+      BND_ID = dplyr::cur_group_id(),
       # turns into 001, 002, 003... if you've got 100+ rows
       BND_ID = sprintf(glue::glue("%0{nchar(nrow(.))}d"), .data$BND_ID),
       BND_mate = ifelse(.data$BND_mate == 0, "A", "B")) %>%
-    dplyr::ungroup() %>%
-    dplyr::bind_cols(., .[match(.$ID, .$MATEID), "chrom"]) %>%
-    dplyr::rename(BND_mate_chrom = .data$chrom1)
+    dplyr::ungroup()
+
+  # Grab each BND mate's chrom
+  bnd_mate_chrom <- unmelted_bnd %>%
+    dplyr::select(BND_mate_chrom = .data$chrom) %>%
+    dplyr::slice(match(unmelted_bnd$ID, unmelted_bnd$MATEID))
+
+  unmelted_bnd <- dplyr::bind_cols(unmelted_bnd, bnd_mate_chrom)
 
   unmelted_other <- unmelted %>%
     dplyr::filter(.data$svtype != "BND")
