@@ -1,0 +1,74 @@
+---
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
+output:
+  html_document:
+    theme: cosmo
+    toc: false
+    code_download: true
+  rmdformats::material:
+    highlight: kate
+params:
+  sample: "SAMPLE"
+  sv: "/path/to/sv.vcf"
+  snv: "/path/to/snv.vcf"
+title: "`r glue::glue('CHORD Results for {params$name}')`"
+description: "Results from CHORD analysis"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+res1 <- run_chord(snv_vcf, sv_vcf, "foo", "hg38")
+
+
+sample_nms <- c("P033" = "2016_249_17_MH_P033__CCR170115b_MH17T002P033",
+                "P025" = "2016_249_18_WH_P025__CCR180149_VPT-WH025-E",
+                "BALL10" = "B_ALL_Case_10__MDX190025_B_ALL_Case_10T",
+                "CUP8" = "CUP-Pairs8__PRJ180660_8_DNA009529_FFPE",
+                "SEQCII50" = "SEQC-II-50pc__SEQC-II_Tumor_50pc",
+                "SFRC01073" = "SFRC01073__PRJ180598_SFRC01073-S2T")
+vcf_files <- tibble::tibble(
+  snv_indel = file.path(here::here("nogit/chord/snv"), paste0(sample_nms, "-somatic-ensemble-PASS.vcf.gz")),
+  sv = file.path(here::here("inst/extdata/umccrise/v0.18/sv"), paste0(sample_nms, "-manta.vcf.gz")),
+  sample = names(sample_nms)
+)
+
+contexts_dir <- here::here("nogit/chord/output/contexts")
+dir.create(contexts_dir, recursive = T)
+
+for (i in 1:nrow(vcf_files)) {
+  params <- as.list(vcf_files[i, ])
+  out_path <- file.path(contexts_dir, paste0(params$sample, "_contexts.txt"))
+
+  if(!file.exists(out_path)){
+    CHORD::extractSigsChord(
+      vcf.snv = params$snv_indel,
+      vcf.sv = params$sv,
+      sv.caller='manta',
+      sample.name = params$sample,
+      output.path = out_path,
+      ref.genome = ref_genome,
+      verbose=F
+    )
+  }
+}
+
+context_files <- list.files(contexts_dir, full.names = T)
+
+l_contexts <- lapply(context_files, function(i) {
+  read.delim(i, check.names = F)
+})
+
+merged_contexts <- do.call(rbind, l_contexts)
+write.table(merged_contexts, file.path(contexts_dir, "merged", "contexts.txt"))
+
+
+# PREDICTION
+chord_output <- CHORD::chordPredict(merged_contexts, do.bootstrap = T, verbose = F)
+
+```
+
