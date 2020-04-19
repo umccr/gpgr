@@ -1,6 +1,8 @@
 #' Run CHORD
 #'
-#' Runs CHORD given SNV and SV VCF files.
+#' Runs CHORD given SNV and SV VCF files. **NOTE**: you need to
+#' load the following R packages:
+#' BSgenome.Hsapiens.UCSC.hg38, mutSigExtractor, and CHORD.
 #'
 #' @param snv Path to SNV VCF.
 #' @param sv Path to SV VCF.
@@ -8,10 +10,8 @@
 #' @param genome Human genome assembly. One of 'hg38' (default) or 'hg19'.
 #'
 #' @return List with extracted signatures and HRD prediction.
-#' @export
-#' @import BSgenome.Hsapiens.UCSC.hg38, mutSigExtractor, CHORD
 #'
-#' @examples
+#' @export
 run_chord <- function(snv, sv, sample, genome = "hg38") {
   assertthat::assert_that(all(file.exists(c(snv, sv))))
   assertthat::assert_that(genome %in% c("hg19", "hg38"))

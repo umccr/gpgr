@@ -15,15 +15,18 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 ByteCompile: true
+Remotes: github::UMCUGenetics/CHORD, github::UMCUGenetics/mutSigExtractor
 Depends:
     R (>= 3.5)
 Imports:
     assertthat,
+    CHORD,
     dplyr,
     ggplot2,
     glue,
     gtools,
     jsonlite,
+    mutSigExtractor,
     purrr,
     readr,
     rlang,
