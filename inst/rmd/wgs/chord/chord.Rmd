@@ -1,0 +1,114 @@
+---
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
+output:
+  html_document:
+    theme: cosmo
+    toc: false
+    code_download: true
+  rmdformats::material:
+    highlight: kate
+params:
+  sample: "SAMPLE"
+  sv: "/path/to/sv.vcf"
+  snv: "/path/to/snv.vcf"
+title: "`r glue::glue('CHORD Results for {params$sample}')`"
+description: "Results from CHORD analysis"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r render_report_interactively, eval=F, echo=F}
+params <- function(x) {
+  paths <- list(
+    local = list(
+      sample = "Validation Samples",
+      sv = here::here("inst/extdata/umccrise/v0.18/sv/manta.vcf.gz"),
+      snv = here::here("inst/extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz")
+    )
+  )
+    paths[[x]]
+}
+params <- params("local")
+
+render_me <- function() {
+  rmarkdown::render(
+    input = here::here("inst/rmd/wgs/chord/chord.Rmd"),
+    params = params)
+}
+render_me()
+```
+
+```{r load_pkgs, message=F, warning=F}
+require(BSgenome.Hsapiens.UCSC.hg38)
+require(CHORD)
+require(mutSigExtractor)
+require(gpgr)
+```
+
+## Run CHORD
+
+```{r run_chord, message=F, warning=F}
+sample_nms <- c("P033" = "2016_249_17_MH_P033__CCR170115b_MH17T002P033",
+                "P025" = "2016_249_18_WH_P025__CCR180149_VPT-WH025-E",
+                "BALL10" = "B_ALL_Case_10__MDX190025_B_ALL_Case_10T",
+                "CUP8" = "CUP-Pairs8__PRJ180660_8_DNA009529_FFPE",
+                "SEQCII50" = "SEQC-II-50pc__SEQC-II_Tumor_50pc",
+                "SFRC01073" = "SFRC01073__PRJ180598_SFRC01073-S2T")
+
+vcf_files <- tibble::tibble(
+  snv = file.path(here::here("nogit/chord/snv"), paste0(sample_nms, "-somatic-ensemble-PASS.vcf.gz")),
+  sv = file.path(here::here("nogit/chord/sv"), paste0(sample_nms, "-manta.vcf.gz")),
+  sample = names(sample_nms)
+)
+
+# res <- seq_len(nrow(vcf_files)) %>%
+#   purrr::map(function(i) {
+#     gpgr::run_chord(snv = vcf_files$snv[i],
+#                     sv = vcf_files$sv[i],
+#                     sample = vcf_files$sample[i])
+#   })
+# saveRDS(res, file = here::here("nogit/chord/res.rds"))
+```
+
+## Process CHORD Results
+```{r chord_results}
+res <- readRDS(here::here("nogit/chord/res.rds"))
+
+sigs <- res %>%
+  purrr::map("contexts") %>%
+  do.call(rbind, .) %>%
+  tibble::as_tibble(rownames = "sample")
+
+sigs_transpose <- sigs %>%
+  tidyr::pivot_longer(-sample, names_to = "context", values_to = "count") %>%
+  tidyr::pivot_wider(names_from = sample, values_from = count)
+
+hrd_preds <- res %>%
+  purrr::map("prediction") %>%
+  dplyr::bind_rows()
+```
+
+## CHORD Results
+```{r chord_tables}
+hrd_preds %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                caption = "HRD predictions.",
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(
+                  scroller = TRUE, scrollY = 300, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+                  buttons = c('csv'), dom = 'Blfrtip'))
+
+sigs_transpose %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                caption = "Counts of mutation context per sample.",
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(
+                  scroller = TRUE, scrollY = 300, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+                  buttons = c('csv'), dom = 'Blfrtip'))
+```
+
