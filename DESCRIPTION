@@ -1,6 +1,6 @@
 Package: gpgr
 Title: Genomics Platform Group Reporting
-Version: 0.0.1-rc1
+Version: 0.0.0.9000
 Description: Reports and functions used in the Genomics Platform Group
              at the University of Melbourne Centre for Cancer Research.
 Authors@R: 
@@ -15,18 +15,15 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 ByteCompile: true
-Remotes: github::UMCUGenetics/CHORD, github::UMCUGenetics/mutSigExtractor
 Depends:
     R (>= 3.5)
 Imports:
     assertthat,
-    CHORD,
     dplyr,
     ggplot2,
     glue,
     gtools,
     jsonlite,
-    mutSigExtractor,
     purrr,
     readr,
     rlang,
@@ -37,8 +34,10 @@ Imports:
 Roxygen: list(markdown = TRUE,
               roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
 RoxygenNote: 7.1.0
-Suggests: 
+Suggests:
+    CHORD,
     knitr,
+    mutSigExtractor,
     rmarkdown,
     testthat,
 VignetteBuilder: knitr
