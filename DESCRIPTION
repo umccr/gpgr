@@ -35,6 +35,8 @@ Roxygen: list(markdown = TRUE,
               roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
 RoxygenNote: 7.1.0
 Suggests:
+    BSgenome.Hsapiens.UCSC.hg19,
+    BSgenome.Hsapiens.UCSC.hg38,
     CHORD,
     knitr,
     mutSigExtractor,

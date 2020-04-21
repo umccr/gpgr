@@ -19,7 +19,15 @@ run_chord(snv, sv, sample, genome = "hg38")
 List with extracted signatures and HRD prediction.
 }
 \description{
-Runs CHORD given SNV and SV VCF files. \strong{NOTE}: you need to
-load the following R packages:
-BSgenome.Hsapiens.UCSC.hg38, mutSigExtractor, and CHORD.
+Runs CHORD given SNV and SV VCF files. \strong{NOTE}: make sure you have
+the BSgenome.Hsapiens.UCSC.hgXX installed.
+}
+\examples{
+\dontrun{
+snv <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+sv <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
+chord_res <- run_chord(snv = snv, sv = sv, sample = "foo")
+}
+
+
 }
