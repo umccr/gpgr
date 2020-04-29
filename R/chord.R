@@ -21,12 +21,14 @@
 #' @export
 run_chord <- function(snv, sv, sample, genome = "hg38") {
   assertthat::assert_that(all(file.exists(c(snv, sv))))
-  assertthat::assert_that(genome %in% c("hg19", "hg38"))
+  assertthat::assert_that(genome %in% c("hg19", "hg38", "GRCh37"))
   ref_genome <- NULL
   if (genome == "hg38") {
     ref_genome <- BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
-  } else {
+  } else if (genome == "hg19") {
     ref_genome <- BSgenome.Hsapiens.UCSC.hg19::BSgenome.Hsapiens.UCSC.hg19
+  } else if (genome == "GRCh37") {
+    ref_genome <- BSgenome.Hsapiens.1000genomes.hs37d5::BSgenome.Hsapiens.1000genomes.hs37d5
   }
 
   contexts <- CHORD::extractSigsChord(

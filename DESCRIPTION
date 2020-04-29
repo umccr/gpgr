@@ -37,6 +37,7 @@ RoxygenNote: 7.1.0
 Suggests:
     BSgenome.Hsapiens.UCSC.hg19,
     BSgenome.Hsapiens.UCSC.hg38,
+    BSgenome.Hsapiens.1000genomes.hs37d5,
     CHORD,
     knitr,
     mutSigExtractor,
