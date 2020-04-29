@@ -3,6 +3,7 @@ author: "University of Melbourne Centre for Cancer Research"
 date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
 output:
   html_document:
+    code: hide
     theme: cosmo
     toc: false
     code_download: true
@@ -16,6 +17,14 @@ title: "`r glue::glue('CHORD Results for {params$sample}')`"
 description: "Results from CHORD analysis"
 ---
 
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -24,7 +33,7 @@ knitr::opts_chunk$set(echo = TRUE)
 params <- function(x) {
   paths <- list(
     local = list(
-      sample = "Validation Samples",
+      sample = "Joep's Interesting Samples",
       sv = here::here("inst/extdata/umccrise/v0.18/sv/manta.vcf.gz"),
       snv = here::here("inst/extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz")
     )
@@ -43,39 +52,66 @@ render_me()
 
 ```{r load_pkgs, message=F, warning=F}
 require(BSgenome.Hsapiens.UCSC.hg38)
+require(BSgenome.Hsapiens.1000genomes.hs37d5)
 require(CHORD)
-require(mutSigExtractor)
 require(gpgr)
+require(kableExtra)
+require(mutSigExtractor)
 ```
 
 ## Run CHORD
+The samples used for CHORD HRD predictions are shown below, along with UMCCR's comments for HRDlikelihood.
 
-```{r run_chord, message=F, warning=F}
-sample_nms <- c("P033" = "2016_249_17_MH_P033__CCR170115b_MH17T002P033",
-                "P025" = "2016_249_18_WH_P025__CCR180149_VPT-WH025-E",
-                "BALL10" = "B_ALL_Case_10__MDX190025_B_ALL_Case_10T",
-                "CUP8" = "CUP-Pairs8__PRJ180660_8_DNA009529_FFPE",
-                "SEQCII50" = "SEQC-II-50pc__SEQC-II_Tumor_50pc",
-                "SFRC01073" = "SFRC01073__PRJ180598_SFRC01073-S2T")
+```{r setup_chord_data, message=F, warning=F}
+s <- tibble::tribble(
+  ~Alias, ~FileName, ~Assembly, ~Comment,
+  "P033", "2016_249_17_MH_P033__CCR170115b_MH17T002P033", "hg38", "ValidationSample",
+  "P025", "2016_249_18_WH_P025__CCR180149_VPT-WH025-E", "hg38", "ValidationSample",
+  "BALL10", "B_ALL_Case_10__MDX190025_B_ALL_Case_10T", "hg38", "ValidationSample",
+  "CUP8", "CUP-Pairs8__PRJ180660_8_DNA009529_FFPE", "hg38", "ValidationSample",
+  "SEQCII50", "SEQC-II-50pc__SEQC-II_Tumor_50pc", "hg38", "ValidationSample",
+  "SFRC01073", "SFRC01073__PRJ180598_SFRC01073-S2T", "hg38", "ValidationSample",
+  "SFRC01122", "SBJ00001__SBJ00001_PRJ190733_L1900931", "hg38", "Likely",
+  "SFRC01143", "SFRC01143__PRJ190190_SFRC01143_T", "GRCh37", "Likely",
+  "SFRC01160", "SFRC01160__PRJ190376_SFRC01160-S1-19-1434", "GRCh37", "Likely",
+  "SFRC01210", "SBJ00162__MDX190151", "GRCh37", "Likely",
+  "PM3056445", "PM3056445__MDX190101_DNA052297-T", "GRCh37", "Likely",
+  "PM3028142", "SBJ00286__SBJ00286_PRJ200069_L2000117", "hg38", "IMPORTANT",
+  "PM4024666", "SBJ00322__SBJ00322_MDX200054_L2000238", "hg38", "Unlikely",
+  "PM3061034", "SBJ00301__SBJ00301_MDX200046_L2000147", "hg38", "Unlikely",
+  "SFRC01258", "SBJ00281__SBJ00281_PRJ200061_L2000100", "hg38", "Unlikely",
+  "PM2293366", "SBJ00236__SBJ00236_MDX190218_L1901019", "hg38", "Unlikely",) %>%
+  dplyr::distinct() %>%
+  dplyr::mutate(
+    snv = file.path(here::here("nogit/chord/snv"), paste0(FileName, "-somatic-ensemble-PASS.vcf.gz")),
+    sv = file.path(here::here("nogit/chord/sv"), paste0(FileName, "-manta.vcf.gz")),
+    sample = Alias
+  )
+```
 
-vcf_files <- tibble::tibble(
-  snv = file.path(here::here("nogit/chord/snv"), paste0(sample_nms, "-somatic-ensemble-PASS.vcf.gz")),
-  sv = file.path(here::here("nogit/chord/sv"), paste0(sample_nms, "-manta.vcf.gz")),
-  sample = names(sample_nms)
-)
+```{r data_table}
+s %>%
+  dplyr::select(Sample = sample, FileName, UMCCR_Comment = Comment) %>%
+  knitr::kable() %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left")
+```
 
-# res <- seq_len(nrow(vcf_files)) %>%
-#   purrr::map(function(i) {
-#     gpgr::run_chord(snv = vcf_files$snv[i],
-#                     sv = vcf_files$sv[i],
-#                     sample = vcf_files$sample[i])
-#   })
-# saveRDS(res, file = here::here("nogit/chord/res.rds"))
+
+```{r run_chord, eval=F}
+res <- seq_len(nrow(s)) %>%
+  purrr::map(function(i) {
+    cat(s$sample[i])
+    gpgr::run_chord(snv = s$snv[i],
+                    sv = s$sv[i],
+                    sample = s$sample[i],
+                    genome = s$Assembly[i])
+  })
+saveRDS(res, file = here::here("nogit/chord/res2.rds"))
 ```
 
 ## Process CHORD Results
 ```{r chord_results}
-res <- readRDS(here::here("nogit/chord/res.rds"))
+res <- readRDS(here::here("nogit/chord/res2.rds"))
 
 sigs <- res %>%
   purrr::map("contexts") %>%
@@ -94,13 +130,31 @@ hrd_preds <- res %>%
 ## CHORD Results
 ```{r chord_tables}
 hrd_preds %>%
+  dplyr::left_join(
+    s %>% dplyr::select(sample = Alias, UMCCR_Comment = Comment),
+    by = "sample"
+  ) %>%
+  dplyr::relocate(UMCCR_Comment, .after = sample) %>%
   DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
                 caption = "HRD predictions.",
                 class = "cell-border display compact",
                 rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
                 options = list(
                   scroller = TRUE, scrollY = 300, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
-                  buttons = c('csv'), dom = 'Blfrtip'))
+                  buttons = c('csv'), dom = 'Blfrtip')) %>%
+    DT::formatStyle(
+    "hr_status",
+    backgroundColor = DT::styleEqual(
+      c("HR_deficient", "HR_proficient"), c("lightblue", "lightpink")
+    )
+  ) %>%
+    DT::formatStyle(
+    "UMCCR_Comment",
+    backgroundColor = DT::styleEqual(
+      c("Likely", "Unlikely"), c("lightblue", "lightpink")
+    )
+  )
+
 
 sigs_transpose %>%
   DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
