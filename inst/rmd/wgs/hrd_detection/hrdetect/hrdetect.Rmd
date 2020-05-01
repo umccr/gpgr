@@ -1,0 +1,98 @@
+---
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
+output:
+  html_document:
+    code: hide
+    theme: cosmo
+    toc: false
+    code_download: true
+  rmdformats::material:
+    highlight: kate
+params:
+  sample: "SAMPLE"
+  sv: "/path/to/sv.vcf"
+  snv: "/path/to/snv.vcf"
+title: "`r glue::glue('HRDetect Results for {params$sample}')`"
+description: "Results from HRDetect analysis"
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r render_report_interactively, eval=F, echo=F}
+params <- function(x) {
+  paths <- list(
+    local = list(
+      sample = "SAMPLE",
+      sv = here::here("inst/extdata/umccrise/v0.18/sv/manta.vcf.gz"),
+      snv = here::here("inst/extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz")
+    )
+  )
+    paths[[x]]
+}
+params <- params("local")
+
+render_me <- function() {
+  rmarkdown::render(
+    input = here::here("inst/rmd/wgs/hrd_detection/hrdetect/hrdetect.Rmd"),
+    params = params)
+}
+render_me()
+```
+
+```{r load_pkgs, message=F, warning=F}
+require(here)
+require(signature.tools.lib)
+```
+
+
+
+## Set up variables
+
+```{r var_setup}
+sample_names <- c("sample1", "sample2")
+SNV_tab_files <- c(here("nogit/hrdetect/testthat/test_hrdetect_1/test_hrdetect_1.snv.simple.txt"),
+                   here("nogit/hrdetect/testthat/test_hrdetect_2/test_hrdetect_2.snv.simple.txt"))
+SV_bedpe_files <-   c(here("nogit/hrdetect/testthat/test_hrdetect_1/test_hrdetect_1.sv.bedpe"),
+                      here("nogit/hrdetect/testthat/test_hrdetect_2/test_hrdetect_2.sv.bedpe"))
+Indels_vcf_files <- c(here("nogit/hrdetect/testthat/test_hrdetect_1/test_hrdetect_1.indel.vcf.gz"),
+                      here("nogit/hrdetect/testthat/test_hrdetect_2/test_hrdetect_2.indel.vcf.gz"))
+CNV_tab_files <-    c(here("nogit/hrdetect/testthat/test_hrdetect_1/test_hrdetect_1.cna.txt"),
+                      here("nogit/hrdetect/testthat/test_hrdetect_2/test_hrdetect_2.cna.txt"))
+
+# name the vector entries with the sample names
+names(SNV_tab_files) <- sample_names
+names(SV_bedpe_files) <- sample_names
+names(Indels_vcf_files) <- sample_names
+names(CNV_tab_files) <- sample_names
+```
+
+
+```{r}
+# load SNV data and convert to SNV mutational catalogues
+SNVcat_list <- list()
+for (i in 1:length(SNV_tab_files)){
+  tmpSNVtab <- read.table(SNV_tab_files[i], sep = "\t",
+                          header = TRUE, check.names = FALSE,
+                          stringsAsFactors = FALSE)
+  # convert to SNV catalogue, see ?tabToSNVcatalogue or
+  # ?vcfToSNVcatalogue for details
+  res <- tabToSNVcatalogue(subs = tmpSNVtab, genome.v = "hg19")
+  colnames(res$catalogue) <- sample_names[i]
+  SNVcat_list[[i]] <- res$catalogue
+}
+
+# bind the catalogues in one table
+SNV_catalogues <- do.call(cbind, SNVcat_list)
+```
+
