@@ -13,7 +13,7 @@ params:
   sample: "SAMPLE"
   sv: "/path/to/sv.vcf"
   snv: "/path/to/snv.vcf"
-title: "`r glue::glue('HRDetect Results for {params$sample}')`"
+title: "`r glue::glue('{params$sample} HRDetect Results')`"
 description: "Results from HRDetect analysis"
 ---
 
@@ -144,5 +144,20 @@ res <- HRDetect_pipeline(input_matrix,
 
 #save HRDetect scores
 writeTable(res$hrdetect_output,file = here("nogit/hrdetect/out/HRDetect_res.tsv"))
+```
+
+## Single Sample
+
+```{r}
+snvindel_vcf <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+snvindel_tabs <- hrdetect_read_snvindel_vcf(snvindel_vcf)
+
+snv_catalogue <- signature.tools.lib::tabToSNVcatalogue(
+  subs = snvindel_tabs$snv,
+  genome.v = "hg38")
+indel_classification <- signature.tools.lib::tabToIndelsClassification(
+  indel.data = snvindel_tabs$indel,
+  sampleID = "FOO",
+  genome.v = "hg38")
 ```
 
