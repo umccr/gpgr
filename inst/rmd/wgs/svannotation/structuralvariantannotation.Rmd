@@ -1,0 +1,66 @@
+---
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
+output:
+  html_document:
+    code: hide
+    theme: cosmo
+    toc: false
+    code_download: true
+  rmdformats::material:
+    highlight: kate
+params:
+  sample: "SAMPLE"
+  sv: "/path/to/sv.vcf"
+title: "`r glue::glue('StructuralVariantAnnotation Exploration')`"
+description: "StructuralVariantAnnotation"
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r render_report_interactively, eval=F, echo=F}
+params <- function(x) {
+  paths <- list(
+    local = list(
+      sample = "FOO",
+      sv = here::here("inst/extdata/umccrise/v0.18/sv/manta.vcf.gz")
+    )
+  )
+    paths[[x]]
+}
+params <- params("local")
+
+render_me <- function() {
+  rmarkdown::render(
+    input = here::here("inst/rmd/wgs/svannotation/structuralvariantannotation.Rmd"),
+    params = params)
+}
+render_me()
+```
+
+```{r load_pkgs, message=F, warning=F}
+require(rtracklayer)
+require(StructuralVariantAnnotation)
+require(VariantAnnotation)
+```
+
+* Read SV VCFs
+
+```{r read_vcf}
+vcf_file_manta <- params$sv
+vcf_file_gridss <- system.file("extdata", "gridss.vcf", package = "StructuralVariantAnnotation")
+vcf_manta <- VariantAnnotation::readVcf(vcf_file_manta, genome = "hg38")
+vcf_gridss <- VariantAnnotation::readVcf(vcf_file_gridss, genome = "hg19")
+```
+
+* 
