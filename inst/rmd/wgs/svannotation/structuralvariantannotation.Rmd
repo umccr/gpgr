@@ -59,8 +59,38 @@ require(VariantAnnotation)
 ```{r read_vcf}
 vcf_file_manta <- params$sv
 vcf_file_gridss <- system.file("extdata", "gridss.vcf", package = "StructuralVariantAnnotation")
+vcf_file_gridss2 <- system.file("extdata", "COLO829T.purple.sv.ann.vcf.gz", package = "StructuralVariantAnnotation")
 vcf_manta <- VariantAnnotation::readVcf(vcf_file_manta, genome = "hg38")
 vcf_gridss <- VariantAnnotation::readVcf(vcf_file_gridss, genome = "hg19")
+vcf_gridss2 <- VariantAnnotation::readVcf(vcf_file_gridss2, genome = "hg19")
 ```
 
-* 
+* Explore SVs
+
+```{r explore_sv}
+nrow(vcf_manta)
+nrow(vcf_gridss)
+vcf_manta
+vcf_gridss
+```
+
+* BreakPoint Ranges
+
+```{r bp_ranges}
+bpgr_manta <- StructuralVariantAnnotation::breakpointRanges(vcf_manta)
+bpgr_gridss <- StructuralVariantAnnotation::breakpointRanges(vcf_gridss)
+bpgr_gridss2 <- StructuralVariantAnnotation::breakpointRanges(vcf_gridss2)
+# partner(bpgr_manta)
+# partner(bpgr_gridss)
+```
+
+* BreakEnd Ranges (single breakends)
+
+```{r be_ranges}
+begr_manta <- StructuralVariantAnnotation::breakendRanges(vcf_manta)
+begr_gridss2 <- StructuralVariantAnnotation::breakendRanges(vcf_gridss2)
+colo829_gr <- sort(c(bpgr_gridss2, begr_gridss2))
+length(bpgr_gridss2) # 166
+length(begr_gridss2) # 12
+```
+
