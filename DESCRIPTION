@@ -29,8 +29,10 @@ Imports:
     rlang,
     scales,
     stringr,
+    StructuralVariantAnnotation,
     tibble,
     tidyr,
+    VariantAnnotation
 Roxygen: list(markdown = TRUE,
               roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
 RoxygenNote: 7.1.0

@@ -152,12 +152,16 @@ writeTable(res$hrdetect_output,file = here("nogit/hrdetect/out/HRDetect_res.tsv"
 snvindel_vcf <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 snvindel_tabs <- hrdetect_read_snvindel_vcf(snvindel_vcf)
 
+sv_vcf <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
+sv_bedpe <- hrdetect_read_sv_vcf(sv_vcf, nm = params$sample, hg_version = "hg38")
+
 snv_catalogue <- signature.tools.lib::tabToSNVcatalogue(
   subs = snvindel_tabs$snv,
   genome.v = "hg38")
 indel_classification <- signature.tools.lib::tabToIndelsClassification(
   indel.data = snvindel_tabs$indel,
-  sampleID = "FOO",
+  sampleID = params$sample,
   genome.v = "hg38")
+sv_catalogue <- signature.tools.lib::bedpeToRearrCatalogue(sv_bedpe = sv_bedpe)
 ```
 
