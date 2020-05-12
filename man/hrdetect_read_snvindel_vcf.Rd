@@ -18,6 +18,6 @@ Reads a VCF with SNVs/INDELs for use with HRDetect.
 }
 \examples{
 x <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
-(hrdetect_read_snvindel_vcf(x))
+(l <- hrdetect_read_snvindel_vcf(x))
 
 }

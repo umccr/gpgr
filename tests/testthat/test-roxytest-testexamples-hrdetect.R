@@ -2,7 +2,19 @@
 
 context("File R/hrdetect.R: @testexamples")
 
-test_that("Function hrdetect_read_sv_vcf() @ L65", {
+test_that("Function hrdetect_read_snvindel_vcf() @ L21", {
+  
+  x <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+  (l <- hrdetect_read_snvindel_vcf(x))
+  
+  expect_equal(length(l), 2)
+  expect_equal(names(l), c("snv", "indel"))
+  expect_equal(colnames(l$snv), c("chr", "position", "REF", "ALT"))
+  expect_equal(colnames(l$indel), c("chr", "position", "REF", "ALT"))
+})
+
+
+test_that("Function hrdetect_read_sv_vcf() @ L66", {
   
   x <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
   sv_bedpe <- hrdetect_read_sv_vcf(x, nm = "SAMPLE")
@@ -11,5 +23,16 @@ test_that("Function hrdetect_read_sv_vcf() @ L65", {
   expect_equal(nrow(sv_bedpe), 190)
   expect_equal(colnames(sv_bedpe), c("chrom1", "start1", "end1", "chrom2",
                "start2", "end2", "sample", "strand1", "strand2"))
+})
+
+
+test_that("Function hrdetect_read_purple_cnv() @ L105", {
+  
+  x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+  (cnv <- hrdetect_read_purple_cnv(x))
+  
+  expect_equal(colnames(cnv), c("Chromosome", "chromStart", "chromEnd",
+                                "total.copy.number.inTumour",
+                                "minor.copy.number.inTumour"))
 })
 

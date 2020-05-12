@@ -16,15 +16,10 @@ hrdetect_read_sv_vcf(x, nm = NULL, hg_version = "hg38")
 \value{
 Tibble with following BEDPE-like columns:
 \itemize{
-\item chrom1
-\item start1
-\item end1
-\item chrom2
-\item start2
-\item end2
+\item chrom1, start1, end1
+\item chrom2, start2, end2
 \item sample
-\item strand1
-\item strand2
+\item strand1, strand2
 }
 }
 \description{

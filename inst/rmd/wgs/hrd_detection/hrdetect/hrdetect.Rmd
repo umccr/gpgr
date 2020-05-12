@@ -155,6 +155,9 @@ snvindel_tabs <- hrdetect_read_snvindel_vcf(snvindel_vcf)
 sv_vcf <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
 sv_bedpe <- hrdetect_read_sv_vcf(sv_vcf, nm = params$sample, hg_version = "hg38")
 
+cnv_file <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+cnv <- hrdetect_read_purple_cnv(cnv_file)
+
 snv_catalogue <- signature.tools.lib::tabToSNVcatalogue(
   subs = snvindel_tabs$snv,
   genome.v = "hg38")
@@ -163,5 +166,6 @@ indel_classification <- signature.tools.lib::tabToIndelsClassification(
   sampleID = params$sample,
   genome.v = "hg38")
 sv_catalogue <- signature.tools.lib::bedpeToRearrCatalogue(sv_bedpe = sv_bedpe)
+cnv_hrd <- signature.tools.lib::ascatToHRDLOH(ascat.data = cnv, SAMPLE.ID = params$sample)
 ```
 
