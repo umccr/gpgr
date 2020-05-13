@@ -4,12 +4,10 @@
 \alias{hrdetect_read_purple_cnv}
 \title{Prepare PURPLE Somatic CNVs for HRDetect}
 \usage{
-hrdetect_read_purple_cnv(x, v = "2.39")
+hrdetect_read_purple_cnv(x)
 }
 \arguments{
 \item{x}{Path to \code{purple.cnv.somatic.tsv} file.}
-
-\item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
 Tibble containing following columns:

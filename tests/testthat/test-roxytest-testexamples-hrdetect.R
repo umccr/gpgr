@@ -26,7 +26,7 @@ test_that("Function hrdetect_read_sv_vcf() @ L66", {
 })
 
 
-test_that("Function hrdetect_read_purple_cnv() @ L105", {
+test_that("Function hrdetect_read_purple_cnv() @ L104", {
   
   x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
   (cnv <- hrdetect_read_purple_cnv(x))

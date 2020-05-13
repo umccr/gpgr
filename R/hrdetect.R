@@ -83,14 +83,11 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, hg_version = "hg38") {
 #' Prepares PURPLE somatic CNVs for HRDetect.
 #'
 #' @param x Path to `purple.cnv.somatic.tsv` file.
-#' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return Tibble containing following columns:
 #' - Chromosome, chromStart, chromEnd
 #' - total.copy.number.inTumour
 #' - minor.copy.number.inTumour
-#'
-#'
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
@@ -102,12 +99,15 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, hg_version = "hg38") {
 #'                               "minor.copy.number.inTumour"))
 #'
 #' @export
-hrdetect_read_purple_cnv <- function(x, v = "2.39") {
+hrdetect_read_purple_cnv <- function(x) {
 
-  cnv <- read_purple_cnv_somatic(x, v = v)
+  cnv <- readr::read_tsv(x,
+                         col_types = readr::cols_only(
+                           "chromosome" = "c", "start" = "i", "end" = "i",
+                           "copyNumber" = "d", "minorAllelePloidy" = "d"))
 
   cnv %>%
-    dplyr::select(
+    dplyr::rename(
       Chromosome = .data$chromosome,
       chromStart = .data$start,
       chromEnd = .data$end,
