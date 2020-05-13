@@ -52,6 +52,7 @@ render_me()
 
 ```{r load_pkgs, message=F, warning=F}
 require(here)
+require(gpgr)
 require(signature.tools.lib)
 require(tidyverse)
 ```
@@ -64,12 +65,12 @@ require(tidyverse)
 sample_names <- c("sample1", "sample2")
 SNV_tab_files <- c(here("nogit/hrdetect/testthat/test_hrdetect_1/test_hrdetect_1.snv.simple.txt"),
                    here("nogit/hrdetect/testthat/test_hrdetect_2/test_hrdetect_2.snv.simple.txt"))
-SV_bedpe_files <-   c(here("nogit/hrdetect/testthat/test_hrdetect_1/test_hrdetect_1.sv.bedpe"),
-                      here("nogit/hrdetect/testthat/test_hrdetect_2/test_hrdetect_2.sv.bedpe"))
+SV_bedpe_files <- c(here("nogit/hrdetect/testthat/test_hrdetect_1/test_hrdetect_1.sv.bedpe"),
+                    here("nogit/hrdetect/testthat/test_hrdetect_2/test_hrdetect_2.sv.bedpe"))
 Indels_vcf_files <- c(here("nogit/hrdetect/testthat/test_hrdetect_1/test_hrdetect_1.indel.vcf.gz"),
                       here("nogit/hrdetect/testthat/test_hrdetect_2/test_hrdetect_2.indel.vcf.gz"))
-CNV_tab_files <-    c(here("nogit/hrdetect/testthat/test_hrdetect_1/test_hrdetect_1.cna.txt"),
-                      here("nogit/hrdetect/testthat/test_hrdetect_2/test_hrdetect_2.cna.txt"))
+CNV_tab_files <- c(here("nogit/hrdetect/testthat/test_hrdetect_1/test_hrdetect_1.cna.txt"),
+                   here("nogit/hrdetect/testthat/test_hrdetect_2/test_hrdetect_2.cna.txt"))
 
 # name the vector entries with the sample names
 names(SNV_tab_files) <- sample_names
@@ -92,6 +93,7 @@ for (i in 1:length(SNV_tab_files)){
   colnames(res$catalogue) <- sample_names[i]
   SNVcat_list[[i]] <- res$catalogue
 }
+rm(tmpSNVtab, i, res)
 
 # bind the catalogues in one table
 SNV_catalogues <- do.call(cbind, SNVcat_list)
@@ -120,7 +122,6 @@ subs_fit_res <- SignatureFit_withBootstrap_Analysis(
 #of the boostrapped runs followed by false positive filters. See
 #?SignatureFit_withBootstrap_Analysis for details
 snv_exp <- subs_fit_res$E_median_filtered
-
 ```
 
 ```{r}
@@ -148,24 +149,70 @@ writeTable(res$hrdetect_output,file = here("nogit/hrdetect/out/HRDetect_res.tsv"
 
 ## Single Sample
 
-```{r}
+```{r prep_snv}
 snvindel_vcf <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 snvindel_tabs <- hrdetect_read_snvindel_vcf(snvindel_vcf)
-
-sv_vcf <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
-sv_bedpe <- hrdetect_read_sv_vcf(sv_vcf, nm = params$sample, hg_version = "hg38")
-
-cnv_file <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
-cnv <- hrdetect_read_purple_cnv(cnv_file)
 
 snv_catalogue <- signature.tools.lib::tabToSNVcatalogue(
   subs = snvindel_tabs$snv,
   genome.v = "hg38")
+snv_catalogue <- snv_catalogue$catalogue
+colnames(snv_catalogue) <- params$sample
+plotSubsSignatures(signature_data_matrix = snv_catalogue, plot_sum = TRUE)
+
+#fit the 12 breast cancer signatures using the bootstrap signature fit approach
+sigsToUse <- c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)
+subs_fit_res <- SignatureFit_withBootstrap_Analysis(
+  outdir = here("nogit/hrdetect/out/sigFit_FOO/"),
+  cat = snv_catalogue,
+  signature_data_matrix = COSMIC30_subs_signatures[, sigsToUse],
+  type_of_mutations = "subs",
+  nboot = 100, nparallel = 4)
+
+#The signature exposures can be found here and correspond to the median
+#of the boostrapped runs followed by false positive filters. See
+#?SignatureFit_withBootstrap_Analysis for details
+snv_exp <- subs_fit_res$E_median_filtered
+```
+
+```{r prep_indel}
 indel_classification <- signature.tools.lib::tabToIndelsClassification(
   indel.data = snvindel_tabs$indel,
   sampleID = params$sample,
   genome.v = "hg38")
+
+```
+
+```{r prep_sv}
+sv_vcf <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
+sv_bedpe <- hrdetect_read_sv_vcf(sv_vcf, nm = params$sample, hg_version = "hg38")
 sv_catalogue <- signature.tools.lib::bedpeToRearrCatalogue(sv_bedpe = sv_bedpe)
+```
+
+```{r prep_cnv}
+cnv_file <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+cnv <- hrdetect_read_purple_cnv(cnv_file)
 cnv_hrd <- signature.tools.lib::ascatToHRDLOH(ascat.data = cnv, SAMPLE.ID = params$sample)
+```
+
+```{r all_together}
+col_hrdetect <- c("del.mh.prop", "SNV3", "SV3", "SV5", "hrd", "SNV8")
+input_matrix <- matrix(NA,
+                       nrow = 1, # 1 sample
+                       ncol = length(col_hrdetect),
+                       dimnames = list(params$sample, col_hrdetect))
+
+input_matrix[colnames(snv_exp),"SNV3"] <- snv_exp["Signature.3", ]
+input_matrix[colnames(snv_exp),"SNV8"] <- snv_exp["Signature.8", ]
+
+input_matrix[colnames(snv_exp),"hrd"] <- cnv_hrd
+input_matrix[colnames(snv_exp),"del.mh.prop"] <- indel_classification$count_proportion[1, "del.mh.prop"]
+
+#run the HRDetect pipeline, for more information see ?HRDetect_pipeline
+res <- HRDetect_pipeline(input_matrix,
+                         genome.v = "hg38",
+                         SV_catalogues = sv_catalogue$rearr_catalogue,
+                         nparallel = 2)
+
 ```
 

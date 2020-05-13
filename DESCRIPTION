@@ -44,5 +44,6 @@ Suggests:
     knitr,
     mutSigExtractor,
     rmarkdown,
+    signature.tools.lib,
     testthat,
 VignetteBuilder: knitr
