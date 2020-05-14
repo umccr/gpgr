@@ -26,7 +26,7 @@ test_that("Function hrdetect_read_sv_vcf() @ L66", {
 })
 
 
-test_that("Function hrdetect_read_purple_cnv() @ L104", {
+test_that("Function hrdetect_read_purple_cnv() @ L102", {
   
   x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
   (cnv <- hrdetect_read_purple_cnv(x))
@@ -34,5 +34,16 @@ test_that("Function hrdetect_read_purple_cnv() @ L104", {
   expect_equal(colnames(cnv), c("Chromosome", "chromStart", "chromEnd",
                                 "total.copy.number.inTumour",
                                 "minor.copy.number.inTumour"))
+})
+
+
+test_that("Function hrdetect_prep_snvindel() @ L142", {
+  
+  x <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+  (l <- hrdetect_prep_snvindel(x, nm = "sampleA", outdir = tempdir()))
+  
+  expect_equal(c("snv_results", "indel_results"), names(l))
+  expect_equal(c("sig", "exposure", "pvalue"), colnames(l[["snv_results"]]))
+  expect_equal(colnames(l[["indel_results"]])[c(1, 7)], c("sample", "del.mh.prop"))
 })
 

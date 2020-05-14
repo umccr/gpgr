@@ -116,3 +116,73 @@ hrdetect_read_purple_cnv <- function(x) {
     ) %>%
     dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome))
 }
+
+#' Prepare VCF with SNVs/INDELs for use with HRDetect
+#'
+#' @param x Path to VCF with SNVs and INDELs.
+#' @param nm Sample name.
+#' @param genome Genome assembly version.
+#' @param outdir Directory to output analysis results.
+#' @param sigsToUse COSMIC signatures to use.
+#'
+#' @return List with two elements:
+#' - snv_results: tibble with exposure score and p-value for chosen signatures.
+#' - indel_results: tibble with a summary of the count of indels and their proportion.
+#'
+#' @examples
+#' x <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+#' (l <- hrdetect_prep_snvindel(x, nm = "sampleA", outdir = tempdir()))
+#'
+#' @testexamples
+#' expect_equal(c("snv_results", "indel_results"), names(l))
+#' expect_equal(c("sig", "exposure", "pvalue"), colnames(l[["snv_results"]]))
+#' expect_equal(colnames(l[["indel_results"]])[c(1, 7)], c("sample", "del.mh.prop"))
+#'
+#' @export
+hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
+                                   sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)) {
+
+  assertthat::assert_that(!is.null(nm), !is.null(outdir), genome %in% c("hg19", "hg38"),
+                          all(sigsToUse %in% 1:30))
+
+  # must end in /
+  outdir <- ifelse(!grepl("/$", outdir), paste0(outdir, "/"), outdir)
+
+  snvindel_tabs <- hrdetect_read_snvindel_vcf(x)
+
+  ##--- SNVs ---##
+  snv_catalogue <- signature.tools.lib::tabToSNVcatalogue(
+    subs = snvindel_tabs[["snv"]],
+    genome.v = genome)[["catalogue"]]
+
+  subs_fit_res <- signature.tools.lib::SignatureFit_withBootstrap_Analysis(
+    outdir = outdir,
+    cat = snv_catalogue,
+    signature_data_matrix = signature.tools.lib::COSMIC30_subs_signatures[, sigsToUse],
+    type_of_mutations = "subs",
+    nboot = 100,
+    nparallel = 2)
+
+  snv_exp <- subs_fit_res$E_median_filtered %>%
+    tibble::as_tibble(rownames = "sig") %>%
+    dplyr::rename(exposure = .data$catalogue)
+
+  snv_pval <- subs_fit_res$E_p.values %>%
+    tibble::as_tibble(rownames = "sig") %>%
+    dplyr::rename(pvalue = .data$catalogue)
+
+  snv_results <- snv_exp %>%
+    dplyr::left_join(snv_pval, by = "sig")
+
+  ##--- INDELs ---##
+  indel_count_proportion <- signature.tools.lib::tabToIndelsClassification(
+    indel.data = snvindel_tabs[["indel"]],
+    sampleID = nm,
+    genome.v = genome)[["count_proportion"]] %>%
+    tibble::as_tibble()
+
+  list(
+    snv_results = snv_results,
+    indel_results = indel_count_proportion
+  )
+}
