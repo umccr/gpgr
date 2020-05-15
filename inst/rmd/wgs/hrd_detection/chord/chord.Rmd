@@ -65,6 +65,7 @@ The samples used for CHORD HRD predictions are shown below, along with UMCCR's c
 ```{r setup_chord_data, message=F, warning=F}
 s <- tibble::tribble(
   ~Alias, ~FileName, ~Assembly, ~Comment,
+  "SFRC01178", "SBJ00267__SBJ00267_PRJ200047_L2000059", "hg38", "Likely",
   "P033", "2016_249_17_MH_P033__CCR170115b_MH17T002P033", "hg38", "ValidationSample",
   "P025", "2016_249_18_WH_P025__CCR180149_VPT-WH025-E", "hg38", "ValidationSample",
   "BALL10", "B_ALL_Case_10__MDX190025_B_ALL_Case_10T", "hg38", "ValidationSample",
@@ -106,12 +107,12 @@ res <- seq_len(nrow(s)) %>%
                     sample = s$sample[i],
                     genome = s$Assembly[i])
   })
-saveRDS(res, file = here::here("nogit/chord/res2.rds"))
+saveRDS(res, file = here::here("nogit/chord/res_2020-05-13.rds"))
 ```
 
 ## Process CHORD Results
 ```{r chord_results}
-res <- readRDS(here::here("nogit/chord/res2.rds"))
+res <- readRDS(here::here("nogit/chord/res_2020-05-13.rds"))
 
 sigs <- res %>%
   purrr::map("contexts") %>%
