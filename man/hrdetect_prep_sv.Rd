@@ -14,13 +14,14 @@ hrdetect_prep_sv(x, nm = NULL, genome = "hg38")
 \item{genome}{Human genome version (default: hg38).}
 }
 \value{
-Tibble with counts for each SV category.
+Single-column data.frame (with rownames) with counts for each SV category.
 }
 \description{
-Prepare VCF with SVs for use with HRDetect
+Prepares VCF with SVs for use with HRDetect.
 }
 \examples{
 x <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
-(l <- hrdetect_prep_sv(x, nm = "SampleA"))
+nm <- "SampleA"
+(d <- hrdetect_prep_sv(x, nm))
 
 }

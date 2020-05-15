@@ -119,10 +119,12 @@ hrdetect_read_purple_cnv <- function(x) {
 
 #' Prepare VCF with SNVs/INDELs for use with HRDetect
 #'
+#' Prepares VCF with SNVs/INDELs for use with HRDetect.
+#'
 #' @param x Path to VCF with SNVs and INDELs.
 #' @param nm Sample name.
-#' @param genome Genome assembly version.
 #' @param outdir Directory to output analysis results.
+#' @param genome Human genome version (default: hg38).
 #' @param sigsToUse COSMIC signatures to use.
 #'
 #' @return List with two elements:
@@ -143,7 +145,7 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
                                    sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)) {
 
   assertthat::assert_that(!is.null(nm), !is.null(outdir), genome %in% c("hg19", "hg38"),
-                          all(sigsToUse %in% 1:30))
+                          all(sigsToUse %in% 1:30), all(c(3, 8) %in% sigsToUse))
 
   # must end in /
   outdir <- ifelse(!grepl("/$", outdir), paste0(outdir, "/"), outdir)
@@ -189,25 +191,27 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
 
 #' Prepare VCF with SVs for use with HRDetect
 #'
+#' Prepares VCF with SVs for use with HRDetect.
+#'
 #' @param x Path to VCF with SVs.
 #' @param nm Sample name.
 #' @param genome Human genome version (default: hg38).
 #'
-#' @return Tibble with counts for each SV category.
+#' @return Single-column data.frame (with rownames) with counts for each SV category.
 #'
 #' @examples
 #' x <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
-#' (l <- hrdetect_prep_sv(x, nm = "SampleA"))
+#' nm <- "SampleA"
+#' (d <- hrdetect_prep_sv(x, nm))
 #'
 #' @testexamples
-#' expect_equal(colnames(l), c("sv_category", "count"))
+#' expect_equal(colnames(d), nm)
+#' expect_true(inherits(d, "data.frame"))
 #'
 #' @export
 hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
   sv_bedpe <- hrdetect_read_sv_vcf(x, nm = nm, genome = genome)
-  res <- signature.tools.lib::bedpeToRearrCatalogue(sv_bedpe = sv_bedpe)[["rearr_catalogue"]] %>%
-    tibble::as_tibble(rownames = "sv_category") %>%
-    dplyr::rename(count = nm)
+  res <- signature.tools.lib::bedpeToRearrCatalogue(sv_bedpe = sv_bedpe)[["rearr_catalogue"]]
   res
 }
 
@@ -239,3 +243,61 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
                  hrdloh_index = unname(cnv_hrd))
 }
 
+#' Run HRDetect via signature.tools.lib
+#'
+#' Runs HRDetect as described in the
+#' [signature.tools.lib repository](https://github.com/Nik-Zainal-Group/signature.tools.lib).
+#'
+#' @param snvindel_vcf Path to VCF with SNVs and INDELs.
+#' @param sv_vcf Path to VCF with SVs.
+#' @param cnv_file Path to `purple.cnv.somatic.tsv` file.
+#' @param nm Sample name.
+#' @param genome Human genome version (default: hg38).
+#' @param snvoutdir Directory to output SNV signature analysis results.
+#' @param sigsToUse COSMIC SNV signatures to use.
+#'
+#' @examples
+#' snvindel_vcf <- system.file(
+#'                   "extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz",
+#'                   package = "gpgr")
+#' sv_vcf <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
+#' cnv_file <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+#' nm <- "SampleA"
+#' genome <- "hg38"
+#' snvoutdir <- tempdir()
+#' (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir))
+#'
+#' @testexamples
+#' expect_equal(colnames(res), c("intercept", "del.mh.prop", "SNV3",
+#'                               "SV3", "SV5", "hrd", "SNV8", "Probability"))
+#' expect_true(inherits(res, "matrix"))
+#'
+#' @export
+hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir,
+                         sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)) {
+  snvindel <- hrdetect_prep_snvindel(snvindel_vcf, nm, genome, snvoutdir, sigsToUse = sigsToUse)
+  snv <- snvindel$snv_results %>%
+    dplyr::filter(.data$sig %in% c("Signature.3", "Signature.8")) %>%
+    tidyr::pivot_wider(id_cols = c("sig", "exposure"),
+                       names_from = "sig", values_from = "exposure")
+
+  indel <- snvindel$indel_results$del.mh.prop
+  sv <- hrdetect_prep_sv(sv_vcf, nm, genome)
+  cnv <- hrdetect_prep_cnv(cnv_file, nm)
+
+  tib <- tibble::tibble(
+    "del.mh.prop" = indel,
+    "SNV3" = snv$Signature.3,
+    "SV3" = NA,
+    "SV5" = NA,
+    "hrd" = cnv$hrdloh_index,
+    "SNV8" = snv$Signature.8)
+  mat <- as.matrix(tib)
+  rownames(mat) <- nm
+  res <- signature.tools.lib::HRDetect_pipeline(mat,
+                                                 genome.v = genome,
+                                                 SV_catalogues = sv,
+                                                 nparallel = 2)
+
+  res[["hrdetect_output"]]
+}

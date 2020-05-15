@@ -17,7 +17,7 @@ hrdetect_prep_snvindel(
 
 \item{nm}{Sample name.}
 
-\item{genome}{Genome assembly version.}
+\item{genome}{Human genome version (default: hg38).}
 
 \item{outdir}{Directory to output analysis results.}
 
@@ -31,7 +31,7 @@ List with two elements:
 }
 }
 \description{
-Prepare VCF with SNVs/INDELs for use with HRDetect
+Prepares VCF with SNVs/INDELs for use with HRDetect.
 }
 \examples{
 x <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
