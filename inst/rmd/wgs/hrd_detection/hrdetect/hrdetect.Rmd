@@ -13,6 +13,7 @@ params:
   sample: "SAMPLE"
   sv: "/path/to/sv.vcf"
   snv: "/path/to/snv.vcf"
+  cnv: "/path/to/purple.somatic.cnv"
 title: "`r glue::glue('{params$sample} HRDetect Results')`"
 description: "Results from HRDetect analysis"
 ---
@@ -145,54 +146,6 @@ res <- HRDetect_pipeline(input_matrix,
 
 #save HRDetect scores
 writeTable(res$hrdetect_output,file = here("nogit/hrdetect/out/HRDetect_res.tsv"))
-```
-
-## Single Sample
-
-```{r prep_snv}
-snvindel_vcf <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
-snvindel_tabs <- hrdetect_read_snvindel_vcf(snvindel_vcf)
-
-snv_catalogue <- signature.tools.lib::tabToSNVcatalogue(
-  subs = snvindel_tabs$snv,
-  genome.v = "hg38")
-snv_catalogue <- snv_catalogue$catalogue
-colnames(snv_catalogue) <- params$sample
-plotSubsSignatures(signature_data_matrix = snv_catalogue, plot_sum = TRUE)
-
-#fit the 12 breast cancer signatures using the bootstrap signature fit approach
-sigsToUse <- c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)
-subs_fit_res <- SignatureFit_withBootstrap_Analysis(
-  outdir = here("nogit/hrdetect/out/sigFit_FOO/"),
-  cat = snv_catalogue,
-  signature_data_matrix = COSMIC30_subs_signatures[, sigsToUse],
-  type_of_mutations = "subs",
-  nboot = 100, nparallel = 4)
-
-#The signature exposures can be found here and correspond to the median
-#of the boostrapped runs followed by false positive filters. See
-#?SignatureFit_withBootstrap_Analysis for details
-snv_exp <- subs_fit_res$E_median_filtered
-```
-
-```{r prep_indel}
-indel_classification <- signature.tools.lib::tabToIndelsClassification(
-  indel.data = snvindel_tabs$indel,
-  sampleID = params$sample,
-  genome.v = "hg38")
-
-```
-
-```{r prep_sv}
-sv_vcf <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
-sv_bedpe <- hrdetect_read_sv_vcf(sv_vcf, nm = params$sample, hg_version = "hg38")
-sv_catalogue <- signature.tools.lib::bedpeToRearrCatalogue(sv_bedpe = sv_bedpe)
-```
-
-```{r prep_cnv}
-cnv_file <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
-cnv <- hrdetect_read_purple_cnv(cnv_file)
-cnv_hrd <- signature.tools.lib::ascatToHRDLOH(ascat.data = cnv, SAMPLE.ID = params$sample)
 ```
 
 ```{r all_together}

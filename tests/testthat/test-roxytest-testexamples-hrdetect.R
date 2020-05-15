@@ -47,3 +47,22 @@ test_that("Function hrdetect_prep_snvindel() @ L142", {
   expect_equal(colnames(l[["indel_results"]])[c(1, 7)], c("sample", "del.mh.prop"))
 })
 
+
+test_that("Function hrdetect_prep_sv() @ L206", {
+  
+  x <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
+  (l <- hrdetect_prep_sv(x, nm = "SampleA"))
+  
+  expect_equal(colnames(l), c("sv_category", "count"))
+})
+
+
+test_that("Function hrdetect_prep_cnv() @ L232", {
+  
+  x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+  (l <- hrdetect_prep_cnv(x, nm = "SampleA"))
+  
+  expect_equal(colnames(l), c("name", "hrdloh_index"))
+  expect_equal(nrow(l), 1)
+})
+

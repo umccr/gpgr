@@ -4,14 +4,14 @@
 \alias{hrdetect_read_sv_vcf}
 \title{Read VCF with SVs for use with HRDetect}
 \usage{
-hrdetect_read_sv_vcf(x, nm = NULL, hg_version = "hg38")
+hrdetect_read_sv_vcf(x, nm = NULL, genome = "hg38")
 }
 \arguments{
 \item{x}{Path to VCF.}
 
 \item{nm}{Sample name.}
 
-\item{hg_version}{Human genome version (default: hg38).}
+\item{genome}{Human genome version (default: hg38).}
 }
 \value{
 Tibble with following BEDPE-like columns:

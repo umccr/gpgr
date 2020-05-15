@@ -2,7 +2,7 @@
 % Please edit documentation in R/hrdetect.R
 \name{hrdetect_read_purple_cnv}
 \alias{hrdetect_read_purple_cnv}
-\title{Prepare PURPLE Somatic CNVs for HRDetect}
+\title{Read PURPLE Somatic CNVs for HRDetect}
 \usage{
 hrdetect_read_purple_cnv(x)
 }
@@ -12,13 +12,13 @@ hrdetect_read_purple_cnv(x)
 \value{
 Tibble containing following columns:
 \itemize{
-\item Chromosome, chromStart, chromEnd
-\item total.copy.number.inTumour
-\item minor.copy.number.inTumour
+\item chromosome, start, end
+\item copyNumber (total)
+\item minorAllelePloidy
 }
 }
 \description{
-Prepares PURPLE somatic CNVs for HRDetect.
+Reads PURPLE somatic CNVs for use with HRDetect.
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")

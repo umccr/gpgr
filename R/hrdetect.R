@@ -44,7 +44,7 @@ hrdetect_read_snvindel_vcf <- function(x) {
 #'
 #' @param x Path to VCF.
 #' @param nm Sample name.
-#' @param hg_version Human genome version (default: hg38).
+#' @param genome Human genome version (default: hg38).
 #'
 #' @return Tibble with following BEDPE-like columns:
 #' - chrom1, start1, end1
@@ -63,11 +63,11 @@ hrdetect_read_snvindel_vcf <- function(x) {
 #' expect_equal(colnames(sv_bedpe), c("chrom1", "start1", "end1", "chrom2",
 #'              "start2", "end2", "sample", "strand1", "strand2"))
 #' @export
-hrdetect_read_sv_vcf <- function(x, nm = NULL, hg_version = "hg38") {
+hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
 
   assertthat::assert_that(!is.null(nm))
 
-  vcf <- VariantAnnotation::readVcf(x, hg_version)
+  vcf <- VariantAnnotation::readVcf(x, genome)
   gr <- StructuralVariantAnnotation::breakpointRanges(vcf)
   bedpe <- StructuralVariantAnnotation::breakpointgr2bedpe(gr) %>%
     dplyr::mutate_if(is.factor, as.character) %>%
@@ -78,16 +78,16 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, hg_version = "hg38") {
 
 }
 
-#' Prepare PURPLE Somatic CNVs for HRDetect
+#' Read PURPLE Somatic CNVs for HRDetect
 #'
-#' Prepares PURPLE somatic CNVs for HRDetect.
+#' Reads PURPLE somatic CNVs for use with HRDetect.
 #'
 #' @param x Path to `purple.cnv.somatic.tsv` file.
 #'
 #' @return Tibble containing following columns:
-#' - Chromosome, chromStart, chromEnd
-#' - total.copy.number.inTumour
-#' - minor.copy.number.inTumour
+#' - chromosome, start, end
+#' - copyNumber (total)
+#' - minorAllelePloidy
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
@@ -186,3 +186,56 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
     indel_results = indel_count_proportion
   )
 }
+
+#' Prepare VCF with SVs for use with HRDetect
+#'
+#' @param x Path to VCF with SVs.
+#' @param nm Sample name.
+#' @param genome Human genome version (default: hg38).
+#'
+#' @return Tibble with counts for each SV category.
+#'
+#' @examples
+#' x <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
+#' (l <- hrdetect_prep_sv(x, nm = "SampleA"))
+#'
+#' @testexamples
+#' expect_equal(colnames(l), c("sv_category", "count"))
+#'
+#' @export
+hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
+  sv_bedpe <- hrdetect_read_sv_vcf(x, nm = nm, genome = genome)
+  res <- signature.tools.lib::bedpeToRearrCatalogue(sv_bedpe = sv_bedpe)[["rearr_catalogue"]] %>%
+    tibble::as_tibble(rownames = "sv_category") %>%
+    dplyr::rename(count = nm)
+  res
+}
+
+#' Prepare PURPLE Somatic CNVs for HRDetect
+#'
+#' Prepares PURPLE somatic CNVs for use with HRDetect.
+#'
+#' @param x Path to `purple.cnv.somatic.tsv` file.
+#' @param nm Sample name.
+#'
+#' @return Tibble with sample name and HRD-LOH index.
+#'
+#' @examples
+#' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+#' (l <- hrdetect_prep_cnv(x, nm = "SampleA"))
+#'
+#' @testexamples
+#' expect_equal(colnames(l), c("name", "hrdloh_index"))
+#' expect_equal(nrow(l), 1)
+#'
+#' @export
+hrdetect_prep_cnv <- function(x, nm = NULL) {
+
+  assertthat::assert_that(!is.null(nm))
+  cnv <- hrdetect_read_purple_cnv(x)
+  cnv_hrd <- signature.tools.lib::ascatToHRDLOH(ascat.data = cnv, SAMPLE.ID = nm)
+
+  tibble::tibble(name = names(cnv_hrd),
+                 hrdloh_index = unname(cnv_hrd))
+}
+
