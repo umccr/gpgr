@@ -301,6 +301,5 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir,
 
   res[["hrdetect_output"]] %>%
     tibble::as_tibble(rownames = "sample") %>%
-    dplyr::mutate(Probability = 100 * .data$Probability) %>%
     dplyr::relocate(.data$Probability, .after = .data$sample)
 }

@@ -15,7 +15,7 @@ params:
   sv_vcf: "/path/to/sv.vcf"
   cnv_tsv: "/path/to/purple.somatic.cnv"
   snvoutdir: "/path/to/outdir_snv"
-title: "`r glue::glue('{params$sample} HRDetect Results')`"
+title: "`r glue::glue('HRDetect Results')`"
 description: "Results from HRDetect analysis"
 ---
 
@@ -57,6 +57,7 @@ render_me()
 
 ```{r load_pkgs, message=F, warning=F}
 require(gpgr)
+require(gt)
 require(here)
 require(kableExtra)
 require(signature.tools.lib)
@@ -81,7 +82,11 @@ d <- tibble::tribble(
   "PM3061034", "SBJ00301__SBJ00301_MDX200046_L2000147", "hg38", "Unlikely",
   "SFRC01258", "SBJ00281__SBJ00281_PRJ200061_L2000100", "hg38", "Unlikely",
   "PM2293366", "SBJ00236__SBJ00236_MDX190218_L1901019", "hg38", "Unlikely",
-) %>%
+)
+
+d %>% gt()
+
+d <- d %>%
   dplyr::distinct() %>%
   dplyr::mutate(
     snvindel_vcf = file.path(here::here("nogit/chord/snv"), paste0(prefix, "-somatic-ensemble-PASS.vcf.gz")),
@@ -90,6 +95,7 @@ d <- tibble::tribble(
     snvoutdir = file.path(here::here("nogit/hrdetect/snvoutdir"), prefix)
   ) %>%
   dplyr::select(nm, snvindel_vcf, sv_vcf, cnv_file, snvoutdir, genome)
+
 ```
 
 ```{r run_hrdetect, eval=FALSE}
@@ -98,9 +104,14 @@ res <- dplyr::bind_rows(res)
 saveRDS(res, file = here::here("nogit/hrdetect/res_2020-05-17.rds"))
 ```
 
+## HRDetect Results
+
 ```{r results}
 res <- readRDS(here::here("nogit/hrdetect/res_2020-05-17.rds"))
 res %>%
-  kableExtra::kable()
+  dplyr::mutate(Probability = Probability / 100) %>%
+  gt(rowname_col = "sample") %>%
+  fmt_percent(columns = "Probability") %>%
+  fmt_number(columns = c("intercept", "del.mh.prop", "SNV3", "SV3", "SV5", "hrd", "SNV8"), decimals = 2)
 ```
 
