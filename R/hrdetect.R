@@ -268,9 +268,9 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir))
 #'
 #' @testexamples
-#' expect_equal(colnames(res), c("intercept", "del.mh.prop", "SNV3",
-#'                               "SV3", "SV5", "hrd", "SNV8", "Probability"))
-#' expect_true(inherits(res, "matrix"))
+#' expect_equal(colnames(res), c("sample", "Probability", "intercept", "del.mh.prop", "SNV3",
+#'                               "SV3", "SV5", "hrd", "SNV8"))
+#' expect_true(inherits(res, "data.frame"))
 #'
 #' @export
 hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir,
@@ -299,5 +299,7 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir,
                                                  SV_catalogues = sv,
                                                  nparallel = 2)
 
-  res[["hrdetect_output"]]
+  res[["hrdetect_output"]] %>%
+    tibble::as_tibble(rownames = "sample") %>%
+    dplyr::relocate(.data$Probability, .after = .data$sample)
 }
