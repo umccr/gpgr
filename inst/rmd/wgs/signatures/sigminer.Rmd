@@ -1,0 +1,71 @@
+---
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
+output:
+  html_document:
+    code: hide
+    theme: cosmo
+    toc: true
+    code_download: true
+  rmdformats::material:
+    highlight: kate
+params:
+  sample: "SAMPLE"
+  snv_vcf: "/path/to/snv.vcf"
+  sv_vcf: "/path/to/sv.vcf"
+  cnv_tsv: "/path/to/purple.somatic.cnv"
+  snvoutdir: "/path/to/outdir_snv"
+title: "`r glue::glue('Results from sigminer')`"
+description: "sigminer Results"
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r render_report_interactively, eval=F, echo=F}
+params <- function(x) {
+  paths <- list(
+    local = list(
+      sample = "SAMPLE",
+      snv_vcf = here::here("inst/extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz"),
+      sv_vcf = here::here("inst/extdata/umccrise/v0.18/sv/manta.vcf.gz"),
+      cnv_tsv = here::here("inst/extdata/purple/v2.39/purple.cnv.somatic.tsv"),
+      outdir = here::here("nogit/sigminer")
+      
+    )
+  )
+    paths[[x]]
+}
+params <- params("local")
+
+render_me <- function() {
+  rmarkdown::render(
+    input = here::here("inst/rmd/wgs/signatures/sigminer.Rmd"),
+    params = params)
+}
+render_me()
+```
+
+```{r load_pkgs, message=F, warning=F}
+require(DT)
+require(gpgr)
+require(gt)
+require(here)
+require(tidyverse)
+```
+
+## Introduction
+
+Here we are using
+[sigminer](https://github.com/ShixiangWang/sigminer) to determine somatic
+signatures.
+
