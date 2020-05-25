@@ -39,6 +39,7 @@ params <- function(x) {
       snv_vcf = here::here("inst/extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz"),
       sv_vcf = here::here("inst/extdata/umccrise/v0.18/sv/manta.vcf.gz"),
       cnv_tsv = here::here("inst/extdata/purple/v2.39/purple.cnv.somatic.tsv"),
+      maf = here::here("inst/extdata/umccrise/v0.18/maf/somatic-PASS.maf"),
       outdir = here::here("nogit/sigminer")
       
     )
@@ -60,6 +61,9 @@ require(DT)
 require(gpgr)
 require(gt)
 require(here)
+require(maftools)
+require(NMF)
+require(sigminer)
 require(tidyverse)
 ```
 
@@ -68,4 +72,61 @@ require(tidyverse)
 Here we are using
 [sigminer](https://github.com/ShixiangWang/sigminer) to determine somatic
 signatures.
+
+## COSMIC Signature Identification
+
+### Read MAF files
+
+We can read in MAF files from multiple samples using `maftools::merge_mafs`.
+
+```{r read_maf}
+laml.maf <- system.file("extdata/tcga_laml.maf.gz", package = "maftools")
+# apgi.maf <- here::here("nogit/inputs/maf/APGI_1830__APGI_1830_tumor-somatic-PASS.maf")
+laml <- sigminer::read_maf(maf = laml.maf)
+apgi <- list.files(here::here("nogit/inputs/maf"), pattern = "maf$", full.names = T) %>% maftools::merge_mafs()
+```
+
+### Tally components
+
+#### SBS
+
+* Divide SBS mutations into 96 mutation types (C>A, C>G, C>T, T>A, T>C, T>G
+  times 4 at 5' times 4 at 3'). Returns list with `SBS_6`, `SBS_96` and `SBS_1536`.
+  `nmf_matrix` is same as `SBS_96`
+* The `add_trans_bias` option will add the `SBS_24`, `SBS_384` and `SBS_6144` matrices.
+
+```{r}
+mt_tally_laml <- sigminer::sig_tally(
+  laml,
+  ref_genome = "BSgenome.Hsapiens.UCSC.hg19",
+  useSyn = TRUE
+)
+
+mt_tally_apgi <- sigminer::sig_tally(
+  apgi,
+  ref_genome = "BSgenome.Hsapiens.UCSC.hg38",
+  useSyn = TRUE
+)
+
+str(mt_tally_apgi, list.len = 3)
+stopifnot(identical(mt_tally_apgi$nmf_matrix, mt_tally_apgi$all_matrices$SBS_96))
+```
+
+
+#### DBS and ID
+
+* Use `mode = "DBS"` or `mode = "ID"`.
+  - `DBS_78` and `DBS_186` (`nmf_matrix`)
+
+```{r}
+mt_tally_apgi_DBS <- sigminer::sig_tally(
+  apgi,
+  ref_genome = "BSgenome.Hsapiens.UCSC.hg38",
+  useSyn = TRUE,
+  mode = "DBS",
+  add_trans_bias = TRUE
+)
+str(mt_tally_apgi_DBS$all_matrices)
+
+```
 
