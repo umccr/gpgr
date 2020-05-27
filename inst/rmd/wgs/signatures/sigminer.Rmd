@@ -28,7 +28,7 @@ description: "sigminer Results"
 </style>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 ```
 
 ```{r render_report_interactively, eval=F, echo=F}
@@ -57,6 +57,9 @@ render_me()
 ```
 
 ```{r load_pkgs, message=F, warning=F}
+require(Biostrings)
+require(BSgenome.Hsapiens.UCSC.hg19)
+require(BSgenome.Hsapiens.UCSC.hg38)
 require(DT)
 require(gpgr)
 require(gt)
@@ -80,10 +83,10 @@ signatures.
 We can read in MAF files from multiple samples using `maftools::merge_mafs`.
 
 ```{r read_maf}
-laml.maf <- system.file("extdata/tcga_laml.maf.gz", package = "maftools")
-# apgi.maf <- here::here("nogit/inputs/maf/APGI_1830__APGI_1830_tumor-somatic-PASS.maf")
-laml <- sigminer::read_maf(maf = laml.maf)
-apgi <- list.files(here::here("nogit/inputs/maf"), pattern = "maf$", full.names = T) %>% maftools::merge_mafs()
+laml <- system.file("extdata/tcga_laml.maf.gz", package = "maftools") %>% sigminer::read_maf()
+# apgi <- list.files(here::here("nogit/inputs/maf"), pattern = "maf$", full.names = T) %>% maftools::merge_mafs()
+# saveRDS(apgi, file = here::here("nogit/inputs/maf/all_merged.rds"))
+apgi <- readRDS(file = here::here("nogit/inputs/maf/all_merged.rds"))
 ```
 
 ### Tally components
@@ -95,21 +98,21 @@ apgi <- list.files(here::here("nogit/inputs/maf"), pattern = "maf$", full.names 
   `nmf_matrix` is same as `SBS_96`
 * The `add_trans_bias` option will add the `SBS_24`, `SBS_384` and `SBS_6144` matrices.
 
-```{r}
-mt_tally_laml <- sigminer::sig_tally(
+```{r calc_sbs}
+laml_SBS <- sigminer::sig_tally(
   laml,
   ref_genome = "BSgenome.Hsapiens.UCSC.hg19",
   useSyn = TRUE
 )
 
-mt_tally_apgi <- sigminer::sig_tally(
+apgi_SBS <- sigminer::sig_tally(
   apgi,
   ref_genome = "BSgenome.Hsapiens.UCSC.hg38",
   useSyn = TRUE
 )
 
-str(mt_tally_apgi, list.len = 3)
-stopifnot(identical(mt_tally_apgi$nmf_matrix, mt_tally_apgi$all_matrices$SBS_96))
+str(apgi_SBS, list.len = 3)
+stopifnot(identical(apgi_SBS$nmf_matrix, apgi_SBS$all_matrices$SBS_96))
 ```
 
 
@@ -117,16 +120,130 @@ stopifnot(identical(mt_tally_apgi$nmf_matrix, mt_tally_apgi$all_matrices$SBS_96)
 
 * Use `mode = "DBS"` or `mode = "ID"`.
   - `DBS_78` and `DBS_186` (`nmf_matrix`)
+  - `ID_28`, `ID_83`, `ID_415`
 
-```{r}
-mt_tally_apgi_DBS <- sigminer::sig_tally(
+```{r calc_dbs_id}
+apgi_DBS <- sigminer::sig_tally(
   apgi,
   ref_genome = "BSgenome.Hsapiens.UCSC.hg38",
   useSyn = TRUE,
   mode = "DBS",
   add_trans_bias = TRUE
 )
-str(mt_tally_apgi_DBS$all_matrices)
+str(apgi_DBS$all_matrices)
+stopifnot(identical(apgi_DBS$nmf_matrix, apgi_DBS$all_matrices$DBS_186))
 
+apgi_ID <- sigminer::sig_tally(
+  apgi,
+  ref_genome = "BSgenome.Hsapiens.UCSC.hg38",
+  useSyn = TRUE,
+  mode = "ID",
+  add_trans_bias = TRUE
+)
+str(apgi_ID$all_matrices, list.len = 3)
+stopifnot(identical(apgi_ID$nmf_matrix, apgi_ID$all_matrices$ID_415))
 ```
 
+#### SBS, DBS and ID
+
+* Use `mode = "ALL"` to get all three different matrices.
+
+```{r calc_all, eval=F}
+apgi_ALL <- sigminer::sig_tally(
+  apgi,
+  ref_genome = "BSgenome.Hsapiens.UCSC.hg38",
+  useSyn = TRUE,
+  mode = "ALL",
+  add_trans_bias = TRUE
+)
+```
+
+### Extract Signatures
+
+#### NMF method
+
+* Run NMF multiple times then select best number of signatures based on the
+  measure vs. signature number plot.
+* Measure `cophenetic` is generally used for determining number of signatures.
+
+```{r sig_num_estimate, eval=F}
+est_sig <- sigminer::sig_estimate(
+  apgi_SBS$nmf_matrix,
+  range = 2:5,
+  nrun = 2,
+  use_random = TRUE,
+  cores = 4,
+  pConstant = 1e-13,
+  verbose = TRUE)
+saveRDS(est_sig, file = here::here("nogit/sigminer/apgi_sigs1_estim.rds"))
+```
+
+```{r show_est_sig}
+est_sig <- readRDS(file = here::here("nogit/sigminer/apgi_sigs1_estim.rds"))
+
+sigminer::show_sig_number_survey2(est_sig$survey, est_sig$survey.random)
+sigminer::show_sig_number_survey(est_sig$survey, right_y = NULL)
+```
+
+```{r extract_sigs_nmf, eval=F}
+sigs <- sigminer::sig_extract(apgi_SBS$nmf_matrix,
+                              n_sig = 3,
+                              nrun = 10,
+                              cores = 4,
+                              pConstant = 1e-13)
+saveRDS(sigs, file = here::here("nogit/sigminer/apgi_sigs1.rds"))
+```
+
+```{r extract_sigs_nmf_show}
+sigs <- readRDS(file = here::here("nogit/sigminer/apgi_sigs1.rds"))
+```
+
+#### Bayesian NMF
+
+* This method estimates number of signatures automatically.
+
+```{r extract_sigs_auto, eval=F}
+sigs2 <- sigminer::sig_auto_extract(apgi_SBS$nmf_matrix, K0 = 10, nrun = 10)
+saveRDS(sigs2, file = here::here("nogit/sigminer/apgi_sigs2.rds"))
+```
+
+```{r extract_sigs_auto_show}
+sigs2 <- readRDS(file = here::here("nogit/sigminer/apgi_sigs2.rds"))
+sigs2$Raw$summary_run
+```
+
+
+### Match Signatures
+
+* Compare these signatures to the COSMIC ones:
+
+```{r sig_similarity}
+sim <- sigminer::get_sig_similarity(sigs)
+f1 <- function(s) {
+  a <- s$aetiology
+  m <- sub("Best match: ", "", s$best_match)
+  paste0(m, ": ", a)
+}
+
+sim_best_match_COSMIC_v2 <- purrr::map(sim$best_match, f1) %>%
+  dplyr::bind_rows(.id = "sig") %>%
+  tidyr::pivot_longer(cols = Sig1:Sig3, names_to = "Sigs", values_to = "COSMIC")
+
+pheatmap::pheatmap(sim$similarity)
+
+sim_best_match_COSMIC_v3 <- sigminer::get_sig_similarity(sigs, sig_db = "SBS")$best_match %>%
+  purrr::map(f1) %>%
+  dplyr::bind_rows(.id = "sig") %>%
+  tidyr::pivot_longer(cols = Sig1:Sig3, names_to = "Sigs", values_to = "COSMIC")
+
+dplyr::left_join(sim_best_match_COSMIC_v2, sim_best_match_COSMIC_v3, by = "Sigs", suffix = c("_v2", "_v3"))
+```
+
+### Sample Signatures
+
+```{r sample_sigs}
+knitr::kable(sigminer::get_sig_exposure(sigs))
+```
+
+
+## Group Analysis
