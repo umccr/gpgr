@@ -89,34 +89,46 @@ used with that tool.
 ## Samples
 
 ```{r setup_data, message=F, warning=F}
-s <- tibble::tribble(
-  ~nm, ~prefix, ~genome, ~comment,
-  "P033", "2016_249_17_MH_P033__CCR170115b_MH17T002P033", "hg38", "ValidationSample",
-  "P025", "2016_249_18_WH_P025__CCR180149_VPT-WH025-E", "hg38", "ValidationSample",
-  "BALL10", "B_ALL_Case_10__MDX190025_B_ALL_Case_10T", "hg38", "ValidationSample",
-  "CUP8", "CUP-Pairs8__PRJ180660_8_DNA009529_FFPE", "hg38", "ValidationSample",
-  "SEQCII50", "SEQC-II-50pc__SEQC-II_Tumor_50pc", "hg38", "ValidationSample",
-  "SFRC01073", "SFRC01073__PRJ180598_SFRC01073-S2T", "hg38", "ValidationSample",
-  "SFRC01178", "SBJ00267__SBJ00267_PRJ200047_L2000059", "hg38", "Unlikely",
-  "SFRC01122", "SBJ00001__SBJ00001_PRJ190733_L1900931", "hg38", "Likely",
-  "SFRC01143", "SFRC01143__PRJ190190_SFRC01143_T", "GRCh37", "Likely",
-  "SFRC01160", "SFRC01160__PRJ190376_SFRC01160-S1-19-1434", "GRCh37", "Likely",
-  "SFRC01210", "SBJ00162__MDX190151", "GRCh37", "Likely",
-  "PM3056445", "PM3056445__MDX190101_DNA052297-T", "GRCh37", "Likely",
-  "PM3028142", "SBJ00286__SBJ00286_PRJ200069_L2000117", "hg38", "Likely",
-  "PM4024666", "SBJ00322__SBJ00322_MDX200054_L2000238", "hg38", "Unlikely",
-  "PM3061034", "SBJ00301__SBJ00301_MDX200046_L2000147", "hg38", "Unlikely",
-  "SFRC01258", "SBJ00281__SBJ00281_PRJ200061_L2000100", "hg38", "Unlikely",
-  "PM2293366", "SBJ00236__SBJ00236_MDX190218_L1901019", "hg38", "Unlikely",
-  "SFRC01180", "SBJ00303__SBJ00303_PRJ200200_L2000150", "hg38", "Likely",
-  ) %>%
+# s <- tibble::tribble(
+  # ~nm, ~prefix, ~genome, ~comment,
+  # "P033", "2016_249_17_MH_P033__CCR170115b_MH17T002P033", "hg38", "ValidationSample",
+  # "P025", "2016_249_18_WH_P025__CCR180149_VPT-WH025-E", "hg38", "ValidationSample",
+  # "BALL10", "B_ALL_Case_10__MDX190025_B_ALL_Case_10T", "hg38", "ValidationSample",
+  # "CUP8", "CUP-Pairs8__PRJ180660_8_DNA009529_FFPE", "hg38", "ValidationSample",
+  # "SEQCII50", "SEQC-II-50pc__SEQC-II_Tumor_50pc", "hg38", "ValidationSample",
+  # "SFRC01073", "SFRC01073__PRJ180598_SFRC01073-S2T", "hg38", "ValidationSample",
+  # "SFRC01178", "SBJ00267__SBJ00267_PRJ200047_L2000059", "hg38", "Unlikely",
+  # "SFRC01122", "SBJ00001__SBJ00001_PRJ190733_L1900931", "hg38", "Likely",
+  # "SFRC01143", "SFRC01143__PRJ190190_SFRC01143_T", "GRCh37", "Likely",
+  # "SFRC01160", "SFRC01160__PRJ190376_SFRC01160-S1-19-1434", "GRCh37", "Likely",
+  # "SFRC01210", "SBJ00162__MDX190151", "GRCh37", "Likely",
+  # "PM3056445", "PM3056445__MDX190101_DNA052297-T", "GRCh37", "Likely",
+  # "PM3028142", "SBJ00286__SBJ00286_PRJ200069_L2000117", "hg38", "Likely",
+  # "PM4024666", "SBJ00322__SBJ00322_MDX200054_L2000238", "hg38", "Unlikely",
+  # "PM3061034", "SBJ00301__SBJ00301_MDX200046_L2000147", "hg38", "Unlikely",
+  # "SFRC01258", "SBJ00281__SBJ00281_PRJ200061_L2000100", "hg38", "Unlikely",
+  # "PM2293366", "SBJ00236__SBJ00236_MDX190218_L1901019", "hg38", "Unlikely",
+  # "SFRC01180", "SBJ00303__SBJ00303_PRJ200200_L2000150", "hg38", "Likely",
+  # "SFRC01260", "SBJ00304__SBJ00304_PRJ200202_L2000152", "hg38", "Unlikely",
+  # "SFRC01265", "SBJ00308__SBJ00308_PRJ200214_L2000169", "hg38", "Unlikely",
+  # ) %>%
+
+s <- list.files(here::here("nogit/inputs/apgi/cancer_reports"), pattern = "html") %>%
+  tibble::tibble(x = .) %>%
+  dplyr::mutate(nm = sub("__.*", "", x),
+                prefix = sub("_cancer_report\\.html", "", x),
+                genome = "hg38",
+                comment = "UNSURE") %>%
   dplyr::distinct() %>%
   dplyr::mutate(
-    snvindel_vcf = file.path(here::here("nogit/inputs/snv"), paste0(prefix, "-somatic-ensemble-PASS.vcf.gz")),
-    sv_vcf = file.path(here::here("nogit/inputs/sv"), paste0(prefix, "-manta.vcf.gz")),
-    cnv_file = file.path(here::here("nogit/inputs/cnv"), paste0(prefix, ".purple.cnv")),
+    # snvindel_vcf = file.path(here::here("nogit/inputs/apgi/snv"), paste0(prefix, "-somatic-ensemble-PASS.vcf.gz")),
+    snvindel_vcf = file.path(here::here("nogit/inputs/apgi/snv"), paste0(prefix, "-somatic-PASS.vcf.gz")),
+    sv_vcf = file.path(here::here("nogit/inputs/apgi/sv"), paste0(prefix, "-manta.vcf.gz")),
+    # cnv_file = file.path(here::here("nogit/inputs/cnv"), paste0(prefix, ".purple.cnv")),
+    cnv_file = file.path(here::here("nogit/inputs/apgi/cnv"), paste0(prefix, ".purple.cnv.somatic.tsv")),
     snvoutdir = file.path(here::here("nogit/hrdetect/snvoutdir"), prefix)
-  )
+  ) %>%
+  dplyr::select(-x)
 
 # HRDetect doesn't work with GRCh37
 s_hg38 <- s %>%
@@ -137,16 +149,19 @@ s %>%
 res_chord <- seq_len(nrow(s)) %>%
   purrr::map(function(i) {
     cat(s$nm[i])
-    gpgr::run_chord(snv = s$snvindel_vcf[i],
-                    sv = s$sv_vcf[i],
-                    sample = s$nm[i],
-                    genome = s$genome[i])
+    x <- gpgr::run_chord(snv = s$snvindel_vcf[i],
+                         sv = s$sv_vcf[i],
+                         sample = s$nm[i],
+                         genome = s$genome[i])
+    saveRDS(x, file = here::here("nogit/inputs/apgi/chord", paste0(s$prefix[i], ".rds")))
+    x
   })
-saveRDS(res_chord, file = here::here("nogit/chord/res_2020-05-20.rds"))
+saveRDS(res_chord, file = here::here("nogit/inputs/apgi/chord/all.rds"))
 ```
 
 ```{r process_chord_results}
-res_chord <- readRDS(here::here("nogit/chord/res_2020-05-20.rds"))
+# res_chord <- readRDS(here::here("nogit/chord/res_2020-05-26.rds"))
+res_chord <- readRDS(here::here("nogit/inputs/apgi/chord/all.rds"))
 
 sigs <- res_chord %>%
   purrr::map("contexts") %>%
@@ -215,22 +230,28 @@ sigs_transpose %>%
 res_hrdetect <- seq_len(nrow(s_hg38)) %>%
   purrr::map(function(i) {
     cat(s_hg38$nm[i], "\n")
-    gpgr::hrdetect_run(
+    x <- gpgr::hrdetect_run(
       nm = s_hg38$nm[i],
       snvindel_vcf = s_hg38$snvindel_vcf[i],
       sv_vcf = s_hg38$sv_vcf[i],
       cnv_file = s_hg38$cnv_file[i],
       genome = s_hg38$genome[i],
       snvoutdir = s_hg38$snvoutdir[i])
+    saveRDS(x, file = here::here("nogit/inputs/apgi/hrdetect", paste0(s_hg38$prefix[i], ".rds")))
+    x
+    
   })
 res_hrdetect <- dplyr::bind_rows(res_hrdetect)
-saveRDS(res_hrdetect, file = here::here("nogit/hrdetect/res_2020-05-20.rds"))
+saveRDS(res_hrdetect, file = here::here("nogit/inputs/apge/hrdetect/all.rds"))
+
+
+
 ```
 
 ## HRDetect Results
 
 ```{r hrdetect_results}
-res_hrdetect <- readRDS(here::here("nogit/hrdetect/res_2020-05-20.rds"))
+res_hrdetect <- readRDS(here::here("nogit/hrdetect/res_2020-05-26.rds"))
 res_hrdetect %>%
   gt(rowname_col = "sample") %>%
   fmt_percent(columns = "Probability") %>%
