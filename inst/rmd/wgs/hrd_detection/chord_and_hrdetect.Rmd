@@ -133,7 +133,6 @@ s <- list.files(here::here("nogit/inputs/apgi/cancer_reports"), pattern = "html"
 # HRDetect doesn't work with GRCh37
 s_hg38 <- s %>%
   dplyr::filter(genome == "hg38")
-
 ```
 
 ```{r inputs_table}
@@ -242,16 +241,14 @@ res_hrdetect <- seq_len(nrow(s_hg38)) %>%
     
   })
 res_hrdetect <- dplyr::bind_rows(res_hrdetect)
-saveRDS(res_hrdetect, file = here::here("nogit/inputs/apge/hrdetect/all.rds"))
-
-
-
+saveRDS(res_hrdetect, file = here::here("nogit/inputs/apgi/hrdetect/all.rds"))
 ```
 
 ## HRDetect Results
 
 ```{r hrdetect_results}
-res_hrdetect <- readRDS(here::here("nogit/hrdetect/res_2020-05-26.rds"))
+# res_hrdetect <- readRDS(here::here("nogit/hrdetect/res_2020-05-26.rds"))
+res_hrdetect <- readRDS(here::here("nogit/inputs/apgi/hrdetect/all.rds"))
 res_hrdetect %>%
   gt(rowname_col = "sample") %>%
   fmt_percent(columns = "Probability") %>%
