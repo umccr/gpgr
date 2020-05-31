@@ -29,6 +29,9 @@ hrdetect_run(
 
 \item{sigsToUse}{COSMIC SNV signatures to use.}
 }
+\value{
+Tibble with sample name and HRD probability in first two columns.
+}
 \description{
 Runs HRDetect as described in the
 \href{https://github.com/Nik-Zainal-Group/signature.tools.lib}{signature.tools.lib repository}.

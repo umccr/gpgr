@@ -211,6 +211,7 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
 #' @export
 hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
   sv_bedpe <- hrdetect_read_sv_vcf(x, nm = nm, genome = genome)
+
   res <- signature.tools.lib::bedpeToRearrCatalogue(sv_bedpe = sv_bedpe)[["rearr_catalogue"]]
   res
 }
@@ -255,6 +256,7 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' @param genome Human genome version (default: hg38).
 #' @param snvoutdir Directory to output SNV signature analysis results.
 #' @param sigsToUse COSMIC SNV signatures to use.
+#' @return Tibble with sample name and HRD probability in first two columns.
 #'
 #' @examples
 #' snvindel_vcf <- system.file(
@@ -295,11 +297,19 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir,
   mat <- as.matrix(tib)
   rownames(mat) <- nm
   res <- signature.tools.lib::HRDetect_pipeline(mat,
-                                                 genome.v = genome,
-                                                 SV_catalogues = sv,
-                                                 nparallel = 2)
+                                                genome.v = genome,
+                                                SV_catalogues = sv,
+                                                nparallel = 2)
 
-  res[["hrdetect_output"]] %>%
-    tibble::as_tibble(rownames = "sample") %>%
+  if ("hrdetect_output" %in% names(res)) {
+    res <- res[["hrdetect_output"]]
+  } else { # no result
+    intercept <- matrix(c(NA), dimnames = list(nm, "intercept"))
+    Probability <- matrix(c(NA), dimnames = list(nm, "Probability"))
+    res <- cbind(intercept, mat, Probability)
+  }
+
+  res %>%
+    tibble::as_tibble(rownames = "sample", .name_repair = "check_unique") %>%
     dplyr::relocate(.data$Probability, .after = .data$sample)
 }
