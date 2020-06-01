@@ -11,7 +11,7 @@ hrdetect_read_sv_vcf(x, nm = NULL, genome = "hg38")
 
 \item{nm}{Sample name.}
 
-\item{genome}{Human genome version (default: hg38).}
+\item{genome}{Human genome version (default: hg38. hg19 means GRCh37).}
 }
 \value{
 Tibble with following BEDPE-like columns:

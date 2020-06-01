@@ -17,7 +17,7 @@ hrdetect_prep_snvindel(
 
 \item{nm}{Sample name.}
 
-\item{genome}{Human genome version (default: hg38).}
+\item{genome}{Human genome version (default: hg38. hg19 means GRCh37).}
 
 \item{outdir}{Directory to output analysis results.}
 

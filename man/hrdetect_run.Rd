@@ -23,7 +23,7 @@ hrdetect_run(
 
 \item{cnv_file}{Path to \code{purple.cnv.somatic.tsv} file.}
 
-\item{genome}{Human genome version (default: hg38).}
+\item{genome}{Human genome version (default: hg38. hg19 means GRCh37).}
 
 \item{snvoutdir}{Directory to output SNV signature analysis results.}
 
