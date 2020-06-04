@@ -40,7 +40,7 @@ params <- params("local")
 
 render_me <- function() {
   rmarkdown::render(
-    input = here::here("inst/rmd/wgs/hrd_detection/chord_and_hrdetect.Rmd"),
+    input = here::here("inst/rmd/wgs/hrd_detection/chord_and_hrdetect_multi.Rmd"),
     params = params)
 }
 render_me()
