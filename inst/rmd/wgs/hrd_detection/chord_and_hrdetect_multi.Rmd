@@ -85,6 +85,7 @@ project <- params$project
 
 s <- tibble::tribble(
   ~nm, ~prefix, ~genome, ~comment,
+  "PM3064948", "SBJ00496__SBJ00496_MDX200090_L2000452", "hg38", "?",
   "PM3055963", "SBJ00495__SBJ00495_MDX200088_L2000450", "hg38", "Unlikely",
   "SFRC01295", "SBJ00504__SBJ00504_PRJ200349_L2000458", "hg38", "Unlikely",
   "PM3043473", "SBJ00193__SBJ00193_MDX190182_L1900907", "GRCh37", "Unlikely",
