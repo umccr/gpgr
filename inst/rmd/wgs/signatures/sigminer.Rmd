@@ -60,6 +60,7 @@ render_me()
 require(Biostrings)
 require(BSgenome.Hsapiens.UCSC.hg19)
 require(BSgenome.Hsapiens.UCSC.hg38)
+require(dplyr)
 require(DT)
 require(gpgr)
 require(gt)
@@ -67,7 +68,6 @@ require(here)
 require(maftools)
 require(NMF)
 require(sigminer)
-require(tidyverse)
 ```
 
 ## Introduction
@@ -86,7 +86,7 @@ We can read in MAF files from multiple samples using `maftools::merge_mafs`.
 laml <- system.file("extdata/tcga_laml.maf.gz", package = "maftools") %>% sigminer::read_maf()
 # apgi <- list.files(here::here("nogit/inputs/maf"), pattern = "maf$", full.names = T) %>% maftools::merge_mafs()
 # saveRDS(apgi, file = here::here("nogit/inputs/maf/all_merged.rds"))
-apgi <- readRDS(file = here::here("nogit/inputs/maf/all_merged.rds"))
+apgi <- readRDS(file = here::here("nogit/inputs/apgi/maf/all_merged.rds"))
 ```
 
 ### Tally components
@@ -246,4 +246,49 @@ knitr::kable(sigminer::get_sig_exposure(sigs))
 ```
 
 
-## Group Analysis
+## Signature Fit
+
+### Fit COSMIC reference signatures
+
+* **SBS:**
+
+```{r}
+ind <- apply(apgi_SBS$nmf_matrix, 1, sum) %>% which.max()
+# ind <- apply(laml_SBS$nmf_matrix, 1, sum) %>% which.max()
+sample1_sbs <- apgi_SBS$nmf_matrix[ind, , drop = FALSE] %>% t()
+# sample1 <- laml_SBS$nmf_matrix[ind, , drop = FALSE] %>% t()
+head(sample1_sbs)
+sigminer::sig_fit(sample1_sbs, sig_index = 1:30)
+sigminer::sig_fit(sample1_sbs, sig_index = 1:30, type = "relative")
+sigminer::sig_fit(t(apgi_SBS$nmf_matrix[1:5,]), sig_index = 1:30, rel_threshold = 0.05)
+```
+* **DBS:**
+
+```{r}
+ind <- apply(apgi_DBS$nmf_matrix, 1, sum) %>% which.max()
+sample1_dbs <- apgi_DBS$nmf_matrix[ind, , drop = FALSE] %>% t()
+sigminer::sig_fit(sample1_dbs, sig_index = 1:11, sig_db = "DBS")
+```
+
+### Fit custom signatures
+
+```{r}
+sig_fit(sample1, sig = sigs)
+```
+
+
+### Exposure stability
+
+```{r}
+bt_result <- sig_fit_bootstrap(sample1, sig = sigs, n = 10)
+```
+
+
+## Plots
+
+```{r}
+show_catalogue(t(apgi_SBS$nmf_matrix), style = "cosmic", x_label_angle = 90)
+show_catalogue(t(apgi_SBS$nmf_matrix), style = "cosmic", x_label_angle = 90,
+               samples = c("APGI_1151_tumor", "APGI_1830_tumor"))
+```
+
