@@ -10,12 +10,10 @@ output:
   rmdformats::material:
     highlight: kate
 params:
+  genome: "hg38"
+  maf: "/path/to/sample.maf"
   sample: "SAMPLE"
-  snv_vcf: "/path/to/snv.vcf"
-  sv_vcf: "/path/to/sv.vcf"
-  cnv_tsv: "/path/to/purple.somatic.cnv"
-  snvoutdir: "/path/to/outdir_snv"
-title: "`r glue::glue('Results from sigminer')`"
+title: "`r glue::glue('sigminer results for $(params$sample)')`"
 description: "sigminer Results"
 ---
 
@@ -27,7 +25,7 @@ description: "sigminer Results"
 }
 </style>
 
-```{r setup, include=FALSE}
+```{r setup_knitr, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 ```
 
@@ -36,15 +34,11 @@ params <- function(x) {
   paths <- list(
     local = list(
       sample = "SAMPLE",
-      snv_vcf = here::here("inst/extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz"),
-      sv_vcf = here::here("inst/extdata/umccrise/v0.18/sv/manta.vcf.gz"),
-      cnv_tsv = here::here("inst/extdata/purple/v2.39/purple.cnv.somatic.tsv"),
-      maf = here::here("inst/extdata/umccrise/v0.18/maf/somatic-PASS.maf"),
-      outdir = here::here("nogit/sigminer")
-      
+      maf = here::here("inst/extdata/umccrise/v0.18/maf/SEQCII50.maf.gz"),
+      genome = "hg38"
     )
   )
-    paths[[x]]
+  paths[[x]]
 }
 params <- params("local")
 
@@ -56,7 +50,7 @@ render_me <- function() {
 render_me()
 ```
 
-```{r load_pkgs, message=F, warning=F}
+```{r setup}
 require(Biostrings)
 require(BSgenome.Hsapiens.UCSC.hg19)
 require(BSgenome.Hsapiens.UCSC.hg38)
@@ -70,225 +64,72 @@ require(NMF)
 require(sigminer)
 ```
 
+```{r check_params}
+stopifnot(params$genome %in% c("hg19", "hg38"))
+genome <- paste0("BSgenome.Hsapiens.UCSC.", params$genome)
+stopifnot(file.exists(params$maf))
+```
+
 ## Introduction
 
 Here we are using
-[sigminer](https://github.com/ShixiangWang/sigminer) to determine somatic
+[sigminer](https://github.com/ShixiangWang/sigminer) to fit COSMIC v3 somatic
 signatures.
 
-## COSMIC Signature Identification
+## Analysis
 
-### Read MAF files
-
-We can read in MAF files from multiple samples using `maftools::merge_mafs`.
+* Step 1: Read MAF file
 
 ```{r read_maf}
-laml <- system.file("extdata/tcga_laml.maf.gz", package = "maftools") %>% sigminer::read_maf()
-# apgi <- list.files(here::here("nogit/inputs/maf"), pattern = "maf$", full.names = T) %>% maftools::merge_mafs()
-# saveRDS(apgi, file = here::here("nogit/inputs/maf/all_merged.rds"))
-apgi <- readRDS(file = here::here("nogit/inputs/apgi/maf/all_merged.rds"))
+maf <- sigminer::read_maf(params$maf)
 ```
 
-### Tally components
+* Step 2: Tally components
 
-#### SBS
-
-* Divide SBS mutations into 96 mutation types (C>A, C>G, C>T, T>A, T>C, T>G
-  times 4 at 5' times 4 at 3'). Returns list with `SBS_6`, `SBS_96` and `SBS_1536`.
-  `nmf_matrix` is same as `SBS_96`
-* The `add_trans_bias` option will add the `SBS_24`, `SBS_384` and `SBS_6144` matrices.
-
-```{r calc_sbs}
-laml_SBS <- sigminer::sig_tally(
-  laml,
-  ref_genome = "BSgenome.Hsapiens.UCSC.hg19",
-  useSyn = TRUE
-)
-
-apgi_SBS <- sigminer::sig_tally(
-  apgi,
-  ref_genome = "BSgenome.Hsapiens.UCSC.hg38",
-  useSyn = TRUE
-)
-
-str(apgi_SBS, list.len = 3)
-stopifnot(identical(apgi_SBS$nmf_matrix, apgi_SBS$all_matrices$SBS_96))
-```
-
-
-#### DBS and ID
-
-* Use `mode = "DBS"` or `mode = "ID"`.
-  - `DBS_78` and `DBS_186` (`nmf_matrix`)
-  - `ID_28`, `ID_83`, `ID_415`
-
-```{r calc_dbs_id}
-apgi_DBS <- sigminer::sig_tally(
-  apgi,
-  ref_genome = "BSgenome.Hsapiens.UCSC.hg38",
-  useSyn = TRUE,
-  mode = "DBS",
-  add_trans_bias = TRUE
-)
-str(apgi_DBS$all_matrices)
-stopifnot(identical(apgi_DBS$nmf_matrix, apgi_DBS$all_matrices$DBS_186))
-
-apgi_ID <- sigminer::sig_tally(
-  apgi,
-  ref_genome = "BSgenome.Hsapiens.UCSC.hg38",
-  useSyn = TRUE,
-  mode = "ID",
-  add_trans_bias = TRUE
-)
-str(apgi_ID$all_matrices, list.len = 3)
-stopifnot(identical(apgi_ID$nmf_matrix, apgi_ID$all_matrices$ID_415))
-```
-
-#### SBS, DBS and ID
-
-* Use `mode = "ALL"` to get all three different matrices.
-
-```{r calc_all, eval=F}
-apgi_ALL <- sigminer::sig_tally(
-  apgi,
-  ref_genome = "BSgenome.Hsapiens.UCSC.hg38",
-  useSyn = TRUE,
-  mode = "ALL",
-  add_trans_bias = TRUE
+```{r tally}
+tally <- sigminer::sig_tally(
+  maf,
+  ref_genome = genome,
+  mode = "ALL"
 )
 ```
 
-### Extract Signatures
+* Step 3: Fit signatures
 
-#### NMF method
-
-* Run NMF multiple times then select best number of signatures based on the
-  measure vs. signature number plot.
-* Measure `cophenetic` is generally used for determining number of signatures.
-
-```{r sig_num_estimate, eval=F}
-est_sig <- sigminer::sig_estimate(
-  apgi_SBS$nmf_matrix,
-  range = 2:5,
-  nrun = 2,
-  use_random = TRUE,
-  cores = 4,
-  pConstant = 1e-13,
-  verbose = TRUE)
-saveRDS(est_sig, file = here::here("nogit/sigminer/apgi_sigs1_estim.rds"))
-```
-
-```{r show_est_sig}
-est_sig <- readRDS(file = here::here("nogit/sigminer/apgi_sigs1_estim.rds"))
-
-sigminer::show_sig_number_survey2(est_sig$survey, est_sig$survey.random)
-sigminer::show_sig_number_survey(est_sig$survey, right_y = NULL)
-```
-
-```{r extract_sigs_nmf, eval=F}
-sigs <- sigminer::sig_extract(apgi_SBS$nmf_matrix,
-                              n_sig = 3,
-                              nrun = 10,
-                              cores = 4,
-                              pConstant = 1e-13)
-saveRDS(sigs, file = here::here("nogit/sigminer/apgi_sigs1.rds"))
-```
-
-```{r extract_sigs_nmf_show}
-sigs <- readRDS(file = here::here("nogit/sigminer/apgi_sigs1.rds"))
-```
-
-#### Bayesian NMF
-
-* This method estimates number of signatures automatically.
-
-```{r extract_sigs_auto, eval=F}
-sigs2 <- sigminer::sig_auto_extract(apgi_SBS$nmf_matrix, K0 = 10, nrun = 10)
-saveRDS(sigs2, file = here::here("nogit/sigminer/apgi_sigs2.rds"))
-```
-
-```{r extract_sigs_auto_show}
-sigs2 <- readRDS(file = here::here("nogit/sigminer/apgi_sigs2.rds"))
-sigs2$Raw$summary_run
-```
-
-
-### Match Signatures
-
-* Compare these signatures to the COSMIC ones:
-
-```{r sig_similarity}
-sim <- sigminer::get_sig_similarity(sigs)
-f1 <- function(s) {
-  a <- s$aetiology
-  m <- sub("Best match: ", "", s$best_match)
-  paste0(m, ": ", a)
+```{r sig_fit}
+if (!is.null(tally$SBS_96)) {
+  SBS <- sigminer::sig_fit(t(tally$SBS_96), sig_index = "ALL", sig_db = "SBS")
+  SBS_legacy <- sigminer::sig_fit(t(tally$SBS_96), sig_index = "ALL", sig_db = "legacy")
+} else {
+  SBS <- matrix("NO_SBS", dimnames = list(c("ROW1"), c(params$sample)))
+  SBS_legacy <- matrix("NO_SBS", dimnames = list(c("ROW1"), c(params$sample)))
 }
 
-sim_best_match_COSMIC_v2 <- purrr::map(sim$best_match, f1) %>%
-  dplyr::bind_rows(.id = "sig") %>%
-  tidyr::pivot_longer(cols = Sig1:Sig3, names_to = "Sigs", values_to = "COSMIC")
+if (!is.null(tally$DBS_78)) {
+  DBS <- sigminer::sig_fit(t(tally$DBS_78), sig_index = "ALL", sig_db = "DBS")
+} else {
+  DBS <- matrix("NO_DBS", dimnames = list(c("ROW1"), c(params$sample)))
+}
 
-pheatmap::pheatmap(sim$similarity)
-
-sim_best_match_COSMIC_v3 <- sigminer::get_sig_similarity(sigs, sig_db = "SBS")$best_match %>%
-  purrr::map(f1) %>%
-  dplyr::bind_rows(.id = "sig") %>%
-  tidyr::pivot_longer(cols = Sig1:Sig3, names_to = "Sigs", values_to = "COSMIC")
-
-dplyr::left_join(sim_best_match_COSMIC_v2, sim_best_match_COSMIC_v3, by = "Sigs", suffix = c("_v2", "_v3"))
+if (!is.null(tally$ID_83)) {
+  ID <- sigminer::sig_fit(t(tally$ID_83), sig_index = "ALL", sig_db = "ID")
+} else {
+  ID <- matrix("NO_ID", dimnames = list(c("ROW1"), c(params$sample)))
+}
 ```
 
-### Sample Signatures
+## Results
 
-```{r sample_sigs}
-knitr::kable(sigminer::get_sig_exposure(sigs))
+```{r plots}
+show_catalogue(t(tally$SBS_96), style = "cosmic", x_label_angle = 90, mode = "SBS")
+show_catalogue(t(tally$DBS_78), style = "cosmic", x_label_angle = 90, mode = "DBS")
+show_catalogue(t(tally$ID_83), style = "cosmic", x_label_angle = 90, mode = "ID")
 ```
 
-
-## Signature Fit
-
-### Fit COSMIC reference signatures
-
-* **SBS:**
-
-```{r}
-ind <- apply(apgi_SBS$nmf_matrix, 1, sum) %>% which.max()
-# ind <- apply(laml_SBS$nmf_matrix, 1, sum) %>% which.max()
-sample1_sbs <- apgi_SBS$nmf_matrix[ind, , drop = FALSE] %>% t()
-# sample1 <- laml_SBS$nmf_matrix[ind, , drop = FALSE] %>% t()
-head(sample1_sbs)
-sigminer::sig_fit(sample1_sbs, sig_index = 1:30)
-sigminer::sig_fit(sample1_sbs, sig_index = 1:30, type = "relative")
-sigminer::sig_fit(t(apgi_SBS$nmf_matrix[1:5,]), sig_index = 1:30, rel_threshold = 0.05)
-```
-* **DBS:**
-
-```{r}
-ind <- apply(apgi_DBS$nmf_matrix, 1, sum) %>% which.max()
-sample1_dbs <- apgi_DBS$nmf_matrix[ind, , drop = FALSE] %>% t()
-sigminer::sig_fit(sample1_dbs, sig_index = 1:11, sig_db = "DBS")
-```
-
-### Fit custom signatures
-
-```{r}
-sig_fit(sample1, sig = sigs)
-```
-
-
-### Exposure stability
-
-```{r}
-bt_result <- sig_fit_bootstrap(sample1, sig = sigs, n = 10)
-```
-
-
-## Plots
-
-```{r}
-show_catalogue(t(apgi_SBS$nmf_matrix), style = "cosmic", x_label_angle = 90)
-show_catalogue(t(apgi_SBS$nmf_matrix), style = "cosmic", x_label_angle = 90,
-               samples = c("APGI_1151_tumor", "APGI_1830_tumor"))
+```{r tables}
+knitr::kable(SBS)
+knitr::kable(SBS_legacy)
+knitr::kable(DBS)
+knitr::kable(ID)
 ```
 
