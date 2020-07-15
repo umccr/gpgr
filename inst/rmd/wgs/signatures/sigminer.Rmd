@@ -120,16 +120,49 @@ if (!is.null(tally$ID_83)) {
 
 ## Results
 
+```{r tables}
+SBS_tab <-
+  tibble::as_tibble(SBS, rownames = "Sig") %>%
+  dplyr::rename(Value = X) %>%
+  dplyr::arrange(dplyr::desc(Value)) %>%
+  dplyr::mutate(Prop = round(Value / sum(Value), 3),
+                Value = round(Value, 0)) %>%
+  dplyr::slice_head(n = 5)
+
+SBS_legacy_tab <-
+  tibble::as_tibble(SBS_legacy, rownames = "Sig") %>%
+  dplyr::rename(Value = X) %>%
+  dplyr::arrange(dplyr::desc(Value)) %>%
+  dplyr::mutate(Prop = round(Value / sum(Value), 3),
+                Value = round(Value, 0)) %>%
+  dplyr::slice_head(n = 5)
+
+DBS_tab <-
+  tibble::as_tibble(DBS, rownames = "Sig") %>%
+  dplyr::rename(Value = X) %>%
+  dplyr::arrange(dplyr::desc(Value)) %>%
+  dplyr::mutate(Prop = round(Value / sum(Value), 3),
+                Value = round(Value, 0)) %>%
+  dplyr::slice_head(n = 5)
+
+ID_tab <-
+  tibble::as_tibble(ID, rownames = "Sig") %>%
+  dplyr::rename(Value = X) %>%
+  dplyr::arrange(dplyr::desc(Value)) %>%
+  dplyr::mutate(Prop = round(Value / sum(Value), 3),
+                Value = round(Value, 0)) %>%
+  dplyr::slice_head(n = 5)
+
+knitr::kable(SBS_tab)
+knitr::kable(SBS_legacy_tab)
+knitr::kable(DBS_tab)
+knitr::kable(ID_tab)
+```
+
+
 ```{r plots}
 show_catalogue(t(tally$SBS_96), style = "cosmic", x_label_angle = 90, mode = "SBS")
 show_catalogue(t(tally$DBS_78), style = "cosmic", x_label_angle = 90, mode = "DBS")
 show_catalogue(t(tally$ID_83), style = "cosmic", x_label_angle = 90, mode = "ID")
-```
-
-```{r tables}
-knitr::kable(SBS)
-knitr::kable(SBS_legacy)
-knitr::kable(DBS)
-knitr::kable(ID)
 ```
 
