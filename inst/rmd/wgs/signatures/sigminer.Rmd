@@ -13,7 +13,7 @@ params:
   genome: "hg38"
   maf: "/path/to/sample.maf"
   sample: "SAMPLE"
-title: "`r glue::glue('sigminer results for $(params$sample)')`"
+title: "`r glue::glue('sigminer results for {params$sample}')`"
 description: "sigminer Results"
 ---
 
@@ -33,7 +33,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 params <- function(x) {
   paths <- list(
     local = list(
-      sample = "SAMPLE",
+      sample = "SEQCII50",
       maf = here::here("inst/extdata/umccrise/v0.18/maf/SEQCII50.maf.gz"),
       genome = "hg38"
     )
@@ -59,6 +59,7 @@ require(DT)
 require(gpgr)
 require(gt)
 require(here)
+require(kableExtra)
 require(maftools)
 require(NMF)
 require(sigminer)
@@ -81,7 +82,7 @@ signatures.
 * Step 1: Read MAF file
 
 ```{r read_maf}
-maf <- sigminer::read_maf(params$maf)
+maf <- sigminer::read_maf(params$maf, verbose = FALSE)
 ```
 
 * Step 2: Tally components
@@ -153,16 +154,23 @@ ID_tab <-
                 Value = round(Value, 0)) %>%
   dplyr::slice_head(n = 5)
 
-knitr::kable(SBS_tab)
-knitr::kable(SBS_legacy_tab)
-knitr::kable(DBS_tab)
-knitr::kable(ID_tab)
+knitr::kable(SBS_tab, caption = "SBS (COSMIC v3)") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left")
+knitr::kable(SBS_legacy_tab, caption = "SBS (COSMIC v2)") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left")
+knitr::kable(DBS_tab, caption = "DBS") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left")
+knitr::kable(ID_tab, caption = "ID") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left")
 ```
 
 
 ```{r plots}
-show_catalogue(t(tally$SBS_96), style = "cosmic", x_label_angle = 90, mode = "SBS")
-show_catalogue(t(tally$DBS_78), style = "cosmic", x_label_angle = 90, mode = "DBS")
-show_catalogue(t(tally$ID_83), style = "cosmic", x_label_angle = 90, mode = "ID")
+show_catalogue(t(tally$SBS_96), style = "cosmic", x_label_angle = 90, mode = "SBS") +
+  ggplot2::ggtitle("SBS Plot")
+show_catalogue(t(tally$DBS_78), style = "cosmic", x_label_angle = 90, mode = "DBS") +
+  ggplot2::ggtitle("DBS Plot")
+show_catalogue(t(tally$ID_83), style = "cosmic", x_label_angle = 90, mode = "ID") +
+  ggplot2::ggtitle("ID Plot")
 ```
 
