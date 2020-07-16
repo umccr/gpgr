@@ -83,8 +83,22 @@ used with that tool.
 ```{r setup_data, message=F, warning=F}
 project <- params$project
 
+excel <- readxl::read_excel("~/Downloads/old vs new signatures recent cases_LZ.xlsx", skip = 1) %>%
+  dplyr::select("EXTERNAL SUBJECT ID", "SUBJECT ID") %>%
+  dplyr::filter(!is.na(`EXTERNAL SUBJECT ID`))
+
 s <- tibble::tribble(
   ~nm, ~prefix, ~genome, ~comment,
+  "PM3058367", "SBJ00551__SBJ00551_MDX200106_L2000601", "hg38", "?",
+  "PM637554",  "SBJ00552__SBJ00552_MDX200109_L2000603", "hg38", "?",
+  "PMEX81421", "SBJ00553__SBJ00553_MDX200112_L2000605", "hg38", "?",
+  "PM3067385", "SBJ00467__SBJ00467_MDX200074_L2000419", "hg38", "?",
+  "SFRC01273", "SBJ00346__SBJ00346_PRJ200268_L2000236", "hg38", "?",
+  "SFRC01249", "SBJ00367__SBJ00367_PRJ200339_L2000284", "hg38", "?",
+  "SFRC01278", "SBJ00468__SBJ00468_PRJ200344_L2000421", "hg38", "?",
+  "PM3061246", "SBJ00501__SBJ00501_MDX200085_L2000448", "hg38", "?",
+  "PM1109969", "SBJ00493__SBJ00493_MDX200082_L2000446", "hg38", "?",
+  "SFRC01252", "SBJ00503__SBJ00503_PRJ200347_L2000456", "hg38", "?",
   "CUPD007", "CUPD007__DNA051766-CUPD007-T", "GRCh37", "Likely",
   "SFRC01286", "SBJ00546__SBJ00546_PRJ200366_L2000573", "hg38", "?",
   "SFRC01077", "SBJ00544__SBJ00544_PRJ200363_L2000571", "hg38", "?",
@@ -120,6 +134,7 @@ s <- tibble::tribble(
   "SFRC01265", "SBJ00308__SBJ00308_PRJ200214_L2000169", "hg38", "Unlikely",
 ) %>%
   dplyr::distinct() %>%
+  dplyr::rowwise() %>%
   dplyr::mutate(
     snvindel_vcf = file.path(here(glue("nogit/inputs/{project}/snv/{prefix}-somatic-ensemble-PASS.vcf.gz"))),
     sv_vcf = file.path(here(glue("nogit/inputs/{project}/sv/{prefix}-manta.vcf.gz"))),
@@ -235,7 +250,7 @@ res_hrdetect <- seq_len(nrow(s)) %>%
         ~sample, ~Probability, ~intercept, ~del.mh.prop, ~SNV3, ~SV3, ~SV5, ~hrd, ~SNV8,
         s$nm[i], NA,           NA,         NA,           NA,    NA,   NA,   NA,   NA,
       )
-      cat("Saving RDS", "\n")
+      cat("Hitting SFRC01143", "\n")
       saveRDS(x, file = here(glue("nogit/hrdetect/rds/{project}/{s$prefix[i]}.rds")))
       x
     }
@@ -246,6 +261,7 @@ res_hrdetect <- seq_len(nrow(s)) %>%
       cnv_file = s$cnv_file[i],
       genome = s$genome[i],
       snvoutdir = s$snvoutdir[i])
+    cat("Saving RDS for ", s$nm[i], "\n")
     saveRDS(x, file = here(glue("nogit/hrdetect/rds/{project}/{s$prefix[i]}.rds")))
     x
 
@@ -299,10 +315,6 @@ CHORD_hrd_preds %>%
       c("Likely", "Unlikely"), c("lightblue", "lightpink")
     )
   ) %>%
-  #   DT::formatPercentage(
-  #   c("HRDetect_prob", "CHORD_prob_50%"),
-  #   digits = 1
-  # ) %>%
   DT::formatStyle(
     c("HRDetect_prob", "CHORD_HRD_prob"),
     backgroundColor = styleInterval(0.1, c('lightpink', 'lightblue'))
