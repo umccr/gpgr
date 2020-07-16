@@ -148,11 +148,16 @@ res_chord <- seq_len(nrow(s)) %>%
     saveRDS(x, file = here(glue("nogit/chord/rds/{project}/{s$prefix[i]}.rds")))
     x
   })
-saveRDS(res_chord, file = here(glue("nogit/chord/rds/{project}/all_2020-06-01.rds")))
+# saveRDS(res_chord, file = here(glue("nogit/chord/rds/{project}/all_2020-06-01.rds")))
 ```
 
 ```{r process_chord_results}
-res_chord <- readRDS(file = here(glue("nogit/chord/rds/{project}/all_2020-06-01.rds")))
+res_chord <-
+  s %>%
+  dplyr::mutate(res_chord_obj = here(glue("nogit/chord/rds/{project}/{prefix}.rds"))) %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(chord = list(readRDS(res_chord_obj)) %>% setNames(nm)) %>%
+  dplyr::pull(chord)
 
 sigs <- res_chord %>%
   purrr::map("contexts") %>%
@@ -161,7 +166,10 @@ sigs <- res_chord %>%
 
 sigs_transpose <- sigs %>%
   tidyr::pivot_longer(-sample, names_to = "context", values_to = "count") %>%
-  tidyr::pivot_wider(names_from = sample, values_from = count)
+  tidyr::pivot_wider(names_from = sample, values_from = count) %>%
+  dplyr::mutate(row = row_number()) %>%
+  dplyr::relocate(row, .before = "context") %>%
+  dplyr::arrange(desc(row))
 
 CHORD_hrd_preds <- res_chord %>%
   purrr::map("prediction") %>%
@@ -171,14 +179,15 @@ CHORD_hrd_preds <- res_chord %>%
 ## CHORD Results {.tabset .tabset-fade}
 
 ### HRD Predictions
+
 ```{r chord_tables_hrdpreds}
 CHORD_hrd_preds <- CHORD_hrd_preds %>%
   dplyr::left_join(
     s %>% dplyr::select(sample = nm, genome, UMCCR_Comment = comment),
     by = "sample"
   ) %>%
-  dplyr::relocate(genome, UMCCR_Comment, hr_status, "p_hrd.50%", .after = sample) %>%
-  dplyr::rename(CHORD_HRD = hr_status, "CHORD_prob_50%" = "p_hrd.50%")
+  dplyr::relocate(genome, UMCCR_Comment, hr_status, p_hrd, .after = sample) %>%
+  dplyr::rename(CHORD_hr_status = hr_status, CHORD_HRD_prob = p_hrd)
 
 CHORD_hrd_preds %>%
   DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
@@ -189,7 +198,7 @@ CHORD_hrd_preds %>%
                   scroller = TRUE, scrollY = 300, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
                   buttons = c('csv'), dom = 'Blfrtip')) %>%
   DT::formatStyle(
-    "CHORD_HRD",
+    "CHORD_hr_status",
     backgroundColor = DT::styleEqual(
       c("HR_deficient", "HR_proficient"), c("lightblue", "lightpink")
     )
@@ -222,11 +231,13 @@ res_hrdetect <- seq_len(nrow(s)) %>%
   purrr::map(function(i) {
     cat(s$nm[i], "\n")
     if (s$nm[i] == "SFRC01143") { # PURPLE without minoralleleploidy
-      return(tibble::tribble(
+      x <- tibble::tribble(
         ~sample, ~Probability, ~intercept, ~del.mh.prop, ~SNV3, ~SV3, ~SV5, ~hrd, ~SNV8,
         s$nm[i], NA,           NA,         NA,           NA,    NA,   NA,   NA,   NA,
-      ))
-
+      )
+      cat("Saving RDS", "\n")
+      saveRDS(x, file = here(glue("nogit/hrdetect/rds/{project}/{s$prefix[i]}.rds")))
+      x
     }
     x <- gpgr::hrdetect_run(
       nm = s$nm[i],
@@ -239,14 +250,21 @@ res_hrdetect <- seq_len(nrow(s)) %>%
     x
 
   })
-res_hrdetect <- dplyr::bind_rows(res_hrdetect)
-saveRDS(res_hrdetect, file = here(glue("nogit/hrdetect/rds/{project}/all_2020-06-01.rds")))
+# res_hrdetect <- dplyr::bind_rows(res_hrdetect)
+# saveRDS(res_hrdetect, file = here(glue("nogit/hrdetect/rds/{project}/all_2020-06-01.rds")))
 ```
 
 ## HRDetect Results
 
 ```{r hrdetect_results}
-res_hrdetect <- readRDS(file = here(glue("nogit/hrdetect/rds/{project}/all_2020-06-01.rds")))
+res_hrdetect <-
+  s %>%
+  dplyr::mutate(res_hrdetect_obj = here(glue("nogit/hrdetect/rds/{project}/{prefix}.rds"))) %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(hrdetect = list(readRDS(res_hrdetect_obj)) %>% setNames(nm)) %>%
+  dplyr::pull(hrdetect) %>%
+  dplyr::bind_rows()
+
 res_hrdetect %>%
   gt(rowname_col = "sample") %>%
   fmt_percent(columns = "Probability") %>%
@@ -259,8 +277,9 @@ res_hrdetect %>%
 ```{r chord_hrd_tab}
 CHORD_hrd_preds %>%
   dplyr::left_join(res_hrdetect, by = "sample") %>%
-  dplyr::relocate(Probability, .after = "CHORD_HRD") %>%
-  dplyr::rename(HRDetect_probability = Probability) %>%
+  dplyr::rename(HRDetect_prob = Probability) %>%
+  dplyr::relocate(HRDetect_prob, .after = "CHORD_HRD_prob") %>%
+  dplyr::mutate(dplyr::across(where(is.numeric), ~ round(.x, 3))) %>%
   DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
                 caption = "HRD predictions.",
                 class = "cell-border display compact",
@@ -269,7 +288,7 @@ CHORD_hrd_preds %>%
                   scroller = TRUE, scrollY = 700, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
                   buttons = c('csv'), dom = 'Blfrtip')) %>%
   DT::formatStyle(
-    "CHORD_HRD",
+    "CHORD_hr_status",
     backgroundColor = DT::styleEqual(
       c("HR_deficient", "HR_proficient"), c("lightblue", "lightpink")
     )
@@ -280,12 +299,12 @@ CHORD_hrd_preds %>%
       c("Likely", "Unlikely"), c("lightblue", "lightpink")
     )
   ) %>%
-    DT::formatPercentage(
-    c("HRDetect_probability", "CHORD_prob_50%"),
-    digits = 1
-  ) %>%
+  #   DT::formatPercentage(
+  #   c("HRDetect_prob", "CHORD_prob_50%"),
+  #   digits = 1
+  # ) %>%
   DT::formatStyle(
-    c("HRDetect_probability", "CHORD_prob_50%"),
+    c("HRDetect_prob", "CHORD_HRD_prob"),
     backgroundColor = styleInterval(0.1, c('lightpink', 'lightblue'))
   )
 ```
