@@ -26,7 +26,7 @@ test_that("Function hrdetect_read_sv_vcf() @ L66", {
 })
 
 
-test_that("Function hrdetect_read_purple_cnv() @ L102", {
+test_that("Function hrdetect_read_purple_cnv() @ L106", {
   
   x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
   (cnv <- hrdetect_read_purple_cnv(x))
@@ -37,7 +37,7 @@ test_that("Function hrdetect_read_purple_cnv() @ L102", {
 })
 
 
-test_that("Function hrdetect_prep_snvindel() @ L144", {
+test_that("Function hrdetect_prep_snvindel() @ L148", {
   
   x <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   (l <- hrdetect_prep_snvindel(x, nm = "sampleA", outdir = tempdir()))
@@ -48,7 +48,7 @@ test_that("Function hrdetect_prep_snvindel() @ L144", {
 })
 
 
-test_that("Function hrdetect_prep_sv() @ L212", {
+test_that("Function hrdetect_prep_sv() @ L220", {
   
   x <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
   nm <- "SampleA"
@@ -59,7 +59,7 @@ test_that("Function hrdetect_prep_sv() @ L212", {
 })
 
 
-test_that("Function hrdetect_prep_cnv() @ L236", {
+test_that("Function hrdetect_prep_cnv() @ L249", {
   
   x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
   (l <- hrdetect_prep_cnv(x, nm = "SampleA"))
@@ -69,7 +69,7 @@ test_that("Function hrdetect_prep_cnv() @ L236", {
 })
 
 
-test_that("Function hrdetect_run() @ L276", {
+test_that("Function hrdetect_run() @ L290", {
   
   snvindel_vcf <- system.file(
                     "extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz",
@@ -81,8 +81,8 @@ test_that("Function hrdetect_run() @ L276", {
   snvoutdir <- tempdir()
   (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir))
   
-  expect_equal(colnames(res), c("intercept", "del.mh.prop", "SNV3",
-                                "SV3", "SV5", "hrd", "SNV8", "Probability"))
-  expect_true(inherits(res, "matrix"))
+  expect_equal(colnames(res), c("sample", "Probability", "intercept", "del.mh.prop", "SNV3",
+                                "SV3", "SV5", "hrd", "SNV8"))
+  expect_true(inherits(res, "data.frame"))
 })
 

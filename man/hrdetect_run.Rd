@@ -23,11 +23,14 @@ hrdetect_run(
 
 \item{cnv_file}{Path to \code{purple.cnv.somatic.tsv} file.}
 
-\item{genome}{Human genome version (default: hg38).}
+\item{genome}{Human genome version (default: hg38. hg19 means GRCh37).}
 
 \item{snvoutdir}{Directory to output SNV signature analysis results.}
 
 \item{sigsToUse}{COSMIC SNV signatures to use.}
+}
+\value{
+Tibble with sample name and HRD probability in first two columns.
 }
 \description{
 Runs HRDetect as described in the

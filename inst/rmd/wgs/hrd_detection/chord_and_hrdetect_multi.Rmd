@@ -1,0 +1,324 @@
+---
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
+output:
+  html_document:
+    code: hide
+    theme: cosmo
+    toc: true
+    code_download: true
+  rmdformats::material:
+    highlight: kate
+params:
+  project: "patients"
+title: "`r glue::glue('HRD Results from CHORD & HRDetect')`"
+description: "HRD Results"
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r render_report_interactively, eval=F, echo=F}
+params <- function(x) {
+  paths <- list(
+    local = list(
+      project = "patients"
+    )
+  )
+    paths[[x]]
+}
+params <- params("local")
+
+render_me <- function() {
+  rmarkdown::render(
+    input = here::here("inst/rmd/wgs/hrd_detection/chord_and_hrdetect_multi.Rmd"),
+    params = params)
+}
+render_me()
+```
+
+```{r load_pkgs, message=F, warning=F}
+require(BSgenome.Hsapiens.UCSC.hg38)
+require(BSgenome.Hsapiens.1000genomes.hs37d5)
+require(CHORD)
+require(DT)
+require(glue)
+require(gpgr)
+require(gt)
+require(here)
+require(kableExtra)
+require(mutSigExtractor)
+require(signature.tools.lib)
+require(tidyverse)
+```
+
+## Introduction
+
+Here we are using
+[CHORD](https://github.com/UMCUGenetics/CHORD) and
+[HRDetect](https://github.com/Nik-Zainal-Group/signature.tools.lib)
+to infer possible HRD deficiency in several of our in-house samples.
+Input files used are:
+
+* SNVs/INDELs: filtered umccrised `somatic-ensemble-PASS` VCF files.
+* SVs: filtered umccrised `manta` VCF files.
+* CNVs: PURPLE somatic CNV files.
+
+The samples used for HRD predictions are shown below, along with UMCCR's comments
+for HRD likelihood.
+Note that HRDetect doesn't work with GRCh37, so only samples with hg38 data were
+used with that tool.
+
+## Samples
+
+```{r setup_data, message=F, warning=F}
+project <- params$project
+
+excel <- readxl::read_excel("~/Downloads/old vs new signatures recent cases_LZ.xlsx", skip = 1) %>%
+  dplyr::select("EXTERNAL SUBJECT ID", "SUBJECT ID") %>%
+  dplyr::filter(!is.na(`EXTERNAL SUBJECT ID`))
+
+s <- tibble::tribble(
+  ~nm, ~prefix, ~genome, ~comment,
+  "PM3064119", "SBJ00557__SBJ00557_MDX200118_L2000617", "hg38", "?",
+  "PM3058367", "SBJ00551__SBJ00551_MDX200106_L2000601", "hg38", "?",
+  "PM637554",  "SBJ00552__SBJ00552_MDX200109_L2000603", "hg38", "?",
+  "PMEX81421", "SBJ00553__SBJ00553_MDX200112_L2000605", "hg38", "?",
+  "PM3067385", "SBJ00467__SBJ00467_MDX200074_L2000419", "hg38", "?",
+  "SFRC01273", "SBJ00346__SBJ00346_PRJ200268_L2000236", "hg38", "?",
+  "SFRC01249", "SBJ00367__SBJ00367_PRJ200339_L2000284", "hg38", "?",
+  "SFRC01278", "SBJ00468__SBJ00468_PRJ200344_L2000421", "hg38", "?",
+  "PM3061246", "SBJ00501__SBJ00501_MDX200085_L2000448", "hg38", "?",
+  "PM1109969", "SBJ00493__SBJ00493_MDX200082_L2000446", "hg38", "?",
+  "SFRC01252", "SBJ00503__SBJ00503_PRJ200347_L2000456", "hg38", "?",
+  "CUPD007", "CUPD007__DNA051766-CUPD007-T", "GRCh37", "Likely",
+  "SFRC01286", "SBJ00546__SBJ00546_PRJ200366_L2000573", "hg38", "?",
+  "SFRC01077", "SBJ00544__SBJ00544_PRJ200363_L2000571", "hg38", "?",
+  "SFRC01038", "SBJ00508__SBJ00508_PRJ200358_L2000503", "hg38", "?",
+  "PM3008047", "SBJ00545__SBJ00545_MDX200103_L2000579", "hg38", "?",
+  "PM3008047-run2", "SBJ00545-run2__SBJ00545_MDX200103_L2000579", "hg38", "?",
+  "PM4029661", "SBJ00526__SBJ00526_MDX200098_L2000516", "hg38", "?",
+  "PM3054576", "SBJ00507__SBJ00507_MDX200095_L2000501", "hg38", "?",
+  "SFRC01270", "SBJ00505__SBJ00505_PRJ200352_L2000460", "hg38", "?",
+  "PM3064948", "SBJ00496__SBJ00496_MDX200090_L2000452", "hg38", "?",
+  "PM3055963", "SBJ00495__SBJ00495_MDX200088_L2000450", "hg38", "Unlikely",
+  "SFRC01295", "SBJ00504__SBJ00504_PRJ200349_L2000458", "hg38", "Unlikely",
+  "PM3043473", "SBJ00193__SBJ00193_MDX190182_L1900907", "GRCh37", "Unlikely",
+  "P033", "2016_249_17_MH_P033__CCR170115b_MH17T002P033", "hg38", "ValidationSample",
+  "P025", "2016_249_18_WH_P025__CCR180149_VPT-WH025-E", "hg38", "ValidationSample",
+  "BALL10", "B_ALL_Case_10__MDX190025_B_ALL_Case_10T", "hg38", "ValidationSample",
+  "CUP8", "CUP-Pairs8__PRJ180660_8_DNA009529_FFPE", "hg38", "ValidationSample",
+  "SEQCII50", "SEQC-II-50pc__SEQC-II_Tumor_50pc", "hg38", "ValidationSample",
+  "SFRC01073", "SFRC01073__PRJ180598_SFRC01073-S2T", "hg38", "ValidationSample",
+  "SFRC01178", "SBJ00267__SBJ00267_PRJ200047_L2000059", "hg38", "Unlikely",
+  "SFRC01122", "SBJ00001__SBJ00001_PRJ190733_L1900931", "hg38", "Likely",
+  "SFRC01143", "SFRC01143__PRJ190190_SFRC01143_T", "GRCh37", "Likely",
+  "SFRC01160", "SFRC01160__PRJ190376_SFRC01160-S1-19-1434", "GRCh37", "Likely",
+  "SFRC01210", "SBJ00162__MDX190151", "GRCh37", "Likely",
+  "PM3056445", "PM3056445__MDX190101_DNA052297-T", "GRCh37", "Likely",
+  "PM3028142", "SBJ00286__SBJ00286_PRJ200069_L2000117", "hg38", "Likely",
+  "PM4024666", "SBJ00322__SBJ00322_MDX200054_L2000238", "hg38", "Unlikely",
+  "PM3061034", "SBJ00301__SBJ00301_MDX200046_L2000147", "hg38", "Unlikely",
+  "SFRC01258", "SBJ00281__SBJ00281_PRJ200061_L2000100", "hg38", "Unlikely",
+  "PM2293366", "SBJ00236__SBJ00236_MDX190218_L1901019", "hg38", "Unlikely",
+  "SFRC01180", "SBJ00303__SBJ00303_PRJ200200_L2000150", "hg38", "Unlikely",
+  "SFRC01260", "SBJ00304__SBJ00304_PRJ200202_L2000152", "hg38", "Unlikely",
+  "SFRC01265", "SBJ00308__SBJ00308_PRJ200214_L2000169", "hg38", "Unlikely",
+) %>%
+  dplyr::distinct() %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(
+    snvindel_vcf = file.path(here(glue("nogit/inputs/{project}/snv/{prefix}-somatic-ensemble-PASS.vcf.gz"))),
+    sv_vcf = file.path(here(glue("nogit/inputs/{project}/sv/{prefix}-manta.vcf.gz"))),
+    cnv_file = file.path(here(glue("nogit/inputs/{project}/cnv/{prefix}.purple.cnv"))),
+    snvoutdir = file.path(here(glue("nogit/hrdetect/snvoutdir/{prefix}")))
+  )
+```
+
+```{r inputs_table}
+s %>%
+  dplyr::select(Sample = nm, UMCCR_Comment = comment, Assembly = genome, Prefix = prefix) %>%
+  knitr::kable() %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left")
+```
+
+## Run CHORD
+
+```{r run_chord, eval=FALSE}
+res_chord <- seq_len(nrow(s)) %>%
+  purrr::map(function(i) {
+    cat(s$nm[i])
+    x <- gpgr::run_chord(snv = s$snvindel_vcf[i],
+                         sv = s$sv_vcf[i],
+                         sample = s$nm[i],
+                         genome = s$genome[i])
+    saveRDS(x, file = here(glue("nogit/chord/rds/{project}/{s$prefix[i]}.rds")))
+    x
+  })
+# saveRDS(res_chord, file = here(glue("nogit/chord/rds/{project}/all_2020-06-01.rds")))
+```
+
+```{r process_chord_results}
+res_chord <-
+  s %>%
+  dplyr::mutate(res_chord_obj = here(glue("nogit/chord/rds/{project}/{prefix}.rds"))) %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(chord = list(readRDS(res_chord_obj)) %>% setNames(nm)) %>%
+  dplyr::pull(chord)
+
+sigs <- res_chord %>%
+  purrr::map("contexts") %>%
+  do.call(rbind, .) %>%
+  tibble::as_tibble(rownames = "sample")
+
+sigs_transpose <- sigs %>%
+  tidyr::pivot_longer(-sample, names_to = "context", values_to = "count") %>%
+  tidyr::pivot_wider(names_from = sample, values_from = count) %>%
+  dplyr::mutate(row = row_number()) %>%
+  dplyr::relocate(row, .before = "context") %>%
+  dplyr::arrange(desc(row))
+
+CHORD_hrd_preds <- res_chord %>%
+  purrr::map("prediction") %>%
+  dplyr::bind_rows()
+```
+
+## CHORD Results {.tabset .tabset-fade}
+
+### HRD Predictions
+
+```{r chord_tables_hrdpreds}
+CHORD_hrd_preds <- CHORD_hrd_preds %>%
+  dplyr::left_join(
+    s %>% dplyr::select(sample = nm, genome, UMCCR_Comment = comment),
+    by = "sample"
+  ) %>%
+  dplyr::relocate(genome, UMCCR_Comment, hr_status, p_hrd, .after = sample) %>%
+  dplyr::rename(CHORD_hr_status = hr_status, CHORD_HRD_prob = p_hrd)
+
+CHORD_hrd_preds %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                caption = "HRD predictions.",
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(
+                  scroller = TRUE, scrollY = 300, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+                  buttons = c('csv'), dom = 'Blfrtip')) %>%
+  DT::formatStyle(
+    "CHORD_hr_status",
+    backgroundColor = DT::styleEqual(
+      c("HR_deficient", "HR_proficient"), c("lightblue", "lightpink")
+    )
+  ) %>%
+  DT::formatStyle(
+    "UMCCR_Comment",
+    backgroundColor = DT::styleEqual(
+      c("Likely", "Unlikely"), c("lightblue", "lightpink")
+    )
+  )
+```
+
+### Sig Counts
+
+```{r chord_tables_sigs}
+sigs_transpose %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                caption = "Counts of mutation context per sample.",
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(
+                  scroller = TRUE, scrollY = 300, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+                  buttons = c('csv'), dom = 'Blfrtip'))
+```
+
+## Run HRDetect
+
+```{r hrdetect_run, eval=FALSE}
+res_hrdetect <- seq_len(nrow(s)) %>%
+  purrr::map(function(i) {
+    cat(s$nm[i], "\n")
+    if (s$nm[i] == "SFRC01143") { # PURPLE without minoralleleploidy
+      x <- tibble::tribble(
+        ~sample, ~Probability, ~intercept, ~del.mh.prop, ~SNV3, ~SV3, ~SV5, ~hrd, ~SNV8,
+        s$nm[i], NA,           NA,         NA,           NA,    NA,   NA,   NA,   NA,
+      )
+      cat("Hitting SFRC01143", "\n")
+      saveRDS(x, file = here(glue("nogit/hrdetect/rds/{project}/{s$prefix[i]}.rds")))
+      x
+    }
+    x <- gpgr::hrdetect_run(
+      nm = s$nm[i],
+      snvindel_vcf = s$snvindel_vcf[i],
+      sv_vcf = s$sv_vcf[i],
+      cnv_file = s$cnv_file[i],
+      genome = s$genome[i],
+      snvoutdir = s$snvoutdir[i])
+    cat("Saving RDS for ", s$nm[i], "\n")
+    saveRDS(x, file = here(glue("nogit/hrdetect/rds/{project}/{s$prefix[i]}.rds")))
+    x
+
+  })
+# res_hrdetect <- dplyr::bind_rows(res_hrdetect)
+# saveRDS(res_hrdetect, file = here(glue("nogit/hrdetect/rds/{project}/all_2020-06-01.rds")))
+```
+
+## HRDetect Results
+
+```{r hrdetect_results}
+res_hrdetect <-
+  s %>%
+  dplyr::mutate(res_hrdetect_obj = here(glue("nogit/hrdetect/rds/{project}/{prefix}.rds"))) %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(hrdetect = list(readRDS(res_hrdetect_obj)) %>% setNames(nm)) %>%
+  dplyr::pull(hrdetect) %>%
+  dplyr::bind_rows()
+
+res_hrdetect %>%
+  gt(rowname_col = "sample") %>%
+  fmt_percent(columns = "Probability") %>%
+  fmt_number(columns = c("intercept", "del.mh.prop", "SNV3", "SV3", "SV5", "hrd", "SNV8"), decimals = 2)
+```
+
+
+## CHORD & HRDetect Table
+
+```{r chord_hrd_tab}
+CHORD_hrd_preds %>%
+  dplyr::left_join(res_hrdetect, by = "sample") %>%
+  dplyr::rename(HRDetect_prob = Probability) %>%
+  dplyr::relocate(HRDetect_prob, .after = "CHORD_HRD_prob") %>%
+  dplyr::mutate(dplyr::across(where(is.numeric), ~ round(.x, 3))) %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                caption = "HRD predictions.",
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(
+                  scroller = TRUE, scrollY = 700, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+                  buttons = c('csv'), dom = 'Blfrtip')) %>%
+  DT::formatStyle(
+    "CHORD_hr_status",
+    backgroundColor = DT::styleEqual(
+      c("HR_deficient", "HR_proficient"), c("lightblue", "lightpink")
+    )
+  ) %>%
+  DT::formatStyle(
+    "UMCCR_Comment",
+    backgroundColor = DT::styleEqual(
+      c("Likely", "Unlikely"), c("lightblue", "lightpink")
+    )
+  ) %>%
+  DT::formatStyle(
+    c("HRDetect_prob", "CHORD_HRD_prob"),
+    backgroundColor = styleInterval(0.1, c('lightpink', 'lightblue'))
+  )
+```
+

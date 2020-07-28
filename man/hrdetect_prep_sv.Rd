@@ -11,7 +11,7 @@ hrdetect_prep_sv(x, nm = NULL, genome = "hg38")
 
 \item{nm}{Sample name.}
 
-\item{genome}{Human genome version (default: hg38).}
+\item{genome}{Human genome version (default: hg38. hg19 means GRCh37).}
 }
 \value{
 Single-column data.frame (with rownames) with counts for each SV category.

@@ -44,7 +44,7 @@ hrdetect_read_snvindel_vcf <- function(x) {
 #'
 #' @param x Path to VCF.
 #' @param nm Sample name.
-#' @param genome Human genome version (default: hg38).
+#' @param genome Human genome version (default: hg38. hg19 means GRCh37).
 #'
 #' @return Tibble with following BEDPE-like columns:
 #' - chrom1, start1, end1
@@ -66,6 +66,10 @@ hrdetect_read_snvindel_vcf <- function(x) {
 hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
 
   assertthat::assert_that(!is.null(nm))
+  assertthat::assert_that(genome %in% c("hg19", "hg38", "GRCh37"))
+  if (genome == "GRCh37") {
+    genome <- "hg19"
+  }
 
   vcf <- VariantAnnotation::readVcf(x, genome)
   gr <- StructuralVariantAnnotation::breakpointRanges(vcf)
@@ -124,7 +128,7 @@ hrdetect_read_purple_cnv <- function(x) {
 #' @param x Path to VCF with SNVs and INDELs.
 #' @param nm Sample name.
 #' @param outdir Directory to output analysis results.
-#' @param genome Human genome version (default: hg38).
+#' @param genome Human genome version (default: hg38. hg19 means GRCh37).
 #' @param sigsToUse COSMIC signatures to use.
 #'
 #' @return List with two elements:
@@ -144,8 +148,12 @@ hrdetect_read_purple_cnv <- function(x) {
 hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
                                    sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)) {
 
-  assertthat::assert_that(!is.null(nm), !is.null(outdir), genome %in% c("hg19", "hg38"),
+  assertthat::assert_that(!is.null(nm), !is.null(outdir),
                           all(sigsToUse %in% 1:30), all(c(3, 8) %in% sigsToUse))
+  assertthat::assert_that(genome %in% c("hg19", "hg38", "GRCh37"))
+  if (genome == "GRCh37") {
+    genome <- "hg19"
+  }
 
   # must end in /
   outdir <- ifelse(!grepl("/$", outdir), paste0(outdir, "/"), outdir)
@@ -195,7 +203,7 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
 #'
 #' @param x Path to VCF with SVs.
 #' @param nm Sample name.
-#' @param genome Human genome version (default: hg38).
+#' @param genome Human genome version (default: hg38. hg19 means GRCh37).
 #'
 #' @return Single-column data.frame (with rownames) with counts for each SV category.
 #'
@@ -210,7 +218,12 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
 #'
 #' @export
 hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
+
+  if (genome == "GRCh37") {
+    genome <- "hg19"
+  }
   sv_bedpe <- hrdetect_read_sv_vcf(x, nm = nm, genome = genome)
+
   res <- signature.tools.lib::bedpeToRearrCatalogue(sv_bedpe = sv_bedpe)[["rearr_catalogue"]]
   res
 }
@@ -252,9 +265,10 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' @param sv_vcf Path to VCF with SVs.
 #' @param cnv_file Path to `purple.cnv.somatic.tsv` file.
 #' @param nm Sample name.
-#' @param genome Human genome version (default: hg38).
+#' @param genome Human genome version (default: hg38. hg19 means GRCh37).
 #' @param snvoutdir Directory to output SNV signature analysis results.
 #' @param sigsToUse COSMIC SNV signatures to use.
+#' @return Tibble with sample name and HRD probability in first two columns.
 #'
 #' @examples
 #' snvindel_vcf <- system.file(
@@ -275,6 +289,11 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' @export
 hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir,
                          sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)) {
+
+  if (genome == "GRCh37") {
+    genome <- "hg19"
+  }
+
   snvindel <- hrdetect_prep_snvindel(snvindel_vcf, nm, genome, snvoutdir, sigsToUse = sigsToUse)
   snv <- snvindel$snv_results %>%
     dplyr::filter(.data$sig %in% c("Signature.3", "Signature.8")) %>%
@@ -295,11 +314,19 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir,
   mat <- as.matrix(tib)
   rownames(mat) <- nm
   res <- signature.tools.lib::HRDetect_pipeline(mat,
-                                                 genome.v = genome,
-                                                 SV_catalogues = sv,
-                                                 nparallel = 2)
+                                                genome.v = genome,
+                                                SV_catalogues = sv,
+                                                nparallel = 2)
 
-  res[["hrdetect_output"]] %>%
-    tibble::as_tibble(rownames = "sample") %>%
+  if ("hrdetect_output" %in% names(res)) {
+    res <- res[["hrdetect_output"]]
+  } else { # no result
+    intercept <- matrix(c(NA), dimnames = list(nm, "intercept"))
+    Probability <- matrix(c(NA), dimnames = list(nm, "Probability"))
+    res <- cbind(intercept, mat, Probability)
+  }
+
+  res %>%
+    tibble::as_tibble(rownames = "sample", .name_repair = "check_unique") %>%
     dplyr::relocate(.data$Probability, .after = .data$sample)
 }
