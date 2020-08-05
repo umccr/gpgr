@@ -1,0 +1,218 @@
+---
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
+output:
+  html_document:
+    code: hide
+    theme: cosmo
+    toc: true
+    code_download: true
+  rmdformats::material:
+    highlight: kate
+params:
+  sample: "SAMPLE"
+title: "`r glue::glue('MutationalPatterns Analysis')`"
+description: "MutationalPatterns Results"
+---
+
+```{r setup_knitr, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+```{r render_report_interactively, eval=F, echo=F}
+params <- function(x) {
+  paths <- list(
+    local = list(
+      sample = "SEQCII50",
+    )
+  )
+  paths[[x]]
+}
+params <- params("local")
+
+render_me <- function() {
+  rmarkdown::render(
+    input = here::here("inst/rmd/wgs/signatures/mutationalpatterns.Rmd"),
+    params = params)
+}
+render_me()
+```
+
+```{r setup, warning=FALSE}
+# require(aws.s3)
+# require(aws.signature)
+# require(Biostrings)
+require(BSgenome.Hsapiens.UCSC.hg19)
+require(BSgenome.Hsapiens.UCSC.hg38)
+require(MutationalPatterns)
+require(dplyr)
+require(DT)
+require(gpgr)
+require(here)
+require(kableExtra)
+```
+
+
+## Introduction
+
+Here we are using
+[MutationalPatterns](https://github.com/UMCUGenetics/MutationalPatterns)
+to fit COSMIC v2 and v3 somatic signatures for the following 20 samples:
+
+```{r download_data, eval=FALSE}
+profile <- "prod"
+region <- "ap-southeast-2"
+aws.signature::use_credentials(profile = profile)
+accessible_buckets <- aws.s3::bucketlist(region = region) # used to check if creds are ok
+
+d <- tibble::tribble(
+  ~Sample, ~SubjectID, ~Genome, #~Bucket, ~VCF, # stored on Trello
+  "PM637554",  "SBJ00552", "hg38",
+  "SFRC01273", "SBJ00346", "hg38",
+  "SFRC1265",  "SBJ00308", "hg38",
+  "SFRC01260", "SBJ00304", "hg38",
+  "SFRC01222", "SBJ00239", "hg38",
+  "PM4024666", "SBJ00322", "hg38",
+  "SFRC01258", "SBJ00281", "hg38",
+  "PM3020208", "SBJ00265", "hg38",
+  "PM3062337", "SBJ00238", "hg38",
+  "CUP1147",   "SBJ00176", "hg19",
+  "CUP7031",   "SBJ00144", "hg19",
+  "SFRC01189", "SBJ00174", "hg19",
+  "SFRC01210", "SBJ00162", "hg19",
+  "CUPD004",   "SBJ00127", "hg19",
+  "PM1007659", "SBJ00148", "hg19",
+  "PM3061246", "SBJ00501", "hg38",
+  "SFRC01122", "SBJ00001", "hg38",
+  "SFRC01143", "SBJ00028", "hg19",
+  "PM3056445", "SBJ00133", "hg19",
+  "P033",      "SBJ00471", "hg38",
+)
+
+for (i in seq_len(nrow(d))) {
+  cat(glue::glue("index {i}: {d$SubjectID[i]}\n"))
+  aws.s3::save_object(object = d$VCF[i], bucket = d$Bucket[i], file = file.path(here::here("nogit/mutationalpatterns/snv", d$SubjectID[i], "snv.vcf.gz")), region = region)
+}
+saveRDS(d, file.path(here("nogit/mutationalpatterns/snv"), "S3_paths_20samples.rds"))
+```
+
+
+```{r read_samples}
+d <- readRDS(file.path(here("nogit/mutationalpatterns/snv"), "S3_paths_20samples.rds")) %>%
+  dplyr::arrange(SubjectID) %>%
+  dplyr::mutate(VCF = basename(VCF),
+                n = row_number(),
+                local_path = file.path(here::here("nogit/mutationalpatterns/snv", SubjectID, "snv.vcf.gz"))) %>%
+  dplyr::relocate(n)
+  
+d %>%
+  dplyr::select(n, Sample, SubjectID, VCF_Name = VCF) %>%
+  DT::datatable(caption = "Available samples.",
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Buttons", "KeyTable"),
+                options = list(
+                  paging = FALSE,
+                  keys = TRUE, buttons = c('csv', 'excel'), dom = 'Blfrtip'))
+```
+
+## Analysis
+
+```{r funcs}
+create_mutmat <- function(vcf, nm, genome) {
+  snv <- MutationalPatterns::read_vcfs_as_granges(
+    vcf_files = vcf,
+    sample_names = nm,
+    genome = genome,
+    group = "auto+sex")
+  return(MutationalPatterns::mut_matrix(vcf_list = snv, ref_genome = genome))
+}
+
+get_sigs <- function(mut_mat) {
+  ###--- OLD Sigs ---###
+  # Get Sanger sigs from "http://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt"
+  # better be explicit - the sig_probs file has 7 extra empty columns
+  ctypes <- paste0(c("ccc", paste0(rep("d", 30), collapse = ""), "ccccccc"), collapse = "")
+  cnames <- c("SubstType", "Trinucleotide", "SomMutType", paste0("Sig", 1:30), paste0("foo", 1:7))
+  cancer_signatures <-
+    file.path(here::here("nogit/mutationalpatterns/sig/v2_mar2015/signatures_probabilities.txt")) %>%
+    readr::read_tsv(col_names = cnames, col_types = ctypes, skip = 1) %>%
+    dplyr::arrange(SubstType) %>%
+    dplyr::select(4:33) %>%
+    as.matrix()
+  
+  ###--- NEW Sigs ---###
+  cancer_signatures2 <-
+    file.path(here::here("nogit/mutationalpatterns/sig/v3_may2019/sigProfiler_SBS_signatures_2019_05_22.csv")) %>%
+    readr::read_csv(col_types = readr::cols(.default = "d", Type = "c", SubType = "c")) %>%
+    dplyr::mutate(SomMutType = paste0(substr(SubType, 1, 1),
+                                      "[", Type, "]",
+                                      substr(SubType, 3, 3))) %>%
+    dplyr::select(SBS1:SBS85) %>%
+    as.matrix()
+  
+  # Fit mutation matrix to cancer signatures
+  fit_res <- MutationalPatterns::fit_to_signatures(mut_matrix = mut_mat, signatures = cancer_signatures)
+  fit_res2 <- MutationalPatterns::fit_to_signatures(mut_matrix = mut_mat, signatures = cancer_signatures2)
+  # Convert to tibbles for more bullet-proof subsetting
+  fit_res <- tibble::tibble(
+    sig = rownames(fit_res$contribution), # matrix rownames
+    contr = unname(fit_res$contribution[, 1])) # matrix single column -> vector
+  fit_res2 <- tibble::tibble(
+    sig = rownames(fit_res2$contribution),
+    contr = unname(fit_res2$contribution[, 1]))
+  # Select signatures with some contribution
+  
+  
+  fit_res_contr <- dplyr::filter(fit_res, contr > 0) %>%
+    dplyr::mutate(prop = round(contr / sum(contr), 3),
+                  contr = round(contr, 0),
+                  rank = as.integer(base::rank(-contr))) %>%
+    dplyr::arrange(rank) %>%
+    dplyr::slice_head(n = 3)
+    
+  fit_res_contr2 <- dplyr::filter(fit_res2, contr > 0) %>%
+    dplyr::mutate(prop = round(contr / sum(contr), 3),
+                  contr = round(contr, 0),
+                  rank = as.integer(base::rank(-contr))) %>%
+    dplyr::arrange(rank) %>%
+    dplyr::slice_head(n = 3)
+
+
+  list(v2 = fit_res_contr,
+       v3 = fit_res_contr2)
+}
+```
+
+
+```{r create_mutmat, eval=FALSE}
+l <- list()
+for (i in seq_len(nrow(d))) {
+  cat(d$SubjectID[i], "\n")
+  l[[d$SubjectID[i]]] <- create_mutmat(vcf = d$local_path[i], nm = d$SubjectID[i], genome = paste0("BSgenome.Hsapiens.UCSC.", d$Genome[i]))
+}
+
+saveRDS(l, file.path(here("nogit/mutationalpatterns/snv"), "mutation_matrices.rds"))
+```
+
+## Results
+
+```{r get_sigs}
+l <- readRDS(file.path(here("nogit/mutationalpatterns/snv"), "mutation_matrices.rds"))
+results <- purrr::map(l, get_sigs) %>%
+  purrr::map(dplyr::bind_rows, .id = "Version") %>%
+  dplyr::bind_rows(.id = "SubjectID") %>%
+  tidyr::pivot_wider(id_cols = c(SubjectID, Version, rank), names_from = Version, values_from = sig:prop)
+```
+
+```{r results}
+results %>%
+  dplyr::left_join(d %>% dplyr::select(Sample, SubjectID), by = "SubjectID") %>%
+  dplyr::relocate(Sample) %>%
+  DT::datatable(caption = "Available samples.",
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Buttons", "KeyTable"),
+                options = list(
+                  paging = FALSE,
+                  keys = TRUE, buttons = c('csv', 'excel'), dom = 'Blfrtip'))
+```
+
