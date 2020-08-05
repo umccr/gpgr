@@ -89,6 +89,7 @@ excel <- readxl::read_excel("~/Downloads/old vs new signatures recent cases_LZ.x
 
 s <- tibble::tribble(
   ~nm, ~prefix, ~genome, ~comment,
+  "PMEX82291", "SBJ00564__SBJ00564_MDX200132_L2000670", "hg38", "?",
   "PM3064119", "SBJ00557__SBJ00557_MDX200118_L2000617", "hg38", "?",
   "PM3058367", "SBJ00551__SBJ00551_MDX200106_L2000601", "hg38", "?",
   "PM637554",  "SBJ00552__SBJ00552_MDX200109_L2000603", "hg38", "?",
