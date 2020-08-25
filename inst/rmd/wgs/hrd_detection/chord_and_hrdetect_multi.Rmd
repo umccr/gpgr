@@ -83,12 +83,11 @@ used with that tool.
 ```{r setup_data, message=F, warning=F}
 project <- params$project
 
-excel <- readxl::read_excel("~/Downloads/old vs new signatures recent cases_LZ.xlsx", skip = 1) %>%
-  dplyr::select("EXTERNAL SUBJECT ID", "SUBJECT ID") %>%
-  dplyr::filter(!is.na(`EXTERNAL SUBJECT ID`))
-
 s <- tibble::tribble(
   ~nm, ~prefix, ~genome, ~comment,
+  # "CUP1163", "SBJ00568__SBJ00568_PRJ200388_L2000685", "hg38", "?",
+  "PM8234379", "SBJ00572__SBJ00572_MDX200138_L2000717", "hg38", "?",
+  "CUP1170", "SBJ00573__SBJ00573_PRJ200397_L2000721", "hg38", "?",
   "PMEX82291", "SBJ00564__SBJ00564_MDX200132_L2000670", "hg38", "?",
   "PM3064119", "SBJ00557__SBJ00557_MDX200118_L2000617", "hg38", "?",
   "PM3058367", "SBJ00551__SBJ00551_MDX200106_L2000601", "hg38", "?",
@@ -153,6 +152,23 @@ s %>%
 ```
 
 ## Run CHORD
+
+```{r}
+sv_df <- here::here("nogit/inputs/patients/sv/SBJ00568__SBJ00568_PRJ200388_L2000685-manta.vcf.gz.tsv") %>%
+  readr::read_tsv(col_types = "cc")
+contexts <- CHORD::extractSigsChord(
+    vcf.snv = here::here("nogit/inputs/patients/snv/SBJ00568__SBJ00568_PRJ200388_L2000685-somatic-ensemble-PASS.vcf.gz"),
+    df.sv = sv_df,
+    sv.caller='manta',
+    sample.name = "CUP1163",
+    ref.genome = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
+  )
+prediction <- CHORD::chordPredict(features = contexts,
+                                  rf.model = CHORD::CHORD,
+                                  do.bootstrap = TRUE, verbose = FALSE)
+
+```
+
 
 ```{r run_chord, eval=FALSE}
 res_chord <- seq_len(nrow(s)) %>%
@@ -263,7 +279,7 @@ res_hrdetect <- seq_len(nrow(s)) %>%
       cnv_file = s$cnv_file[i],
       genome = s$genome[i],
       snvoutdir = s$snvoutdir[i])
-    cat("Saving RDS for ", s$nm[i], "\n")
+    cat("Saving RDS for", s$nm[i], "\n")
     saveRDS(x, file = here(glue("nogit/hrdetect/rds/{project}/{s$prefix[i]}.rds")))
     x
 
