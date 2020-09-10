@@ -85,7 +85,9 @@ project <- params$project
 
 s <- tibble::tribble(
   ~nm, ~prefix, ~genome, ~comment,
-  # "CUP1163", "SBJ00568__SBJ00568_PRJ200388_L2000685", "hg38", "?",
+  "PM8188522", "SBJ00576__SBJ00576_MDX200145_L2000739", "hg38", "?",
+  "PM3062657", "SBJ00571__SBJ00571_MDX200135_L2000737", "hg38", "?",
+  # "CUP1163", "SBJ00568__SBJ00568_PRJ200388_L2000685", "hg38", "?", # has big SV events
   "PM8234379", "SBJ00572__SBJ00572_MDX200138_L2000717", "hg38", "?",
   "CUP1170", "SBJ00573__SBJ00573_PRJ200397_L2000721", "hg38", "?",
   "PMEX82291", "SBJ00564__SBJ00564_MDX200132_L2000670", "hg38", "?",
@@ -153,7 +155,8 @@ s %>%
 
 ## Run CHORD
 
-```{r}
+```{r eval=FALSE}
+# Run CHORD with SV data.frame
 sv_df <- here::here("nogit/inputs/patients/sv/SBJ00568__SBJ00568_PRJ200388_L2000685-manta.vcf.gz.tsv") %>%
   readr::read_tsv(col_types = "cc")
 contexts <- CHORD::extractSigsChord(
