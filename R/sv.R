@@ -83,10 +83,10 @@ count_pieces <- function(x, sep) {
 #' (e4 <- gpgr:::abbreviate_effect("foo&bar&stop_gained&badaboom"))
 #'
 #' @testexamples
-#' expect_equal(e1, "3UTRtrunc, StartLoss, SpliceRegV")
+#' expect_equal(e1, "3UTRtrunc, SpliceRegV, StartLoss")
 #' expect_equal(e2, "Dup, FusG, IntronV")
-#' expect_equal(e3, "TFBSVar, TFBSDel")
-#' expect_equal(e4, "foo, bar, StopGain, badaboom")
+#' expect_equal(e3, "TFBSDel, TFBSVar")
+#' expect_equal(e4, "badaboom, bar, foo, StopGain")
 #'
 abbreviate_effect <- function(effects) {
 
@@ -117,6 +117,7 @@ abbreviate_effect <- function(effects) {
 
   strsplit(effects, "&")[[1]] %>%
     purrr::map_chr(.abbreviate_effect) %>%
+    sort() %>%
     paste(collapse = ", ")
 }
 
