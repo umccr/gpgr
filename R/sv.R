@@ -173,13 +173,11 @@ read_sv_tsv <- function(x) {
 #' @export
 process_sv <- function(x) {
   sv <- read_sv_tsv(x)
-  unmelted <- NULL
-  melted <- NULL
 
-  if (!nrow(sv) > 0) {
+  if (nrow(sv) == 0) {
     return(list(
-      unmelted = unmelted,
-      melted = melted
+      unmelted = NULL,
+      melted = NULL
     ))
   }
 
@@ -263,7 +261,7 @@ process_sv <- function(x) {
       dplyr::arrange(.data$Tier, .data$Genes, .data$Effect)
 
   list(
-    unmelted = unmelted,
+    unmelted = unmelted_all,
     melted = melted
   )
 }
