@@ -1,0 +1,117 @@
+---
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r format(Sys.time(), '%a %Y-%b-%d %H:%M')`"
+output:
+  html_document:
+    code: hide
+    theme: cosmo
+    toc: false
+    code_download: true
+  rmdformats::material:
+    highlight: kate
+params:
+  sample: "SAMPLE"
+  snv_vcf: "/path/to/snv.vcf"
+  sv_vcf: "/path/to/sv.vcf"
+  cnv_tsv: "/path/to/purple.somatic.cnv"
+  snvoutdir: "/path/to/outdir_snv"
+title: "`r glue::glue('HRDetect Results')`"
+description: "Results from HRDetect analysis"
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r render_report_interactively, eval=F, echo=F}
+params <- function(x) {
+  paths <- list(
+    local = list(
+      sample = "SAMPLE",
+      snv_vcf = here::here("inst/extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz"),
+      sv_vcf = here::here("inst/extdata/umccrise/v0.18/sv/manta.vcf.gz"),
+      cnv_tsv = here::here("inst/extdata/purple/v2.39/purple.cnv.somatic.tsv"),
+      snvoutdir = here::here("nogit/hrdetect/out/snvoutdir1")
+      
+    )
+  )
+    paths[[x]]
+}
+params <- params("local")
+
+render_me <- function() {
+  rmarkdown::render(
+    input = here::here("inst/rmd/wgs/hrd_detection/hrdetect/hrdetect.Rmd"),
+    params = params)
+}
+render_me()
+```
+
+```{r load_pkgs, message=F, warning=F}
+require(gpgr)
+require(gt)
+require(here)
+require(kableExtra)
+require(signature.tools.lib)
+require(tidyverse)
+```
+
+## Sample Inputs
+
+```{r sample_inputs}
+d <- tibble::tribble(
+  ~nm, ~prefix, ~genome, ~comment,
+  "P033", "2016_249_17_MH_P033__CCR170115b_MH17T002P033", "hg38", "ValidationSample",
+  "P025", "2016_249_18_WH_P025__CCR180149_VPT-WH025-E", "hg38", "ValidationSample",
+  "BALL10", "B_ALL_Case_10__MDX190025_B_ALL_Case_10T", "hg38", "ValidationSample",
+  "CUP8", "CUP-Pairs8__PRJ180660_8_DNA009529_FFPE", "hg38", "ValidationSample",
+  "SEQCII50", "SEQC-II-50pc__SEQC-II_Tumor_50pc", "hg38", "ValidationSample",
+  "SFRC01073", "SFRC01073__PRJ180598_SFRC01073-S2T", "hg38", "ValidationSample",
+  "SFRC01178", "SBJ00267__SBJ00267_PRJ200047_L2000059", "hg38", "Likely",
+  "SFRC01122", "SBJ00001__SBJ00001_PRJ190733_L1900931", "hg38", "Likely",
+  "PM3028142", "SBJ00286__SBJ00286_PRJ200069_L2000117", "hg38", "IMPORTANT",
+  "PM4024666", "SBJ00322__SBJ00322_MDX200054_L2000238", "hg38", "Unlikely",
+  "PM3061034", "SBJ00301__SBJ00301_MDX200046_L2000147", "hg38", "Unlikely",
+  "SFRC01258", "SBJ00281__SBJ00281_PRJ200061_L2000100", "hg38", "Unlikely",
+  "PM2293366", "SBJ00236__SBJ00236_MDX190218_L1901019", "hg38", "Unlikely",
+)
+
+d %>% gt()
+
+d <- d %>%
+  dplyr::distinct() %>%
+  dplyr::mutate(
+    snvindel_vcf = file.path(here::here("nogit/chord/snv"), paste0(prefix, "-somatic-ensemble-PASS.vcf.gz")),
+    sv_vcf = file.path(here::here("nogit/chord/sv"), paste0(prefix, "-manta.vcf.gz")),
+    cnv_file = file.path(here::here("nogit/chord/cnv"), paste0(prefix, ".purple.cnv")),
+    snvoutdir = file.path(here::here("nogit/hrdetect/snvoutdir"), prefix)
+  ) %>%
+  dplyr::select(nm, snvindel_vcf, sv_vcf, cnv_file, snvoutdir, genome)
+
+```
+
+```{r run_hrdetect, eval=FALSE}
+res <- pmap(d, hrdetect_run)
+res <- dplyr::bind_rows(res)
+saveRDS(res, file = here::here("nogit/hrdetect/res_2020-05-17.rds"))
+```
+
+## HRDetect Results
+
+```{r results}
+res <- readRDS(here::here("nogit/hrdetect/res_2020-05-17.rds"))
+res %>%
+  dplyr::mutate(Probability = Probability / 100) %>%
+  gt(rowname_col = "sample") %>%
+  fmt_percent(columns = "Probability") %>%
+  fmt_number(columns = c("intercept", "del.mh.prop", "SNV3", "SV3", "SV5", "hrd", "SNV8"), decimals = 2)
+```
+

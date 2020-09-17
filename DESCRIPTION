@@ -1,6 +1,6 @@
 Package: gpgr
 Title: Genomics Platform Group Reporting
-Version: 0.0.0.9000
+Version: 0.0.1
 Description: Reports and functions used in the Genomics Platform Group
              at the University of Melbourne Centre for Cancer Research.
 Authors@R: 
@@ -29,13 +29,22 @@ Imports:
     rlang,
     scales,
     stringr,
+    StructuralVariantAnnotation,
     tibble,
     tidyr,
+    VariantAnnotation
 Roxygen: list(markdown = TRUE,
               roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
+
 RoxygenNote: 7.1.1
-Suggests: 
+Suggests:
+    BSgenome.Hsapiens.UCSC.hg19,
+    BSgenome.Hsapiens.UCSC.hg38,
+    BSgenome.Hsapiens.1000genomes.hs37d5,
+    CHORD,
     knitr,
+    mutSigExtractor,
     rmarkdown,
+    signature.tools.lib,
     testthat,
 VignetteBuilder: knitr
