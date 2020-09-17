@@ -35,7 +35,8 @@ Imports:
     VariantAnnotation
 Roxygen: list(markdown = TRUE,
               roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
-RoxygenNote: 7.1.0
+
+RoxygenNote: 7.1.1
 Suggests:
     BSgenome.Hsapiens.UCSC.hg19,
     BSgenome.Hsapiens.UCSC.hg38,
