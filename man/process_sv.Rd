@@ -10,7 +10,7 @@ process_sv(x)
 \item{x}{Path to \code{manta.tsv} output by umccrise.}
 }
 \value{
-A list with melted/unmelted tibbles.
+A list with melted/unmelted tibbles (these are NULL if TSV file was empty).
 }
 \description{
 Processes the Manta TSV file output by umccrise.

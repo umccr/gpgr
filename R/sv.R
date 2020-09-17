@@ -159,7 +159,7 @@ read_sv_tsv <- function(x) {
 #' Processes the Manta TSV file output by umccrise.
 #'
 #' @param x Path to `manta.tsv` output by umccrise.
-#' @return A list with melted/unmelted tibbles.
+#' @return A list with melted/unmelted tibbles (these are NULL if TSV file was empty).
 #'
 #' @examples
 #' x <- system.file("extdata/umccrise/v0.18/sv/manta.tsv", package = "gpgr")
@@ -192,8 +192,7 @@ process_sv <- function(x) {
       SR_PR_alt = paste0(.data$SR_alt, ",", .data$PR_alt),
       SR_PR_ref = paste0(.data$SR_ref, ",", .data$PR_ref),
       Ploidy = round(as.double(.data$Ploidy_PURPLE), 2),
-      # chrom = sub("chr", "", .data$chrom),
-      # chrom = as.factor(.data$chrom), # for better DT filtering
+      chrom = sub("chr", "", .data$chrom),
       svtype = ifelse(is.na(.data$PURPLE_status), .data$svtype, "PURPLE_inf"),
       Start = ifelse(is.na(.data$PURPLE_status), .data$START_BPI, .data$start),
       nann = count_pieces(.data$annotation, ","),
@@ -229,12 +228,14 @@ process_sv <- function(x) {
                      unmelted_other) %>%
     dplyr::mutate(
       END_BPI = base::format(.data$END_BPI, big.mark = ",", trim = TRUE),
+      Start = base::format(.data$Start, big.mark = ",", trim = TRUE),
       End = paste0(
         ifelse(.data$svtype == "BND", .data$BND_mate_chrom, .data$chrom),
         ":",
-        .data$END_BPI)) %>%
+        .data$END_BPI),
+      Start = paste0(.data$chrom, ":", .data$Start)) %>%
     dplyr::select(.data$vcfnum, TierTop = .data$tier,
-                  Chr = .data$chrom, .data$Start, .data$End,
+                  .data$Start, .data$End,
                   Type = .data$svtype,
                   .data$ID, .data$MATEID, .data$BND_ID, .data$BND_mate,
                   .data$SR_PR_alt, .data$SR_PR_ref, .data$Ploidy,
