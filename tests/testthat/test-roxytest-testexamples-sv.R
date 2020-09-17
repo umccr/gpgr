@@ -34,28 +34,27 @@ test_that("Function count_pieces() @ L66", {
 test_that("Function abbreviate_effect() @ L91", {
   
   (e1 <- gpgr:::abbreviate_effect("3_prime_UTR_truncation&start_lost&splice_region_variant"))
-  (e2 <- gpgr:::abbreviate_effect("duplication&gene_fusion&intron_variant"))
+  (e2 <- gpgr:::abbreviate_effect("duplication&foo&gene_fusion&BOOM&intron_variant"))
   (e3 <- gpgr:::abbreviate_effect("TF_binding_site_variant&TFBS_ablation"))
   (e4 <- gpgr:::abbreviate_effect("foo&bar&stop_gained&badaboom"))
   
-  expect_equal(e1, "3UTRtrunc, StartLoss, SpliceRegV")
-  expect_equal(e2, "Dup, FusG, IntronV")
-  expect_equal(e3, "TFBSVar, TFBSDel")
-  expect_equal(e4, "foo, bar, StopGain, badaboom")
+  expect_equal(e1, "3UTRtrunc, SpliceRegV, StartLoss")
+  expect_equal(e2, "BOOM, Dup, foo, FusG, IntronV")
+  expect_equal(e3, "TFBSDel, TFBSVar")
+  expect_equal(e4, "badaboom, bar, foo, StopGain")
 })
 
 
-test_that("Function read_sv_tsv() @ L141", {
+test_that("Function read_sv_tsv() @ L140", {
   
   x <- system.file("extdata/umccrise/v0.18/sv/manta.tsv", package = "gpgr")
   (sv <- read_sv_tsv(x))
   
   expect_equal(colnames(sv)[ncol(sv)], "MATEID")
-  expect_error(read_sv_tsv(x, v = "0.17"))
 })
 
 
-test_that("Function process_sv() @ L191", {
+test_that("Function process_sv() @ L174", {
   
   x <- system.file("extdata/umccrise/v0.18/sv/manta.tsv", package = "gpgr")
   (sv <- process_sv(x))

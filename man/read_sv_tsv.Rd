@@ -4,15 +4,13 @@
 \alias{read_sv_tsv}
 \title{Read SV TSV}
 \usage{
-read_sv_tsv(x, v = "0.18")
+read_sv_tsv(x)
 }
 \arguments{
 \item{x}{Path to \code{manta.tsv} output by umccrise.}
-
-\item{v}{umccrise version (default: 0.18). Used to verify the column names.}
 }
 \value{
-A tibble
+A tibble corresponding to the input TSV file.
 }
 \description{
 Reads the Manta TSV file output by umccrise.

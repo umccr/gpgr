@@ -4,12 +4,10 @@
 \alias{process_sv}
 \title{Process Structural Variants}
 \usage{
-process_sv(x, v = "0.18")
+process_sv(x)
 }
 \arguments{
 \item{x}{Path to \code{manta.tsv} output by umccrise.}
-
-\item{v}{umccrise version (default: 0.18). Used to verify the column names.}
 }
 \value{
 A list with melted/unmelted tibbles.

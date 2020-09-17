@@ -17,7 +17,7 @@ Abbreviates SV effects column.
 }
 \examples{
 (e1 <- gpgr:::abbreviate_effect("3_prime_UTR_truncation&start_lost&splice_region_variant"))
-(e2 <- gpgr:::abbreviate_effect("duplication&gene_fusion&intron_variant"))
+(e2 <- gpgr:::abbreviate_effect("duplication&foo&gene_fusion&BOOM&intron_variant"))
 (e3 <- gpgr:::abbreviate_effect("TF_binding_site_variant&TFBS_ablation"))
 (e4 <- gpgr:::abbreviate_effect("foo&bar&stop_gained&badaboom"))
 
