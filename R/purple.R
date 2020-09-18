@@ -5,50 +5,32 @@
 #' (see [this table](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator#gene-copy-number-file)).
 #'
 #' @param x Path to `purple.cnv.gene.tsv` file.
-#' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return The input file as a tibble.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
-#' (p <- read_purple_cnv_gene(x, "2.39"))
+#' (p <- read_purple_cnv_gene(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "minMinorAllelePloidy")
-#' expect_error(read_purple_cnv_gene(x, "2.38"))
 #'
 #' @export
-read_purple_cnv_gene <- function(x, v = "2.39") {
+read_purple_cnv_gene <- function(x) {
 
-  config <- function(v) {
-    current <- list(
-      nm = c("chromosome" = "c", "start" = "i", "end" = "i", "gene" = "c",
-             "minCopyNumber" = "d", "maxCopyNumber" = "d",
-             "unused" = "c", "somaticRegions" = "d", "germlineHomDeletionRegions" = "d",
-             "germlineHetToHomDeletionRegions" = "d",
-             "transcriptId" = "c", "transcriptVersion" = "c", "chromosomeBand" = "c",
-             "minRegions" = "d", "minRegionStart" = "i", "minRegionEnd" = "i",
-             "minRegionStartSupport" = "c", "minRegionEndSupport" = "c",
-             "minRegionMethod" = "c", "minMinorAllelePloidy" = "d"))
+  nm <- c("chromosome" = "c", "start" = "i", "end" = "i", "gene" = "c",
+          "minCopyNumber" = "d", "maxCopyNumber" = "d",
+          "unused" = "c", "somaticRegions" = "d", "germlineHomDeletionRegions" = "d",
+          "germlineHetToHomDeletionRegions" = "d",
+          "transcriptId" = "c", "transcriptVersion" = "c", "chromosomeBand" = "c",
+          "minRegions" = "d", "minRegionStart" = "i", "minRegionEnd" = "i",
+          "minRegionStartSupport" = "c", "minRegionEndSupport" = "c",
+          "minRegionMethod" = "c", "minMinorAllelePloidy" = "d")
 
-    l <- list(
-      "2.39" = current,
-      "2.45" = list(nm = c(current$nm, "foo" = "c", "bar" = "c"))
-    )
-    if (numeric_version(v) >= numeric_version("2.45")) {
-      return(l[["2.45"]])
-    } else if (numeric_version(v) >= numeric_version("2.39")) {
-      return(l[["2.39"]])
-    } else {
-      stop(glue::glue("You've specified PURPLE version {v}, which is older than 2.39.",
-                      "Please update to newer PURPLE version."))
-    }
-  }
-  conf <- config(v)
-  ctypes <- paste(conf$nm, collapse = "")
+  ctypes <- paste(nm, collapse = "")
   purple_cnv_gene <- readr::read_tsv(x, col_types = ctypes)
-  assertthat::assert_that(ncol(purple_cnv_gene) == length(conf$nm))
-  assertthat::assert_that(all(colnames(purple_cnv_gene) == names(conf$nm)))
+  assertthat::assert_that(ncol(purple_cnv_gene) == length(nm))
+  assertthat::assert_that(all(colnames(purple_cnv_gene) == names(nm)))
   purple_cnv_gene
 }
 
@@ -64,7 +46,6 @@ read_purple_cnv_gene <- function(x, v = "2.39") {
 #' * `symbol`: gene name (character).
 #' * `tumorsuppressor`: is this gene a tumor suppressor (TRUE/FALSE).
 #' * `oncogene`: is this gene an oncogene (TRUE/FALSE).
-#' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return List with two elements:
 #' * `tab`: Tibble filtered to genes found in  `g`.
@@ -73,15 +54,14 @@ read_purple_cnv_gene <- function(x, v = "2.39") {
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
 #' g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
-#' (pp <- process_purple_cnv_gene(x, g)$tab)
+#' (pp <- process_purple_cnv_gene(x, g))
 #'
 #' @testexamples
-#' expect_equal(colnames(pp)[ncol(pp)], "minRegSupportStartEndMethod")
-#' expect_error(process_purple_cnv_gene(x, "2.38"))
+#' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "minRegSupportStartEndMethod")
 #'
 #' @export
-process_purple_cnv_gene <- function(x, g = NULL, v = "2.39") {
-  purple_cnv_gene <- read_purple_cnv_gene(x, v)
+process_purple_cnv_gene <- function(x, g = NULL) {
+  purple_cnv_gene <- read_purple_cnv_gene(x)
   if (is.null(g)) {
     g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
   }
@@ -112,7 +92,7 @@ process_purple_cnv_gene <- function(x, g = NULL, v = "2.39") {
                   somReg = .data$somaticRegions, .data$germDelReg, minReg = .data$minRegions,
                   .data$minRegStartEnd, .data$minRegSupportStartEndMethod)
 
-  col_description <- dplyr::tribble(
+  descr <- dplyr::tribble(
     ~Column, ~Description,
     "gene", "Name of gene",
     "minCN/maxCN", "Min/Max copy number found in gene exons",
@@ -128,7 +108,7 @@ process_purple_cnv_gene <- function(x, g = NULL, v = "2.39") {
     "minRegSupportStartEndMethod", "Start/end support of the CN region overlapping the gene with the min CN (plus determination method)")
 
   list(tab = purple_cnv_gene,
-       descr = col_description)
+       descr = descr)
 }
 
 #' Read PURPLE CNV Somatic File
@@ -138,47 +118,28 @@ process_purple_cnv_gene <- function(x, g = NULL, v = "2.39") {
 #' (see [this table](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator#copy-number-file)).
 #'
 #' @param x Path to `purple.cnv.somatic.tsv` file.
-#' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return The input file as a tibble.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
-#' (p <- read_purple_cnv_somatic(x, "2.39"))
+#' (p <- read_purple_cnv_somatic(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
-#' expect_error(read_purple_cnv_somatic(x, "2.38"))
 #'
 #' @export
-read_purple_cnv_somatic <- function(x, v = "2.39") {
-  config <- function(v) {
-    current <- list(
-      nm = c("chromosome" = "c", "start" = "i", "end" = "i",
-             "copyNumber" = "d", "bafCount" = "d", "observedBAF" = "d",
-             "baf" = "d", "segmentStartSupport" = "c", "segmentEndSupport" = "c",
-             "method" = "c", "depthWindowCount" = "i", "gcContent" = "d",
-             "minStart" = "i", "maxStart" = "i", "minorAllelePloidy" = "d",
-             "majorAllelePloidy" = "d"))
-    l <- list(
-      "2.39" = current,
-      "2.45" = list(nm = c(current$nm, "foo" = "c", "bar" = "c"))
-    )
-    if (numeric_version(v) >= numeric_version("2.45")) {
-      return(l[["2.45"]])
-    } else if (numeric_version(v) >= numeric_version("2.39")) {
-      return(l[["2.39"]])
-    } else {
-      stop(glue::glue("You've specified PURPLE version {v}, which is older than 2.39.",
-                      "Please update to newer PURPLE version."))
-    }
-  }
-
-  conf <- config(v)
-  ctypes <- paste(conf$nm, collapse = "")
+read_purple_cnv_somatic <- function(x) {
+  nm <- c("chromosome" = "c", "start" = "i", "end" = "i",
+          "copyNumber" = "d", "bafCount" = "d", "observedBAF" = "d",
+          "baf" = "d", "segmentStartSupport" = "c", "segmentEndSupport" = "c",
+          "method" = "c", "depthWindowCount" = "i", "gcContent" = "d",
+          "minStart" = "i", "maxStart" = "i", "minorAllelePloidy" = "d",
+          "majorAllelePloidy" = "d")
+  ctypes <- paste(nm, collapse = "")
   purple_cnv_somatic <- readr::read_tsv(x, col_types = ctypes)
-  assertthat::assert_that(ncol(purple_cnv_somatic) == length(conf$nm))
-  assertthat::assert_that(all(colnames(purple_cnv_somatic) == names(conf$nm)))
+  assertthat::assert_that(ncol(purple_cnv_somatic) == length(nm))
+  assertthat::assert_that(all(colnames(purple_cnv_somatic) == names(nm)))
   purple_cnv_somatic
 }
 
@@ -188,7 +149,6 @@ read_purple_cnv_somatic <- function(x, v = "2.39") {
 #' and selects columns of interest.
 #'
 #' @param x Path to `purple.cnv.somatic.tsv` file.
-#' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return List with two elements:
 #' * `tab`: Tibble with more condensed columns.
@@ -196,16 +156,15 @@ read_purple_cnv_somatic <- function(x, v = "2.39") {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
-#' (pp <- process_purple_cnv_somatic(x)$tab)
+#' (pp <- process_purple_cnv_somatic(x))
 #'
 #' @testexamples
-#' expect_equal(colnames(pp)[ncol(pp)], "GC (windowCount)")
-#' expect_error(process_purple_cnv_somatic(x, "2.38"))
+#' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 #'
 #' @export
-process_purple_cnv_somatic <- function(x, v = "2.39") {
+process_purple_cnv_somatic <- function(x) {
 
-  purple_cnv_somatic <- read_purple_cnv_somatic(x, v)
+  purple_cnv_somatic <- read_purple_cnv_somatic(x)
   purple_cnv_somatic <- purple_cnv_somatic %>%
     dplyr::mutate(
       Chr = as.factor(.data$chromosome),
@@ -224,7 +183,7 @@ process_purple_cnv_somatic <- function(x, v = "2.39") {
       .data$`BAF (count)`, .data$`GC (windowCount)`)
 
 
-  col_description <- dplyr::tribble(
+  descr <- dplyr::tribble(
     ~Column, ~Description,
     "Chr/Start/End", "Coordinates of copy number segment",
     "CN", "Fitted absolute copy number of segment adjusted for purity and ploidy",
@@ -244,7 +203,7 @@ process_purple_cnv_somatic <- function(x, v = "2.39") {
   )
 
   list(tab = purple_cnv_somatic,
-       descr = col_description)
+       descr = descr)
 }
 
 #' Read PURPLE CNV Germline File
@@ -252,21 +211,20 @@ process_purple_cnv_somatic <- function(x, v = "2.39") {
 #' Reads the `purple.cnv.germline.tsv` file.
 #'
 #' @param x Path to `purple.cnv.germline.tsv` file.
-#' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return The input file as a tibble.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
-#' (p <- read_purple_cnv_germline(x, "2.39"))
+#' (p <- read_purple_cnv_germline(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
-#' expect_error(read_purple_cnv_somatic(x, "2.38"))
 #'
 #' @export
-read_purple_cnv_germline <- function(x, v = "2.39") {
-  purple_cnv_germline <- read_purple_cnv_somatic(x, v)
+read_purple_cnv_germline <- function(x) {
+  # as of PURPLE v2.39, germline and somatic files have same columns.
+  purple_cnv_germline <- read_purple_cnv_somatic(x)
   purple_cnv_germline
 }
 
@@ -276,7 +234,6 @@ read_purple_cnv_germline <- function(x, v = "2.39") {
 #' and selects columns of interest.
 #'
 #' @param x Path to `purple.cnv.germline.tsv` file.
-#' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return List with two elements:
 #' * `tab`: Tibble with more condensed columns.
@@ -284,15 +241,15 @@ read_purple_cnv_germline <- function(x, v = "2.39") {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
-#' (pp <- process_purple_cnv_germline(x)$tab)
+#' (pp <- process_purple_cnv_germline(x))
 #'
 #' @testexamples
-#' expect_equal(colnames(pp)[ncol(pp)], "GC (windowCount)")
-#' expect_error(process_purple_cnv_germline(x, "2.38"))
+#' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 #'
 #' @export
-process_purple_cnv_germline <- function(x, v = "2.39") {
-  processed_purple_cnv_germline <- process_purple_cnv_somatic(x, v)
+process_purple_cnv_germline <- function(x) {
+  # as of PURPLE v2.39, germline and somatic files have same columns.
+  processed_purple_cnv_germline <- process_purple_cnv_somatic(x)
   processed_purple_cnv_germline
 }
 
@@ -330,7 +287,6 @@ read_purple_version <- function(x) {
 #' Reads the `purple.qc` file.
 #'
 #' @param x Path to the `purple.qc` file.
-#' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return A named character vector containing QC values for several PURPLE
 #'         metrics.
@@ -343,39 +299,17 @@ read_purple_version <- function(x) {
 #' expect_true(inherits(p, "tbl_df"))
 #'
 #' @export
-read_purple_qc <- function(x, v = "2.39") {
+read_purple_qc <- function(x) {
   purple_qc <-
     readr::read_tsv(x, col_names = c("key", "value"), col_types = "cc") %>%
     dplyr::mutate(value = toupper(.data$value))
-  # turn into named vector
-  # purple_qc <- tibble::tibble(purple_qc$value, names = purple_qc$key) %>%
 
-  config <- function(v) {
-    current <- list(
-      nm = c(
-        "QCStatus" = "c", "SegmentPass" = "c", "GenderPass" = "c",
-        "DeletedGenesPass" = "c", "SegmentScore" = "d", "UnsupportedSegments" = "d",
-        "Ploidy" = "d", "AmberGender" = "c", "CobaltGender" = "c", "DeletedGenes" = "d"
-      )
-    )
+  nm <- c("QCStatus", "SegmentPass", "GenderPass", "DeletedGenesPass",
+          "SegmentScore", "UnsupportedSegments", "Ploidy", "AmberGender",
+          "CobaltGender", "DeletedGenes")
 
-    l <- list(
-      "2.39" = current,
-      "2.45" = list(nm = c(current$nm, "foo" = "c", "bar" = "c"))
-    )
-    if (numeric_version(v) >= numeric_version("2.45")) {
-      return(l[["2.45"]])
-    } else if (numeric_version(v) >= numeric_version("2.39")) {
-      return(l[["2.39"]])
-    } else {
-      stop(glue::glue("You've specified PURPLE version {v}, which is older than 2.39.",
-                      "Please update to newer PURPLE version."))
-    }
-  }
-  conf <- config(v)
-  assertthat::assert_that(all(purple_qc$key == names(conf$nm)))
-  purple_qc %>%
-    dplyr::mutate(type = conf$nm)
+  assertthat::assert_that(all(purple_qc$key == names(nm)))
+  purple_qc
 }
 
 #' Read PURPLE Purity file
@@ -383,7 +317,6 @@ read_purple_qc <- function(x, v = "2.39") {
 #' Reads the `purple.purity.tsv` file containing a summary of the purity fit.
 #'
 #' @param x Path to the `purple.purity.tsv` file.
-#' @param v PURPLE version (default: 2.39). Used to determine the column names.
 #'
 #' @return A named character vector containing a summary of the purity fit.
 #'
@@ -392,40 +325,49 @@ read_purple_qc <- function(x, v = "2.39") {
 #' (p <- read_purple_purity(x))
 #'
 #' @testexamples
-#' expect_equal(colnames(p)[ncol(p)], "tmbStatus")
-#' expect_error(read_purple_purity(x, "2.38"))
+#' expect_equal(p[1, "Column", drop = TRUE], "purity")
+#' expect_equal(p[nrow(p), "Column", drop = TRUE], "tmbStatus")
 #'
 #' @export
-read_purple_purity <- function(x, v = "2.39") {
-  config <- function(v) {
-    current <- list(
-      nm = c(
-        "purity" = "d", "normFactor" = "d", "score" = "d",
-        "diploidProportion" = "d", "ploidy" = "d",  "gender" = "c",
-        "status" = "c", "polyclonalProportion" = "d", "minPurity" = "d",
-        "maxPurity" = "d",  "minPloidy" = "d", "maxPloidy" = "d",
-        "minDiploidProportion" = "d", "maxDiploidProportion" = "d", "version" = "c",
-        "somaticPenalty" = "d", "wholeGenomeDuplication" = "c",
-        "msIndelsPerMb" = "d", "msStatus" = "c",
-        "tml" = "d", "tmlStatus"  = "c", "tmbPerMb" = "d", "tmbStatus" = "c"))
+read_purple_purity <- function(x) {
+  tab <- dplyr::tribble(
+    ~Column, ~Description, ~Type,
+    "purity", "Purity of tumor in the sample.", "d",
+    "normFactor", "Factor to convert tumor ratio to copy number. Lower number implies higher ploidy.", "d",
+    "score", "Score of fit. Lower is better.", "d",
+    "diploidProportion", "Proportion of CN regions that have 1 (+- 0.2) minor and major allele.", "d",
+    "ploidy", "Average ploidy of tumor after adjusting for purity.", "d",
+    "gender", "One of MALE, FEMALE or MALE_KLINEFELTER.", "c",
+    "status", "One of NORMAL, HIGHLY_DIPLOID, SOMATIC or NO_TUMOR.", "c",
+    "polyclonalProportion", "Proportion of CN regions that are more than 0.25 from a whole CN.", "d",
+    "minPurity", "Minimum purity with score within 10% of best.", "d",
+    "maxPurity", "Maximum purity with score within 10% of best.", "d",
+    "minPloidy", "Minimum ploidy with score within 10% of best.", "d",
+    "maxPloidy", "Maximum ploidy with score within 10% of best.", "d",
+    "minDiploidProportion", "Min diploidProportion.", "d",
+    "maxDiploidProportion", "Max diploidProportion.", "d",
+    "version", "PURPLE Version.", "c",
+    "somaticPenalty", paste("Penalty from somatic variants with implied variant",
+                            "copy numbers that are inconsistent with the minor and major allele copy number."), "d",
+    "wholeGenomeDuplication", "True if more than 10 autosomes have major allele copy number > 1.5.", "c",
+    "msIndelsPerMb", "Microsatellite indels per mega base.", "d",
+    "msStatus", "Microsatellite status. One of MSI, MSS or UNKNOWN if somatic variants not supplied.", "c",
+    "tml", "Tumor mutational load (# of missense variants in sample).", "d",
+    "tmlStatus", "Tumor mutational load status. One of HIGH, LOW or UNKNOWN if somatic variants not supplied.", "c",
+    "tmbPerMb", "Tumor mutational burden (#passing variants per Mb) per mega base.", "d",
+    "tmbStatus", paste("Tumor mutational burden status. One of HIGH, LOW or UNKNOWN if",
+                       "somatic variants not supplied. High = > 10 pass variants per Mb."), "c")
 
-    l <- list(
-      "2.39" = current,
-      "2.45" = list(nm = c(current$nm, "foo" = "c", "bar" = "c"))
-    )
-    if (numeric_version(v) >= numeric_version("2.45")) {
-      return(l[["2.45"]])
-    } else if (numeric_version(v) >= numeric_version("2.39")) {
-      return(l[["2.39"]])
-    } else {
-      stop(glue::glue("You've specified PURPLE version {v}, which is older than 2.39.",
-                      "Please update to newer PURPLE version."))
-    }
-  }
-  conf <- config(v)
-  ctypes <- paste(conf$nm, collapse = "")
+  ctypes <- paste(tab$Type, collapse = "")
   purple_purity <- readr::read_tsv(x, col_types = ctypes)
-  assertthat::assert_that(ncol(purple_purity) == length(conf$nm))
-  assertthat::assert_that(all(colnames(purple_purity) == names(conf$nm)))
-  purple_purity
+  assertthat::assert_that(ncol(purple_purity) == nrow(tab))
+  assertthat::assert_that(all(colnames(purple_purity) == tab$Column))
+
+  purple_purity %>%
+    dplyr::mutate(
+      dplyr::across(tidyselect:::where(is.numeric), round, 2),
+      dplyr::across(dplyr::everything(), as.character)) %>%
+    tidyr::pivot_longer(dplyr::everything(), names_to = "Column", values_to = "Value") %>%
+    dplyr::left_join(tab, by = "Column") %>%
+    dplyr::select(.data$Column, .data$Value, .data$Description)
 }
