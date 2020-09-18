@@ -365,7 +365,7 @@ read_purple_purity <- function(x) {
 
   purple_purity %>%
     dplyr::mutate(
-      dplyr::across(tidyselect:::where(is.numeric), round, 2),
+      dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 2),
       dplyr::across(dplyr::everything(), as.character)) %>%
     tidyr::pivot_longer(dplyr::everything(), names_to = "Column", values_to = "Value") %>%
     dplyr::left_join(tab, by = "Column") %>%
