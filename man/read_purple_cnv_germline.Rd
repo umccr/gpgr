@@ -4,12 +4,10 @@
 \alias{read_purple_cnv_germline}
 \title{Read PURPLE CNV Germline File}
 \usage{
-read_purple_cnv_germline(x, v = "2.39")
+read_purple_cnv_germline(x)
 }
 \arguments{
 \item{x}{Path to \code{purple.cnv.germline.tsv} file.}
-
-\item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
 The input file as a tibble.
@@ -19,6 +17,6 @@ Reads the \code{purple.cnv.germline.tsv} file.
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
-(p <- read_purple_cnv_germline(x, "2.39"))
+(p <- read_purple_cnv_germline(x))
 
 }

@@ -4,12 +4,10 @@
 \alias{process_purple_cnv_germline}
 \title{Process PURPLE CNV germline File for UMCCRISE}
 \usage{
-process_purple_cnv_germline(x, v = "2.39")
+process_purple_cnv_germline(x)
 }
 \arguments{
 \item{x}{Path to \code{purple.cnv.germline.tsv} file.}
-
-\item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
 List with two elements:
@@ -24,6 +22,6 @@ and selects columns of interest.
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
-(pp <- process_purple_cnv_germline(x)$tab)
+(pp <- process_purple_cnv_germline(x))
 
 }

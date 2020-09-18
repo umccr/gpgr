@@ -4,12 +4,10 @@
 \alias{process_purple_cnv_somatic}
 \title{Process PURPLE CNV Somatic File for UMCCRISE}
 \usage{
-process_purple_cnv_somatic(x, v = "2.39")
+process_purple_cnv_somatic(x)
 }
 \arguments{
 \item{x}{Path to \code{purple.cnv.somatic.tsv} file.}
-
-\item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
 List with two elements:
@@ -24,6 +22,6 @@ and selects columns of interest.
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
-(pp <- process_purple_cnv_somatic(x)$tab)
+(pp <- process_purple_cnv_somatic(x))
 
 }

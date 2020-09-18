@@ -4,12 +4,10 @@
 \alias{read_purple_qc}
 \title{Read PURPLE QC file}
 \usage{
-read_purple_qc(x, v = "2.39")
+read_purple_qc(x)
 }
 \arguments{
 \item{x}{Path to the \code{purple.qc} file.}
-
-\item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
 A named character vector containing QC values for several PURPLE

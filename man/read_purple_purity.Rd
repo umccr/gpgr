@@ -4,12 +4,10 @@
 \alias{read_purple_purity}
 \title{Read PURPLE Purity file}
 \usage{
-read_purple_purity(x, v = "2.39")
+read_purple_purity(x)
 }
 \arguments{
 \item{x}{Path to the \code{purple.purity.tsv} file.}
-
-\item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
 A named character vector containing a summary of the purity fit.
