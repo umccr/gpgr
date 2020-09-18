@@ -32,6 +32,7 @@ Imports:
     StructuralVariantAnnotation,
     tibble,
     tidyr,
+    tidyselect,
     VariantAnnotation
 Roxygen: list(markdown = TRUE,
               roclets = c("namespace", "rd", "roxytest::testthat_roclet"))

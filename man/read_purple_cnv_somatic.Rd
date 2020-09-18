@@ -4,12 +4,10 @@
 \alias{read_purple_cnv_somatic}
 \title{Read PURPLE CNV Somatic File}
 \usage{
-read_purple_cnv_somatic(x, v = "2.39")
+read_purple_cnv_somatic(x)
 }
 \arguments{
 \item{x}{Path to \code{purple.cnv.somatic.tsv} file.}
-
-\item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
 The input file as a tibble.
@@ -21,6 +19,6 @@ profile of all (contiguous) segments of the tumor sample
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
-(p <- read_purple_cnv_somatic(x, "2.39"))
+(p <- read_purple_cnv_somatic(x))
 
 }

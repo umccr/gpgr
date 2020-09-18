@@ -4,7 +4,7 @@
 \alias{process_purple_cnv_gene}
 \title{Process PURPLE CNV Gene File for UMCCRISE}
 \usage{
-process_purple_cnv_gene(x, g = NULL, v = "2.39")
+process_purple_cnv_gene(x, g = NULL)
 }
 \arguments{
 \item{x}{Path to \code{purple.cnv.gene.tsv} file.}
@@ -15,8 +15,6 @@ process_purple_cnv_gene(x, g = NULL, v = "2.39")
 \item \code{tumorsuppressor}: is this gene a tumor suppressor (TRUE/FALSE).
 \item \code{oncogene}: is this gene an oncogene (TRUE/FALSE).
 }}
-
-\item{v}{PURPLE version (default: 2.39). Used to determine the column names.}
 }
 \value{
 List with two elements:
@@ -33,6 +31,6 @@ and selects columns of interest.
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
 g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
-(pp <- process_purple_cnv_gene(x, g)$tab)
+(pp <- process_purple_cnv_gene(x, g))
 
 }
