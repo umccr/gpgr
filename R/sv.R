@@ -67,6 +67,7 @@ count_pieces <- function(x, sep) {
   ifelse(nchar(x) == 0, 0, stringr::str_count(x, sep) + 1)
 }
 
+
 #' Abbreviate SV Effects
 #'
 #' Abbreviates SV effects column.

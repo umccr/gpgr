@@ -19,7 +19,6 @@ Reads the \code{purple.cnv.germline.tsv} file.
 }
 \examples{
 x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
-p <- read_purple_cnv_germline(x, "2.39")
-p
+(p <- read_purple_cnv_germline(x, "2.39"))
 
 }
