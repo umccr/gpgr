@@ -85,6 +85,11 @@ project <- params$project
 
 s <- tibble::tribble(
   ~nm, ~prefix, ~genome, ~comment,
+  "CUP1163", "SBJ00568__SBJ00568_PRJ200418_L2000769", "hg38", "?",
+  "SFRC01198", "SBJ00582__SBJ00582_PRJ200421_L2000771", "hg38", "?",
+  "SFRC01285", "SBJ00583__SBJ00583_PRJ200423_L2000773", "hg38", "?",
+  "PM2078754", "SBJ00580__SBJ00580_MDX200153_L2000765", "hg38", "?",
+  "PM3056445", "SBJ00133__SBJ00133_MDX200150_L2000763", "hg38", "?",
   "MB20-71", "SBJ00578__SBJ00578_PRJ200404_L2000747", "hg38", "?",
   "PM8188522", "SBJ00576__SBJ00576_MDX200145_L2000739", "hg38", "?",
   "PM3062657", "SBJ00571__SBJ00571_MDX200135_L2000737", "hg38", "?",
@@ -147,7 +152,13 @@ s <- tibble::tribble(
   )
 ```
 
+```{r}
+purrr::map(s[c("sv_vcf", "cnv_file", "snvindel_vcf")], file.exists)
+```
+
+
 ```{r inputs_table}
+
 s %>%
   dplyr::select(Sample = nm, UMCCR_Comment = comment, Assembly = genome, Prefix = prefix) %>%
   knitr::kable() %>%
