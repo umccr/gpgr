@@ -4,16 +4,31 @@
 \alias{run_chord}
 \title{Run CHORD}
 \usage{
-run_chord(snv, sv, sample, genome = "hg38")
+run_chord(
+  vcf.snv = NULL,
+  vcf.sv = NULL,
+  df.sv = NULL,
+  sample.name = NULL,
+  ref.genome = "hg38",
+  sv.caller = "manta",
+  ...
+)
 }
 \arguments{
-\item{snv}{Path to SNV VCF.}
+\item{vcf.snv}{Path to VCF containing SNVs and INDELs.}
 
-\item{sv}{Path to SV VCF.}
+\item{vcf.sv}{Path to VCF containing SVs.}
 
-\item{sample}{Name of sample to use.}
+\item{df.sv}{A data.frame object containing the columns
+'SVTYPE' and 'SVLEN' from a Manta SV VCF.}
 
-\item{genome}{Human genome assembly. One of 'hg38' (default) or 'hg19'.}
+\item{sample.name}{Name of sample to use.}
+
+\item{ref.genome}{Human genome assembly. One of 'hg38' (default), 'hg19' or 'GRCh37'.}
+
+\item{sv.caller}{manta (default) or gridss.}
+
+\item{...}{Other arguments to be passed to \code{CHORD::extractSigsChord()}.}
 }
 \value{
 List with extracted signatures and HRD prediction.
@@ -26,7 +41,8 @@ the BSgenome.Hsapiens.UCSC.hgXX installed.
 \dontrun{
 snv <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 sv <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
-chord_res <- run_chord(snv = snv, sv = sv, sample = "foo")
+chord_res <- run_chord(vcf.snv = snv, vcf.sv = sv, sample.name = "foo")
+chord_res2 <- run_chord(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = "foo")
 }
 
 

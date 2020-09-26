@@ -19,6 +19,7 @@ Depends:
     R (>= 3.5)
 Imports:
     assertthat,
+    bedr,
     dplyr,
     ggplot2,
     glue,
