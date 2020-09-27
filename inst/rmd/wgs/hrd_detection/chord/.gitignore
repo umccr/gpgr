@@ -1,3 +1,4 @@
 *
 !.gitignore
 !chord.Rmd
+!run_chord.R
