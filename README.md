@@ -1,6 +1,8 @@
 [![Conda build status](https://anaconda.org/anaconda/conda-build/badges/installer/conda.svg)](https://anaconda.org/pdiakumis/r-gpgr)
 [![Travis build status](https://travis-ci.org/umccr/gpgr.svg?branch=master)](https://travis-ci.org/umccr/gpgr)
 
+* See <https://umccr.github.io/gpgr/>
+
 # gpgr - Genomics Platform Group Reporting
 Contains reports and functions used in the Genomics Platform Group
 at the University of Melbourne Centre for Cancer Research.
