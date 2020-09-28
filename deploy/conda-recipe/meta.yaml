@@ -29,25 +29,43 @@ requirements:
 
   host:
     - r-base
+    - r-assertthat
+    - r-bedr
     - r-dplyr
     - r-ggplot2
     - r-glue
+    - r-gtools
+    - r-jsonlite
     - r-purrr
     - r-readr
     - r-rlang
+    - r-scales
+    - r-stringr
+    - bioconductor-structuralvariantannotation
     - r-tibble
     - r-tidyr
+    - r-tidyselect
+    - bioconductor-variantannotation
 
   run:
     - r-base
+    - r-assertthat
+    - r-bedr
     - r-dplyr
     - r-ggplot2
     - r-glue
+    - r-gtools
+    - r-jsonlite
     - r-purrr
     - r-readr
     - r-rlang
+    - r-scales
+    - r-stringr
+    - bioconductor-structuralvariantannotation
     - r-tibble
     - r-tidyr
+    - r-tidyselect
+    - bioconductor-variantannotation
 
 test:
   commands:
