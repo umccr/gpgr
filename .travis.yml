@@ -16,13 +16,13 @@ install:
   # Update conda and install packages
   - conda update --yes conda
   - conda config --add channels pdiakumis --add channels bioconda --add channels conda-forge
-  - conda install --yes conda-build jinja2 anaconda-client conda-verify
+  - conda install --yes conda-build anaconda-client conda-verify
   # Useful for debugging any issues with conda
   - conda info -a
 
 script:
   - mkdir out
-  - conda build --R 3.6 deploy/conda-recipe --output-folder out
+  - conda build --R 4.0 deploy/conda-recipe --output-folder out
 
 after_success:
   - test $TRAVIS_BRANCH = "master" &&
