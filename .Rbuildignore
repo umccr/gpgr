@@ -6,3 +6,7 @@
 ^nogit$
 ^README\.Rmd$
 ^\.Rproj\.user$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
