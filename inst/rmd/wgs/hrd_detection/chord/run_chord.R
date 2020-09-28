@@ -1,15 +1,16 @@
-require(BSgenome.Hsapiens.UCSC.hg38)
-require(BSgenome.Hsapiens.1000genomes.hs37d5)
-require(CHORD)
-require(furrr)
-require(future)
-require(glue)
-require(gpgr)
-require(here)
-require(kableExtra)
-require(mutSigExtractor)
-require(tidyverse)
+suppressPackageStartupMessages(require(BSgenome.Hsapiens.UCSC.hg38))
+suppressPackageStartupMessages(require(BSgenome.Hsapiens.1000genomes.hs37d5))
+suppressPackageStartupMessages(require(CHORD))
+suppressPackageStartupMessages(require(furrr))
+suppressPackageStartupMessages(require(future))
+suppressPackageStartupMessages(require(glue))
+suppressPackageStartupMessages(require(gpgr))
+suppressPackageStartupMessages(require(here))
+suppressPackageStartupMessages(require(kableExtra))
+suppressPackageStartupMessages(require(mutSigExtractor))
+suppressPackageStartupMessages(require(tidyverse))
 
+print("Starting")
 s <- tibble::tribble(
   ~Alias, ~Prefix, ~Assembly,
   "CUP1163", "SBJ00568__SBJ00568_PRJ200418_L2000769", "hg38",
@@ -81,9 +82,11 @@ res <- seq_len(nrow(s)) %>%
   furrr::future_map(function(i) {
     cat(s$Alias[i], "\n")
     gpgr::run_chord(vcf.snv = s$snvindel_vcf[i],
-                    vcf.sv = s$sv_vcf[i],
+                    #vcf.sv = s$sv_vcf[i],
+                    df.sv = gpgr:::chord_mantavcf2df(s$sv_vcf[i]),
                     sample.name = s$Alias[i],
                     ref.genome = s$Assembly[i])
   })
 tictoc::toc()
-saveRDS(res, "chord_results_2020-09-27_vcfinput.rds")
+saveRDS(res, here::here("nogit/chord/rds/patients/chord_results_2020-09-28_dfinput.rds")
+# saveRDS(res, here::here("nogit/chord/rds/patients/chord_results_2020-09-27_vcfinput.rds")

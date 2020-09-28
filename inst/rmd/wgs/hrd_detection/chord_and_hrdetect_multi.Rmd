@@ -152,13 +152,12 @@ s <- tibble::tribble(
   )
 ```
 
-```{r}
+```{r eval=FALSE}
 purrr::map(s[c("sv_vcf", "cnv_file", "snvindel_vcf")], file.exists)
 ```
 
 
 ```{r inputs_table}
-
 s %>%
   dplyr::select(Sample = nm, UMCCR_Comment = comment, Assembly = genome, Prefix = prefix) %>%
   knitr::kable() %>%
@@ -204,7 +203,7 @@ res_chord <-
   s %>%
   dplyr::mutate(res_chord_obj = here(glue("nogit/chord/rds/{project}/{prefix}.rds"))) %>%
   dplyr::rowwise() %>%
-  dplyr::mutate(chord = list(readRDS(res_chord_obj)) %>% setNames(nm)) %>%
+  dplyr::mutate(chord = list(readRDS(res_chord_obj)) %>% setNames(prefix)) %>%
   dplyr::pull(chord)
 
 sigs <- res_chord %>%
