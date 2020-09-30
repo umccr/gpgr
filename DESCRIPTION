@@ -17,26 +17,32 @@ LazyData: true
 ByteCompile: true
 Depends:
     R (>= 3.5)
+biocViews:
 Remotes:
-    pdiakumis/hrdetect,
+    pdiakumis/signature.tools.lib,
     UMCUGenetics/mutSigExtractor,
-    UMCUGenetics/CHORD,
+    UMCUGenetics/CHORD
 Imports:
     assertthat,
     bedr,
+    CHORD,
     dplyr,
     ggplot2,
     glue,
     gtools,
     jsonlite,
+    mutSigExtractor,
     purrr,
     readr,
     rlang,
     scales,
+    signature.tools.lib,
+    StructuralVariantAnnotation,
     stringr,
     tibble,
     tidyr,
     tidyselect,
+    VariantAnnotation
 Roxygen: list(markdown = TRUE,
               roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
 RoxygenNote: 7.1.1
@@ -44,12 +50,7 @@ Suggests:
     BSgenome.Hsapiens.UCSC.hg19,
     BSgenome.Hsapiens.UCSC.hg38,
     BSgenome.Hsapiens.1000genomes.hs37d5,
-    CHORD,
     knitr,
-    mutSigExtractor,
     rmarkdown,
-    signature.tools.lib,
-    StructuralVariantAnnotation,
     testthat,
-    VariantAnnotation
 VignetteBuilder: knitr

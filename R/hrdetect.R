@@ -76,10 +76,11 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
   bedpe <- StructuralVariantAnnotation::breakpointgr2bedpe(gr) %>%
     dplyr::mutate_if(is.factor, as.character) %>%
     dplyr::mutate(sample = nm) %>%
-    dplyr::select(.data$chrom1:.data$end2, .data$sample, .data$strand1, .data$strand2)
+    dplyr::select(.data$chrom1, .data$start1, .data$end1,
+                  .data$chrom2, .data$start2, .data$end2,
+                  .data$sample, .data$strand1, .data$strand2)
 
   bedpe
-
 }
 
 #' Read PURPLE Somatic CNVs for HRDetect
