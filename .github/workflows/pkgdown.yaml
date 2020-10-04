@@ -39,9 +39,12 @@ jobs:
             git config --local user.email "actions@github.com"
             git config --local user.name "GitHub Actions"
             conda activate pkgdown_gpgr
+            # needs ragg > 0.3.1 but conda only has 0.1.4
+            Rscript -e "install.packages('ragg', repos = c(CRAN = 'http://cran.rstudio.com'))"
             printf "gpgr version:\n"
             Rscript -e "packageVersion('gpgr')"
-            printf "pkgdown version:\n"
-            Rscript -e "packageVersion('pkgdown')"
+            printf "ragg version:\n"
+            Rscript -e "packageVersion('ragg')"
+            printf "Running pkgdown\n"
             Rscript -e 'pkgdown::deploy_to_branch(branch = "gh-pages", new_process = FALSE)'
 
