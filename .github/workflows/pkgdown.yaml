@@ -5,7 +5,6 @@ on: [push, pull_request]
 jobs:
   build-conda-deploy-pkgdown:
     name: Build conda package & deploy pkgdown website
-    if: "! startsWith(github.event.head_commit.message, 'bump ') || startsWith(github.ref, 'refs/tags/')"
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +22,7 @@ jobs:
           channels: "pdiakumis,conda-forge,bioconda"
 
       - name: Conda package build and upload
-        if: "!startsWith(github.ref, 'refs/tags/')"
+        shell: bash -l {0}
         run: |
           mamba install conda-build conda-verify anaconda-client
           mamba build --R 4.0 deploy/conda-recipe/
@@ -31,10 +30,11 @@ jobs:
           anaconda -t ${{ secrets.ANACONDA_UPLOAD_TOKEN }} upload $PKG_PATH
 
       - name: Install conda packages
-        if: "!startsWith(github.ref, 'refs/tags/')"
+        shell: bash -l {0}
         run: mamba create -n pkgdown_gpgr --use-local r-gpgr r-pkgdown pandoc
 
       - name: Publish pkgdown website
+        shell: bash -l {0}
         run: |
             git config --local user.email "actions@github.com"
             git config --local user.name "GitHub Actions"

@@ -1,5 +1,5 @@
 [![Conda install](https://anaconda.org/pdiakumis/r-gpgr/badges/installer/conda.svg)](https://anaconda.org/pdiakumis/r-gpgr)
-[![pkgdown build status](https://github.com/umccr/gpgr/workflows/pkgdown/badge.svg)](https://github.com/umccr/gpgr/actions?query=workflow%3Apkgdown)
+[![Conda pkgdown github action status](https://github.com/umccr/gpgr/workflows/conda-pkgdown/badge.svg)](https://github.com/umccr/gpgr/actions?query=workflow%3Aconda-pkgdown)
 
 * See <https://umccr.github.io/gpgr/>
 
