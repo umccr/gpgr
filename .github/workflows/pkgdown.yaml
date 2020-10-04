@@ -1,46 +1,47 @@
-on:
-  push:
-    branches: master
+name: conda-pkgdown
 
-name: pkgdown
+on: [push, pull_request]
 
 jobs:
-  pkgdown:
-    runs-on: macOS-latest
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+  build-conda-deploy-pkgdown:
+    name: Build conda package & deploy pkgdown website
+    if: "! startsWith(github.event.head_commit.message, 'bump ') || startsWith(github.ref, 'refs/tags/')"
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@master
-
-      - uses: r-lib/actions/setup-pandoc@master
-
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-        shell: Rscript {0}
-
-      - name: Cache R packages
-        uses: actions/cache@v2
+      - name: Set up miniconda
+        uses: conda-incubator/setup-miniconda@v1
         with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+          # Do everything inside the base env
+          auto-update-conda: true
+          auto-activate-base: true
+          activate-environment: ""
+          mamba-version: "*"
+          channels: "pdiakumis,conda-forge,bioconda"
 
-      - name: Install dependencies
+      - name: Conda package build and upload
+        if: "!startsWith(github.ref, 'refs/tags/')"
         run: |
-          remotes::install_deps(dependencies = c("Depends", "Imports"))
-          install.packages("pkgdown")
-        shell: Rscript {0}
+          mamba install conda-build conda-verify anaconda-client
+          mamba build --R 4.0 deploy/conda-recipe/
+          PKG_PATH="/usr/share/miniconda/conda-bld/linux-64/r-gpgr-*.tar.bz2"
+          anaconda -t ${{ secrets.ANACONDA_UPLOAD_TOKEN }} upload $PKG_PATH
 
-      - name: Install package
-        run: R CMD INSTALL .
+      - name: Install conda packages
+        if: "!startsWith(github.ref, 'refs/tags/')"
+        run: mamba create -n pkgdown_gpgr --use-local r-gpgr r-pkgdown pandoc
 
-      - name: Deploy package
+      - name: Publish pkgdown website
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
+            git config --local user.email "actions@github.com"
+            git config --local user.name "GitHub Actions"
+            conda activate pkgdown_gpgr
+            printf "gpgr version:\n"
+            Rscript -e "packageVersion('gpgr')"
+            printf "pkgdown version:\n"
+            Rscript -e "packageVersion('pkgdown')"
+            Rscript -e 'pkgdown::deploy_to_branch(branch = "gh-pages", new_process = FALSE)'
+
