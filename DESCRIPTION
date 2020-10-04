@@ -25,7 +25,6 @@ Remotes:
 Imports:
     assertthat,
     bedr,
-    BSgenome.Hsapiens.UCSC.hg38,
     CHORD,
     dplyr,
     ggplot2,
@@ -34,9 +33,6 @@ Imports:
     jsonlite,
     mutSigExtractor,
     purrr,
-    Rcpp,
-    RcppArmadillo,
-    RcppProgress,
     readr,
     rlang,
     scales,
@@ -52,6 +48,7 @@ Roxygen: list(markdown = TRUE,
 RoxygenNote: 7.1.1
 Suggests:
     BSgenome.Hsapiens.UCSC.hg19,
+    BSgenome.Hsapiens.UCSC.hg38,
     BSgenome.Hsapiens.1000genomes.hs37d5,
     knitr,
     rmarkdown,

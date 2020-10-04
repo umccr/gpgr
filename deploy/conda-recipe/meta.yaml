@@ -6,7 +6,6 @@ package:
   version: {{ GIT_DESCRIBE_TAG }}
 
 source:
-
   git_url: https://github.com/umccr/gpgr
   git_tag: master
 
@@ -31,6 +30,8 @@ requirements:
     - r-base
     - r-assertthat
     - r-bedr
+    - bioconductor-bsgenome.hsapiens.ucsc.hg38
+    - r-chord
     - r-dplyr
     - r-ggplot2
     - r-glue
@@ -40,6 +41,7 @@ requirements:
     - r-readr
     - r-rlang
     - r-scales
+    - r-signature.tools.lib
     - r-stringr
     - bioconductor-structuralvariantannotation
     - r-tibble
@@ -51,6 +53,8 @@ requirements:
     - r-base
     - r-assertthat
     - r-bedr
+    - bioconductor-bsgenome.hsapiens.ucsc.hg38
+    - r-chord
     - r-dplyr
     - r-ggplot2
     - r-glue
@@ -60,6 +64,7 @@ requirements:
     - r-readr
     - r-rlang
     - r-scales
+    - r-signature.tools.lib
     - r-stringr
     - bioconductor-structuralvariantannotation
     - r-tibble
