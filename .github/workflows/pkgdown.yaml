@@ -31,7 +31,7 @@ jobs:
 
       - name: Install conda packages
         shell: bash -l {0}
-        run: mamba create -n pkgdown_gpgr --use-local r-gpgr r-pkgdown pandoc
+        run: mamba create -n pkgdown_gpgr --use-local r-gpgr r-pkgdown pandoc libpng freetype pkg-config
 
       - name: Publish pkgdown website
         shell: bash -l {0}
