@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4</span>
       </span>
     </div>
 
@@ -149,8 +149,14 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/umccrise/v0.18/sv/manta.vcf.gz"</span>, package <span class='op'>=</span> <span class='st'>"gpgr"</span><span class='op'>)</span>
 <span class='va'>sv_bedpe</span> <span class='op'>&lt;-</span> <span class='fu'>hrdetect_read_sv_vcf</span><span class='op'>(</span><span class='va'>x</span>, nm <span class='op'>=</span> <span class='st'>"SAMPLE"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘VariantAnnotation’</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>sv_bedpe</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in head(sv_bedpe): object 'sv_bedpe' not found</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>sv_bedpe</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   chrom1    start1      end1 chrom2    start2      end2 sample strand1 strand2
+#&gt; 1   chr1   2067943   2067948   chr1   2068052   2068057 SAMPLE       +       -
+#&gt; 2   chr1  51143148  51143153   chr1  51143238  51143243 SAMPLE       +       -
+#&gt; 3   chr1  92930821  92930825   chr1  92930928  92930932 SAMPLE       +       -
+#&gt; 4   chr1  93828256  93828270   chr1  93828770  93828784 SAMPLE       +       -
+#&gt; 5   chr1 100376743 100376746   chr1 100376825 100376828 SAMPLE       +       -
+#&gt; 6   chr1 164031278 164031280   chr1 164031331 164031333 SAMPLE       +       -</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
