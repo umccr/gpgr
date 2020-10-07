@@ -3,7 +3,7 @@
 set -euo pipefail
 v=$1
 
-commit_message="bump v${v}"
+commit_message="Bump v${v}"
 
 sed -i "" "s/\(Version:\).*/\1 ${v}/" DESCRIPTION
 git add DESCRIPTION
