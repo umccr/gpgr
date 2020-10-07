@@ -1,0 +1,85 @@
+---
+title: "HRDetect"
+author: "Peter Diakumis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+
+vignette: >
+  %\VignetteIndexEntry{HRDetect}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r knitr_opts, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+require(gpgr)
+require(devtools)
+require(dplyr)
+require(knitr)
+```
+
+## Introduction
+
+HRDetect: Homologous Recombination Deficiency Detect
+(https://github.com/Nik-Zainal-Group/signature.tools.lib)
+
+## Data
+
+HRDetect takes as input somatic SNV, INDEL, SV and CNV files. We have made it
+somewhat easier to feed SNV/INDEL and Manta SV VCFs, together with PURPLE somatic CNV files,
+with the `gpgr::hrdetect_run` wrapper.
+
+
+```{r datafiles}
+snvindel_vcf <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+sv_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
+cnv_file <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
+```
+
+## Analysis
+
+```{r run_hrdetect}
+res <- gpgr::hrdetect_run(
+  nm = "sample_A",
+  snvindel_vcf = snvindel_vcf,
+  sv_vcf = sv_vcf,
+  cnv_file = cnv_file,
+  genome = "hg38",
+  snvoutdir = tempdir()
+) %>%
+  dplyr::mutate(dplyr::across(where(is.numeric), ~ round(.x, 3)))
+```
+
+## Results
+
+```{r res}
+cbind(var = colnames(res), value = unlist(res[1, ])) %>%
+  dplyr::as_tibble(.name_repair = "check_unique") %>%
+  knitr::kable(format = "html", caption = "HRDetect results.")
+```
+
+## Session Info
+
+```{r session_info}
+si <- devtools::session_info(include_base = TRUE)
+si_pl <- unclass(si$platform) %>% as_tibble() %>% t()
+pkgs_of_interest <- c("base", "gpgr", "signature.tools.lib")
+si_pkg <- unclass(si$packages) %>%
+  dplyr::as_tibble() %>%
+  dplyr::select(package, version = ondiskversion, datestamp = date, source) %>%
+  dplyr::filter(package %in% pkgs_of_interest)
+
+dplyr::tibble(var = row.names(si_pl),
+              value = si_pl[, , drop = TRUE]) %>%
+  knitr::kable(format = "html", caption = "Platform information.")
+
+
+si_pkg %>%
+  knitr::kable(format = "html", caption = "Main packages used in this vignette.")
+```

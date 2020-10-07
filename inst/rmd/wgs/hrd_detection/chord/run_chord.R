@@ -88,5 +88,5 @@ res <- seq_len(nrow(s)) %>%
                     ref.genome = s$Assembly[i])
   })
 tictoc::toc()
-saveRDS(res, here::here("nogit/chord/rds/patients/chord_results_2020-09-28_dfinput.rds")
+saveRDS(res, here::here("nogit/chord/rds/patients/chord_results_2020-09-28_dfinput.rds"))
 # saveRDS(res, here::here("nogit/chord/rds/patients/chord_results_2020-09-27_vcfinput.rds")
