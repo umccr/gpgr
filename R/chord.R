@@ -13,12 +13,17 @@
 #' @param ... Other arguments to be passed to `CHORD::extractSigsChord()`.
 #'
 #' @examples
-#' \dontrun{
-#' snv <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
-#' sv <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
-#' chord_res <- run_chord(vcf.snv = snv, vcf.sv = sv, sample.name = "foo")
-#' chord_res2 <- run_chord(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = "foo")
-#' }
+#'
+#' snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+#' sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
+#' # chord_res <- run_chord(vcf.snv = snv, vcf.sv = sv, sample.name = "foo")
+#' chord_res <- run_chord(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = "foo") # a bit faster
+#'
+#' @testexamples
+#'
+#' expect_equal(length(chord_res), 2)
+#' expect_equal(names(chord_res), c("contexts", "prediction"))
+#' expect_equal(chord_res[["prediction"]][, 1, drop = TRUE], "foo")
 #'
 #'
 #' @return List with extracted signatures and HRD prediction.
@@ -57,6 +62,23 @@ run_chord <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL, sample.name =
   )
 }
 
+#' Convert Manta VCF to data.frame
+#'
+#' Converts a Manta VCF to a data.frame for processing with CHORD.
+#'
+#' @param in_vcf Manta VCF.
+#'
+#' @return Tibble with two columns: sv_type and sv_len (INFO/SVTYPE and INFO/SVLEN from VCF).
+#'
+#' @examples
+#' in_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
+#' d <- chord_mantavcf2df(in_vcf)
+#'
+#' @testexamples
+#' expect_equal(d$sv_len[1], "-108")
+#' expect_equal(d$sv_type[1], "DEL")
+#'
+#' @export
 chord_mantavcf2df <- function(in_vcf) {
   d <- bedr::read.vcf(in_vcf, split.info = TRUE, verbose = FALSE)
   tibble::tibble(sv_type = d$vcf$SVTYPE,

@@ -38,12 +38,10 @@ Runs CHORD given SNV and SV VCF files. \strong{NOTE}: make sure you have
 the BSgenome.Hsapiens.UCSC.hgXX installed.
 }
 \examples{
-\dontrun{
-snv <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
-sv <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
-chord_res <- run_chord(vcf.snv = snv, vcf.sv = sv, sample.name = "foo")
-chord_res2 <- run_chord(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = "foo")
-}
 
+snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
+# chord_res <- run_chord(vcf.snv = snv, vcf.sv = sv, sample.name = "foo")
+chord_res <- run_chord(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = "foo") # a bit faster
 
 }
