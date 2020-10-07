@@ -17,7 +17,7 @@
 #' snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' chord_res <- run_chord(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = "foo")
-#' # chord_res <- run_chord(vcf.snv = snv, vcf.sv = sv, sample.name = "foo") # a bit slower
+#' # chord_res <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo") # a bit slower
 #'
 #' @testexamples
 #'
@@ -29,7 +29,7 @@
 #' @return List with extracted signatures and HRD prediction.
 #'
 #' @export
-run_chord <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL, sample.name = NULL, ref.genome = "hg38", sv.caller = "manta", ...) {
+chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL, sample.name = NULL, ref.genome = "hg38", sv.caller = "manta", ...) {
   avail_genomes <- c("hg19", "hg38", "GRCh37")
   g <- NULL
   if (ref.genome == "hg38") {
@@ -80,6 +80,7 @@ run_chord <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL, sample.name =
 #'
 #' @export
 chord_mantavcf2df <- function(in_vcf) {
+  assertthat::assert_that(grepl("vcf$", in_vcf) | grepl("vcf\\.gz$", in_vcf))
   d <- bedr::read.vcf(in_vcf, split.info = TRUE, verbose = FALSE)
   tibble::tibble(sv_type = d$vcf$SVTYPE,
                  sv_len = d$vcf$SVLEN)

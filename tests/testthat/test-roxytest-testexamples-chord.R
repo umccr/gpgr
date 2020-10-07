@@ -2,13 +2,13 @@
 
 context("File R/chord.R: @testexamples")
 
-test_that("Function run_chord() @ L32", {
+test_that("Function chord_run() @ L32", {
   
   
   snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
   chord_res <- run_chord(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = "foo")
-  # chord_res <- run_chord(vcf.snv = snv, vcf.sv = sv, sample.name = "foo") # a bit slower
+  # chord_res <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo") # a bit slower
   
   expect_equal(length(chord_res), 2)
   expect_equal(names(chord_res), c("contexts", "prediction"))
