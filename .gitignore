@@ -42,3 +42,4 @@ vignettes/*.pdf
 # nogit data
 nogit/
 docs
+inst/doc

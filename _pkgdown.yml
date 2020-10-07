@@ -1,0 +1,24 @@
+reference:
+- title: "CHORD"
+  desc: >
+    Functions related to CHORD (https://github.com/UMCUGenetics/CHORD)
+- contents:
+  - matches("chord")
+- title: "HRDetect"
+  desc: >
+    Functions related to HRDetect (https://github.com/Nik-Zainal-Group/signature.tools.lib)
+- contents:
+  - matches("hrdetect")
+- title: "PURPLE"
+  desc: >
+    Functions related to PURPLE (https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator)
+- contents:
+  - matches("purple")
+- title: "Others"
+- contents:
+  - abbreviate_effect
+  - count_pieces
+  - process_sv
+  - read_sv_tsv
+  - split_double_col
+

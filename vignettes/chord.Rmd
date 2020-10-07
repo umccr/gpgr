@@ -85,7 +85,6 @@ res$contexts %>%
 
 ## Session Info
 
-
 ```{r session_info}
 si <- devtools::session_info(include_base = TRUE)
 si_pl <- unclass(si$platform) %>% as_tibble() %>% t()
