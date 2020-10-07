@@ -1,0 +1,105 @@
+---
+title: "CHORD"
+author: "Peter Diakumis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+
+vignette: >
+  %\VignetteIndexEntry{CHORD}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r knitr_opts, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+require(gpgr)
+require(devtools)
+require(dplyr)
+require(knitr)
+```
+
+## Introduction
+
+CHORD: Classifier of HOmologous Recombination Deficiency (https://github.com/UMCUGenetics/CHORD)
+
+> CHORD is a random forest model that uses the relative counts of somatic
+mutation contexts to predict homologous recombination deficiency (HRD).
+The primary contexts used by CHORD are deletions with flanking microhomology
+and 1-100kb structural duplications. Additionally, 1-100kb structural
+duplications are used to distinguish BRCA1-type HRD from BRCA2-type HRD.
+
+## Data
+
+CHORD takes as input somatic VCFs containing SNVs, INDELs and SVs. The former
+two can be in the same VCF. It is also able to take data.frames with those variants
+as input. Due to the annotation size in some of our processed Manta VCFs, we prefer
+to feed it a pre-processed SV data.frame instead of a VCF, thus we use
+the `gpgr::chord_mantavcf2df` function.
+
+
+```{r datafiles}
+snvindel_vcf <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+sv_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
+```
+
+## Analysis
+
+```{r run_chord}
+sv_df <- gpgr::chord_mantavcf2df(sv_vcf) # prepare SV VCF as data.frame
+res <- gpgr::run_chord(vcf.snv = snvindel_vcf,
+                       df.sv = sv_df,
+                       sv.caller = "manta",
+                       # vcf.sv = sv_vcf, # alternative
+                       sample.name = "sample_A",
+                       ref.genome = "hg38",
+                       verbose = TRUE
+                       )
+```
+
+## Results
+
+```{r res}
+str(res, list.len = 4)
+
+cbind(var = colnames(res$prediction), value = unlist(res$prediction[1, ])) %>%
+  dplyr::as_tibble(.name_repair = "check_unique") %>%
+  knitr::kable(format = "html", caption = "CHORD results.")
+
+# grab first and last few of the contexts
+col_ind <- c(1:6, (ncol(res$contexts) - 10):ncol(res$contexts))
+res$contexts %>%
+  as.data.frame() %>%
+  t() %>%
+  dplyr::as_tibble(rownames = "context", .name_repair = "check_unique") %>%
+  dplyr::mutate(n = row_number()) %>%
+  dplyr::select(n, dplyr::everything()) %>%
+  dplyr::slice(col_ind) %>%
+  knitr::kable(format = "html", caption = "Sample of rows from contexts counts.")
+```
+
+## Session Info
+
+
+```{r session_info}
+si <- devtools::session_info(include_base = TRUE)
+si_pl <- unclass(si$platform) %>% as_tibble() %>% t()
+pkgs_of_interest <- c("base", "gpgr", "CHORD", "mutSigExtractor")
+si_pkg <- unclass(si$packages) %>%
+  dplyr::as_tibble() %>%
+  dplyr::select(package, version = ondiskversion, datestamp = date, source) %>%
+  dplyr::filter(package %in% pkgs_of_interest)
+
+dplyr::tibble(var = row.names(si_pl),
+              value = si_pl[, , drop = TRUE]) %>%
+  knitr::kable(format = "html", caption = "Platform information.")
+
+  
+si_pkg %>%
+  knitr::kable(format = "html", caption = "Main packages used in this vignette.")
+```

@@ -28,7 +28,7 @@ run_chord(
 
 \item{sv.caller}{manta (default) or gridss.}
 
-\item{...}{Other arguments to be passed to \code{CHORD::extractSigsChord()}.}
+\item{...}{Other arguments to be passed to \code{\link[CHORD:extractSigsChord]{CHORD::extractSigsChord()}}.}
 }
 \value{
 List with extracted signatures and HRD prediction.

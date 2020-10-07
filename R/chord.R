@@ -10,7 +10,7 @@
 #' @param sample.name Name of sample to use.
 #' @param ref.genome Human genome assembly. One of 'hg38' (default), 'hg19' or 'GRCh37'.
 #' @param sv.caller manta (default) or gridss.
-#' @param ... Other arguments to be passed to `CHORD::extractSigsChord()`.
+#' @param ... Other arguments to be passed to [CHORD::extractSigsChord()].
 #'
 #' @examples
 #'
