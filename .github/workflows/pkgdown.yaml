@@ -3,7 +3,7 @@ name: conda-pkgdown
 on:
   push:
     tags-ignore:
-      - **
+      - "**"
 
 jobs:
   build-conda-deploy-pkgdown:
