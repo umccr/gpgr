@@ -21,7 +21,7 @@ Processes the \code{purple.cnv.somatic.tsv} file.
 and selects columns of interest.
 }
 \examples{
-x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 (pp <- process_purple_cnv_somatic(x))
 
 }

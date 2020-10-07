@@ -16,7 +16,7 @@ The input file as a tibble.
 Reads the \code{purple.cnv.germline.tsv} file.
 }
 \examples{
-x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
+x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
 (p <- read_purple_cnv_germline(x))
 
 }

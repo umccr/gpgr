@@ -16,7 +16,7 @@ A named character vector containing a summary of the purity fit.
 Reads the \code{purple.purity.tsv} file containing a summary of the purity fit.
 }
 \examples{
-x <- system.file("extdata/purple/v2.39/purple.purity.tsv", package = "gpgr")
+x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
 (p <- read_purple_purity(x))
 
 }

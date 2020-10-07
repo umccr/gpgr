@@ -16,7 +16,7 @@ A tibble corresponding to the input TSV file.
 Reads the Manta TSV file output by umccrise.
 }
 \examples{
-x <- system.file("extdata/umccrise/v0.18/sv/manta.tsv", package = "gpgr")
+x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
 (sv <- read_sv_tsv(x))
 
 }

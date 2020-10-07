@@ -17,7 +17,7 @@ metrics.
 Reads the \code{purple.qc} file.
 }
 \examples{
-x <- system.file("extdata/purple/v2.39/purple.qc", package = "gpgr")
+x <- system.file("extdata/purple/purple.qc", package = "gpgr")
 (p <- read_purple_qc(x))
 
 }

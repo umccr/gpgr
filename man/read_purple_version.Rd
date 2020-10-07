@@ -20,7 +20,7 @@ A list with the elements:
 Reads the \code{purple.version} file containing the PURPLE version and build date.
 }
 \examples{
-x <- system.file("extdata/purple/v2.39/purple.version", package = "gpgr")
+x <- system.file("extdata/purple/purple.version", package = "gpgr")
 (v <- read_purple_version(x))
 
 }

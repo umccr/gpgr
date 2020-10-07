@@ -29,7 +29,7 @@ Processes the \code{purple.cnv.gene.tsv} file. Keeps genes that are in the
 and selects columns of interest.
 }
 \examples{
-x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
+x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
 (pp <- process_purple_cnv_gene(x, g))
 

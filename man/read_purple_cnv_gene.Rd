@@ -18,7 +18,7 @@ alterations of each gene in the HMF panel
 (see \href{https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator#gene-copy-number-file}{this table}).
 }
 \examples{
-x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
+x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 (p <- read_purple_cnv_gene(x))
 
 }

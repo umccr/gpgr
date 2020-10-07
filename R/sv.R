@@ -131,7 +131,7 @@ abbreviate_effect <- function(effects) {
 #' @return A tibble corresponding to the input TSV file.
 #'
 #' @examples
-#' x <- system.file("extdata/umccrise/v0.18/sv/manta.tsv", package = "gpgr")
+#' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
 #' (sv <- read_sv_tsv(x))
 #'
 #' @testexamples
@@ -163,7 +163,7 @@ read_sv_tsv <- function(x) {
 #' @return A list with melted/unmelted tibbles (these are NULL if TSV file was empty).
 #'
 #' @examples
-#' x <- system.file("extdata/umccrise/v0.18/sv/manta.tsv", package = "gpgr")
+#' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
 #' (sv <- process_sv(x))
 #'
 #' @testexamples

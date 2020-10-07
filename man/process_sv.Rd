@@ -16,7 +16,7 @@ A list with melted/unmelted tibbles (these are NULL if TSV file was empty).
 Processes the Manta TSV file output by umccrise.
 }
 \examples{
-x <- system.file("extdata/umccrise/v0.18/sv/manta.tsv", package = "gpgr")
+x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
 (sv <- process_sv(x))
 
 }

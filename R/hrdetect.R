@@ -8,7 +8,7 @@
 #'         for SNVs and INDELs in separate tibbles.
 #'
 #' @examples
-#' x <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+#' x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' (l <- hrdetect_read_snvindel_vcf(x))
 #'
 #' @testexamples
@@ -54,7 +54,7 @@ hrdetect_read_snvindel_vcf <- function(x) {
 #'
 #'
 #' @examples
-#' x <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
+#' x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' sv_bedpe <- hrdetect_read_sv_vcf(x, nm = "SAMPLE")
 #' head(sv_bedpe)
 #'
@@ -95,7 +95,7 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
 #' - minorAllelePloidy
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' (cnv <- hrdetect_read_purple_cnv(x))
 #'
 #' @testexamples
@@ -137,7 +137,7 @@ hrdetect_read_purple_cnv <- function(x) {
 #' - indel_results: tibble with a summary of the count of indels and their proportion.
 #'
 #' @examples
-#' x <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+#' x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' (l <- hrdetect_prep_snvindel(x, nm = "sampleA", outdir = tempdir()))
 #'
 #' @testexamples
@@ -209,7 +209,7 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
 #' @return Single-column data.frame (with rownames) with counts for each SV category.
 #'
 #' @examples
-#' x <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
+#' x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' nm <- "SampleA"
 #' (d <- hrdetect_prep_sv(x, nm))
 #'
@@ -239,7 +239,7 @@ hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
 #' @return Tibble with sample name and HRD-LOH index.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' (l <- hrdetect_prep_cnv(x, nm = "SampleA"))
 #'
 #' @testexamples
@@ -273,10 +273,10 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #'
 #' @examples
 #' snvindel_vcf <- system.file(
-#'                   "extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz",
+#'                   "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
 #'                   package = "gpgr")
-#' sv_vcf <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
-#' cnv_file <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+#' sv_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
+#' cnv_file <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' nm <- "SampleA"
 #' genome <- "hg38"
 #' snvoutdir <- tempdir()

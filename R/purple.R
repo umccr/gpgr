@@ -9,7 +9,7 @@
 #' @return The input file as a tibble.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 #' (p <- read_purple_cnv_gene(x))
 #'
 #' @testexamples
@@ -52,7 +52,7 @@ read_purple_cnv_gene <- function(x) {
 #' * `descr`: Description of tibble columns.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 #' g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
 #' (pp <- process_purple_cnv_gene(x, g))
 #'
@@ -122,7 +122,7 @@ process_purple_cnv_gene <- function(x, g = NULL) {
 #' @return The input file as a tibble.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' (p <- read_purple_cnv_somatic(x))
 #'
 #' @testexamples
@@ -155,7 +155,7 @@ read_purple_cnv_somatic <- function(x) {
 #' * `descr`: Description of tibble columns.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' (pp <- process_purple_cnv_somatic(x))
 #'
 #' @testexamples
@@ -215,7 +215,7 @@ process_purple_cnv_somatic <- function(x) {
 #' @return The input file as a tibble.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
 #' (p <- read_purple_cnv_germline(x))
 #'
 #' @testexamples
@@ -240,7 +240,7 @@ read_purple_cnv_germline <- function(x) {
 #' * `descr`: Description of tibble columns.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
 #' (pp <- process_purple_cnv_germline(x))
 #'
 #' @testexamples
@@ -265,7 +265,7 @@ process_purple_cnv_germline <- function(x) {
 #' * `build_date`: The build date of the PURPLE version.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.version", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.version", package = "gpgr")
 #' (v <- read_purple_version(x))
 #'
 #' @testexamples
@@ -292,7 +292,7 @@ read_purple_version <- function(x) {
 #'         metrics.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.qc", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.qc", package = "gpgr")
 #' (p <- read_purple_qc(x))
 #'
 #' @testexamples
@@ -321,7 +321,7 @@ read_purple_qc <- function(x) {
 #' @return A named character vector containing a summary of the purity fit.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/v2.39/purple.purity.tsv", package = "gpgr")
+#' x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
 #' (p <- read_purple_purity(x))
 #'
 #' @testexamples

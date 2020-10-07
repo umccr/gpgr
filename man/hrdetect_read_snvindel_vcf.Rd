@@ -17,7 +17,7 @@ for SNVs and INDELs in separate tibbles.
 Reads a VCF with SNVs/INDELs for use with HRDetect.
 }
 \examples{
-x <- system.file("extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 (l <- hrdetect_read_snvindel_vcf(x))
 
 }

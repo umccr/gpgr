@@ -21,7 +21,7 @@ Tibble containing following columns:
 Reads PURPLE somatic CNVs for use with HRDetect.
 }
 \examples{
-x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 (cnv <- hrdetect_read_purple_cnv(x))
 
 }

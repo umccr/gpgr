@@ -38,10 +38,10 @@ Runs HRDetect as described in the
 }
 \examples{
 snvindel_vcf <- system.file(
-                  "extdata/umccrise/v0.18/snv/somatic-ensemble-PASS.vcf.gz",
+                  "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
                   package = "gpgr")
-sv_vcf <- system.file("extdata/umccrise/v0.18/sv/manta.vcf.gz", package = "gpgr")
-cnv_file <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+sv_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
+cnv_file <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 nm <- "SampleA"
 genome <- "hg38"
 snvoutdir <- tempdir()

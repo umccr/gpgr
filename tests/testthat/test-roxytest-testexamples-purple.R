@@ -4,7 +4,7 @@ context("File R/purple.R: @testexamples")
 
 test_that("Function read_purple_cnv_gene() @ L19", {
   
-  x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
+  x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
   (p <- read_purple_cnv_gene(x))
   
   expect_equal(colnames(p)[ncol(p)], "minMinorAllelePloidy")
@@ -13,7 +13,7 @@ test_that("Function read_purple_cnv_gene() @ L19", {
 
 test_that("Function process_purple_cnv_gene() @ L63", {
   
-  x <- system.file("extdata/purple/v2.39/purple.cnv.gene.tsv", package = "gpgr")
+  x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
   g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
   (pp <- process_purple_cnv_gene(x, g))
   
@@ -23,7 +23,7 @@ test_that("Function process_purple_cnv_gene() @ L63", {
 
 test_that("Function read_purple_cnv_somatic() @ L132", {
   
-  x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+  x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (p <- read_purple_cnv_somatic(x))
   
   expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
@@ -32,7 +32,7 @@ test_that("Function read_purple_cnv_somatic() @ L132", {
 
 test_that("Function process_purple_cnv_somatic() @ L165", {
   
-  x <- system.file("extdata/purple/v2.39/purple.cnv.somatic.tsv", package = "gpgr")
+  x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (pp <- process_purple_cnv_somatic(x))
   
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
@@ -41,7 +41,7 @@ test_that("Function process_purple_cnv_somatic() @ L165", {
 
 test_that("Function read_purple_cnv_germline() @ L225", {
   
-  x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
+  x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
   (p <- read_purple_cnv_germline(x))
   
   expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
@@ -50,7 +50,7 @@ test_that("Function read_purple_cnv_germline() @ L225", {
 
 test_that("Function process_purple_cnv_germline() @ L250", {
   
-  x <- system.file("extdata/purple/v2.39/purple.cnv.germline.tsv", package = "gpgr")
+  x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
   (pp <- process_purple_cnv_germline(x))
   
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
@@ -59,7 +59,7 @@ test_that("Function process_purple_cnv_germline() @ L250", {
 
 test_that("Function read_purple_version() @ L277", {
   
-  x <- system.file("extdata/purple/v2.39/purple.version", package = "gpgr")
+  x <- system.file("extdata/purple/purple.version", package = "gpgr")
   (v <- read_purple_version(x))
   
   expect_equal(length(v), 2)
@@ -70,7 +70,7 @@ test_that("Function read_purple_version() @ L277", {
 
 test_that("Function read_purple_qc() @ L302", {
   
-  x <- system.file("extdata/purple/v2.39/purple.qc", package = "gpgr")
+  x <- system.file("extdata/purple/purple.qc", package = "gpgr")
   (p <- read_purple_qc(x))
   
   expect_true(inherits(p, "tbl_df"))
@@ -79,7 +79,7 @@ test_that("Function read_purple_qc() @ L302", {
 
 test_that("Function read_purple_purity() @ L332", {
   
-  x <- system.file("extdata/purple/v2.39/purple.purity.tsv", package = "gpgr")
+  x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
   (p <- read_purple_purity(x))
   
   expect_equal(p[1, "Column", drop = TRUE], "purity")

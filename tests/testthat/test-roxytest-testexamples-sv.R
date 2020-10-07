@@ -47,7 +47,7 @@ test_that("Function abbreviate_effect() @ L92", {
 
 test_that("Function read_sv_tsv() @ L141", {
   
-  x <- system.file("extdata/umccrise/v0.18/sv/manta.tsv", package = "gpgr")
+  x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
   (sv <- read_sv_tsv(x))
   
   expect_equal(colnames(sv)[ncol(sv)], "MATEID")
@@ -56,7 +56,7 @@ test_that("Function read_sv_tsv() @ L141", {
 
 test_that("Function process_sv() @ L175", {
   
-  x <- system.file("extdata/umccrise/v0.18/sv/manta.tsv", package = "gpgr")
+  x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
   (sv <- process_sv(x))
   
   expect_true(inherits(sv, "list"))
