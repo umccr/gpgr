@@ -52,14 +52,15 @@ sv_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 
 ```{r run_chord}
 sv_df <- gpgr::chord_mantavcf2df(sv_vcf) # prepare SV VCF as data.frame
-res <- gpgr::run_chord(vcf.snv = snvindel_vcf,
-                       df.sv = sv_df,
-                       sv.caller = "manta",
-                       # vcf.sv = sv_vcf, # alternative
-                       sample.name = "sample_A",
-                       ref.genome = "hg38",
-                       verbose = TRUE
-                       )
+res <- gpgr::chord_run(
+  vcf.snv = snvindel_vcf,
+  df.sv = sv_df,
+  sv.caller = "manta",
+  # vcf.sv = sv_vcf, # alternative
+  sample.name = "sample_A",
+  ref.genome = "hg38",
+  verbose = TRUE
+)
 ```
 
 ## Results
@@ -85,7 +86,7 @@ res$contexts %>%
 
 ## Session Info
 
-```{r session_info}
+```{r session_info, echo=FALSE}
 si <- devtools::session_info(include_base = TRUE)
 si_pl <- unclass(si$platform) %>% as_tibble() %>% t()
 pkgs_of_interest <- c("base", "gpgr", "CHORD", "mutSigExtractor")
