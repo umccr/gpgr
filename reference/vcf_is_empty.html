@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Count Number of Parts in a String — count_pieces • gpgr</title>
+<title>Does the VCF file contain any variants? — vcf_is_empty • gpgr</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Count Number of Parts in a String — count_pieces" />
-<meta property="og:description" content="Counts number of pieces of a string separated by a pattern.
-If it's an empty string, returns 0. If the pattern isn't found, returns 1.
-If the pattern is found once, returns 2 (two pieces), etc." />
+<meta property="og:title" content="Does the VCF file contain any variants? — vcf_is_empty" />
+<meta property="og:description" content="Checks if the VCF file contains any variants." />
 
 
 
@@ -125,42 +123,51 @@ If the pattern is found once, returns 2 (two pieces), etc." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Count Number of Parts in a String</h1>
-    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/sv.R'><code>R/sv.R</code></a></small>
-    <div class="hidden name"><code>count_pieces.Rd</code></div>
+    <h1>Does the VCF file contain any variants?</h1>
+    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>vcf_is_empty.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Counts number of pieces of a string separated by a pattern.
-If it's an empty string, returns 0. If the pattern isn't found, returns 1.
-If the pattern is found once, returns 2 (two pieces), etc.</p>
+    <p>Checks if the VCF file contains any variants.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>count_pieces</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>sep</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>vcf_is_empty</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Input string.</p></td>
-    </tr>
-    <tr>
-      <th>sep</th>
-      <td><p>Pattern to count for.</p></td>
+      <td><p>Path to VCF file.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Number of parts.</p>
+    <p>TRUE if there is at least one variant in the VCF, FALSE otherwise.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='op'>(</span><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'>gpgr</span><span class='fu'>:::</span><span class='fu'>count_pieces</span><span class='op'>(</span><span class='st'>"foo,bar,baz"</span>, sep <span class='op'>=</span> <span class='st'>","</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 3</div><div class='input'><span class='op'>(</span><span class='va'>b</span> <span class='op'>&lt;-</span> <span class='fu'>gpgr</span><span class='fu'>:::</span><span class='fu'>count_pieces</span><span class='op'>(</span><span class='st'>"foo"</span>, sep <span class='op'>=</span> <span class='st'>","</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='op'>(</span><span class='va'>k</span> <span class='op'>&lt;-</span> <span class='fu'>gpgr</span><span class='fu'>:::</span><span class='fu'>count_pieces</span><span class='op'>(</span><span class='st'>""</span>, sep <span class='op'>=</span> <span class='st'>","</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='op'>(</span><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>gpgr</span><span class='fu'>:::</span><span class='fu'>count_pieces</span><span class='op'>(</span><span class='st'>","</span>, sep <span class='op'>=</span> <span class='st'>","</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 2</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class='op'>=</span> <span class='st'>"gpgr"</span><span class='op'>)</span>
+<span class='op'>(</span><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'>vcf_is_empty</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
+<span class='va'>tmp1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>"fakeFile"</span>, fileext <span class='op'>=</span> <span class='st'>"vcf"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"col1\tcol2\tcol3"</span>, <span class='st'>"1\t2\t3"</span><span class='op'>)</span>, con <span class='op'>=</span> <span class='va'>tmp1</span><span class='op'>)</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>vcf_is_empty</span><span class='op'>(</span><span class='va'>tmp1</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='va'>vcf_cols</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"#CHROM"</span>, <span class='st'>"POS"</span>, <span class='st'>"ID"</span>, <span class='st'>"REF"</span>, <span class='st'>"ALT"</span>, <span class='st'>"QUAL"</span>,
+              <span class='st'>"FILTER"</span>, <span class='st'>"INFO"</span>, <span class='st'>"FORMAT"</span><span class='op'>)</span>
+<span class='va'>tmp2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>"fakeFile"</span>, fileext <span class='op'>=</span> <span class='st'>"vcf"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>vcf_cols</span>, collapse <span class='op'>=</span> <span class='st'>"\t"</span><span class='op'>)</span>, con <span class='op'>=</span> <span class='va'>tmp2</span><span class='op'>)</span>
+<span class='op'>(</span><span class='va'>z</span> <span class='op'>&lt;-</span> <span class='fu'>vcf_is_empty</span><span class='op'>(</span><span class='va'>tmp2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>/tmp/RtmpPyBoAc/fakeFile394b664ae8e8vcf does not contain any variants.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='va'>tmp3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>"fakeFile"</span>, fileext <span class='op'>=</span> <span class='st'>"FOO"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>vcf_cols</span>, collapse <span class='op'>=</span> <span class='st'>"\t"</span><span class='op'>)</span>, con <span class='op'>=</span> <span class='va'>tmp3</span><span class='op'>)</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>vcf_is_empty</span><span class='op'>(</span><span class='va'>tmp3</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 </div></pre>
   </div>

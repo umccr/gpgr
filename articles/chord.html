@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6</span>
       </span>
     </div>
 
@@ -85,7 +85,7 @@
       <h1 data-toc-skip>CHORD</h1>
                         <h4 class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-10-07</h4>
+            <h4 class="date">2020-10-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/chord.Rmd"><code>vignettes/chord.Rmd</code></a></small>
       <div class="hidden name"><code>chord.Rmd</code></div>
@@ -120,14 +120,15 @@
 <a href="#analysis" class="anchor"></a>Analysis</h2>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="va">sv_df</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/chord_mantavcf2df.html">chord_mantavcf2df</a></span><span class="op">(</span><span class="va">sv_vcf</span><span class="op">)</span> <span class="co"># prepare SV VCF as data.frame</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/run_chord.html">run_chord</a></span><span class="op">(</span>vcf.snv <span class="op">=</span> <span class="va">snvindel_vcf</span>,
-                       df.sv <span class="op">=</span> <span class="va">sv_df</span>,
-                       sv.caller <span class="op">=</span> <span class="st">"manta"</span>,
-                       <span class="co"># vcf.sv = sv_vcf, # alternative</span>
-                       sample.name <span class="op">=</span> <span class="st">"sample_A"</span>,
-                       ref.genome <span class="op">=</span> <span class="st">"hg38"</span>,
-                       verbose <span class="op">=</span> <span class="cn">TRUE</span>
-                       <span class="op">)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/chord_run.html">chord_run</a></span><span class="op">(</span>
+  vcf.snv <span class="op">=</span> <span class="va">snvindel_vcf</span>,
+  df.sv <span class="op">=</span> <span class="va">sv_df</span>,
+  sv.caller <span class="op">=</span> <span class="st">"manta"</span>,
+  <span class="co"># vcf.sv = sv_vcf, # alternative</span>
+  sample.name <span class="op">=</span> <span class="st">"sample_A"</span>,
+  ref.genome <span class="op">=</span> <span class="st">"hg38"</span>,
+  verbose <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; #====== Loading variants from vcfs ======#</span>
 <span class="co">#&gt; </span>
@@ -289,7 +290,7 @@ remarks_hrd_type
 p_BRCA1.5%
 </td>
 <td style="text-align:left;">
-0.0812
+0.1057
 </td>
 </tr>
 <tr>
@@ -297,7 +298,7 @@ p_BRCA1.5%
 p_BRCA1.50%
 </td>
 <td style="text-align:left;">
-0.215
+0.193
 </td>
 </tr>
 <tr>
@@ -305,7 +306,7 @@ p_BRCA1.50%
 p_BRCA1.95%
 </td>
 <td style="text-align:left;">
-0.3245
+0.3184
 </td>
 </tr>
 <tr>
@@ -313,7 +314,7 @@ p_BRCA1.95%
 p_BRCA2.5%
 </td>
 <td style="text-align:left;">
-0.4713
+0.4675
 </td>
 </tr>
 <tr>
@@ -321,7 +322,7 @@ p_BRCA2.5%
 p_BRCA2.50%
 </td>
 <td style="text-align:left;">
-0.588
+0.605
 </td>
 </tr>
 <tr>
@@ -329,7 +330,7 @@ p_BRCA2.50%
 p_BRCA2.95%
 </td>
 <td style="text-align:left;">
-0.7182
+0.7042
 </td>
 </tr>
 <tr>
@@ -337,7 +338,7 @@ p_BRCA2.95%
 p_hrd.5%
 </td>
 <td style="text-align:left;">
-0.776
+0.7779
 </td>
 </tr>
 <tr>
@@ -345,7 +346,7 @@ p_hrd.5%
 p_hrd.50%
 </td>
 <td style="text-align:left;">
-0.808
+0.796
 </td>
 </tr>
 <tr>
@@ -353,7 +354,7 @@ p_hrd.50%
 p_hrd.95%
 </td>
 <td style="text-align:left;">
-0.8204
+0.8162
 </td>
 </tr>
 </tbody>
@@ -579,18 +580,6 @@ TRA
 <div id="session-info" class="section level2">
 <h2 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h2>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="va">si</span> <span class="op">&lt;-</span> <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/session_info.html">session_info</a></span><span class="op">(</span>include_base <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">si_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/class.html">unclass</a></span><span class="op">(</span><span class="va">si</span><span class="op">$</span><span class="va">platform</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">pkgs_of_interest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"base"</span>, <span class="st">"gpgr"</span>, <span class="st">"CHORD"</span>, <span class="st">"mutSigExtractor"</span><span class="op">)</span>
-<span class="va">si_pkg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/class.html">unclass</a></span><span class="op">(</span><span class="va">si</span><span class="op">$</span><span class="va">packages</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">package</span>, version <span class="op">=</span> <span class="va">ondiskversion</span>, datestamp <span class="op">=</span> <span class="va">date</span>, <span class="va">source</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">package</span> <span class="op">%in%</span> <span class="va">pkgs_of_interest</span><span class="op">)</span>
-
-<span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">si_pl</span><span class="op">)</span>,
-              value <span class="op">=</span> <span class="va">si_pl</span><span class="op">[</span>, , drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Platform information."</span><span class="op">)</span></pre></div>
 <table class="table">
 <caption>
 Platform information.
@@ -673,16 +662,11 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-10-07
+2020-10-08
 </td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-
-  
-<span class="va">si_pkg</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Main packages used in this vignette."</span><span class="op">)</span></pre></div>
 <table class="table">
 <caption>
 Main packages used in this vignette.
@@ -735,10 +719,10 @@ local
 gpgr
 </td>
 <td style="text-align:left;">
-0.0.5
+0.0.6
 </td>
 <td style="text-align:left;">
-2020-10-07
+2020-10-08
 </td>
 <td style="text-align:left;">
 local
