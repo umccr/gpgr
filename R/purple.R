@@ -10,13 +10,13 @@
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
-#' (p <- read_purple_cnv_gene(x))
+#' (p <- purple_cnv_gene_read(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "minMinorAllelePloidy")
 #'
 #' @export
-read_purple_cnv_gene <- function(x) {
+purple_cnv_gene_read <- function(x) {
 
   nm <- c("chromosome" = "c", "start" = "i", "end" = "i", "gene" = "c",
           "minCopyNumber" = "d", "maxCopyNumber" = "d",
@@ -54,14 +54,14 @@ read_purple_cnv_gene <- function(x) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 #' g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
-#' (pp <- process_purple_cnv_gene(x, g))
+#' (pp <- purple_cnv_gene_process(x, g))
 #'
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "minRegSupportStartEndMethod")
 #'
 #' @export
-process_purple_cnv_gene <- function(x, g = NULL) {
-  purple_cnv_gene <- read_purple_cnv_gene(x)
+purple_cnv_gene_process <- function(x, g = NULL) {
+  purple_cnv_gene <- purple_cnv_gene_read(x)
   if (is.null(g)) {
     g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
   }
@@ -124,13 +124,13 @@ process_purple_cnv_gene <- function(x, g = NULL) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
-#' (p <- read_purple_cnv_somatic(x))
+#' (p <- purple_cnv_somatic_read(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
 #'
 #' @export
-read_purple_cnv_somatic <- function(x) {
+purple_cnv_somatic_read <- function(x) {
   nm <- c("chromosome" = "c", "start" = "i", "end" = "i",
           "copyNumber" = "d", "bafCount" = "d", "observedBAF" = "d",
           "baf" = "d", "segmentStartSupport" = "c", "segmentEndSupport" = "c",
@@ -157,15 +157,15 @@ read_purple_cnv_somatic <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
-#' (pp <- process_purple_cnv_somatic(x))
+#' (pp <- purple_cnv_somatic_process(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 #'
 #' @export
-process_purple_cnv_somatic <- function(x) {
+purple_cnv_somatic_process <- function(x) {
 
-  purple_cnv_somatic <- read_purple_cnv_somatic(x)
+  purple_cnv_somatic <- purple_cnv_somatic_read(x)
   purple_cnv_somatic <- purple_cnv_somatic %>%
     dplyr::mutate(
       Chr = as.factor(.data$chromosome),
@@ -217,15 +217,15 @@ process_purple_cnv_somatic <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
-#' (p <- read_purple_cnv_germline(x))
+#' (p <- purple_cnv_germline_read(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
 #'
 #' @export
-read_purple_cnv_germline <- function(x) {
+purple_cnv_germline_read <- function(x) {
   # as of PURPLE v2.39, germline and somatic files have same columns.
-  purple_cnv_germline <- read_purple_cnv_somatic(x)
+  purple_cnv_germline <- purple_cnv_somatic_read(x)
   purple_cnv_germline
 }
 
@@ -242,15 +242,15 @@ read_purple_cnv_germline <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
-#' (pp <- process_purple_cnv_germline(x))
+#' (pp <- purple_cnv_germline_process(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 #'
 #' @export
-process_purple_cnv_germline <- function(x) {
+purple_cnv_germline_process <- function(x) {
   # as of PURPLE v2.39, germline and somatic files have same columns.
-  processed_purple_cnv_germline <- process_purple_cnv_somatic(x)
+  processed_purple_cnv_germline <- purple_cnv_somatic_process(x)
   processed_purple_cnv_germline
 }
 
@@ -266,7 +266,7 @@ process_purple_cnv_germline <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.version", package = "gpgr")
-#' (v <- read_purple_version(x))
+#' (v <- purple_version_read(x))
 #'
 #' @testexamples
 #' expect_equal(length(v), 2)
@@ -274,7 +274,7 @@ process_purple_cnv_germline <- function(x) {
 #' expect_equal(v$version, "2.39")
 #'
 #' @export
-read_purple_version <- function(x) {
+purple_version_read <- function(x) {
   tab <- readr::read_delim(x, delim = "=", col_names = c("key", "value"), col_types = "cc")
   assertthat::assert_that(nrow(tab) == 2, all(tab$key == c("version", "build.date")))
 

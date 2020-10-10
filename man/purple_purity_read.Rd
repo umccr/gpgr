@@ -10,7 +10,7 @@ purple_purity_read(x)
 \item{x}{Path to the \code{purple.purity.tsv} file.}
 }
 \value{
-A named character vector containing a summary of the purity fit.
+The input file as a tibble with a description of each metric.
 }
 \description{
 Reads the \code{purple.purity.tsv} file containing a summary of the purity fit.
