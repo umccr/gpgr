@@ -21,7 +21,7 @@ test_that("Function process_purple_cnv_gene() @ L63", {
 })
 
 
-test_that("Function read_purple_cnv_somatic() @ L132", {
+test_that("Function read_purple_cnv_somatic() @ L133", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (p <- read_purple_cnv_somatic(x))
@@ -30,7 +30,7 @@ test_that("Function read_purple_cnv_somatic() @ L132", {
 })
 
 
-test_that("Function process_purple_cnv_somatic() @ L165", {
+test_that("Function process_purple_cnv_somatic() @ L166", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (pp <- process_purple_cnv_somatic(x))
@@ -39,7 +39,7 @@ test_that("Function process_purple_cnv_somatic() @ L165", {
 })
 
 
-test_that("Function read_purple_cnv_germline() @ L225", {
+test_that("Function read_purple_cnv_germline() @ L226", {
   
   x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
   (p <- read_purple_cnv_germline(x))
@@ -48,7 +48,7 @@ test_that("Function read_purple_cnv_germline() @ L225", {
 })
 
 
-test_that("Function process_purple_cnv_germline() @ L250", {
+test_that("Function process_purple_cnv_germline() @ L251", {
   
   x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
   (pp <- process_purple_cnv_germline(x))
@@ -68,19 +68,19 @@ test_that("Function read_purple_version() @ L277", {
 })
 
 
-test_that("Function read_purple_qc() @ L302", {
+test_that("Function purple_qc_read() @ L302", {
   
   x <- system.file("extdata/purple/purple.qc", package = "gpgr")
-  (p <- read_purple_qc(x))
+  (p <- purple_qc_read(x))
   
   expect_true(inherits(p, "tbl_df"))
 })
 
 
-test_that("Function read_purple_purity() @ L332", {
+test_that("Function purple_purity_read() @ L332", {
   
   x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
-  (p <- read_purple_purity(x))
+  (p <- purple_purity_read(x))
   
   expect_equal(p[1, "Column", drop = TRUE], "purity")
   expect_equal(p[nrow(p), "Column", drop = TRUE], "tmbStatus")

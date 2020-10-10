@@ -88,7 +88,8 @@ process_purple_cnv_gene <- function(x, g = NULL) {
         TRUE ~ "")) %>%
     dplyr::select(.data$gene, minCN = .data$minCopyNumber, maxCN = .data$maxCopyNumber,
                   chrom = .data$chromosome, .data$start, .data$end,
-                  chrBand = .data$chromosomeBand, .data$onco_or_ts, .data$transcriptID, .data$minMinorAllelePloidy,
+                  chrBand = .data$chromosomeBand, .data$onco_or_ts,
+                  .data$transcriptID, .data$minMinorAllelePloidy,
                   somReg = .data$somaticRegions, .data$germDelReg, minReg = .data$minRegions,
                   .data$minRegStartEnd, .data$minRegSupportStartEndMethod)
 
@@ -253,7 +254,6 @@ process_purple_cnv_germline <- function(x) {
   processed_purple_cnv_germline
 }
 
-
 #' Read PURPLE version file
 #'
 #' Reads the `purple.version` file containing the PURPLE version and build date.
@@ -261,7 +261,7 @@ process_purple_cnv_germline <- function(x) {
 #' @param x Path to the `purple.version` file.
 #'
 #' @return A list with the elements:
-#' * `version`: The version of PURPLE as character.
+#' * `version`: The version of PURPLE used.
 #' * `build_date`: The build date of the PURPLE version.
 #'
 #' @examples
@@ -293,13 +293,13 @@ read_purple_version <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.qc", package = "gpgr")
-#' (p <- read_purple_qc(x))
+#' (p <- purple_qc_read(x))
 #'
 #' @testexamples
-#' expect_true(inherits(p, "tbl_df"))
+#' expect_true(p[1] == "PASS")
 #'
 #' @export
-read_purple_qc <- function(x) {
+purple_qc_read <- function(x) {
   purple_qc <-
     readr::read_tsv(x, col_names = c("key", "value"), col_types = "cc") %>%
     dplyr::mutate(value = toupper(.data$value))
@@ -308,8 +308,8 @@ read_purple_qc <- function(x) {
           "SegmentScore", "UnsupportedSegments", "Ploidy", "AmberGender",
           "CobaltGender", "DeletedGenes")
 
-  assertthat::assert_that(all(purple_qc$key == names(nm)))
-  purple_qc
+  assertthat::assert_that(all(purple_qc$key == nm))
+  structure(purple_qc$value, names = purple_qc$key)
 }
 
 #' Read PURPLE Purity file
@@ -318,18 +318,18 @@ read_purple_qc <- function(x) {
 #'
 #' @param x Path to the `purple.purity.tsv` file.
 #'
-#' @return A named character vector containing a summary of the purity fit.
+#' @return The input file as a tibble with a description of each metric.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
-#' (p <- read_purple_purity(x))
+#' (p <- purple_purity_read(x))
 #'
 #' @testexamples
 #' expect_equal(p[1, "Column", drop = TRUE], "purity")
 #' expect_equal(p[nrow(p), "Column", drop = TRUE], "tmbStatus")
 #'
 #' @export
-read_purple_purity <- function(x) {
+purple_purity_read <- function(x) {
   tab <- dplyr::tribble(
     ~Column, ~Description, ~Type,
     "purity", "Purity of tumor in the sample.", "d",

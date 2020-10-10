@@ -12,7 +12,7 @@ read_purple_version(x)
 \value{
 A list with the elements:
 \itemize{
-\item \code{version}: The version of PURPLE as character.
+\item \code{version}: The version of PURPLE used.
 \item \code{build_date}: The build date of the PURPLE version.
 }
 }
