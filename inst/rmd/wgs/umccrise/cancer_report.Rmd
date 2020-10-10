@@ -1,0 +1,1974 @@
+---
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    theme: cosmo # darkly
+    css: style.css
+    toc: false
+    code_download: true
+  rmdformats::material:
+    highlight: kate
+params:
+  title: "Cancer Report for Sample "
+  tumor_name: 'x'
+  batch_name: 'x'
+  genome_build: 'hg38' # 'hg19'
+  key_genes: 'x'
+  af_global: 'x'
+  af_keygenes: 'x'
+  somatic_snv: 'x'
+  somatic_sv: 'x'
+  somatic_sv_vcf: 'x'
+  purple_gene_cnv: 'x'
+  purple_cnv: 'x'
+  purple_purity: 'x'
+  purple_qc: 'x'
+  oncoviral_present_viruses: 'x'
+  oncoviral_breakpoints_tsv: 'x'
+  conda_list: 'x'
+  # genome_build:     'hg38'
+  # tumor_name:       'T_SRR7890902_20pc'
+  # batch_name:       'T_SRR7890902_20pc'
+  # key_genes:        '~/rjn/extras/vlad/synced/NGS_Utils/ngs_utils/reference_data/key_genes/umccr_cancer_genes.latest.tsv'
+  # af_global:        '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/rmd/afs/af_tumor.txt'
+  # af_keygenes:      '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/rmd/afs/af_tumor_keygenes.txt'
+  # somatic_snv:      '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/rmd/dragen-with_chr_prefix.vcf'
+  # somatic_sv:       '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/T_SRR7890902_20pc/structural/T_SRR7890902_20pc-manta.tsv'
+  # somatic_sv_vcf:       '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/T_SRR7890902_20pc/structural/T_SRR7890902_20pc-manta.vcf.gz'
+  # purple_gene_cnv:  '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/purple/T_SRR7890902_20pc.purple.cnv.gene.tsv'
+  # purple_cnv:       '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/purple/T_SRR7890902_20pc.purple.cnv.somatic.tsv'
+  # purple_purity:    '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/purple/T_SRR7890902_20pc.purple.purity.tsv'
+  # purple_qc:        '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/purple/T_SRR7890902_20pc.purple.qc'
+  # conda_list:       '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/rmd/conda_pkg_list.txt'
+description: "Analysis of tumor/normal samples at UMCCR"
+title: "`r paste(params$title, params$batch_name)`"
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+```{r knitr_opts, include=F}
+knitr::opts_chunk$set(collapse = TRUE, echo = FALSE,
+                      warning = FALSE, message = FALSE)
+```
+
+```{r render_report_interactively, eval=F, echo=F}
+batch_name <- "SEQCII_50pc__T_SRR7890936_50pc"
+# tumor_name <- strsplit(batch_name, "__")[[1]][2]
+tumor_name <- "T_SRR7890936_50pc"
+
+params_tmp <- list(
+  gadi = list(
+    tumor_name='T_SRR7890936_50pc',
+    batch_name='SEQCII_50pc__T_SRR7890936_50pc',
+    genome_build='hg38',
+    key_genes='/g/data/gx8/projects/diakumis/conda/envs/umccrise/lib/python3.7/site-packages/ngs_utils/reference_data/key_genes/umccr_cancer_genes.latest.tsv',
+    af_global='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/rmd/afs/af_tumor.txt',
+    af_keygenes='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/rmd/afs/af_tumor_keygenes.txt',
+    somatic_snv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/SEQCII_50pc__T_SRR7890936_50pc/small_variants/SEQCII_50pc__T_SRR7890936_50pc-somatic-PASS.vcf.gz',
+    somatic_sv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/SEQCII_50pc__T_SRR7890936_50pc/structural/SEQCII_50pc__T_SRR7890936_50pc-manta.tsv',
+    somatic_sv_vcf='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/SEQCII_50pc__T_SRR7890936_50pc/structural/SEQCII_50pc__T_SRR7890936_50pc-manta.vcf.gz',
+    purple_gene_cnv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.cnv.gene.tsv',
+    purple_cnv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.cnv.somatic.tsv',
+    purple_purity='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.purity.tsv',
+    purple_qc='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.qc',
+    oncoviral_present_viruses='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/oncoviruses/present_viruses.txt',
+    oncoviral_breakpoints_tsv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/oncoviruses/oncoviral_breakpoints.tsv',
+    conda_list='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/conda_pkg_list.txt'),
+  local = list(
+    genome_build='hg38',
+    key_genes='data/ref/umccr_cancer_genes.latest.tsv',
+    af_global=glue::glue('data/umccrised/work/{batch_name}/cancer_report/afs/af_tumor.txt'),
+    af_keygenes=glue::glue('data/umccrised/work/{batch_name}/cancer_report/afs/af_tumor_keygenes.txt'),
+    somatic_snv=glue::glue('data/umccrised/{batch_name}/small_variants/{batch_name}-somatic-PASS.vcf.gz'),
+    somatic_sv=glue::glue('data/umccrised/{batch_name}/structural/{batch_name}-manta.tsv'),
+    somatic_sv_vcf=glue::glue('data/umccrised/{batch_name}/structural/{batch_name}-manta.vcf.gz'),
+    purple_gene_cnv=glue::glue('data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.gene.tsv'),
+    purple_cnv=glue::glue('data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.somatic.tsv'),
+    purple_purity=glue::glue('data/umccrised/work/{batch_name}/purple/{batch_name}.purple.purity.tsv'),
+    purple_qc=glue::glue('data/umccrised/work/{batch_name}/purple/{batch_name}.purple.qc'),
+    oncoviral_present_viruses='data/umccrised/work/{batch_name}/oncoviruses/present_viruses.txt',
+    oncoviral_breakpoints_tsv='data/umccrised/work/{batch_name}/oncoviruses/oncoviral_breakpoints.tsv',
+    conda_list=glue::glue('data/umccrised/work/conda_pkg_list.txt')
+  )
+)
+
+params <- params_tmp[["local"]]
+params$batch_name <- batch_name
+params$tumor_name <- tumor_name
+
+render_me <- function() {
+  rmarkdown::render(
+    "cancer_report.Rmd",
+    params = params)
+}
+render_me()
+```
+
+```{r load_pkgs}
+# Bioconductor
+library(BSgenome)
+library(MutationalPatterns)
+ref_genome <- paste0("BSgenome.Hsapiens.UCSC.", params$genome_build)
+library(ref_genome, character.only = TRUE)
+tx_ref_genome <- paste0("TxDb.Hsapiens.UCSC.", params$genome_build, ".knownGene")
+library(tx_ref_genome, character.only = TRUE)
+# CRAN
+library(devtools)
+library(DT)
+library(dplyr)
+library(glue)
+library(ggplot2)
+library(htmltools)
+library(knitr)
+library(kableExtra)
+library(purrr)
+library(readr)
+library(rmarkdown)
+library(stringr)
+library(tidyr)
+# umccr
+library(gpgr)
+```
+
+```{r funcs}
+# for checking if the columns in the dt are all described
+check_cols_described <- function(cols, descr) {
+  stopifnot(is.character(cols), is.atomic(cols))
+  stopifnot(is.character(descr), is.atomic(descr))
+  for (col in cols) {
+    if (!col %in% descr) {
+      warning(glue::glue("{col} is not described!"))
+    }
+  }
+}
+
+# get js indices when using in DT options
+col_ind_js <- function(dt, col) {
+  ntab <- setNames((1:ncol(dt) - 1), names(dt))
+  stopifnot(all(col %in% names(dt)))
+  sort(unname(ntab[col]))
+}
+
+# used in SV table Details
+sv_detail_table <- function(tab) {
+  check_cols_described(colnames(tab), sv_col_descr$Column)
+  list(Column = colnames(tab)) %>%
+    tibble::as_tibble() %>%
+    dplyr::left_join(sv_col_descr, by = "Column") %>%
+    dplyr::mutate(
+      Column = kableExtra::cell_spec(Column, bold = TRUE)) %>%
+    knitr::kable(escape = FALSE) %>%
+    kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+    kableExtra::scroll_box(height = "200px")
+}
+```
+
+```{r allele_freq_prep}
+#---- Allele Frequencies ----#
+set.seed(42)
+af_global <-
+  readr::read_tsv(params$af_global, col_types = "d") %>%
+  dplyr::mutate(set = "Global")
+
+af_keygenes <-
+  readr::read_tsv(params$af_keygenes, col_types = "cicccd") %>%
+  dplyr::select(af) %>%
+  dplyr::mutate(set = 'Key genes CDS')
+
+af_both <-
+  dplyr::bind_rows(af_global, af_keygenes) %>%
+  dplyr::mutate(set = factor(set, levels = c("Global", "Key genes CDS")))
+
+mode2 <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+af_stats <- af_both %>%
+  dplyr::group_by(set) %>%
+  dplyr::summarise(n = n(),
+                   mean = round(mean(af), 2),
+                   median = round(median(af), 2),
+                   mode = round(mode2(af), 2),
+                   .groups = "drop_last") %>%
+  tidyr::complete(set, fill = list(n = 0))
+```
+
+```{r hrd_prep}
+chord_sv_df <- gpgr::chord_mantavcf2df(params$somatic_sv_vcf)
+chord_res <- gpgr::chord_run(
+  vcf.snv = params$somatic_snv,
+  df.sv = chord_sv_df,
+  sv.caller = "manta",
+  sample.name = params$tumor_name,
+  ref.genome = params$genome_build,
+  verbose = TRUE)
+
+hrdetect_res <- NULL
+# HRDetect doesn't handle empty files
+if (gpgr::vcf_is_empty(params$somatic_sv_vcf) |
+    gpgr::vcf_is_empty(params$somatic_snv)) {
+  hrdetect_res <- tibble::tribble(
+    ~sample, ~Probability, ~intercept, ~del.mh.prop, ~SNV3, ~SV3, ~SV5, ~hrd, ~SNV8,
+    params$tumor_name, NA, NA, NA, NA, NA, NA, NA, NA
+  )
+} else {
+  hrdetect_res <- gpgr::hrdetect_run(
+    nm = params$tumor_name,
+    snvindel_vcf = params$somatic_snv,
+    sv_vcf = params$somatic_sv_vcf,
+    cnv_file = params$purple_cnv,
+    genome = params$genome_build,
+    snvoutdir = tempdir()) %>%
+  dplyr::mutate(dplyr::across(where(is.numeric), ~ round(.x, 3)))
+}
+```
+
+```{r mutational_sigs_prep}
+#---- Mutational Signatures ----#
+somatic_snv <- MutationalPatterns::read_vcfs_as_granges(
+  vcf_files = params$somatic_snv,
+  sample_names = params$tumor_name,
+  genome = ref_genome,
+  group = "auto+sex")
+
+mut_mat <- MutationalPatterns::mut_matrix(vcf_list = somatic_snv, ref_genome = ref_genome)
+
+###--- OLD Sigs ---###
+# Get Sanger sigs from "http://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt"
+sig_probs <- file.path("misc/sig/v2_mar2015/signatures_probabilities.txt")
+# better be explicit - the sig_probs file has 7 extra empty columns
+col_types <- paste0(c("ccc", paste0(rep("d", 30), collapse = ""), "ccccccc"), collapse = "")
+col_names <- c("SubstType", "Trinucleotide", "SomMutType", paste0("Sig", 1:30), paste0("foo", 1:7))
+cancer_signatures <-
+  readr::read_tsv(sig_probs, col_names = col_names, col_types = col_types, skip = 1) %>%
+  dplyr::arrange(SubstType)
+
+# sanity check - need to be in same order
+stopifnot(all(cancer_signatures$SomMutType == rownames(mut_mat)))
+# select only 30 sig columns, 96 mut types
+cancer_signatures <- cancer_signatures %>%
+  dplyr::select(4:33) %>%
+  as.matrix()
+
+###--- NEW Sigs ---###
+sig_probs2 <- file.path("misc/sig/v3_may2019/sigProfiler_SBS_signatures_2019_05_22.csv")
+cancer_signatures2 <-
+  readr::read_csv(sig_probs2, col_types = cols(.default = "d", Type = "c", SubType = "c")) %>%
+  dplyr::mutate(SomMutType = paste0(substr(SubType, 1, 1),
+                                    "[", Type, "]",
+                                    substr(SubType, 3, 3))) %>%
+  dplyr::select(SomMutType, SBS1:SBS85)
+
+# sanity check - need to be in same order
+stopifnot(all(cancer_signatures2$SomMutType == rownames(mut_mat)))
+# select only 67 sig columns, 96 mut types
+cancer_signatures2 <- cancer_signatures2 %>%
+  dplyr::select(-1) %>%
+  as.matrix()
+
+# Fit mutation matrix to cancer signatures
+fit_res <- MutationalPatterns::fit_to_signatures(mut_matrix = mut_mat, signatures = cancer_signatures)
+fit_res2 <- MutationalPatterns::fit_to_signatures(mut_matrix = mut_mat, signatures = cancer_signatures2)
+
+# Convert to tibbles for more bullet-proof subsetting
+fit_res <- tibble::tibble(
+  sig = rownames(fit_res$contribution), # matrix rownames
+  contr = unname(fit_res$contribution[, 1])) # matrix single column -> vector
+
+fit_res2 <- tibble::tibble(
+  sig = rownames(fit_res2$contribution),
+  contr = unname(fit_res2$contribution[, 1]))
+
+# Select signatures with some contribution
+fit_res_contr <- dplyr::filter(fit_res, contr > 0)
+fit_res_contr2 <- dplyr::filter(fit_res2, contr > 0)
+
+# If there are no signatures, return a dummy tibble
+if (nrow(fit_res_contr) == 0) {
+  fit_res_contr <- tibble::tibble(
+    sig = "NOSIGS",
+    contr = 0
+  )
+}
+
+if (nrow(fit_res_contr2) == 0) {
+  fit_res_contr2 <- tibble::tibble(
+    sig = "NOSIGS",
+    contr = 0
+  )
+}
+
+mut_sig_contr <-
+  fit_res_contr %>%
+  dplyr::mutate(contr = round(contr, 0),
+                Rank = as.integer(base::rank(-contr))) %>%
+  dplyr::select(Rank, Signature = sig, Contribution = contr) %>%
+  dplyr::arrange(Rank)
+mut_sig_contr2 <-
+  fit_res_contr2 %>%
+  dplyr::mutate(contr = round(contr, 0),
+                Rank = as.integer(base::rank(-contr))) %>%
+  dplyr::select(Rank, Signature = sig, Contribution = contr) %>%
+  dplyr::arrange(Rank)
+```
+
+```{r sv_prioritize_prep}
+#---- Structural Variants ----#
+split_sv_field <- function(.data, field, is_pct = FALSE) {
+  # - separate field into two parts
+  # - mutate to pct accordingly
+  # - original field is mean of two parts
+  f_q <- rlang::enquo(field)
+  f_str <- rlang::quo_name(f_q)
+  f1_str <- str_c(f_str, '1')
+  f2_str <- str_c(f_str, '2')
+  f1_q <- sym(f1_str)
+  f2_q <- sym(f2_str)
+  .data %>%
+    tidyr::separate(!!f_q, c(f1_str, f2_str), sep = ",", fill = "right") %>%
+    dplyr::mutate(
+      !!f1_q := round(as.double(!!f1_q) * ifelse(is_pct, 100, 1), 1),
+      !!f2_q := round(as.double(!!f2_q) * ifelse(is_pct, 100, 1), 1),
+      !!f_q  := round(((!!f1_q + ifelse(is.na(!!f2_q), !!f1_q, !!f2_q)) / 2), 1)
+    )
+}
+
+count_pieces <- function(x, sep) {
+  ifelse(nchar(x) == 0, 0, stringr::str_count(x, sep) + 1)
+}
+
+effect_abbreviations <- c(
+  "3_prime_UTR_truncation" = "3UTRtrunc", "3_prime_UTR_variant" = "3UTRvar",
+  "5_prime_UTR_truncation" = "5UTRtrunc",  "5_prime_UTR_variant" = "5UTRvar",
+  "feature_fusion" = "Fus", "bidirectional_gene_fusion" = "BidFusG", "gene_fusion" = "FusG",
+  "chromosome_number_variation" = "ChromNumV", "conservative_inframe_deletion" = "ConsInframeDel",
+  "downstream_gene_variant" = "DnstreamGV", "upstream_gene_variant" = "UpstreamGV",
+  "duplication" = "Dup", "exon_loss_variant" = "ExonLossV",
+  "feature_ablation" = "DelG", "transcript_ablation" = "DelTx",
+  "frameshift_variant" = "FrameshiftV", "intergenic_region" = "IntergenReg", "intragenic_variant" = "IntragenV",
+  "intron_variant" = "IntronV",  "no_func_effect" = "NoFuncEff", "no_prio_effect" = "NoPrioEff",
+  "non_coding_transcript_variant" = "NoncodTxV",
+  "splice_acceptor_variant" = "SpliceAccV",
+  "splice_donor_variant" = "SpliceDonV", "splice_region_variant" = "SpliceRegV",
+  "start_lost" = "StartLoss", "stop_gained" = "StopGain", "stop_lost" = "StopLoss",
+  "TF_binding_site_variant" = "TFBSVar",  "TFBS_ablation" = "TFBSDel")
+effect_abbrev_nms <- names(effect_abbreviations)
+
+abbreviate_effect <- function(effects) {
+  # take string as x&y&z
+  # split by &
+  # abbreviate each piece and glue back with comma
+
+  .abbreviate_effect <- function(effect) {
+    ifelse(effect %in% effect_abbrev_nms, effect_abbreviations[effect], effect)
+  }
+
+  strsplit(effects, "&")[[1]] %>%
+    purrr::map_chr(.abbreviate_effect) %>%
+    paste(collapse = ", ")
+}
+abbreviate_effectv <- Vectorize(abbreviate_effect)
+
+sv_path <- params$somatic_sv
+sv_unmelted <- NULL
+sv_all <- NULL
+somatic_sv_tsv <- NULL
+no_sv_found <- T
+if (sv_path == "NA") {
+  sv_unmelted <- tibble(WARNING = "Structural variants were not called")
+  sv_all <- tibble(WARNING = "Structural variants were not called")
+} else {
+  somatic_sv_tsv = readr::read_tsv(sv_path, col_names = TRUE, col_types = "ccciicccccicccccdciicc")
+  no_sv_found = length(readLines(con = sv_path, n = 2)) < 2  # only header in the file
+  if (no_sv_found) {
+    sv_unmelted <- tibble(WARNING = "THERE WERE 0 SVs PRIORITISED!")
+    sv_all <- tibble(WARNING = "THERE WERE 0 SVs PRIORITISED!")
+  } else {
+    sv_unmelted <- somatic_sv_tsv %>%
+      dplyr::select(-caller, -sample) %>%
+      split_sv_field(AF_BPI) %>%
+      split_sv_field(AF_PURPLE) %>%
+      split_sv_field(CN_PURPLE) %>%
+      split_sv_field(CN_change_PURPLE) %>%
+      dplyr::mutate(
+        AF_BPI = ifelse(is.na(AF_BPI), NA, paste0(AF_BPI, " (", AF_BPI1, ",", AF_BPI2, ")")),
+        AF_PURPLE = ifelse(is.na(AF_PURPLE), NA, paste0(AF_PURPLE, " (", AF_PURPLE1, ", ", AF_PURPLE2, ")")),
+        CN_PURPLE = ifelse(is.na(CN_PURPLE), NA, paste0(CN_PURPLE, " (", CN_PURPLE1, ", ", CN_PURPLE2, ")")),
+        CN_change_PURPLE = ifelse(is.na(CN_change_PURPLE), NA, paste0(CN_change_PURPLE, " (", CN_change_PURPLE1, ", ", CN_change_PURPLE2, ")"))
+      ) %>%
+      tidyr::separate(split_read_support, c("SR_ref", "SR_alt"), ",", convert = TRUE) %>%
+      tidyr::separate(paired_support_PR, c("PR_ref", "PR_alt"), ",", convert = TRUE) %>%
+      dplyr::mutate(
+        SR_PR_alt = paste0(SR_alt, ",", PR_alt),
+        SR_PR_ref = paste0(SR_ref, ",", PR_ref),
+        Ploidy = round(as.double(Ploidy_PURPLE), 2),
+        chrom = sub("chr", "", chrom),
+        chrom = as.factor(chrom), # for better DT filtering
+        svtype = ifelse(is.na(PURPLE_status), svtype, "PURPLE_inf"),
+        Start = ifelse(is.na(PURPLE_status), START_BPI, start),
+        nann = count_pieces(annotation, ","),
+        varnum = dplyr::row_number(),
+        varnum = sprintf(glue::glue("%0{nchar(nrow(.))}d"), varnum))
+
+    # Fix BND IDs
+    sv_unmelted_bnd1 <- sv_unmelted %>%
+      dplyr::filter(svtype == "BND") %>%
+      tidyr::separate(ID, into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) %>%
+      dplyr::group_by(BND_group) %>%
+      dplyr::mutate(
+        BND_ID = dplyr::cur_group_id(),
+        BND_ID = sprintf(glue::glue("%0{nchar(nrow(.))}d"), BND_ID),
+        BND_mate = ifelse(BND_mate == 0, "A", "B")) %>%
+      dplyr::ungroup()
+
+    match_id2mateid <- match(sv_unmelted_bnd1$ID, sv_unmelted_bnd1$MATEID)
+
+    sv_unmelted_bnd2 <- sv_unmelted_bnd1[match_id2mateid, c("chrom")] %>%
+      dplyr::rename(BND_mate_chrom = chrom)
+
+    sv_unmelted_bnd <- dplyr::bind_cols(sv_unmelted_bnd1, sv_unmelted_bnd2)
+
+    sv_unmelted_other <- sv_unmelted %>%
+      dplyr::filter(svtype != "BND")
+
+    sv_unmelted <-
+      dplyr::bind_rows(sv_unmelted_bnd,
+                       sv_unmelted_other) %>%
+      dplyr::mutate(
+        END_BPI = base::format(END_BPI, big.mark = ",", trim = TRUE),
+        End = ifelse(svtype == "BND", paste0(BND_mate_chrom, ":", END_BPI), END_BPI)) %>%
+      dplyr::select(varnum, TierTop = tier,
+                    Chr = chrom, Start, End,
+                    Type = svtype,
+                    ID, MATEID, BND_ID, BND_mate,
+                    SR_PR_alt, SR_PR_ref, Ploidy,
+                    AF_PURPLE, AF_BPI,
+                    CNC = CN_change_PURPLE, CN = CN_PURPLE,
+                    SScore = somaticscore, nann, annotation)
+
+    sv_all <- sv_unmelted %>%
+      dplyr::mutate(annotation = strsplit(annotation, ',')) %>%
+      tidyr::unnest(annotation) %>%
+      tidyr::separate(
+        annotation, c('Event', 'Effect', 'Genes', 'Transcript', 'Detail', 'Tier'),
+        sep = '\\|', convert = FALSE) %>%
+      dplyr::mutate(
+        ntrx = count_pieces(Transcript, "&"),
+        ngen = count_pieces(Genes, "&"),
+        neff = count_pieces(Effect, "&"),
+        Transcript = Transcript %>% stringr::str_replace_all('&', ', '),
+        Genes = Genes %>% stringr::str_replace_all('&', ', '),
+        Effect = abbreviate_effectv(Effect)) %>%
+      dplyr::distinct() %>%
+      dplyr::arrange(Tier, Genes, Effect)
+  }
+}
+```
+
+```{r purple_qc_prep}
+#---- PURPLE QC ----#
+# read both datasets
+qc_path <- params$purple_qc
+purity_path <- params$purple_purity
+
+purple_qc <-
+  file.path(qc_path) %>%
+  readr::read_tsv(col_names = c("key", "value"), col_types = "cc") %>%
+  dplyr::mutate(value = toupper(value))
+# turn into named vector
+purple_qc <- structure(purple_qc$value, names = purple_qc$key)
+
+purple_purity <-
+  file.path(purity_path) %>%
+  readr::read_tsv(col_types = cols(.default = col_double(),
+                                   gender = col_character(),
+                                   status = col_character(),
+                                   wholeGenomeDuplication = col_character(),
+                                   msStatus = col_character(),
+                                   tmlStatus = col_character(),
+                                   tmbStatus = col_character()
+  )) %>%
+  dplyr::mutate_if(is.numeric, round, 3) %>%
+  unlist()
+
+# sanity checks in case something changes between versions (PURPLE v2.34 as of 2019-09-29)
+nms_purple_qc <- c("QCStatus", "SegmentPass", "GenderPass", "DeletedGenesPass",
+                   "SegmentScore", "UnsupportedSegments", "Ploidy",
+                   "AmberGender", "CobaltGender", "DeletedGenes")
+
+nms_purple_purity <- c("purity", "normFactor", "score", "diploidProportion", "ploidy",
+                       "gender", "status", "polyclonalProportion", "minPurity", "maxPurity",
+                       "minPloidy", "maxPloidy", "minDiploidProportion", "maxDiploidProportion",
+                       "version", "somaticPenalty", "wholeGenomeDuplication", "msIndelsPerMb", "msStatus",
+                       "tml", "tmlStatus", "tmbPerMb", "tmbStatus")
+
+
+# for shorter reference in glue
+p <- purple_purity
+q <- purple_qc
+purple_qc_summary <- dplyr::tribble(
+  ~Variable        , ~value,                                                   ~details,
+  'QC_Status'      , glue('{q["QCStatus"]}')                                  , "",
+  'Purity'         , glue('{p["purity"]} ({p["minPurity"]}-{p["maxPurity"]})'), "Purity of tumor in the sample (and min-max with score within 10% of best)",
+  'Ploidy'         , glue('{p["ploidy"]} ({p["minPloidy"]}-{p["maxPloidy"]})'), "Average ploidy of tumor sample after adjusting for purity (and min-max with score within 10% of best)",
+  'Gender'         , glue('{p["gender"]}')                                    , "",
+  'WGD'            , glue('{p["wholeGenomeDuplication"]}')                    , "Whole genome duplication",
+  'MSI (indels/Mb)', glue('{p["msStatus"]} ({p["msIndelsPerMb"]})')           , "MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) & MS Indels per Mb",
+  'Polyclonal Prop', glue('{p["polyclonalProportion"]}')                      , "Proportion of CN regions that are more than 0.25 from a whole copy number",
+  'Diploidy Prop'  , glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'), glue('Proportion of CN regions that have 1 (+- 0.2) minor and major allele'),
+  'Segment_Pass'   , glue('{q["SegmentPass"]}')                               , glue('Score: {q["SegmentScore"]}; Unsupported: {q["UnsupportedSegments"]}'),
+  'Gender_Pass'    , glue('{q["GenderPass"]}')                                , glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'),
+  'DelGenes_Pass'  , glue('{q["DeletedGenesPass"]}')                          , glue('count: {q["DeletedGenes"]}'),
+  'TMB'            , glue('{p["tmbPerMb"]} ({p["tmbStatus"]})')               , "Tumor mutational burden per mega base (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)",
+  'TML'            , glue('{p["tml"]} ({p["tmlStatus"]})')                    , "Tumor mutational load (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)"
+)
+```
+
+```{r purple_gene_cnv_prep}
+#---- PURPLE Gene CNV Table ----#
+key_genes <-
+  readr::read_tsv(params$key_genes, col_types = cols(oncogene = "l", tumorsuppressor = "l")) %>%
+  dplyr::select(symbol, oncogene, tumorsuppressor)
+
+oncogenes <- key_genes %>% dplyr::filter(oncogene) %>% dplyr::pull(symbol)
+tsgenes <- key_genes %>% dplyr::filter(tumorsuppressor) %>% dplyr::pull(symbol)
+
+purple_gene_cnv <- readr::read_tsv(params$purple_gene_cnv, col_types = "ciicddcdddcccdiicccd")
+
+# sanity checks in case something changes between versions (PURPLE v2.34 as of 2019-09-29)
+nms_gene_cnv <- c("chromosome", "start", "end", "gene", "minCopyNumber", "maxCopyNumber",
+                  "unused", "somaticRegions", "germlineHomDeletionRegions", "germlineHetToHomDeletionRegions",
+                  "transcriptId", "transcriptVersion", "chromosomeBand", "minRegions",
+                  "minRegionStart", "minRegionEnd", "minRegionStartSupport", "minRegionEndSupport",
+                  "minRegionMethod", "minMinorAllelePloidy")
+stopifnot(all(colnames(purple_gene_cnv) == nms_gene_cnv))
+
+purple_gene_cnv <- purple_gene_cnv %>%
+  dplyr::filter(gene %in% key_genes$symbol) %>%
+  dplyr::mutate(chromosome = as.factor(chromosome),
+                transcriptID = paste0(transcriptId, ".", transcriptVersion),
+                minRegStartEnd = paste0(minRegionStart, "-", minRegionEnd),
+                minRegSupportStartEndMethod = paste0(minRegionStartSupport, "-", minRegionEndSupport, " (", minRegionMethod, ")"),
+                germDelReg = paste0(germlineHomDeletionRegions, "/", germlineHetToHomDeletionRegions),
+                oncogene = gene %in% oncogenes,
+                tsgene = gene %in% tsgenes,
+                onco_or_ts = dplyr::case_when(
+                  oncogene & tsgene ~ "onco+ts",
+                  oncogene ~ "oncogene",
+                  tsgene ~ "tsgene",
+                  TRUE ~ "")) %>%
+  dplyr::select(gene, minCN = minCopyNumber, maxCN = maxCopyNumber,
+                chrom = chromosome, start, end,
+                chrBand = chromosomeBand, onco_or_ts, transcriptID, minMinorAllelePloidy,
+                somReg = somaticRegions, germDelReg, minReg = minRegions,
+                minRegStartEnd, minRegSupportStartEndMethod)
+```
+
+```{r purple_global_cnv_prep}
+#---- PURPLE Global CNV Table ----#
+purple_global_cnv <- file.path(params$purple_cnv) %>%
+  readr::read_tsv(col_types = "ciididdcccdddddd")
+
+nms_purple_cnv <- c("chromosome", "start", "end", "copyNumber", "bafCount", "observedBAF",
+                    "baf", "segmentStartSupport", "segmentEndSupport", "method",
+                    "depthWindowCount", "gcContent", "minStart", "maxStart", "minorAllelePloidy",
+                    "majorAllelePloidy")
+
+# sanity checks in case something changes between versions (PURPLE v2.34 as of 2019-09-29)
+stopifnot(all(names(purple_global_cnv) == nms_purple_cnv))
+```
+
+## Summary
+
+```{r summary_tables}
+summarise_sigs <- function(mut_sig_contr) {
+  mut_sig_contr %>%
+    head(2) %>%
+    dplyr::mutate(string = paste0(Signature, " (", Contribution, ")")) %>%
+    dplyr::pull(string) %>%
+    paste(collapse = ", ")
+}
+
+hrd_summary <- list(chord = round(chord_res[["prediction"]][, "p_hrd", drop = TRUE], 3),
+                    hrdetect = round(hrdetect_res[, "Probability", drop = TRUE], 3))
+
+af_summary <- af_stats %>%
+  knitr::kable(format = "html", caption = "AF Summary Stats") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::column_spec(1, bold = TRUE)
+
+cnv_summary <- purple_global_cnv %>%
+  dplyr::rename(cn = copyNumber) %>%
+  dplyr::summarise(Min = round(min(cn), 2),
+                   Max = round(max(cn), 2),
+                   N = n()) %>% unlist()
+
+if (no_sv_found) {
+  sv_summary <- tibble(unmelted = c(0), melted = c(0))
+} else {
+  sv_summary <-
+    list(unmelted = sv_unmelted %>% dplyr::select(Type),
+         melted = sv_all %>% dplyr::select(Type)) %>%
+    purrr::map(function(x) addmargins(table(x, useNA = 'ifany'))) %>%
+    do.call("rbind", .) %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column(var = "group") %>%
+    tidyr::pivot_longer(-group) %>%
+    dplyr::mutate(value = paste0(name, ": ", value)) %>%
+    tidyr::pivot_wider(names_from = group, values_from = value) %>%
+    dplyr::select(unmelted, melted)
+}
+
+qc_summary_all <- purple_qc_summary %>%
+  dplyr::filter(Variable %in% c("QC_Status", "Gender", "Purity", "Ploidy")) %>%
+  dplyr::select(Variable, value) %>%
+  dplyr::bind_rows(
+    dplyr::tribble(
+      ~Variable, ~value,
+      "Top MutSigs", glue::glue("{htmltools::strong('Old:')} {summarise_sigs(mut_sig_contr)} ",
+                                "- {htmltools::strong('New:')} {summarise_sigs(mut_sig_contr2)}"),
+      "HRD", glue::glue("{htmltools::strong('CHORD:')} {hrd_summary$chord}; ",
+                        "{htmltools::strong('HRDetect:')} {hrd_summary$hrdetect}"),
+      "CNVs (Somatic)", glue::glue("{htmltools::strong('Min: ')}{cnv_summary['Min']}; ",
+                                   "{htmltools::strong('Max: ')}{cnv_summary['Max']}; ",
+                                   "{htmltools::strong('N: ')}{cnv_summary['N']} "),
+      "SVs (unmelted)", paste(rev(sv_summary$unmelted), collapse = ", "),
+      "SVs (melted)", paste(rev(sv_summary$melted), collapse = ", "),
+      "Genome", params$genome_build
+    )
+  ) %>%
+  dplyr::mutate(Variable = kableExtra::cell_spec(Variable, bold = TRUE)) %>%
+  knitr::kable(escape = FALSE, col.names = NULL) %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left")
+
+qc_summary_all
+af_summary
+```
+
+## Somatic Mutation Profiles
+
+### Allelic Frequencies {#allelic-freqs}
+Summarised below are the allele frequencies (AFs) for somatic variants detected
+genome-wide (__Global__) vs. within the coding sequence of ~1,100 UMCCR
+cancer genes (__Key Genes CDS__).
+AFs range from 0 to 1, or 0%-100% (we filter out all novel variants with AF < 10%).
+
+<details>
+<summary>Details</summary>
+
+Variants are typically called in bcbio by 3 different callers, with calls supported by at least 2 of them used ("ensemble" approach).
+In some cases only a single caller is used due to technical reasons (e.g. highly mutated FFPE sample).
+
+The following post-processing steps occur:
+
+1. `somatic_vcf_annotate`: [annotate VCF](https://github.com/umccr/vcf_stuff/blob/master/vcf_stuff/filtering/annotate_somatic_vcf.smk)
+    against databases of known hotspots, germline variants, low mappability regions, UMCCR panel of normals
+2. `somatic_vcf_filter`: [filter VCF](https://github.com/umccr/vcf_stuff/blob/master/scripts/filter_somatic_vcf)
+    to remove germline variants and artefacts, but keep known hotspots
+3. As preparation for the allelic frequencies plots:
+    * `subset_to_giab`: keep variants in 'high confidence' regions as determined by the [Genome in a Bottle consortium](http://jimb.stanford.edu/giab/)
+    * keep only variants with AF above 10%
+4. Allele frequencies for global and keygenes:
+    * `afs`: grab only the `INFO/TUMOR_AF` field and output to final txt file
+    * `afs_keygenes`: grab the `CHROM`, `POS`, `ID`, `REF`, `ALT` and `INFO/TUMOR_AF`
+      for variants in the UMCCR cancer gene BED file, and output to final txt file
+</details>
+
+
+```{r allele_freq_plot_stats, fig.width=10, fig.height=3}
+ggplot(data = af_both, aes(af)) +
+  geom_histogram(stat = 'bin', binwidth = 0.01, fill = "#006400") +
+  facet_wrap(~set, scales = 'free_y', drop = FALSE) +
+  scale_x_continuous(name = "Allele Frequency",
+                     breaks = seq(0, 1, by = 0.1),
+                     limits = c(0, 1), expand = c(0, 0)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+        panel.grid.minor = element_blank()) +
+  labs(title = paste("AF count distribution"))
+```
+
+### Mutational Signatures {.tabset .tabset-fade #signatures}
+
+Deciphering the mutational signature of a tumor sample can provide insight into the mutational
+processes involved in carcinogenesis and help in cancer treatment and prevention.
+The [MutationalPatterns](http://bioconductor.org/packages/release/bioc/html/MutationalPatterns.html)
+R package is used to generate a mutation signature for the sample. We use the final filtered somatic
+calls as input.
+
+#### Context signature
+
+```{r plot_96_prof, fig.height=3}
+MutationalPatterns::plot_96_profile(mut_mat, condensed = TRUE)
+```
+
+#### Point mutation spectrum
+
+<details>
+<summary>Description</summary>
+
+We can count the mutation type occurrences for the input VCF.
+For `C>T` mutations, a distinction is made between `C>T` at CpG sites
+and other sites, as deamination of methylated cytosine at CpG sites is a common mutational
+process. This is the reason the reference genome is needed.
+
+A mutation spectrum shows the relative contribution of each mutation type in the base
+substitution catalogs. We can plot the mean relative contribution of
+each of the 6 base substitution types over all samples. Error bars indicate standard deviation
+over all samples. The total number of mutations is indicated. We can also distinguish
+between `C>T` at CpG sites and other sites.
+
+</details>
+
+```{r plot_mut_type_occurrences, fig.height=3}
+type_occurrences <- mut_type_occurrences(vcf_list = somatic_snv, ref_genome = ref_genome)
+plot_spectrum(type_occurrences, CT = TRUE)
+```
+
+#### Transcriptional strand bias
+
+<details>
+<summary>Description</summary>
+
+We can determine if a gene mutation is on the transcribed or non-transcribed
+strand, which can be used to evaluate the involvement of transcription-coupled
+repair. By convention base substitutions are regarded as C>X or T>X, so we try
+to determine whether the C or T base is on the same strand as the gene
+definition. Base substitutions on the same strand as the gene definition are
+considered 'untranscribed', and on the opposite strand 'transcribed', since the
+gene definitions report the coding or sense strand, which is untranscribed. No
+strand information is reported for base substitutions that overlap with more
+than one gene on different strands.
+
+</details>
+
+```{r tran_strand_bias, fig.height=3}
+# Get known genes table from UCSC
+if (params$genome_build == 'hg19') {
+  genes_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene)
+} else {
+  genes_list <- genes(TxDb.Hsapiens.UCSC.hg38.knownGene)
+}
+
+# Mutation count matrix with strand info (4*6*4=96 -> 96*2=192)
+mut_mat_s <- MutationalPatterns::mut_matrix_stranded(somatic_snv,
+                                                     ref_genome = ref_genome,
+                                                     ranges = genes_list,
+                                                     mode = "transcription")
+
+# Mutation count per type and strand
+strand_counts <- MutationalPatterns::strand_occurrences(mut_mat_s, by = "all")
+# Poisson test for strand asymmetry significance testing
+strand_bias <- MutationalPatterns::strand_bias_test(strand_counts)
+
+# mutation spectrum with strand distinction
+MutationalPatterns::plot_strand(strand_counts, mode = "relative")
+# effect size of strand bias
+MutationalPatterns::plot_strand_bias(strand_bias)
+```
+
+#### Replicative strand bias
+
+<details>
+<summary>Description</summary>
+
+The involvement of replication-associated mechanisms can be evaluated by
+testing for a mutational bias between the leading and lagging strand.
+The replication strand is dependent on the locations of replication
+origins from which DNA replication is fired.
+However, replication timing is dynamic and cell-type specific,
+which makes replication strand determination less straightforward than
+transcriptional strand bias analysis.
+Replication timing profiles can be generated with
+Repli-Seq experiments. Once the replication direction is defined,
+a strand asymmetry analysis can be performed similarly as the transcription
+strand bias analysis.
+
+</details>
+
+```{r rep_strand_bias, fig.height=3}
+repli_file <- system.file("extdata/ReplicationDirectionRegions.bed",
+                          package = "MutationalPatterns")
+# start/stop contain scientific notation, so need to be doubles
+repli_strand <-
+  readr::read_tsv(repli_file, col_names = TRUE, col_types = "cddcc") %>%
+  dplyr::mutate_if(is.character, as.factor)
+repli_strand_granges <- GRanges(
+  seqnames = repli_strand$Chr,
+  ranges = IRanges(start = repli_strand$Start + 1,
+                   end = repli_strand$Stop),
+  strand_info = repli_strand$Class)
+
+seqlevelsStyle(repli_strand_granges) <- seqlevelsStyle(base::get(ref_genome))
+
+mut_mat_s_rep <-
+  MutationalPatterns::mut_matrix_stranded(
+    vcf_list = somatic_snv,
+    ref_genome = ref_genome,
+    ranges = repli_strand_granges,
+    mode = "replication")
+# Mutation count per type and strand
+strand_counts_rep <- strand_occurrences(mut_mat_s_rep, by = "all")
+# Poisson test for strand asymmetry significance testing
+strand_bias_rep <- strand_bias_test(strand_counts_rep)
+
+MutationalPatterns::plot_strand(strand_counts_rep, mode = "relative")
+MutationalPatterns::plot_strand_bias(strand_bias_rep)
+```
+
+### Signature Contribution {.tabset .tabset-fade #contributions}
+
+<details>
+<summary>Description</summary>
+
+The contribution of any set of signatures to the mutational profile of a
+sample can be quantified. This unique feature is specifically useful
+for mutational signature analyses of small cohorts or individual samples,
+but also to relate own findings to known signatures and published findings.
+The `fit_to_signatures` function finds the optimal linear combination of
+mutational signatures that most closely reconstructs
+the mutation matrix by solving a non-negative least-squares constraints problem.
+
+Shown are signatures with positive Contribution values, along with summarised descriptions
+and reference signature plots from <https://cancer.sanger.ac.uk/cosmic/signatures>.
+
+</details>
+
+<p>&nbsp;</p>
+
+#### OLD
+
+```{r mutational_signature_contribution}
+sig_table <-
+  readr::read_tsv(file = "misc/sig/v2_mar2015/signatures_description.tsv", col_types = "cc") %>%
+  dplyr::mutate(Plot = paste0("![](misc/sig/v2_mar2015/img/sig-", signature, ".png)"),
+                signature = paste0("Sig", signature)) %>%
+  dplyr::select(Signature = signature, Description = description, Plot)
+
+mut_sig_contr %>%
+  dplyr::left_join(sig_table, by = "Signature") %>%
+  knitr::kable() %>%
+  kableExtra::kable_styling(font_size = 12) %>%
+  kableExtra::scroll_box(height = "400px")
+```
+
+#### NEW
+
+```{r mutational_signature_contribution2}
+sig_table2 <-
+  readr::read_tsv(file = "misc/sig/v3_may2019/signatures_description.tsv", col_types = "cc") %>%
+  dplyr::mutate(Plot = paste0("![](misc/sig/v3_may2019/img/sbs", signature, ".png)"),
+                signature = paste0("SBS", signature)) %>%
+  dplyr::select(Signature = signature, Description = description, Plot)
+
+possible_seq_artefacts <- c("SBS27", "SBS43", "SBS45", "SBS46", "SBS47", "SBS48", "SBS49", "SBS50", "SBS51", "SBS52",
+                            "SBS53", "SBS54", "SBS55", "SBS56", "SBS57", "SBS58", "SBS59", "SBS60")
+
+mut_sig_contr2 %>%
+  dplyr::left_join(sig_table2, by = "Signature") %>%
+  dplyr::mutate(Signature = ifelse(Signature %in% possible_seq_artefacts, paste0(Signature, " (SA)"), Signature)) %>%
+  knitr::kable() %>%
+  kableExtra::kable_styling(font_size = 12) %>%
+  kableExtra::scroll_box(height = "400px")
+```
+
+<p>&nbsp;</p>
+
+### Rainfall Plot {#rainfall}
+Rainfall plots show the distribution of mutations along the genome, with mutation types
+indicated with different colors. The y-axis corresponds to the distance of a mutation from the
+previous mutation, and is log10 transformed. Drop-downs from the plots indicate clusters or
+"hotspots" of mutations.
+
+```{r mutationalpatterns_rainfall, out.width="90%", fig.width=14}
+# When there is only 1 or lower number of variants on a chromosome, MutationalPatterns::plot_rainfall will crash with an error. So need to check if it will work beforehand.
+chromosomes = seqnames(get(ref_genome))[1:22]
+vcf = somatic_snv[[1]]
+chr_subset = vcf[seqnames(vcf) == chromosomes[1]]
+n = length(chr_subset)
+will_work = FALSE
+for (i in 1:length(chromosomes)) {
+  chr_subset = vcf[seqnames(vcf) == chromosomes[i]]
+  n = length(chr_subset)
+  if (n >= 2) {
+    will_work = TRUE
+  }
+}
+if (will_work) {
+  MutationalPatterns::plot_rainfall(somatic_snv[[1]], chromosomes = seqnames(get(ref_genome))[1:22], cex = 1.2, ylim = 1e+09)
+}
+```
+
+## HRD (Homologous Recombination Deficiency) Detection {#hrd}
+
+### CHORD
+
+<details>
+<summary>Description</summary>
+
+For more details see <https://github.com/UMCUGenetics/CHORD>.
+
+__Probabilities__
+
+CHORD outputs the probability of:
+
+* HRD: `p_hrd`
+* BRCA1-type HRD: `p_BRCA1`
+* BRCA2-type HRD: `p_BRCA2`
+
+__HR status and type__
+
+`hr_status` tells us if a sample is HR deficient (`p_hrd >= 0.5`) or proficient.
+If a sample is HRD, then `hrd_type` will tell us if the sample has BRCA1-type HRD
+or BRCA2-type HRD (=`max(p_BRCA1, p_BRCA2)`).
+
+__Pre-requisites for accurate HRD prediction__
+
+* CHORD requires `>=50` indels to accurately determine whether a sample is HRD
+
+If this criterion is not met, `hr_status` will be `cannot_be_determined` and `remarks_hr_status` will be
+`<50 indels`.
+
+* CHORD cannot be applied to MSI samples
+
+If an MSI sample is detected, `hr_status` will be `cannot_be_determined` and `remarks_hr_status` will be
+`Has MSI (>14000 indel.rep)`.
+
+* If a sample is HRD, CHORD requires `>=30` SVs to accurately determine HRD subtype
+
+If this criterion is not met, `hrd_type` will be `cannot_be_determined`, and `remarks_hr_status` will be `<30 SVs`.
+
+The user may of course ignore these remarks and proceed with using the raw probabilities output by CHORD
+(`p_hrd` and/or `p_BRCA1/pBRCA2`).
+
+</details>
+
+```{r chord_res}
+tibble::tibble(col = colnames(chord_res$prediction), val = unlist(chord_res$prediction[1, ])) %>%
+  DT::datatable(class = "cell-border display compact",
+                caption = "CHORD Results",
+                rownames = FALSE, extensions = c("Buttons"),
+                options = list(buttons = c('csv', 'excel'), dom = 'Brti', paging = FALSE)) %>%
+  DT::formatStyle(columns = c("col"), fontWeight = 'bold', `text-align` = 'left')
+```
+
+### HRDetect
+
+<details>
+<summary>Description</summary>
+
+See https://github.com/Nik-Zainal-Group/signature.tools.lib for the R package
+that includes HRDetect.
+
+</details>
+
+```{r hrdetect_res}
+tibble::tibble(col = colnames(hrdetect_res), val = unlist(hrdetect_res[1, ])) %>%
+  DT::datatable(class = "cell-border display compact",
+                caption = "HRDetect Results",
+                rownames = FALSE, extensions = c("Buttons"),
+                options = list(buttons = c('csv', 'excel'), dom = 'Brti', paging = FALSE)) %>%
+  DT::formatStyle(columns = c("col"), fontWeight = 'bold', `text-align` = 'left')
+```
+
+## Circos Plots {.tabset .tabset-fade #circos}
+Circos plots are generated by PURPLE.
+The first BAF plot is based on PURPLE data and configuration files.
+
+### BAF, Total/Minor CN, SVs
+
+<details>
+<summary>Description</summary>
+
+* __Track1__: Chromosomes. Darker shaded areas: gaps in reference genome
+  (centromeres, heterochromatin & missing short arms)
+* __Track2__: <span style="color:#8A2BE2">Beta Allele Frequency</span>.
+  Given that the BAF points correspond to allele frequencies of heterozygous SNPs that are common in germline samples,
+  there shouldn't be any in chromosome Y (and chromosome X when male).
+* __Track3__: __Total__ copy number changes adjusted for tumor purity,
+  including focal and chromosomal somatic events.
+  <span style="color:red">Red</span> = Loss; <span style="color:#32CD32">Green</span> = Gain.
+  Scaled from 0 (complete loss) to 6 (high level gains).
+  If > 6, shown as 6 with a green dot on the outermost green gridline.
+* __Track4__: __Minor__ allele copy numbers. Range from 0 to 3.
+  Expected normal minor allele copy number is 1, and anything below 1 is shown
+  as a loss (<span style="color:#EE7600">Orange</span>), representing an LOH event.
+  Minor allele copy numbers above 1 (<span style="color:#7EC0EE">Blue</span>) indicate gains
+  of both A and B alleles.
+* __Track5__ (Inner circle): Observed structural variants within or between the chromosomes.
+    * <span style="color:#7EC0EE">Blue</span> = Translocations
+    * <span style="color:red">Red</span> = Deletions
+    * <span style="color:#e6e600">Yellow</span> = Insertions
+    * <span style="color:#32CD32">Green</span> = Tandem duplications
+    * <span style="color:#000000">Black</span> = Inversions
+
+</details>
+
+```{r circos_baf_plot, out.width="80%"}
+img_dir <- file.path('img') # created before when copying purple files to tmp dir
+knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.circos_baf.png')))
+```
+
+
+### SNVs/Indels, Total/Minor CN, SVs
+
+<details>
+<summary>Description</summary>
+
+* __Track1__: Chromosomes. Darker shaded areas: gaps in reference genome
+  (centromeres, heterochromatin & missing short arms)
+* __Track2__: Somatic variants (incl. exon, intron and intergenic regions).
+    * outer ring: SNP allele frequencies, corrected for tumor purity and scaled from 0 to 100%.
+      Each dot represents a single somatic variant, coloured according to the
+      type of base change (e.g. C>T/G>A in red).
+    * inner ring: short insertion (yellow) and deletion (red) locations.
+* __Track3__: Observed __total__ copy number changes adjusted for tumor purity,
+  including focal and chromosomal somatic events.
+  <span style="color:red">Red</span> = Loss; <span style="color:#32CD32">Green</span> = Gain.
+  Scaled from 0 (complete loss) to 6 (high level gains).
+  If > 6, shown as 6 with a green dot on the outermost green gridline.
+* __Track4__: Observed __minor__ allele copy numbers. Range from 0 to 3.
+  Expected normal minor allele copy number is 1, and anything below 1 is shown
+  as a loss (<span style="color:#EE7600">Orange</span>), representing an LOH event.
+  Minor allele copy numbers above 1 (<span style="color:#7EC0EE">Blue</span>) indicate gains
+  of both A and B alleles.
+* __Track5__ (Inner circle): Observed structural variants within or between the chromosomes.
+    * <span style="color:#7EC0EE">Blue</span> = Translocations
+    * <span style="color:red">Red</span> = Deletions
+    * <span style="color:#e6e600">Yellow</span> = Insertions
+    * <span style="color:#32CD32">Green</span> = Tandem duplications
+    * <span style="color:#000000">Black</span> = Inversions
+
+</details>
+
+```{r circos_default1, out.width="80%"}
+knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.circos.png')))
+```
+
+### Allele Ratios, BAF
+
+<details>
+<summary>Description</summary>
+
+* __Track1__: Chromosomes. Darker shaded areas: gaps in reference genome
+  (centromeres, heterochromatin & missing short arms)
+* __Track2__: <span style="color:blue">Tumor</span> and <span style="color:#32CD32">Normal</span> Allele Ratios
+* __Track3__: <span style="color:#EE7600">Beta Allele Frequency</span>
+  Given that the BAF points correspond to allele frequencies of heterozygous SNPs that are common in germline samples,
+  there shouldn't be any in chromosome Y (and chromosome X when male).
+
+</details>
+
+```{r circos_default2, out.width="80%"}
+knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.input.png')))
+```
+
+## Structural Variants {#sv-summary}
+Structural variants are inferred with [Manta](https://github.com/illumina/manta),
+adjusted using [PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator#7-structural-variant-recovery-and-single-breakend-filtering),
+and prioritised using [simple_sv_annotation](https://github.com/AstraZeneca-NGS/simple_sv_annotation).
+Allele frequencies, copy number changes and ploidy are purity-adjusted.
+
+<details>
+<summary>Details</summary>
+
+The input file corresponds to `umccrised/<batch>/structural/<batch>-manta.tsv`.
+
+It's generated through the following steps:
+
+__Step 1: Processing__
+
+* __Input__: Manta structural variant calls from bcbio
+(`final/<tumor-name>/<batch-name>-sv-prioritize-manta.vcf.gz` (or
+`<batch-name>-manta.vcf.gz` if not prioritised))
+* Remove following annotations from Manta VCF:
+  'INFO/SIMPLE_ANN', 'INFO/SV_HIGHEST_TIER', 'FILTER/Intergenic', 'FILTER/MissingAnn', 'FILTER/REJECT'
+* Prioritise variants with [simple_sv_annotation](https://github.com/vladsaveliev/simple_sv_annotation)`
+* __Output__: `work/{batch}/structural/prioritize/{batch}-manta.vcf.gz`
+* Keep PASS variants
+* If more than 100,000 variants, keep only variants where `INFO/SV_TOP_TIER <= 3`
+* __Output__: `work/{batch}/structural/keep_pass/{batch}-manta.vcf`
+* Deal with chromosome capitalisation occurring from SnpEff
+* Run BreakPointInspector (BPI) if it was disabled in bcbio
+* __Output__: `work/{batch}/structural/maybe_bpi/{batch}-manta.vcf`
+
+__Step 2: Filtering__
+
+* Keep PASS variants (since BPI updates the FILTER column)
+* For BND variants require paired reads support (PR) to be higher than split read support (SR)
+* Keep all `INFO/SV_TOP_TIER <= 2` variants
+* For `INFO/SV_TOP_TIER > 2` variants require split _or_ paired reads support of at least 5x
+* For `INFO/SV_TOP_TIER > 2` variants with low allele frequency at any breakpoint (`BPI_AF[0 or 1] < 0.1`),
+  require SR or PR support of at least 10x
+* __Output__: `work/{batch}/structural/filt/{batch}-manta.vcf`
+
+__Step 3: PURPLE and FFPE conditional__
+
+* If the sample _is not_ FFPE:
+  * Feed above filtered SVs to PURPLE, which outputs `purple.sv.vcf.gz` that contains rescued SVs
+  * Prioritise variants (again)
+  * Remove 'INFO/ANN' annotation
+  * __Output__: `{batch}/structural/{batch}-manta.vcf.gz`
+* If the sample _is_ FFPE:
+  * Just copy `filtered` variants and don't do anything
+    (i.e. we don't want the rescued SVs from PURPLE since they'll likely be heaps)
+    (note that PURPLE will still get fed with the `filtered` SVs)
+  * __Output__: `{batch}/structural/{batch}-manta.vcf.gz`
+
+__Step 4: TSV final output__
+
+* Input: `{batch}/structural/{batch}-manta.vcf.gz` VCF
+* Output: `{batch}/structural/{batch}-manta.tsv` TSV
+
+
+```{r manta_tsv_description}
+manta_tsv_col_descr <- dplyr::tribble(
+  ~Column, ~Description,
+  "caller", "Manta SV caller",
+  "sample", "Tumor sample name",
+  "chrom", "CHROM column in VCF",
+  "start", "POS column in VCF",
+  "end", "INFO/END: End position of the variant described in this record",
+  "svtype", "INFO/SVTYPE: Type of structural variant",
+  "split_read_support", "FORMAT/SR of tumor sample: Split reads for the ref and alt alleles in the order listed, for reads where P(allele|read)>0.999",
+  "paired_support_PE", "FORMAT/PE of tumor sample: ??",
+  "paired_support_PR", "FORMAT/PR of tumor sample: Spanning paired-read support for the ref and alt alleles in the order listed, for reads where P(allele|read)>0.999",
+  "AF_BPI", "INFO/BPI_AF: AF at each breakpoint (so AF_BPI1,AF_BPI2)",
+  "somaticscore", "INFO/SOMATICSCORE: Somatic variant quality score",
+  "tier", "INFO/SV_TOP_TIER (or 4 if missing): Highest priority tier for the effects of a variant entry",
+  "annotation", "INFO/SIMPLE_ANN: Simplified structural variant annotation: 'SVTYPE | EFFECT | GENE(s) | TRANSCRIPT | PRIORITY (1-4)'",
+  "AF_PURPLE", "INFO/PURPLE_AF: AF at each breakend (purity adjusted) (so AF_PURPLE1,AF_PURPLE2)",
+  "CN_PURPLE", "INFO/PURPLE_CN: CN at each breakend (purity adjusted) (so CN_PURPLE1,CN_PURPLE2)",
+  "CN_change_PURPLE", "INFO/PURPLE_CN_CHANGE: change in CN at each breakend (purity adjusted) (so CN_change_PURPLE1,CN_change_PURPLE2)",
+  "Ploidy_PURPLE", "INFO/PURPLE_PLOIDY: Ploidy of variant (purity adjusted)",
+  "PURPLE_status", "INFERRED if FILTER=INFERRED, or RECOVERED if has INFO/RECOVERED, else blank. INFERRED: Breakend inferred from copy number transition",
+  "START_BPI", "INFO/BPI_START: BPI adjusted breakend location",
+  "END_BPI", "INFO/BPI_END: BPI adjusted breakend location",
+  "ID", "ID column in VCF",
+  "MATEID", "INFO/MATEID: ID of mate breakend")
+
+if (!is.null(somatic_sv_tsv)) {
+  check_cols_described(manta_tsv_col_descr$Column, colnames(somatic_sv_tsv))
+}
+
+manta_tsv_col_descr %>%
+  dplyr::arrange(Column) %>%
+  dplyr::mutate(Column = kableExtra::cell_spec(Column, bold = TRUE)) %>%
+  knitr::kable(escape = FALSE, caption = "Description of Manta TSV columns") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::scroll_box(height = "250px")
+```
+
+```{r sv_table_description}
+sv_col_descr <- dplyr::tribble(
+  ~Column, ~Description,
+  "nrow", "Row number that connects variants between tables in same tab set",
+  "varnum", "Original event row number that connects variants to events",
+  "TierTop", "Top priority of the event (from 'simple_sv_annotation': 1 highest, 4 lowest)",
+  "Tier", "Priority of the specific event (from 'simple_sv_annotation': 1 highest, 4 lowest)",
+  "Chr", "Chromosome",
+  "Start", "Start position as inferred by BPI (for PURPLE-inferred SVs we use POS)",
+  "End", paste("End position. For BNDs this has been assigned to the Chr:Start of the BND's mate for convenience.",
+               "Values are inferred by BPI (PURPLE-inferred SVs don't have an End)."),
+  "ID", "ID of BND from Manta (or PURPLE for PURPLE-inferred SVs))",
+  "MATEID", "ID of BND mate from Manta",
+  "BND_ID", "ID of BND pair simplified. BNDs with the same BND_ID belong to the same translocation event",
+  "BND_mate", "'A' or 'B' depending on if it's the first or second mate in the BND pair",
+  "Genes", "Genes involved in the event. DEL/DUP/INS events involving more than 2 genes are shown in separate table.",
+  "Transcript", "Transcripts involved in the event. DEL/DUP/INS events involving more than 2 transcripts are shown in separate table.",
+  "Effect", glue::glue("SV effect (based on ",
+                       "{htmltools::a(href='http://snpeff.sourceforge.net/SnpEff_manual.html#input', 'SnpEff Effect Sequence Ontology')}",
+                       " - abbreviations are shown under {htmltools::a(href='#sv-summary', 'Details')} in the Effects table"),
+  "Detail", "Prioritisation detail (from 'simple_sv_annotation')",
+  "Ploidy", "Ploidy of variant from PURPLE (purity adjusted)",
+  "AF_PURPLE", "PURPLE AF at each breakend preceded by their average",
+  "AF_BPI", "BPI AF at each breakend preceded by their average",
+  "CN", "Copy Number at each breakend preceded by their average",
+  "CNC", "Copy Number Change at each breakend preceded by their average",
+  "SR_PR_alt", "Number of Split Reads and Paired Reads supporting the alt allele, for reads where P(allele|read)>0.999",
+  "SR_PR_ref", "Number of Split Reads and Paired Reads supporting the ref allele, for reads where P(allele|read)>0.999",
+  "Type", "Type of structural variant",
+  "SScore", "Somatic variant quality score",
+  "ntrx", "Number of transcripts for given event",
+  "ngen", "Number of genes for given event",
+  "nann", "Number of annotations for given event"
+)
+```
+
+<p>&nbsp;</p>
+
+__Prioritisation process__
+
+1. Annotate with [SnpEff](http://snpeff.sourceforge.net/SnpEff_manual.html) based on Ensembl gene model
+2. Subset annotations to [APPRIS principal transcripts](http://appris.bioinfo.cnio.es/#/)
+3. Prioritize variants with [simple_sv_annotation](https://github.com/vladsaveliev/simple_sv_annotation)
+   1(high)-2(moderate)-3(low)-4(no interest):
+  * exon loss
+     - on prioritisation gene list (1)
+     - other (2)
+  * gene_fusion
+     - paired (hits two genes)
+        - on list of known pairs (1) (curated by [HMF](https://resources.hartwigmedicalfoundation.nl))
+        - one gene is a known promiscuous fusion gene (1) (curated by [HMF](https://resources.hartwigmedicalfoundation.nl))
+        - on list of FusionCatcher known pairs (2)
+        - other:
+           - one or two genes on prioritisation gene list (2)
+           - neither gene on prioritisation gene list (3)
+     - unpaired (hits one gene)
+         - on prioritisation gene list (2)
+         - others (3)
+  * upstream or downstream
+     - on prioritisation gene list genes (2)  - e.g. one gene is got into
+       control of another gene's promoter and get overexpressed (oncogene) or underexpressed (tsgene)
+  * LoF or HIGH impact in a tumor suppressor
+     - on prioritisation gene list (2)
+     - other TS gene (3)
+  * other (4)
+
+* Use PURPLE copy number caller to infer more SV calls from copy number transitions (marked as 'PURPLE Inferred')
+
+```{r effect_abbrev_tab}
+effect_abbreviations %>%
+  tibble::enframe(value = "abbreviation") %>%
+  dplyr::arrange(abbreviation) %>%
+  dplyr::mutate(name = kableExtra::cell_spec(name, bold = TRUE)) %>%
+  knitr::kable(escape = FALSE) %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::scroll_box(height = "250px")
+```
+
+</details>
+
+<p>&nbsp;</p>
+
+### Summary
+
+```{r sv_summary, results='asis'}
+if (!no_sv_found) {
+  sv_tier_vs_svtype <- function() {
+    l <- list(unmelted = sv_unmelted %>% dplyr::select(TierTop, Type),
+              melted = sv_all %>% dplyr::select(Tier, Type)) %>%
+      purrr::map(function(x) addmargins(table(x, useNA = 'ifany')))
+
+    cap_unmelt <- glue::glue("SV type by {htmltools::strong('top')} tier {htmltools::strong('before')}",
+                             "{htmltools::br()}breaking down by annotation")
+    cap_melt <- glue::glue("SV type by {htmltools::strong('individual')} tier {htmltools::strong('after')}",
+                           "{htmltools::br()}breaking down by annotation")
+    unmelted <- knitr::kable(l$unmelted, format = "html", caption = cap_unmelt, output = FALSE) %>%
+      kableExtra::kable_styling(full_width = FALSE, position = "float_right")
+    melted <- knitr::kable(l$melted, format = "html",
+                           caption = cap_melt, output = FALSE) %>%
+      kableExtra::kable_styling(full_width = FALSE, position = "float_right")
+
+    list(unmelted = unmelted, melted = melted)
+  }
+  cat(c('<table><tr valign="top"><td>', sv_tier_vs_svtype()$unmelted, '</td>', '<td>', sv_tier_vs_svtype()$melted, '</td></tr></table>'), sep = '')
+} else {
+  cat("No SVs called.")
+}
+```
+
+### Unmelted Variants {#sv-unmelted}
+
+```{r svtab_raw}
+if (!no_sv_found) {
+  svtab_raw <- sv_unmelted %>%
+    dplyr::select(-annotation) %>%
+    dplyr::arrange(TierTop, varnum)
+
+  svtab_rawdt <- svtab_raw %>%
+    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                  class = "cell-border display compact",
+                  rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right', targets = col_ind_js(svtab_raw, "End"))),
+                    scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+                    buttons = c('csv'), dom = 'Blfrtip')) %>%
+    DT::formatCurrency(~ Start, currency = "", interval = 3, mark = ",", digits = 0)
+} else {
+  svtab_raw <- NULL
+  svtab_rawdt <- NULL
+}
+```
+
+<details>
+<summary>Description</summary>
+
+```{r}
+if (!no_sv_found) {
+  sv_detail_table(svtab_raw)
+} else {
+  cat("No SVs called.")
+}
+```
+
+</details>
+
+```{r svtab_rawdt}
+if (!no_sv_found) {
+  svtab_rawdt
+} else {
+  cat("No SVs called.")
+}
+```
+
+### Translocations (BNDs) {.tabset .tabset-fade #translocations}
+
+```{r svtab_BND}
+if (!no_sv_found) {
+  sv_BND <- sv_all %>%
+    dplyr::filter(Type == "BND") %>%
+    dplyr::mutate(nrow = dplyr::row_number(),
+                  nrow = sprintf(glue::glue("%0{nchar(nrow(.))}d"), nrow)) %>%
+    dplyr::select(nrow, dplyr::everything())
+
+  sv_BND_main <- sv_BND %>%
+    dplyr::select(nrow, varnum, Tier, Chr, Start, End,
+                  ID, BND_ID, BND_mate,
+                  Genes, Effect, Detail, SR_PR_alt, Ploidy, AF_PURPLE)
+
+  sv_BND_other <- sv_BND %>%
+    dplyr::select(nrow, AF_BPI, CNC, CN, SR_PR_ref, SScore, ntrx, Transcript)
+
+  sv_BND_purple <- sv_all %>%
+    dplyr::filter(Type %in% c("PURPLE_inf")) %>%
+    dplyr::select(Tier, Chr, Start, Effect, Detail, Ploidy, CN, CNC, ID)
+
+  sv_BND_maindt <- sv_BND_main %>%
+    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                  class = "cell-border display compact",
+                  rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right', targets = col_ind_js(svtab_raw, "End"))),
+                    scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+                    buttons = c('csv'), dom = 'Blfrtip')) %>%
+    DT::formatCurrency(~ Start, currency = "", interval = 3, mark = ",", digits = 0)
+
+  sv_BND_otherdt <- sv_BND_other %>%
+    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                  class = "cell-border display compact",
+                  rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                  options = list(
+                    scroller = TRUE, scrollY = 400, scrollX = TRUE, keys = TRUE, autoWidth = FALSE,
+                    buttons = c('csv'), dom = 'Blfrtip'))
+
+  sv_BND_purpledt <- sv_BND_purple %>%
+    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                  class = "cell-border display compact",
+                  rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                  options = list(
+                    scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = TRUE,
+                    buttons = c('csv'),
+                    dom = 'Blfrtip')) %>%
+    DT::formatCurrency(~ Start, currency = "", interval = 3, mark = ",", digits = 0)
+}
+```
+
+#### Main Columns
+
+<details>
+<summary>Description</summary>
+
+```{r}
+if (!no_sv_found) {
+  sv_detail_table(sv_BND_main)
+} else {
+  cat("No SVs called.")
+}
+```
+
+</details>
+
+```{r sv_BND_maindt}
+if (!no_sv_found) {
+  sv_BND_maindt
+} else {
+  cat("No SVs called.")
+}
+
+```
+
+#### Other Columns
+
+<details>
+<summary>Description</summary>
+
+```{r}
+if (!no_sv_found) {
+  sv_detail_table(sv_BND_other)
+} else {
+  cat("No SVs called.")
+}
+```
+
+</details>
+
+```{r sv_BND_otherdt}
+if (!no_sv_found) {
+  sv_BND_otherdt
+} else {
+  cat("No SVs called.")
+}
+```
+
+#### PURPLE Inferred
+
+<details>
+<summary>Description</summary>
+
+```{r}
+if (!no_sv_found) {
+  sv_detail_table(sv_BND_purple)
+} else {
+  cat("No SVs called.")
+}
+```
+
+</details>
+
+```{r sv_BND_purpledt}
+if (!no_sv_found) {
+  sv_BND_purpledt
+} else {
+  cat("No SVs called.")
+}
+```
+
+### DEL/DUP/INS {.tabset .tabset-fade #deldupins}
+
+```{r svtab_noBND}
+if (!no_sv_found) {
+  sv_noBND <- sv_all %>%
+    dplyr::filter(!Type %in% c("BND", "PURPLE_inf")) %>%
+    dplyr::mutate(nrow = dplyr::row_number(),
+                  nrow = sprintf(glue::glue("%0{nchar(nrow(.))}d"), nrow),
+                  Genes_original = Genes,
+                  Transcript_original = Transcript) %>%
+    dplyr::select(-ID)
+
+  max_genes <- 2
+  max_transcripts <- 2
+
+  sv_noBND_main <- sv_noBND %>%
+    dplyr::mutate(Genes = ifelse(ngen > max_genes,
+                                 glue::glue("Many Genes ({ngen})"),
+                                 Genes),
+                  Transcript = ifelse(ntrx > max_transcripts,
+                                      glue::glue("Many Transcripts ({ntrx})"),
+                                      Transcript)) %>%
+    dplyr::select(nrow, varnum, TierTop, Tier, Type, Chr, Start, End, Effect,
+                  Genes, Transcript, Detail, SR_PR_alt, AF_PURPLE)
+
+  sv_noBND_other <- sv_noBND %>%
+    dplyr::select(varnum, Ploidy, AF_BPI, CNC, CN, SR_PR_ref, SScore) %>%
+    dplyr::distinct()
+
+  sv_noBND_manygenes <- sv_noBND %>%
+    dplyr::filter(ngen > max_genes) %>%
+    dplyr::select(nrow, varnum, Tier, Type, Chr, Start, End,
+                  Effect, ngen, Genes = Genes_original)
+
+  sv_noBND_manytx <- sv_noBND %>%
+    dplyr::filter(ntrx > max_transcripts) %>%
+    dplyr::select(nrow, varnum, Tier, Type, Chr, Start, End,
+                  Effect, ntrx, Transcript = Transcript_original)
+
+  sv_noBND_maindt <- sv_noBND_main %>%
+    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                  class = "cell-border display compact",
+                  rownames = FALSE, extensions = c("Buttons"),
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right', targets = col_ind_js(svtab_raw, "End"))),
+                    pageLength = 20,
+                    autoWidth = FALSE,
+                    buttons = c('csv'), dom = 'Blfrtip')) %>%
+    DT::formatCurrency(~ Start, currency = "", interval = 3, mark = ",", digits = 0)
+
+  sv_noBND_otherdt <- sv_noBND_other %>%
+    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                  class = "cell-border display compact",
+                  rownames = FALSE, extensions = c("Buttons"),
+                  options = list(
+                    pageLength = 20,
+                    autoWidth = FALSE,
+                    buttons = c('csv'),
+                    dom = 'Blfrtip'))
+
+  sv_noBND_manygenesdt <- sv_noBND_manygenes %>%
+    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                  class = "cell-border display compact",
+                  rownames = FALSE, extensions = c("Buttons", "KeyTable"),
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right', targets = col_ind_js(svtab_raw, "End"))),
+                    pageLength = 10,
+                    autoWidth = FALSE, keys = TRUE,
+                    buttons = c('csv'),
+                    dom = 'Blfrtip')) %>%
+    DT::formatCurrency(~ Start, currency = "", interval = 3, mark = ",", digits = 0)
+
+  sv_noBND_manytxdt <- sv_noBND_manytx %>%
+    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                  class = "cell-border display compact",
+                  rownames = FALSE, extensions = c("Buttons", "KeyTable"),
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right', targets = col_ind_js(svtab_raw, "End"))),
+                    pageLength = 10,
+                    autoWidth = FALSE, keys = TRUE,
+                    buttons = c('csv'),
+                    dom = 'Blfrtip')) %>%
+    DT::formatCurrency(~ Start, currency = "", interval = 3, mark = ",", digits = 0)
+}
+```
+
+#### Main Columns
+
+<details>
+<summary>Description</summary>
+
+```{r}
+if (!no_sv_found) {
+  sv_detail_table(sv_noBND_main)
+} else {
+  cat("No SVs called.")
+}
+```
+
+</details>
+
+```{r sv_noBND_maindt}
+if (!no_sv_found) {
+  sv_noBND_maindt
+} else {
+  cat("No SVs called.")
+}
+```
+
+#### Other Columns
+
+<details>
+<summary>Description</summary>
+
+```{r}
+if (!no_sv_found) {
+  sv_detail_table(sv_noBND_other)
+} else {
+  cat("No SVs called.")
+}
+```
+
+</details>
+
+```{r sv_noBND2_dt}
+if (!no_sv_found) {
+  sv_noBND_otherdt
+} else {
+  cat("No SVs called.")
+}
+```
+
+#### Many Genes
+
+<details>
+<summary>Description</summary>
+
+```{r}
+if (!no_sv_found) {
+  sv_detail_table(sv_noBND_manygenes)
+} else {
+  cat("No SVs called.")
+}
+```
+
+</details>
+
+```{r sv_noBND_manygenesdt}
+if (!no_sv_found) {
+  sv_noBND_manygenesdt
+} else {
+  cat("No SVs called.")
+}
+```
+
+#### Many Transcripts
+
+<details>
+<summary>Description</summary>
+
+```{r}
+if (!no_sv_found) {
+  sv_detail_table(sv_noBND_manytx)
+} else {
+  cat("No SVs called.")
+}
+```
+
+</details>
+
+```{r sv_noBND_manytxdt}
+if (!no_sv_found) {
+  sv_noBND_manytxdt
+} else {
+  cat("No SVs called.")
+}
+```
+
+## Copy Number Variants {#cnv-qc}
+The purity and ploidy estimator
+[PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator)
+is used to generate a copy number profile for the somatic sample.
+
+### QC, Purity and Ploidy Summary
+
+PURPLE outputs a QC status along with a summary
+for the inferred purity and ploidy of the somatic sample.
+A failed QC status can be attributed to several factors
+(see `Description` below).
+
+<details>
+<summary>Description</summary>
+
+__QC Status__
+
+The QC Status field reflects how we have determined the purity of the sample:
+
+* `NORMAL` - PURPLE fit the purity using COBALT and AMBER output.
+* `HIGHLY_DIPLOID` - The fitted purity solution is highly diploid (> 95%)
+  with a large range of potential solutions, but somatic variants are unable to
+  help either because they were not supplied or because their implied purity was too low.
+* `SOMATIC` - Somatic variants have improved the otherwise highly diploid solution.
+* `NO_TUMOR` - PURPLE failed to find any aneuploidy and somatic variants were
+  supplied but there were fewer than 300 with observed VAF > 0.1.
+
+__QC Failure__
+
+There are several reasons PURPLE may classify a sample as failed:
+
+* `FAIL_SEGMENT`: more than 220 copy number segments __not__ supported at either end
+  by SV breakpoints. Indicates samples with extreme GC bias, with differences
+  in depth of >= 10x between high and low GC regions. GC normalisation is
+  unreliable when the corrections are so extreme so it is recommended to fail
+  the sample (concerns with miscalled deletions or amplifications or have
+  poor sensitivity in high GC regions.
+* `NO_TUMOR`: no aneuploidy found and the number of somatic SNVs found is
+  less than 1,000
+* `MIN_PURITY`: fitted purity < 20%
+* `FAIL_DELETED_GENES`: more than 280 deleted genes. This QC step was added
+  after observing that in a handful of samples with high MB scale positive GC
+  bias we sometimes systematically underestimate the copy number in high GC
+  regions. This can lead us to incorrectly infer homozygous loss of entire
+  chromosomes, particularly on chromosomes 17 and 19.
+* `FAIL_GENDER`: if the AMBER and COBALT inferred genders are inconsistent
+  then the COBALT one is used but the sample is failed.
+
+</details>
+
+<p>&nbsp;</p>
+
+```{r purple_qc_summary}
+purple_qc_summary %>%
+  dplyr::mutate(
+    Variable = kableExtra::cell_spec(Variable, bold = TRUE),
+    value = kableExtra::cell_spec(value, bold = TRUE,
+                                  color = dplyr::case_when(
+                                    value == "PASS" ~ "green",
+                                    grepl("FAIL", value) ~ "red",
+                                    value == "FEMALE" ~ "purple",
+                                    value == "MALE" ~ "blue",
+                                    value == "MALE_KLINEFELTER" ~ "red",
+                                    value == "TRUE" ~ "green",
+                                    value == "FALSE" ~ "red",
+                                    TRUE ~ "black"))) %>%
+  knitr::kable(escape = FALSE) %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left")
+```
+
+### UMCCR Gene CNV Calls {#cnv-gene}
+
+<details>
+<summary>Description</summary>
+
+PURPLE copy number alterations in the UMCCR Cancer Gene panel (~1,200 genes) - description
+is from <https://github.com/hartwigmedical/hmftools/blob/master/purity-ploidy-estimator/README.md#gene-copy-number-file>
+
+```{r purple_gene_cnv_description}
+dplyr::tribble(
+  ~Column, ~Description,
+  "gene", "Name of gene",
+  "minCN/maxCN", "Min/Max copy number found in gene exons",
+  "chrom/start/end", "Chromosome/start/end location of gene transcript",
+  "chrBand", "Chromosome band of the gene",
+  "onco_or_ts", "oncogene ('oncogene'), tumor suppressor ('tsgene'), or both ('onco+ts'), as reported by [Cancermine](https://github.com/jakelever/cancermine)",
+  "transcriptID", "Ensembl transcript ID (dot version)",
+  "minMinorAllelePloidy", "Minimum allele ploidy found over the gene exons - useful for identifying LOH events",
+  "somReg (somaticRegions)", "Count of somatic copy number regions this gene spans",
+  "germDelReg (germlineHomDeletionRegions / germlineHetToHomDeletionRegions)", "Number of regions spanned by this gene that are (homozygously deleted in the germline / both heterozygously deleted in the germline and homozygously deleted in the tumor)",
+  "minReg (minRegions)", "Number of somatic regions inside the gene that share the min copy number",
+  "minRegStartEnd", "Start/End base of the copy number region overlapping the gene with the minimum copy number",
+  "minRegSupportStartEndMethod", "Start/end support of the CN region overlapping the gene with the min CN (plus determination method)"
+) %>%
+  dplyr::mutate(
+    Column = kableExtra::cell_spec(Column, bold = TRUE)) %>%
+  knitr::kable(escape = FALSE) %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::scroll_box(height = "200px")
+```
+
+</details>
+
+<p>&nbsp;</p>
+
+```{r purple_gene_cnv_tab}
+purple_gene_cnv %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = TRUE, keys = TRUE,
+                               buttons = c('csv', 'excel'), dom = 'Bfrtip')) %>%
+  DT::formatCurrency(~ start + end, currency = "", interval = 3, mark = ",", digits = 0) %>%
+  DT::formatRound(~ minCN + maxCN, digits = 1)
+```
+
+### Genome-wide CNV Segments {#cnv-segs}
+
+<details>
+<summary>Description</summary>
+
+PURPLE outputs a file with the copy number profile of all contiguous segments
+of the tumor sample:
+
+PURPLE copy number profile of all (contiguous) segments of the tumor sample - description
+is from <https://github.com/hartwigmedical/hmftools/blob/master/purity-ploidy-estimator/README.md#copy-number-file>
+
+
+```{r purple_seg_description}
+dplyr::tribble(
+  ~Column, ~Description,
+  "Chr/Start/End", "Coordinates of copy number segment",
+  "CN", "Fitted absolute copy number of segment adjusted for purity and ploidy",
+  "Ploidy Min+Maj", "Ploidy of minor + major allele adjusted for purity",
+  "BAF", "Tumor BAF after adjusted for purity and ploidy",
+  "BafCount", "Count of AMBER baf points covered by this segment",
+  "Start/End SegSupport", "Type of SV support for the CN breakpoint at start/end of region. Allowed values: CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), SGL (single breakend SV support), NONE (no SV support for CN breakpoint), MULT (multiple SV support at exact breakpoint)",
+  "Method", "Method used to determine the CN of the region. Allowed values: BAF_WEIGHTED (avg of all depth windows for the region), STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), LONG_ARM (inferred from the long arm), GERMLINE_AMPLIFICATION (inferred using special logic to handle regions of germline amplification)",
+  "windowCount", "Count of COBALT windows covered by this segment",
+  "GC", "Proportion of segment that is G or C") %>%
+  dplyr::mutate(
+    Column = kableExtra::cell_spec(Column, bold = TRUE)) %>%
+  knitr::kable(escape = FALSE) %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::scroll_box(height = "200px")
+```
+
+</details>
+
+<p>&nbsp;</p>
+
+```{r purple_global_cnv_tab}
+purple_global_cnv %>%
+  dplyr::mutate(Chr = as.factor(`chromosome`),
+                minorAllelePloidy = round(minorAllelePloidy, 1),
+                majorAllelePloidy = round(majorAllelePloidy, 1),
+                `Ploidy Min+Maj` = paste0(minorAllelePloidy, "+", majorAllelePloidy),
+                copyNumber = round(copyNumber, 1),
+                bafAdj = round(baf, 2),
+                gcContent = round(gcContent, 2),
+                `Start/End SegSupport` = paste0(segmentStartSupport, "-", segmentEndSupport),
+                `BAF (count)` = paste0(bafAdj, " (", bafCount, ")"),
+                `GC (windowCount)` = paste0(gcContent, " (", depthWindowCount, ")")) %>%
+  dplyr::select(Chr, Start = start, End = end, CN = copyNumber, `Ploidy Min+Maj`,
+                `Start/End SegSupport`, Method = method, `BAF (count)`, `GC (windowCount)`) %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = TRUE, keys = TRUE,
+                               buttons = c('csv', 'excel'), dom = 'Bfrtip')) %>%
+  DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
+```
+
+### PURPLE Charts {.tabset .tabset-fade #purple-charts}
+PURPLE generates charts for summarising tumor sample characteristics.
+Description is from the [PURPLE docs](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator#charts).
+
+#### Copy number / Minor allele ploidy
+The following figures show the AMBER BAF count weighted distribution of
+copy number and minor allele ploidy throughout the fitted segments.
+Copy numbers are broken down by colour into their respective minor
+allele ploidy (MAP) while the minor allele ploidy figure is broken
+down by copy number.
+
+```{r purple_plot_copynumber, out.width="40%"}
+knitr::include_graphics(c(file.path(img_dir, paste0(params$batch_name, '.copynumber.png')),
+                        file.path(img_dir, paste0(params$batch_name, '.map.png'))))
+```
+
+#### Rainfall
+If a somatic variant VCF has been supplied, a figure will be produced
+showing the somatic variant ploidy broken down by copy number as well
+as a rainfall plot with kataegis clusters highlighted in grey.
+
+```{r purple_plot_somatic, out.width="40%"}
+knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.somatic.png')))
+```
+
+```{r purple_plot_somaticrainfall, out.width="90%"}
+knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.somatic.rainfall.png')))
+```
+
+#### Purity/ploidy
+The following 'sunrise' chart shows the range of scores of all examined solutions of
+purity and ploidy. Crosshairs identify the best purity / ploidy solution.
+
+```{r purple_plot_purityrange, out.width="40%"}
+knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.purity.range.png')))
+```
+
+#### Clonality
+The following diagram illustrates the clonality model of a typical sample.
+
+The top figure shows the histogram of somatic ploidy for all SNVs and INDELs in blue.
+Superimposed are peaks in different colours fitted from the sample as described in the
+docs while the black line shows the overall fitted ploidy distribution. Red filled
+peaks are below the 0.85 subclonal threshold.
+
+We can determine the likelihood of a variant being subclonal at
+any given ploidy as shown in the bottom half of the figure.
+
+```{r purple_plot_somaticclonality, out.width="50%"}
+knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.somatic.clonality.png')))
+```
+
+#### Segment
+The contribution of each fitted segment to the final score of the best fit is shown in
+the following figure. Each segment is divided into its major and minor allele ploidy.
+The area of each circle shows the weight (AMBER baf count) of each segment.
+
+```{r purple_plot_segment, out.width="40%"}
+knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.segment.png')))
+```
+
+## Oncoviruses {.tabset .tabset-fade #oncoviruses}
+
+Oncoviruses and their integration sites. Viral sequences are obtained from the
+<a href="https://gdc.cancer.gov/about-data/data-harmonization-and-generation/gdc-reference-files">GDC database</a>.
+Host genes are reported if the integration site falls on a gene or at least before 100kbp of the gene start.
+
+```{r oncoviruses_table}
+present_viruses <- params$oncoviral_present_viruses
+breakpoints_tsv <- params$oncoviral_breakpoints_tsv
+
+if (!is.na(breakpoints_tsv) && breakpoints_tsv != "" && file.exists(breakpoints_tsv)) {
+  breakpoints <- readr::read_tsv(breakpoints_tsv, col_names = T, col_types = "cciicicccc")
+  breakpoints %>%
+    dplyr::mutate(Coord = ifelse(is.na(end), start, str_c(start, "-", end))) %>%
+    dplyr::select(Contig = contig, Coord, `Read support` = PAIR_COUNT,
+                  `Disrupted genes` = DisruptedGenes, `Upstream genes` = UpstreamGenes,
+                  `SV type` = svtype, ID, MATEID) %>%
+    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                  class = "cell-border display compact",
+                  rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                  options = list(scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = TRUE, keys = TRUE,
+                                 buttons = c('csv', 'excel'), dom = 'Bfrtip')) %>%
+    DT::formatCurrency(~ Coord, currency = "", interval = 3, mark = ",", digits = 0)
+} else {
+  if (!is.na(present_viruses) && present_viruses != "" && file.exists(present_viruses)) {
+    viruses = readr::read_file(present_viruses)
+    if (str_length(viruses) > 0) {
+      cat(str_c("Deteced significant traces of content of the following viruses: ", viruses, ", however no evidence of viral integration into the host genome is observed."))
+    } else {
+      cat("No oncoviral content detected in this sample.")
+    }
+  } else {
+    cat("Oncoviral detection was disabled in the umccrise run with `-E oncoviruses`.")
+  }
+}
+
+```
+
+## Addendum {.tabset .tabset-fade #addendum}
+
+<a href="#top">Back to top</a>
+
+### Conda Pkgs Main
+
+```{r conda_list_main}
+conda_pkgs <- readr::read_table2(params$conda_list,
+                                 col_names = c("env", "name", "version", "build", "channel"),
+                                 col_types = "ccccc") %>%
+  dplyr::mutate(channel = ifelse(is.na(channel), "MISSING", channel),
+                env = sub("env", "umccrise", env),
+                env = sub("^umccrise_", "", env)) %>%
+  dplyr::arrange(name) %>%
+  dplyr::group_by(name, version, build, channel) %>%
+  dplyr::summarise(envs = paste(env, collapse = ", ")) %>%
+  dplyr::ungroup()
+
+
+main_pkgs <- c(
+  "^cacao", "^conpair$", "^cpsr",
+  "^gridss", "^hmftools", "^reference", "^htslib$",
+  "^multiqc", "^ngs",
+  "pandoc", "^pcgr", "^python$",
+  "^r-base$", "snakemake",
+  "^umccrise$") %>%
+  paste(collapse = "|")
+
+conda_pkgs %>%
+  dplyr::filter(grepl(main_pkgs, name)) %>%
+  dplyr::arrange(desc(name)) %>%
+  knitr::kable(format = "html") %>%
+  kableExtra::kable_styling(full_width = TRUE, position = "left") %>%
+  kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::scroll_box(height = "300px")
+```
+
+### Report Inputs
+
+```{r report_inputs}
+dplyr::tibble(key = names(params), value = unlist(params)) %>%
+  knitr::kable(format = "html") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::scroll_box(height = "200px")
+```
+
+### Conda Pkgs All
+
+```{r conda_list_all}
+conda_pkgs %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                rownames = FALSE, extensions = c("Scroller", "Buttons"),
+                options = list(scroller = TRUE, scrollX = TRUE, scrollY = 400,
+                               buttons = c('csv'), dom = 'Bfrtip'))
+```
+
+```{r session_info, eval=F}
+si <- devtools::session_info(include_base = TRUE)
+si_pl <- unclass(si$platform) %>% as_tibble() %>% t()
+# si_pkg <- unclass(si$packages) %>%
+#   dplyr::as_tibble() %>%
+#   dplyr::select(package, version = ondiskversion, path, datestamp = date)
+
+dplyr::tibble(var = row.names(si_pl),
+              value = si_pl[, , drop = TRUE]) %>%
+  knitr::kable(format = "html") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::column_spec(1, bold = TRUE)
+```
+
+```{r session_info_pkgs, eval=F}
+knitr::kable(si_pkg, format = "html") %>%
+  kableExtra::kable_styling(full_width = TRUE, position = "left") %>%
+  kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::scroll_box(height = "400px")
+```
+
+<p>&nbsp;</p>
+
