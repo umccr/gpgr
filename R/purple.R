@@ -288,15 +288,15 @@ purple_version_read <- function(x) {
 #'
 #' @param x Path to the `purple.qc` file.
 #'
-#' @return A named character vector containing QC values for several PURPLE
-#'         metrics.
+#' @return The input file as a tibble and a summarised tibble with a
+#' description of each metric.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.qc", package = "gpgr")
-#' (p <- purple_qc_read(x))
+#' (q <- purple_qc_read(x))
 #'
 #' @testexamples
-#' expect_true(p[1] == "PASS")
+#' expect_true(q$raw[1, "value", drop = TRUE] == "PASS")
 #'
 #' @export
 purple_qc_read <- function(x) {
@@ -309,7 +309,23 @@ purple_qc_read <- function(x) {
           "CobaltGender", "DeletedGenes")
 
   assertthat::assert_that(all(purple_qc$key == nm))
-  structure(purple_qc$value, names = purple_qc$key)
+  q <- structure(purple_qc$value, names = purple_qc$key)
+  summary <- dplyr::tribble(
+    ~variable, ~value, ~details,
+    'QC_Status', glue::glue('{q["QCStatus"]}'),
+    "",
+    'Segment_Pass', glue::glue('{q["SegmentPass"]}'),
+    glue::glue('Score: {q["SegmentScore"]}; Unsupported: {q["UnsupportedSegments"]}'),
+    'Gender_Pass', glue::glue('{q["GenderPass"]}'),
+    glue::glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'),
+    'DelGenes_Pass', glue::glue('{q["DeletedGenesPass"]}'),
+    glue::glue('count: {q["DeletedGenes"]}'),
+  )
+
+  list(
+    raw = purple_qc,
+    summary = summary
+  )
 }
 
 #' Read PURPLE Purity file
@@ -318,56 +334,84 @@ purple_qc_read <- function(x) {
 #'
 #' @param x Path to the `purple.purity.tsv` file.
 #'
-#' @return The input file as a tibble with a description of each metric.
+#' @return The input file as a tibble and a summarised tibble with a
+#' description of each metric.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
 #' (p <- purple_purity_read(x))
 #'
 #' @testexamples
-#' expect_equal(p[1, "Column", drop = TRUE], "purity")
-#' expect_equal(p[nrow(p), "Column", drop = TRUE], "tmbStatus")
+#' expect_equal(p$raw[1, "column", drop = TRUE], "purity")
+#' expect_equal(p$raw[nrow(p$raw), "column", drop = TRUE], "tmbStatus")
 #'
 #' @export
 purple_purity_read <- function(x) {
   tab <- dplyr::tribble(
-    ~Column, ~Description, ~Type,
-    "purity", "Purity of tumor in the sample.", "d",
-    "normFactor", "Factor to convert tumor ratio to copy number. Lower number implies higher ploidy.", "d",
-    "score", "Score of fit. Lower is better.", "d",
-    "diploidProportion", "Proportion of CN regions that have 1 (+- 0.2) minor and major allele.", "d",
-    "ploidy", "Average ploidy of tumor after adjusting for purity.", "d",
-    "gender", "One of MALE, FEMALE or MALE_KLINEFELTER.", "c",
-    "status", "One of NORMAL, HIGHLY_DIPLOID, SOMATIC or NO_TUMOR.", "c",
-    "polyclonalProportion", "Proportion of CN regions that are more than 0.25 from a whole CN.", "d",
-    "minPurity", "Minimum purity with score within 10% of best.", "d",
-    "maxPurity", "Maximum purity with score within 10% of best.", "d",
-    "minPloidy", "Minimum ploidy with score within 10% of best.", "d",
-    "maxPloidy", "Maximum ploidy with score within 10% of best.", "d",
-    "minDiploidProportion", "Min diploidProportion.", "d",
-    "maxDiploidProportion", "Max diploidProportion.", "d",
-    "version", "PURPLE Version.", "c",
-    "somaticPenalty", paste("Penalty from somatic variants with implied variant",
-                            "copy numbers that are inconsistent with the minor and major allele copy number."), "d",
-    "wholeGenomeDuplication", "True if more than 10 autosomes have major allele copy number > 1.5.", "c",
-    "msIndelsPerMb", "Microsatellite indels per mega base.", "d",
-    "msStatus", "Microsatellite status. One of MSI, MSS or UNKNOWN if somatic variants not supplied.", "c",
-    "tml", "Tumor mutational load (# of missense variants in sample).", "d",
-    "tmlStatus", "Tumor mutational load status. One of HIGH, LOW or UNKNOWN if somatic variants not supplied.", "c",
-    "tmbPerMb", "Tumor mutational burden (#passing variants per Mb) per mega base.", "d",
-    "tmbStatus", paste("Tumor mutational burden status. One of HIGH, LOW or UNKNOWN if",
-                       "somatic variants not supplied. High = > 10 pass variants per Mb."), "c")
+    ~column, ~type,
+    "purity", "d",
+    "normFactor", "d",
+    "score", "d",
+    "diploidProportion", "d",
+    "ploidy", "d",
+    "gender", "c",
+    "status", "c",
+    "polyclonalProportion", "d",
+    "minPurity", "d",
+    "maxPurity", "d",
+    "minPloidy", "d",
+    "maxPloidy", "d",
+    "minDiploidProportion", "d",
+    "maxDiploidProportion", "d",
+    "version", "c",
+    "somaticPenalty", "d",
+    "wholeGenomeDuplication", "c",
+    "msIndelsPerMb",  "d",
+    "msStatus", "c",
+    "tml", "d",
+    "tmlStatus", "c",
+    "tmbPerMb", "d",
+    "tmbStatus", "c")
 
-  ctypes <- paste(tab$Type, collapse = "")
+  ctypes <- paste(tab$type, collapse = "")
   purple_purity <- readr::read_tsv(x, col_types = ctypes)
   assertthat::assert_that(ncol(purple_purity) == nrow(tab))
-  assertthat::assert_that(all(colnames(purple_purity) == tab$Column))
+  assertthat::assert_that(all(colnames(purple_purity) == tab$column))
 
-  purple_purity %>%
+  purple_purity <- purple_purity %>%
     dplyr::mutate(
       dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 2),
       dplyr::across(dplyr::everything(), as.character)) %>%
-    tidyr::pivot_longer(dplyr::everything(), names_to = "Column", values_to = "Value") %>%
-    dplyr::left_join(tab, by = "Column") %>%
-    dplyr::select(.data$Column, .data$Value, .data$Description)
+    tidyr::pivot_longer(dplyr::everything(), names_to = "column", values_to = "value") %>%
+    dplyr::left_join(tab, by = "column") %>%
+    dplyr::select(.data$column, .data$value)
+
+  p <- structure(purple_purity$value, names = purple_purity$column)
+
+  summary <- dplyr::tribble(
+    ~variable, ~value, ~details,
+    'Purity', glue::glue('{p["purity"]} ({p["minPurity"]}-{p["maxPurity"]})'),
+    "Purity of tumor in the sample (and min-max with score within 10% of best)",
+    'Ploidy', glue::glue('{p["ploidy"]} ({p["minPloidy"]}-{p["maxPloidy"]})'),
+    "Average ploidy of tumor sample after adjusting for purity (and min-max with score within 10% of best)",
+    'Gender', glue::glue('{p["gender"]}'),
+    "Gender as inferred by AMBER/COBALT.",
+    'WGD', glue::glue('{p["wholeGenomeDuplication"]}'),
+    "Whole genome duplication",
+    'MSI (indels/Mb)', glue::glue('{p["msStatus"]} ({p["msIndelsPerMb"]})'),
+    "MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) & MS Indels per Mb",
+    'Polyclonal Prop', glue::glue('{p["polyclonalProportion"]}'),
+    "Proportion of CN regions that are more than 0.25 from a whole copy number",
+    'Diploidy Prop', glue::glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'),
+    'Proportion of CN regions that have 1 (+- 0.2) minor and major allele',
+    'TMB', glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
+    "Tumor mutational burden per mega base (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)",
+    'TML', glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
+    "Tumor mutational load (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)"
+  )
+
+  list(
+    raw = purple_purity,
+    summary = summary
+  )
 }

@@ -10,14 +10,14 @@ purple_qc_read(x)
 \item{x}{Path to the \code{purple.qc} file.}
 }
 \value{
-A named character vector containing QC values for several PURPLE
-metrics.
+The input file as a tibble and a summarised tibble with a
+description of each metric.
 }
 \description{
 Reads the \code{purple.qc} file.
 }
 \examples{
 x <- system.file("extdata/purple/purple.qc", package = "gpgr")
-(p <- purple_qc_read(x))
+(q <- purple_qc_read(x))
 
 }

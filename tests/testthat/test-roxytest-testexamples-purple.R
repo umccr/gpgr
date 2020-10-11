@@ -71,18 +71,18 @@ test_that("Function purple_version_read() @ L277", {
 test_that("Function purple_qc_read() @ L302", {
   
   x <- system.file("extdata/purple/purple.qc", package = "gpgr")
-  (p <- purple_qc_read(x))
+  (q <- purple_qc_read(x))
   
-  expect_true(p[1] == "PASS")
+  expect_true(q$raw[1, "value", drop = TRUE] == "PASS")
 })
 
 
-test_that("Function purple_purity_read() @ L332", {
+test_that("Function purple_purity_read() @ L349", {
   
   x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
   (p <- purple_purity_read(x))
   
-  expect_equal(p[1, "Column", drop = TRUE], "purity")
-  expect_equal(p[nrow(p), "Column", drop = TRUE], "tmbStatus")
+  expect_equal(p$raw[1, "column", drop = TRUE], "purity")
+  expect_equal(p$raw[nrow(p$raw), "column", drop = TRUE], "tmbStatus")
 })
 
