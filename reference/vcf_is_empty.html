@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7</span>
       </span>
     </div>
 
@@ -99,6 +99,9 @@
     </li>
     <li>
       <a href="../articles/hrdetect.html">HRDetect</a>
+    </li>
+    <li>
+      <a href="../articles/purple.html">PURPLE</a>
     </li>
   </ul>
 </li>
@@ -162,7 +165,7 @@
 <span class='va'>tmp2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>"fakeFile"</span>, fileext <span class='op'>=</span> <span class='st'>"vcf"</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>vcf_cols</span>, collapse <span class='op'>=</span> <span class='st'>"\t"</span><span class='op'>)</span>, con <span class='op'>=</span> <span class='va'>tmp2</span><span class='op'>)</span>
 <span class='op'>(</span><span class='va'>z</span> <span class='op'>&lt;-</span> <span class='fu'>vcf_is_empty</span><span class='op'>(</span><span class='va'>tmp2</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>/tmp/RtmpPyBoAc/fakeFile394b664ae8e8vcf does not contain any variants.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>/tmp/RtmpznauIf/fakeFile3acb241aa0b8vcf does not contain any variants.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 <span class='va'>tmp3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>"fakeFile"</span>, fileext <span class='op'>=</span> <span class='st'>"FOO"</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>vcf_cols</span>, collapse <span class='op'>=</span> <span class='st'>"\t"</span><span class='op'>)</span>, con <span class='op'>=</span> <span class='va'>tmp3</span><span class='op'>)</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

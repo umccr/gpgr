@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tidy eval helpers — tidyeval • gpgr</title>
+<title>Read PURPLE Purity file — purple_purity_read • gpgr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Tidy eval helpers — tidyeval" />
-<meta property="og:description" content="https://www.tidyverse.org/blog/2019/06/rlang-0-4-0/" />
+<meta property="og:title" content="Read PURPLE Purity file — purple_purity_read" />
+<meta property="og:description" content="Reads the purple.purity.tsv file containing a summary of the purity fit." />
 
 
 
@@ -126,18 +126,65 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tidy eval helpers</h1>
-    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/utils_shortcuts.R'><code>R/utils_shortcuts.R</code></a></small>
-    <div class="hidden name"><code>tidyeval.Rd</code></div>
+    <h1>Read PURPLE Purity file</h1>
+    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/purple.R'><code>R/purple.R</code></a></small>
+    <div class="hidden name"><code>purple_purity_read.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><a href='https://www.tidyverse.org/blog/2019/06/rlang-0-4-0/'>https://www.tidyverse.org/blog/2019/06/rlang-0-4-0/</a></p>
+    <p>Reads the <code>purple.purity.tsv</code> file containing a summary of the purity fit.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>purple_purity_read</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>Path to the <code>purple.purity.tsv</code> file.</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>The input file as a tibble and a summarised tibble with a
+description of each metric.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/purple/purple.purity.tsv"</span>, package <span class='op'>=</span> <span class='st'>"gpgr"</span><span class='op'>)</span>
+<span class='op'>(</span><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'>purple_purity_read</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $raw
+#&gt; <span style='color: #555555;'># A tibble: 23 x 2</span><span>
+#&gt;    column               value 
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> 
+#&gt; </span><span style='color: #555555;'> 1</span><span> purity               0.75  
+#&gt; </span><span style='color: #555555;'> 2</span><span> normFactor           1.05  
+#&gt; </span><span style='color: #555555;'> 3</span><span> score                0.26  
+#&gt; </span><span style='color: #555555;'> 4</span><span> diploidProportion    0.86  
+#&gt; </span><span style='color: #555555;'> 5</span><span> ploidy               1.87  
+#&gt; </span><span style='color: #555555;'> 6</span><span> gender               MALE  
+#&gt; </span><span style='color: #555555;'> 7</span><span> status               NORMAL
+#&gt; </span><span style='color: #555555;'> 8</span><span> polyclonalProportion 0     
+#&gt; </span><span style='color: #555555;'> 9</span><span> minPurity            0.71  
+#&gt; </span><span style='color: #555555;'>10</span><span> maxPurity            0.78  
+#&gt; </span><span style='color: #555555;'># … with 13 more rows</span><span>
+#&gt; 
+#&gt; $summary
+#&gt; </span><span style='color: #555555;'># A tibble: 9 x 3</span><span>
+#&gt;   variable      value        details                                            
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                                              
+#&gt; </span><span style='color: #555555;'>1</span><span> Purity        0.75 (0.71-… Purity of tumor in the sample (and min-max with sc…
+#&gt; </span><span style='color: #555555;'>2</span><span> Ploidy        1.87 (1.86-… Average ploidy of tumor sample after adjusting for…
+#&gt; </span><span style='color: #555555;'>3</span><span> Gender        MALE         Gender as inferred by AMBER/COBALT.                
+#&gt; </span><span style='color: #555555;'>4</span><span> WGD           false        Whole genome duplication                           
+#&gt; </span><span style='color: #555555;'>5</span><span> MSI (indels/… MSS (0)      MSI status (MSI, MSS or UNKNOWN if somatic variant…
+#&gt; </span><span style='color: #555555;'>6</span><span> Polyclonal P… 0            Proportion of CN regions that are more than 0.25 f…
+#&gt; </span><span style='color: #555555;'>7</span><span> Diploidy Prop 0.86 (0.86-… Proportion of CN regions that have 1 (+- 0.2) mino…
+#&gt; </span><span style='color: #555555;'>8</span><span> TMB           0 (LOW)      Tumor mutational burden per mega base (Status: 'HI…
+#&gt; </span><span style='color: #555555;'>9</span><span> TML           0 (LOW)      Tumor mutational load (Status: 'HIGH', 'LOW' or 'U…
+#&gt; </div><div class='input'>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
