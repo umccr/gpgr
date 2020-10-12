@@ -1,0 +1,148 @@
+---
+title: "PURPLE"
+author: "Peter Diakumis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+  
+
+vignette: >
+  %\VignetteIndexEntry{PURPLE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r knitr_opts, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+require(gpgr)
+require(devtools)
+require(dplyr)
+require(knitr)
+```
+
+## Introduction
+
+PURPLE: Purity Ploidy Estimator
+(https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator)
+
+PURPLE combines B-allele frequency, read depth ratios, small variants and structural variants to
+estimate the purity and copy number profile of a tumor sample.
+
+It outputs several files, some of which are displayed below.
+
+## Data Munging
+
+### Somatic CNVs (per chromosome)
+
+```{r cnv_som}
+cnv_som <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr") %>%
+  gpgr::purple_cnv_somatic_process()
+```
+
+<details>
+<summary>Description</summary>
+
+```{r cnv_som_descr}
+cnv_som$descr %>%
+  knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per chromosome) Columns.")
+```
+
+</details>
+
+```{r cnv_som_tab}
+cnv_som$tab %>%
+  dplyr::slice(1:10) %>%
+  knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per chromosome) Summary Table.")
+```
+
+### Somatic CNVs (per gene)
+
+```{r cnv_som_gene}
+umccr_key_genes <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
+cnv_som_gene <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr") %>%
+  gpgr::purple_cnv_gene_process(g = umccr_key_genes)
+```
+
+<details>
+<summary>Description</summary>
+
+```{r cnv_som_gene_descr}
+cnv_som_gene$descr %>%
+  knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per gene) Columns.")
+```
+
+</details>
+
+```{r cnv_som_gene_tab}
+cnv_som_gene$tab %>%
+  dplyr::slice(1:10) %>%
+  knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per gene) Summary Table.")
+```
+
+### Germline CNVs (per chromosome)
+
+```{r cnv_germ}
+cnv_germ <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr") %>%
+  gpgr::purple_cnv_germline_process()
+```
+
+<details>
+<summary>Description</summary>
+
+```{r cnv_germ_descr}
+cnv_germ$descr %>%
+  knitr::kable(format = "html", caption = "PURPLE Germline CNVs (per chromosome) Columns.")
+```
+
+</details>
+
+```{r cnv_germ_tab}
+cnv_germ$tab %>%
+  dplyr::slice(1:10) %>%
+  knitr::kable(format = "html", caption = "PURPLE Germline CNVs (per chromosome) Summary Table.")
+```
+
+### Purity
+
+```{r purity}
+purity <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr") %>%
+  gpgr::purple_purity_read()
+
+purity$summary %>%
+  knitr::kable(format = "html", caption = "PURPLE Purity Summary Table.")
+```
+
+### QC
+
+```{r qc}
+qc <- system.file("extdata/purple/purple.qc", package = "gpgr") %>%
+  gpgr::purple_qc_read()
+
+qc$summary %>%
+  knitr::kable(format = "html", caption = "PURPLE QC Summary Table.")
+```
+
+## Session Info
+
+```{r session_info, echo=FALSE}
+si <- devtools::session_info(include_base = TRUE)
+si_pl <- unclass(si$platform) %>% dplyr::as_tibble() %>% t()
+pkgs_of_interest <- c("base", "gpgr")
+si_pkg <- unclass(si$packages) %>%
+  dplyr::as_tibble() %>%
+  dplyr::select(package, version = ondiskversion, datestamp = date) %>%
+  dplyr::filter(package %in% pkgs_of_interest)
+
+dplyr::tibble(var = row.names(si_pl),
+              value = si_pl[, , drop = TRUE]) %>%
+  knitr::kable(format = "html", caption = "Platform information.")
+
+
+si_pkg %>%
+  knitr::kable(format = "html", caption = "Main packages used in this vignette.")
+```

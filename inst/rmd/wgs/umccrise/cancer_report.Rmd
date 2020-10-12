@@ -487,19 +487,9 @@ purple_qc_summary <- dplyr::bind_rows(
 purple_cnv_gene <- gpgr::purple_cnv_gene_process(params$purple_gene_cnv, params$key_genes)
 ```
 
-```{r purple_global_cnv_prep}
+```{r purple_cnv_somatic_prep}
 #---- PURPLE Global CNV Table ----#
 purple_cnv_somatic <- gpgr::purple_cnv_somatic_process(params$purple_cnv)
-purple_global_cnv <- file.path(params$purple_cnv) %>%
-  readr::read_tsv(col_types = "ciididdcccdddddd")
-
-nms_purple_cnv <- c("chromosome", "start", "end", "copyNumber", "bafCount", "observedBAF",
-                    "baf", "segmentStartSupport", "segmentEndSupport", "method",
-                    "depthWindowCount", "gcContent", "minStart", "maxStart", "minorAllelePloidy",
-                    "majorAllelePloidy")
-
-# sanity checks in case something changes between versions (PURPLE v2.34 as of 2019-09-29)
-stopifnot(all(names(purple_global_cnv) == nms_purple_cnv))
 ```
 
 ## Summary
