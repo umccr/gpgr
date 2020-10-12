@@ -10,3 +10,4 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+^inst/rmd/wgs/umccrise/img$

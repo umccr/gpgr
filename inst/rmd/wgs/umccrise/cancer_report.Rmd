@@ -62,6 +62,7 @@ knitr::opts_chunk$set(collapse = TRUE, echo = FALSE,
 batch_name <- "SEQCII_50pc__T_SRR7890936_50pc"
 # tumor_name <- strsplit(batch_name, "__")[[1]][2]
 tumor_name <- "T_SRR7890936_50pc"
+dd <- "/Users/pdiakumis/Desktop/projects/umccr/umccrise_dev/umccrise/umccrise/rmd_files"
 
 params_tmp <- list(
   gadi = list(
@@ -83,19 +84,19 @@ params_tmp <- list(
     conda_list='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/conda_pkg_list.txt'),
   local = list(
     genome_build='hg38',
-    key_genes='data/ref/umccr_cancer_genes.latest.tsv',
-    af_global=glue::glue('data/umccrised/work/{batch_name}/cancer_report/afs/af_tumor.txt'),
-    af_keygenes=glue::glue('data/umccrised/work/{batch_name}/cancer_report/afs/af_tumor_keygenes.txt'),
-    somatic_snv=glue::glue('data/umccrised/{batch_name}/small_variants/{batch_name}-somatic-PASS.vcf.gz'),
-    somatic_sv=glue::glue('data/umccrised/{batch_name}/structural/{batch_name}-manta.tsv'),
-    somatic_sv_vcf=glue::glue('data/umccrised/{batch_name}/structural/{batch_name}-manta.vcf.gz'),
-    purple_gene_cnv=glue::glue('data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.gene.tsv'),
-    purple_cnv=glue::glue('data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.somatic.tsv'),
-    purple_purity=glue::glue('data/umccrised/work/{batch_name}/purple/{batch_name}.purple.purity.tsv'),
-    purple_qc=glue::glue('data/umccrised/work/{batch_name}/purple/{batch_name}.purple.qc'),
-    oncoviral_present_viruses='data/umccrised/work/{batch_name}/oncoviruses/present_viruses.txt',
-    oncoviral_breakpoints_tsv='data/umccrised/work/{batch_name}/oncoviruses/oncoviral_breakpoints.tsv',
-    conda_list=glue::glue('data/umccrised/work/conda_pkg_list.txt')
+    key_genes=glue::glue('{dd}/data/ref/umccr_cancer_genes.latest.tsv'),
+    af_global=glue::glue('{dd}/data/umccrised/work/{batch_name}/cancer_report/afs/af_tumor.txt'),
+    af_keygenes=glue::glue('{dd}/data/umccrised/work/{batch_name}/cancer_report/afs/af_tumor_keygenes.txt'),
+    somatic_snv=glue::glue('{dd}/data/umccrised/{batch_name}/small_variants/{batch_name}-somatic-PASS.vcf.gz'),
+    somatic_sv=glue::glue('{dd}/data/umccrised/{batch_name}/structural/{batch_name}-manta.tsv'),
+    somatic_sv_vcf=glue::glue('{dd}/data/umccrised/{batch_name}/structural/{batch_name}-manta.vcf.gz'),
+    purple_gene_cnv=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.gene.tsv'),
+    purple_cnv=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.somatic.tsv'),
+    purple_purity=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.purity.tsv'),
+    purple_qc=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.qc'),
+    oncoviral_present_viruses=glue::glue('{dd}/data/umccrised/work/{batch_name}/oncoviruses/present_viruses.txt'),
+    oncoviral_breakpoints_tsv=glue::glue('{dd}/data/umccrised/work/{batch_name}/oncoviruses/oncoviral_breakpoints.tsv'),
+    conda_list=glue::glue('{dd}/data/umccrised/work/conda_pkg_list.txt')
   )
 )
 
@@ -473,107 +474,22 @@ if (sv_path == "NA") {
 }
 ```
 
-```{r purple_qc_prep}
+```{r purple_qc_summary_prep}
 #---- PURPLE QC ----#
-# read both datasets
-qc_path <- params$purple_qc
-purity_path <- params$purple_purity
-
-purple_qc <-
-  file.path(qc_path) %>%
-  readr::read_tsv(col_names = c("key", "value"), col_types = "cc") %>%
-  dplyr::mutate(value = toupper(value))
-# turn into named vector
-purple_qc <- structure(purple_qc$value, names = purple_qc$key)
-
-purple_purity <-
-  file.path(purity_path) %>%
-  readr::read_tsv(col_types = cols(.default = col_double(),
-                                   gender = col_character(),
-                                   status = col_character(),
-                                   wholeGenomeDuplication = col_character(),
-                                   msStatus = col_character(),
-                                   tmlStatus = col_character(),
-                                   tmbStatus = col_character()
-  )) %>%
-  dplyr::mutate_if(is.numeric, round, 3) %>%
-  unlist()
-
-# sanity checks in case something changes between versions (PURPLE v2.34 as of 2019-09-29)
-nms_purple_qc <- c("QCStatus", "SegmentPass", "GenderPass", "DeletedGenesPass",
-                   "SegmentScore", "UnsupportedSegments", "Ploidy",
-                   "AmberGender", "CobaltGender", "DeletedGenes")
-
-nms_purple_purity <- c("purity", "normFactor", "score", "diploidProportion", "ploidy",
-                       "gender", "status", "polyclonalProportion", "minPurity", "maxPurity",
-                       "minPloidy", "maxPloidy", "minDiploidProportion", "maxDiploidProportion",
-                       "version", "somaticPenalty", "wholeGenomeDuplication", "msIndelsPerMb", "msStatus",
-                       "tml", "tmlStatus", "tmbPerMb", "tmbStatus")
-
-
-# for shorter reference in glue
-p <- purple_purity
-q <- purple_qc
-purple_qc_summary <- dplyr::tribble(
-  ~Variable        , ~value,                                                   ~details,
-  'QC_Status'      , glue('{q["QCStatus"]}')                                  , "",
-  'Purity'         , glue('{p["purity"]} ({p["minPurity"]}-{p["maxPurity"]})'), "Purity of tumor in the sample (and min-max with score within 10% of best)",
-  'Ploidy'         , glue('{p["ploidy"]} ({p["minPloidy"]}-{p["maxPloidy"]})'), "Average ploidy of tumor sample after adjusting for purity (and min-max with score within 10% of best)",
-  'Gender'         , glue('{p["gender"]}')                                    , "",
-  'WGD'            , glue('{p["wholeGenomeDuplication"]}')                    , "Whole genome duplication",
-  'MSI (indels/Mb)', glue('{p["msStatus"]} ({p["msIndelsPerMb"]})')           , "MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) & MS Indels per Mb",
-  'Polyclonal Prop', glue('{p["polyclonalProportion"]}')                      , "Proportion of CN regions that are more than 0.25 from a whole copy number",
-  'Diploidy Prop'  , glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'), glue('Proportion of CN regions that have 1 (+- 0.2) minor and major allele'),
-  'Segment_Pass'   , glue('{q["SegmentPass"]}')                               , glue('Score: {q["SegmentScore"]}; Unsupported: {q["UnsupportedSegments"]}'),
-  'Gender_Pass'    , glue('{q["GenderPass"]}')                                , glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'),
-  'DelGenes_Pass'  , glue('{q["DeletedGenesPass"]}')                          , glue('count: {q["DeletedGenes"]}'),
-  'TMB'            , glue('{p["tmbPerMb"]} ({p["tmbStatus"]})')               , "Tumor mutational burden per mega base (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)",
-  'TML'            , glue('{p["tml"]} ({p["tmlStatus"]})')                    , "Tumor mutational load (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)"
+purple_qc_summary <- dplyr::bind_rows(
+  gpgr::purple_qc_read(params$purple_qc)[["summary"]],
+  gpgr::purple_purity_read(params$purple_purity)[["summary"]]
 )
 ```
 
 ```{r purple_gene_cnv_prep}
 #---- PURPLE Gene CNV Table ----#
-key_genes <-
-  readr::read_tsv(params$key_genes, col_types = cols(oncogene = "l", tumorsuppressor = "l")) %>%
-  dplyr::select(symbol, oncogene, tumorsuppressor)
-
-oncogenes <- key_genes %>% dplyr::filter(oncogene) %>% dplyr::pull(symbol)
-tsgenes <- key_genes %>% dplyr::filter(tumorsuppressor) %>% dplyr::pull(symbol)
-
-purple_gene_cnv <- readr::read_tsv(params$purple_gene_cnv, col_types = "ciicddcdddcccdiicccd")
-
-# sanity checks in case something changes between versions (PURPLE v2.34 as of 2019-09-29)
-nms_gene_cnv <- c("chromosome", "start", "end", "gene", "minCopyNumber", "maxCopyNumber",
-                  "unused", "somaticRegions", "germlineHomDeletionRegions", "germlineHetToHomDeletionRegions",
-                  "transcriptId", "transcriptVersion", "chromosomeBand", "minRegions",
-                  "minRegionStart", "minRegionEnd", "minRegionStartSupport", "minRegionEndSupport",
-                  "minRegionMethod", "minMinorAllelePloidy")
-stopifnot(all(colnames(purple_gene_cnv) == nms_gene_cnv))
-
-purple_gene_cnv <- purple_gene_cnv %>%
-  dplyr::filter(gene %in% key_genes$symbol) %>%
-  dplyr::mutate(chromosome = as.factor(chromosome),
-                transcriptID = paste0(transcriptId, ".", transcriptVersion),
-                minRegStartEnd = paste0(minRegionStart, "-", minRegionEnd),
-                minRegSupportStartEndMethod = paste0(minRegionStartSupport, "-", minRegionEndSupport, " (", minRegionMethod, ")"),
-                germDelReg = paste0(germlineHomDeletionRegions, "/", germlineHetToHomDeletionRegions),
-                oncogene = gene %in% oncogenes,
-                tsgene = gene %in% tsgenes,
-                onco_or_ts = dplyr::case_when(
-                  oncogene & tsgene ~ "onco+ts",
-                  oncogene ~ "oncogene",
-                  tsgene ~ "tsgene",
-                  TRUE ~ "")) %>%
-  dplyr::select(gene, minCN = minCopyNumber, maxCN = maxCopyNumber,
-                chrom = chromosome, start, end,
-                chrBand = chromosomeBand, onco_or_ts, transcriptID, minMinorAllelePloidy,
-                somReg = somaticRegions, germDelReg, minReg = minRegions,
-                minRegStartEnd, minRegSupportStartEndMethod)
+purple_cnv_gene <- gpgr::purple_cnv_gene_process(params$purple_gene_cnv, params$key_genes)
 ```
 
 ```{r purple_global_cnv_prep}
 #---- PURPLE Global CNV Table ----#
+purple_cnv_somatic <- gpgr::purple_cnv_somatic_process(params$purple_cnv)
 purple_global_cnv <- file.path(params$purple_cnv) %>%
   readr::read_tsv(col_types = "ciididdcccdddddd")
 
