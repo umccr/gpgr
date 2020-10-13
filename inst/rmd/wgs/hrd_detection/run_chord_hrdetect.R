@@ -52,3 +52,8 @@ res <- seq_len(nrow(s)) %>%
   })
 
 saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-10-13.rds"))
+
+res <- readRDS(here::here("nogit/results/chord_hrdetect_2020-10-13.rds"))
+
+chord <- purrr::map(res, "chord") %>% dplyr::bind_rows()
+hrdetect <- purrr::map(res, "hrdetect") %>% dplyr::bind_rows()
