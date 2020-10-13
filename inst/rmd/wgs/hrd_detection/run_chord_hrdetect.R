@@ -1,0 +1,54 @@
+suppressPackageStartupMessages(require(BSgenome.Hsapiens.UCSC.hg38))
+suppressPackageStartupMessages(require(furrr))
+suppressPackageStartupMessages(require(future))
+suppressPackageStartupMessages(require(glue))
+suppressPackageStartupMessages(require(gpgr))
+suppressPackageStartupMessages(require(here))
+suppressPackageStartupMessages(require(kableExtra))
+suppressPackageStartupMessages(require(tidyverse))
+
+s <- tibble::tribble(
+  ~sample, ~prefix, ~snv, ~sv, ~cnv, ~genome,
+  "SBJ00574_1", "SBJ00574_1__SBJ00574_PRJ200428_L2000802", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00574_2", "SBJ00574_2__SBJ00574_PRJ200429_L2000803", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00590",   "SBJ00590__SBJ00590_MDX200156_L2000853", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00597",   "SBJ00597__SBJ00597_MDX200162_L2000855", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00600",   "SBJ00600__SBJ00600_PRJ200484_L2000839", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00602",   "SBJ00602__SBJ00602_PRJ200487_L2000841", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00603",   "SBJ00603__SBJ00603_PRJ200489_L2000843", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00605",   "SBJ00605__SBJ00605_PRJ200504_L2000847", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00607",   "SBJ00607__SBJ00607_MDX200165_L2000857", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+) %>%
+  dplyr::mutate(
+    dd = file.path(here::here("nogit")),
+    snv = file.path(dd, "snv", paste0(prefix, snv)),
+    sv = file.path(dd, "sv", paste0(prefix, sv)),
+    cnv = file.path(dd, "cnv", paste0(prefix, cnv))
+  )
+
+future::plan(multicore)
+res <- seq_len(nrow(s)) %>%
+  furrr::future_map(function(i) {
+    cat(s$sample[i], "CHORD\n")
+    chord_sv_df <- gpgr::chord_mantavcf2df(s$sv[i])
+    chord <- gpgr::chord_run(
+      vcf.snv = s$snv[i],
+      df.sv = chord_sv_df,
+      sv.caller = "manta",
+      sample.name = s$sample[i],
+      ref.genome = s$genome[i])
+
+    cat(s$sample[i], "HRDetect\n")
+    hrdetect <- gpgr::hrdetect_run(
+      nm = s$sample[i],
+      snvindel_vcf = s$snv[i],
+      sv_vcf = s$sv[i],
+      cnv_file = s$cnv[i],
+      genome = s$genome[i],
+      snvoutdir = file.path(here::here("nogit"), "results", "hrdetect", s$sample[i])
+    )
+    list(chord = chord$prediction,
+         hrdetect = hrdetect)
+  })
+
+saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-10-13.rds"))
