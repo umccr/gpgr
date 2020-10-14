@@ -135,7 +135,7 @@ abbreviate_effect <- function(effects) {
 #' (sv <- umccrise_read_sv_tsv(x))
 #'
 #' @testexamples
-#' expect_equal(colnames(sv)[ncol(sv)], "MATEID")
+#' expect_equal(colnames(sv)[ncol(sv)], "ALT")
 #'
 #' @export
 umccrise_read_sv_tsv <- function(x) {

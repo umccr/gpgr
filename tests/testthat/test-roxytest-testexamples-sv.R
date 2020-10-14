@@ -50,7 +50,7 @@ test_that("Function umccrise_read_sv_tsv() @ L141", {
   x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
   (sv <- umccrise_read_sv_tsv(x))
   
-  expect_equal(colnames(sv)[ncol(sv)], "MATEID")
+  expect_equal(colnames(sv)[ncol(sv)], "ALT")
 })
 
 
