@@ -132,21 +132,22 @@ abbreviate_effect <- function(effects) {
 #'
 #' @examples
 #' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-#' (sv <- read_sv_tsv(x))
+#' (sv <- umccrise_read_sv_tsv(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(sv)[ncol(sv)], "MATEID")
 #'
 #' @export
-read_sv_tsv <- function(x) {
+umccrise_read_sv_tsv <- function(x) {
 
   # tsv column names + types
-  nm <- c("caller" = "c", "sample" = "c", "chrom" = "c", "start" = "i", "end" = "i", "svtype" = "c",
+  nm <- c("caller" = "c", "sample" = "c",
+          "chrom" = "c", "start" = "i", "end" = "i", "svtype" = "c",
           "split_read_support" = "c", "paired_support_PE" = "c", "paired_support_PR" = "c",
           "AF_BPI" = "c", "somaticscore" = "i", "tier" = "c", "annotation" = "c",
           "AF_PURPLE" = "c", "CN_PURPLE" = "c", "CN_change_PURPLE" = "c", "Ploidy_PURPLE" = "d",
           "PURPLE_status" = "c", "START_BPI" = "i", "END_BPI" = "i", "ID" = "c",
-          "MATEID" = "c")
+          "MATEID" = "c", "ALT" = "c")
 
   ctypes <- paste(nm, collapse = "")
   somatic_sv_tsv <- readr::read_tsv(x, col_names = TRUE, col_types = ctypes)
@@ -173,7 +174,7 @@ read_sv_tsv <- function(x) {
 #'
 #' @export
 process_sv <- function(x) {
-  sv <- read_sv_tsv(x)
+  sv <- umccrise_read_sv_tsv(x)
 
   if (nrow(sv) == 0) {
     return(list(
@@ -202,7 +203,7 @@ process_sv <- function(x) {
 
   # BND IDs
   # Two BND mates share the same ID up to the last digit (0 or 1)
-  unmelted_bnd <- unmelted %>%
+  unmelted_bnd1 <- unmelted %>%
     dplyr::filter(.data$svtype == "BND") %>%
     tidyr::separate(.data$ID, into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) %>%
     dplyr::group_by(.data$BND_group) %>%
@@ -215,11 +216,14 @@ process_sv <- function(x) {
     dplyr::ungroup()
 
   # Grab each BND mate's chrom
-  bnd_mate_chrom <- unmelted_bnd %>%
-    dplyr::select(BND_mate_chrom = .data$chrom) %>%
-    dplyr::slice(match(unmelted_bnd$ID, unmelted_bnd$MATEID))
+  # Orphan mates have that info in the ALT field
+  match_id2mateid <- match(unmelted_bnd1$ID, unmelted_bnd1$MATEID)
+  unmelted_bnd2 <- unmelted_bnd1[match_id2mateid, c("chrom")] %>%
+    dplyr::rename(BND_mate_chrom = .data$chrom)
 
-  unmelted_bnd <- dplyr::bind_cols(unmelted_bnd, bnd_mate_chrom)
+  unmelted_bnd <- dplyr::bind_cols(unmelted_bnd1, unmelted_bnd2) %>%
+    dplyr::mutate(
+      BND_mate_chrom = ifelse(is.na(BND_mate_chrom), sub(".*chr(.*):.*", "orphan_\\1", ALT), BND_mate_chrom))
 
   unmelted_other <- unmelted %>%
     dplyr::filter(.data$svtype != "BND")
