@@ -271,3 +271,68 @@ process_sv <- function(x) {
     melted = melted
   )
 }
+
+# histo + density plots of PR - SR for BNDs
+plot_bnd_sr_pr <- function(d, nm) {
+  assertthat::assert_that(all(c("Type", "SR_PR_alt") %in% colnames(d)))
+  dplot <- d %>%
+    dplyr::filter(Type == "BND") %>%
+    dplyr::select(SR_PR_alt) %>%
+    tidyr::separate(SR_PR_alt, into = c("SR", "PR"), convert = TRUE) %>%
+    dplyr::mutate(PR = ifelse(is.na(PR), 0, PR),
+                  SR = ifelse(is.na(SR), 0, SR),
+                  PR_minus_SR = PR - SR)
+
+  p1 <- dplot %>%
+    ggplot2::ggplot(ggplot2::aes(x = .data$PR_minus_SR)) +
+    ggplot2::geom_histogram(fill = "darkblue", binwidth = 1) +
+    ggplot2::theme_bw()
+  p2 <- dplot %>%
+    ggplot2::ggplot(ggplot2::aes(x = .data$PR_minus_SR)) +
+    ggplot2::geom_density(colour = "darkblue") +
+    ggplot2::theme_bw() +
+    ggplot2::ggtitle(nm)
+
+  p1 / p2
+
+}
+
+# line plot for SR, PR and SR + PR for BNDs
+plot_bnd_sr_pr_tot <- function(d, nm) {
+  assertthat::assert_that(all(c("Type", "SR_PR_alt") %in% colnames(d)))
+  dplot <- d %>%
+    dplyr::filter(Type == "BND") %>%
+    dplyr::select(SR_PR_alt) %>%
+    tidyr::separate(SR_PR_alt, into = c("SR", "PR"), convert = TRUE) %>%
+    dplyr::mutate(PR = ifelse(is.na(PR), 0, PR),
+                  SR = ifelse(is.na(SR), 0, SR)) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(tot = sum(SR, PR, na.rm = T)) %>%
+    dplyr::ungroup() %>%
+    dplyr::arrange(dplyr::desc(tot)) %>%
+    dplyr::mutate(n = dplyr::row_number()) %>%
+    tidyr::pivot_longer(cols = c(SR, PR, tot))
+
+  p <- dplot %>%
+    ggplot2::ggplot(ggplot2::aes(x = .data$n, y = .data$value, colour = .data$name)) +
+    ggplot2::geom_line() +
+    ggplot2::scale_x_continuous(breaks=scales::breaks_extended(10)) +
+    ggplot2::theme_bw() +
+    ggplot2::ggtitle(nm)
+
+  p
+}
+
+# sv1 <- process_sv("~/Desktop/tmp/SBJ1_keep_pass.tsv")
+# sv2 <- process_sv("~/Desktop/tmp/SBJ2_keep_pass.tsv")
+# sv3 <- process_sv("~/Desktop/tmp/SEQC_keep_pass.tsv")
+#
+# p1 <- plot_bnd_sr_pr(sv1$unmelted, "574_1")
+# p2 <- plot_bnd_sr_pr(sv2$unmelted, "574_2")
+# p3 <- plot_bnd_sr_pr(sv3$unmelted, "SEQC")
+# p1 | p2 | p3
+#
+# p1 <- plot_bnd_sr_pr_tot(sv1$unmelted, "574_1")
+# p2 <- plot_bnd_sr_pr_tot(sv2$unmelted, "574_2")
+# p3 <- plot_bnd_sr_pr_tot(sv3$unmelted, "SEQC")
+# p1 | p2 | p3
