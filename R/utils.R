@@ -87,14 +87,51 @@ is_vcf <- function(x) {
 #' @export
 vcf_is_empty <- function(x) {
   assertthat::assert_that(is_vcf(x))
+  tsv_is_empty(x)
+}
+
+#' Does the TSV file contain any non-header rows?
+#'
+#' Checks if the TSV file contains any non-header rows.
+#'
+#' @param x Path to TSV file.
+#' @param comment Taken from [readr::read_tsv()].
+#' @param col_types Taken from [readr::read_tsv()].
+#' @param n_max Taken from [readr::read_tsv()].
+#' @param ... Other arguments to be passed to [readr::read_tsv()].
+#'
+#' @return TRUE if there is at least one non-header row in the TSV, FALSE otherwise.
+#'
+#' @examples
+#'
+#' tmp1 <- tempfile()
+#' writeLines(c("col1\tcol2\tcol3", "1\t2\t3"), con = tmp1)
+#' (a <- tsv_is_empty(tmp1))
+#'
+#' tmp2 <- tempfile()
+#' writeLines(c("col1\tcol2\tcol3"), con = tmp2)
+#' (b <- tsv_is_empty(tmp2))
+#'
+#' tmp3 <- tempfile()
+#' writeLines(c("##meta1", "##meta2", "col1\tcol2\tcol3"), con = tmp3)
+#' (c <- tsv_is_empty(tmp3))
+#'
+#' @testexamples
+#' expect_false(a)
+#' expect_true(b)
+#' expect_true(c)
+#'
+#' @export
+tsv_is_empty <- function(x, comment = "##", col_types = readr::cols(.default = "c"), n_max = 1, ...) {
   d <- readr::read_tsv(
     file = x,
-    comment = "##",
-    col_types = readr::cols(.default = "c"),
-    n_max = 1)
+    comment = comment,
+    col_types = col_types,
+    n_max = n_max,
+    ...)
 
-  if (nrow(d) != 1) {
-    message(glue::glue("{x} does not contain any variants."))
+  if (nrow(d) != n_max) {
+    message(glue::glue("{x} does not contain any non-header rows."))
     return(TRUE)
   }
   return(FALSE)

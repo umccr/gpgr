@@ -39,3 +39,24 @@ test_that("Function vcf_is_empty() @ L88", {
   expect_error(vcf_is_empty(tmp3))
 })
 
+
+test_that("Function tsv_is_empty() @ L125", {
+  
+  
+  tmp1 <- tempfile()
+  writeLines(c("col1\tcol2\tcol3", "1\t2\t3"), con = tmp1)
+  (a <- tsv_is_empty(tmp1))
+  
+  tmp2 <- tempfile()
+  writeLines(c("col1\tcol2\tcol3"), con = tmp2)
+  (b <- tsv_is_empty(tmp2))
+  
+  tmp3 <- tempfile()
+  writeLines(c("##meta1", "##meta2", "col1\tcol2\tcol3"), con = tmp3)
+  (c <- tsv_is_empty(tmp3))
+  
+  expect_false(a)
+  expect_true(b)
+  expect_true(c)
+})
+
