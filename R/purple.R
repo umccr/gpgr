@@ -10,13 +10,13 @@
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
-#' (p <- purple_cnv_gene_read(x))
+#' (p <- purple_cnv_som_gene_read(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "minMinorAllelePloidy")
 #'
 #' @export
-purple_cnv_gene_read <- function(x) {
+purple_cnv_som_gene_read <- function(x) {
 
   nm <- c("chromosome" = "c", "start" = "i", "end" = "i", "gene" = "c",
           "minCopyNumber" = "d", "maxCopyNumber" = "d",
@@ -54,14 +54,14 @@ purple_cnv_gene_read <- function(x) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 #' g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
-#' (pp <- purple_cnv_gene_process(x, g))
+#' (pp <- purple_cnv_som_gene_process(x, g))
 #'
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "minRegSupportStartEndMethod")
 #'
 #' @export
-purple_cnv_gene_process <- function(x, g = NULL) {
-  purple_cnv_gene <- purple_cnv_gene_read(x)
+purple_cnv_som_gene_process <- function(x, g = NULL) {
+  purple_cnv_gene <- purple_cnv_som_gene_read(x)
   if (is.null(g)) {
     g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
   }
@@ -124,13 +124,13 @@ purple_cnv_gene_process <- function(x, g = NULL) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
-#' (p <- purple_cnv_somatic_read(x))
+#' (p <- purple_cnv_som_read(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
 #'
 #' @export
-purple_cnv_somatic_read <- function(x) {
+purple_cnv_som_read <- function(x) {
   nm <- c("chromosome" = "c", "start" = "i", "end" = "i",
           "copyNumber" = "d", "bafCount" = "d", "observedBAF" = "d",
           "baf" = "d", "segmentStartSupport" = "c", "segmentEndSupport" = "c",
@@ -157,15 +157,15 @@ purple_cnv_somatic_read <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
-#' (pp <- purple_cnv_somatic_process(x))
+#' (pp <- purple_cnv_som_process(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 #'
 #' @export
-purple_cnv_somatic_process <- function(x) {
+purple_cnv_som_process <- function(x) {
 
-  purple_cnv_somatic <- purple_cnv_somatic_read(x)
+  purple_cnv_somatic <- purple_cnv_som_read(x)
   purple_cnv_somatic <- purple_cnv_somatic %>%
     dplyr::mutate(
       Chr = as.factor(.data$chromosome),
@@ -217,15 +217,15 @@ purple_cnv_somatic_process <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
-#' (p <- purple_cnv_germline_read(x))
+#' (p <- purple_cnv_germ_read(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
 #'
 #' @export
-purple_cnv_germline_read <- function(x) {
+purple_cnv_germ_read <- function(x) {
   # as of PURPLE v2.39, germline and somatic files have same columns.
-  purple_cnv_germline <- purple_cnv_somatic_read(x)
+  purple_cnv_germline <- purple_cnv_som_read(x)
   purple_cnv_germline
 }
 
@@ -242,15 +242,15 @@ purple_cnv_germline_read <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
-#' (pp <- purple_cnv_germline_process(x))
+#' (pp <- purple_cnv_germ_process(x))
 #'
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 #'
 #' @export
-purple_cnv_germline_process <- function(x) {
+purple_cnv_germ_process <- function(x) {
   # as of PURPLE v2.39, germline and somatic files have same columns.
-  processed_purple_cnv_germline <- purple_cnv_somatic_process(x)
+  processed_purple_cnv_germline <- purple_cnv_som_process(x)
   processed_purple_cnv_germline
 }
 

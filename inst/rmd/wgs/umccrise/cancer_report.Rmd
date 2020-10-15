@@ -342,9 +342,9 @@ purple_qc_summary <- dplyr::bind_rows(
 )
 
 #---- PURPLE CNV Tables ----#
-purple_cnv_som <- gpgr::purple_cnv_somatic_process(params$purple_som_cnv)
-purple_cnv_som_gene <- gpgr::purple_cnv_gene_process(params$purple_som_gene_cnv, params$key_genes)
-purple_cnv_germ <- gpgr::purple_cnv_somatic_process(params$purple_germ_cnv)
+purple_cnv_som <- gpgr::purple_cnv_som_process(params$purple_som_cnv)
+purple_cnv_som_gene <- gpgr::purple_cnv_som_gene_process(params$purple_som_gene_cnv, params$key_genes)
+purple_cnv_germ <- gpgr::purple_cnv_germ_process(params$purple_germ_cnv)
 ```
 
 ## Summary
@@ -1419,14 +1419,12 @@ if (!no_sv_found) {
 }
 ```
 
-## Copy Number Variants {#cnv-qc}
+## Copy Number Variants
 The purity and ploidy estimator
 [PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator)
 is used to generate a copy number profile for the somatic sample.
 
-<p>&nbsp;</p>
-
-### UMCCR Gene CNV Calls {#cnv-gene}
+### UMCCR Gene Somatic CNV Calls {#cnv-gene}
 
 <details>
 <summary>Description</summary>
@@ -1472,7 +1470,7 @@ purple_cnv_som_gene$tab %>%
   DT::formatRound(~ minCN + maxCN, digits = 1)
 ```
 
-### Genome-wide CNV Segments {#cnv-segs}
+### Genome-wide Somatic CNV Segments {#cnv-segs}
 
 <details>
 <summary>Description</summary>
@@ -1507,7 +1505,7 @@ dplyr::tribble(
 
 <p>&nbsp;</p>
 
-```{r purple_global_cnv_tab}
+```{r purple_cnv_som_tab}
 purple_cnv_som$tab %>%
   DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
                 class = "cell-border display compact",
@@ -1516,6 +1514,19 @@ purple_cnv_som$tab %>%
                                buttons = c('csv', 'excel'), dom = 'Bfrtip')) %>%
   DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
 ```
+
+### Genome-wide Germline CNV Segments
+
+```{r purple_cnv_germ_tab}
+purple_cnv_germ$tab %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = TRUE, keys = TRUE,
+                               buttons = c('csv', 'excel'), dom = 'Bfrtip')) %>%
+  DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
+```
+
 
 ### PURPLE Charts {.tabset .tabset-fade #purple-charts}
 PURPLE generates charts for summarising tumor sample characteristics.

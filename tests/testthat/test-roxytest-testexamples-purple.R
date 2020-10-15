@@ -2,56 +2,56 @@
 
 context("File R/purple.R: @testexamples")
 
-test_that("Function purple_cnv_gene_read() @ L19", {
+test_that("Function purple_cnv_som_gene_read() @ L19", {
   
   x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
-  (p <- purple_cnv_gene_read(x))
+  (p <- purple_cnv_som_gene_read(x))
   
   expect_equal(colnames(p)[ncol(p)], "minMinorAllelePloidy")
 })
 
 
-test_that("Function purple_cnv_gene_process() @ L63", {
+test_that("Function purple_cnv_som_gene_process() @ L63", {
   
   x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
   g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
-  (pp <- purple_cnv_gene_process(x, g))
+  (pp <- purple_cnv_som_gene_process(x, g))
   
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "minRegSupportStartEndMethod")
 })
 
 
-test_that("Function purple_cnv_somatic_read() @ L133", {
+test_that("Function purple_cnv_som_read() @ L133", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
-  (p <- purple_cnv_somatic_read(x))
+  (p <- purple_cnv_som_read(x))
   
   expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
 })
 
 
-test_that("Function purple_cnv_somatic_process() @ L166", {
+test_that("Function purple_cnv_som_process() @ L166", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
-  (pp <- purple_cnv_somatic_process(x))
+  (pp <- purple_cnv_som_process(x))
   
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 })
 
 
-test_that("Function purple_cnv_germline_read() @ L226", {
+test_that("Function purple_cnv_germ_read() @ L226", {
   
   x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
-  (p <- purple_cnv_germline_read(x))
+  (p <- purple_cnv_germ_read(x))
   
   expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
 })
 
 
-test_that("Function purple_cnv_germline_process() @ L251", {
+test_that("Function purple_cnv_germ_process() @ L251", {
   
   x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
-  (pp <- purple_cnv_germline_process(x))
+  (pp <- purple_cnv_germ_process(x))
   
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 })
