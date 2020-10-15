@@ -311,14 +311,14 @@ purple_qc_read <- function(x) {
   assertthat::assert_that(all(purple_qc$key == nm))
   q <- structure(purple_qc$value, names = purple_qc$key)
   summary <- dplyr::tribble(
-    ~variable, ~value, ~details,
-    'QC_Status', glue::glue('{q["QCStatus"]}'),
+    ~n, ~variable, ~value, ~details,
+    1, 'QC_Status', glue::glue('{q["QCStatus"]}'),
     "",
-    'Segment_Pass', glue::glue('{q["SegmentPass"]}'),
+    11, 'Segment_Pass', glue::glue('{q["SegmentPass"]}'),
     glue::glue('Score: {q["SegmentScore"]}; Unsupported: {q["UnsupportedSegments"]}'),
-    'Gender_Pass', glue::glue('{q["GenderPass"]}'),
+    12, 'Gender_Pass', glue::glue('{q["GenderPass"]}'),
     glue::glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'),
-    'DelGenes_Pass', glue::glue('{q["DeletedGenesPass"]}'),
+    13, 'DelGenes_Pass', glue::glue('{q["DeletedGenesPass"]}'),
     glue::glue('count: {q["DeletedGenes"]}'),
   )
 
@@ -389,24 +389,24 @@ purple_purity_read <- function(x) {
   p <- structure(purple_purity$value, names = purple_purity$column)
 
   summary <- dplyr::tribble(
-    ~variable, ~value, ~details,
-    'Purity', glue::glue('{p["purity"]} ({p["minPurity"]}-{p["maxPurity"]})'),
+    ~n, ~variable, ~value, ~details,
+    2, 'Purity', glue::glue('{p["purity"]} ({p["minPurity"]}-{p["maxPurity"]})'),
     "Purity of tumor in the sample (and min-max with score within 10% of best)",
-    'Ploidy', glue::glue('{p["ploidy"]} ({p["minPloidy"]}-{p["maxPloidy"]})'),
+    3, 'Ploidy', glue::glue('{p["ploidy"]} ({p["minPloidy"]}-{p["maxPloidy"]})'),
     "Average ploidy of tumor sample after adjusting for purity (and min-max with score within 10% of best)",
-    'Gender', glue::glue('{p["gender"]}'),
+    4, 'Gender', glue::glue('{p["gender"]}'),
     "Gender as inferred by AMBER/COBALT.",
-    'WGD', glue::glue('{p["wholeGenomeDuplication"]}'),
+    5, 'WGD', glue::glue('{p["wholeGenomeDuplication"]}'),
     "Whole genome duplication",
-    'MSI (indels/Mb)', glue::glue('{p["msStatus"]} ({p["msIndelsPerMb"]})'),
+    6, 'MSI (indels/Mb)', glue::glue('{p["msStatus"]} ({p["msIndelsPerMb"]})'),
     "MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) & MS Indels per Mb",
-    'Polyclonal Prop', glue::glue('{p["polyclonalProportion"]}'),
+    7, 'Polyclonal Prop', glue::glue('{p["polyclonalProportion"]}'),
     "Proportion of CN regions that are more than 0.25 from a whole copy number",
-    'Diploidy Prop', glue::glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'),
+    8, 'Diploidy Prop', glue::glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'),
     'Proportion of CN regions that have 1 (+- 0.2) minor and major allele',
-    'TMB', glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
+    9, 'TMB', glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
     "Tumor mutational burden per mega base (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)",
-    'TML', glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
+    10, 'TML', glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
     "Tumor mutational load (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)"
   )
 

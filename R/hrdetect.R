@@ -296,7 +296,7 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
                          sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)) {
 
-  assertthat::assert_that(file.exists(snvindel_vcf, sv_vcf, cnv_tsv))
+  assertthat::assert_that(all(file.exists(snvindel_vcf, sv_vcf, cnv_tsv)))
   if (genome == "GRCh37") {
     genome <- "hg19"
   }
