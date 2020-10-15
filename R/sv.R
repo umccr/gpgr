@@ -72,6 +72,22 @@ count_pieces <- function(x, sep) {
   ifelse(nchar(x) == 0, 0, stringr::str_count(x, sep) + 1)
 }
 
+EFFECT_ABBREVIATIONS <- c(
+  "3_prime_UTR_truncation" = "3UTRtrunc", "3_prime_UTR_variant" = "3UTRvar",
+  "5_prime_UTR_truncation" = "5UTRtrunc",  "5_prime_UTR_variant" = "5UTRvar",
+  "feature_fusion" = "Fus", "bidirectional_gene_fusion" = "BidFusG", "gene_fusion" = "FusG",
+  "chromosome_number_variation" = "ChromNumV", "conservative_inframe_deletion" = "ConsInframeDel",
+  "downstream_gene_variant" = "DnstreamGV", "upstream_gene_variant" = "UpstreamGV",
+  "duplication" = "Dup", "exon_loss_variant" = "ExonLossV",
+  "feature_ablation" = "DelG", "transcript_ablation" = "DelTx",
+  "frameshift_variant" = "FrameshiftV", "intergenic_region" = "IntergenReg", "intragenic_variant" = "IntragenV",
+  "intron_variant" = "IntronV",  "no_func_effect" = "NoFuncEff", "no_prio_effect" = "NoPrioEff",
+  "non_coding_transcript_variant" = "NoncodTxV",
+  "splice_acceptor_variant" = "SpliceAccV",
+  "splice_donor_variant" = "SpliceDonV", "splice_region_variant" = "SpliceRegV",
+  "start_lost" = "StartLoss", "stop_gained" = "StopGain", "stop_lost" = "StopLoss",
+  "TF_binding_site_variant" = "TFBSVar",  "TFBS_ablation" = "TFBSDel")
+
 
 #' Abbreviate SV Effects
 #'
@@ -96,29 +112,13 @@ count_pieces <- function(x, sep) {
 #'
 abbreviate_effect <- function(effects) {
 
-  effect_abbreviations <- c(
-    "3_prime_UTR_truncation" = "3UTRtrunc", "3_prime_UTR_variant" = "3UTRvar",
-    "5_prime_UTR_truncation" = "5UTRtrunc",  "5_prime_UTR_variant" = "5UTRvar",
-    "feature_fusion" = "Fus", "bidirectional_gene_fusion" = "BidFusG", "gene_fusion" = "FusG",
-    "chromosome_number_variation" = "ChromNumV", "conservative_inframe_deletion" = "ConsInframeDel",
-    "downstream_gene_variant" = "DnstreamGV", "upstream_gene_variant" = "UpstreamGV",
-    "duplication" = "Dup", "exon_loss_variant" = "ExonLossV",
-    "feature_ablation" = "DelG", "transcript_ablation" = "DelTx",
-    "frameshift_variant" = "FrameshiftV", "intergenic_region" = "IntergenReg", "intragenic_variant" = "IntragenV",
-    "intron_variant" = "IntronV",  "no_func_effect" = "NoFuncEff", "no_prio_effect" = "NoPrioEff",
-    "non_coding_transcript_variant" = "NoncodTxV",
-    "splice_acceptor_variant" = "SpliceAccV",
-    "splice_donor_variant" = "SpliceDonV", "splice_region_variant" = "SpliceRegV",
-    "start_lost" = "StartLoss", "stop_gained" = "StopGain", "stop_lost" = "StopLoss",
-    "TF_binding_site_variant" = "TFBSVar",  "TFBS_ablation" = "TFBSDel")
-
-  effect_abbrev_nms <- names(effect_abbreviations)
+  effect_abbrev_nms <- names(EFFECT_ABBREVIATIONS)
 
   # take string as x&y&z
   # split by &
   # abbreviate each piece and glue back with comma
   .abbreviate_effect <- function(effect) {
-    ifelse(effect %in% effect_abbrev_nms, effect_abbreviations[effect], effect)
+    ifelse(effect %in% effect_abbrev_nms, EFFECT_ABBREVIATIONS[effect], effect)
   }
 
   strsplit(effects, "&")[[1]] %>%
