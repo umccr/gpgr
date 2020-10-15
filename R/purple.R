@@ -314,11 +314,11 @@ purple_qc_read <- function(x) {
     ~n, ~variable, ~value, ~details,
     1, 'QC_Status', glue::glue('{q["QCStatus"]}'),
     "",
-    11, 'Segment_Pass', glue::glue('{q["SegmentPass"]}'),
+    13, 'Segment_Pass', glue::glue('{q["SegmentPass"]}'),
     glue::glue('Score: {q["SegmentScore"]}; Unsupported: {q["UnsupportedSegments"]}'),
-    12, 'Gender_Pass', glue::glue('{q["GenderPass"]}'),
+    14, 'Gender_Pass', glue::glue('{q["GenderPass"]}'),
     glue::glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'),
-    13, 'DelGenes_Pass', glue::glue('{q["DeletedGenesPass"]}'),
+    15, 'DelGenes_Pass', glue::glue('{q["DeletedGenesPass"]}'),
     glue::glue('count: {q["DeletedGenes"]}'),
   )
 
@@ -384,6 +384,7 @@ purple_purity_read <- function(x) {
       dplyr::across(dplyr::everything(), as.character)) %>%
     tidyr::pivot_longer(dplyr::everything(), names_to = "column", values_to = "value") %>%
     dplyr::left_join(tab, by = "column") %>%
+    dplyr::mutate(value = toupper(.data$value)) %>%
     dplyr::select(.data$column, .data$value)
 
   p <- structure(purple_purity$value, names = purple_purity$column)
@@ -396,17 +397,17 @@ purple_purity_read <- function(x) {
     "Average ploidy of tumor sample after adjusting for purity (and min-max with score within 10% of best)",
     4, 'Gender', glue::glue('{p["gender"]}'),
     "Gender as inferred by AMBER/COBALT.",
-    5, 'WGD', glue::glue('{p["wholeGenomeDuplication"]}'),
+    7, 'WGD', glue::glue('{p["wholeGenomeDuplication"]}'),
     "Whole genome duplication",
-    6, 'MSI (indels/Mb)', glue::glue('{p["msStatus"]} ({p["msIndelsPerMb"]})'),
+    8, 'MSI (indels/Mb)', glue::glue('{p["msStatus"]} ({p["msIndelsPerMb"]})'),
     "MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) & MS Indels per Mb",
-    7, 'Polyclonal Prop', glue::glue('{p["polyclonalProportion"]}'),
+    9, 'Polyclonal Prop', glue::glue('{p["polyclonalProportion"]}'),
     "Proportion of CN regions that are more than 0.25 from a whole copy number",
-    8, 'Diploidy Prop', glue::glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'),
+    10, 'Diploidy Prop', glue::glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'),
     'Proportion of CN regions that have 1 (+- 0.2) minor and major allele',
-    9, 'TMB', glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
+    11, 'TMB', glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
     "Tumor mutational burden per mega base (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)",
-    10, 'TML', glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
+    12, 'TML', glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
     "Tumor mutational load (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)"
   )
 
