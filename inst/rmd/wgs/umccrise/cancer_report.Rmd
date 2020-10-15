@@ -1062,6 +1062,11 @@ gpgr::EFFECT_ABBREVIATIONS %>%
 
 ### Summary
 
+```{r plot_bnd_sr_pr_tot_lines, fig.width=10, fig.height=6}
+gpgr:::plot_bnd_sr_pr_tot_lines(sv_unmelted)
+```
+
+
 ```{r sv_summary, results='asis'}
 if (!no_sv_found) {
   sv_tier_vs_svtype <- function() {

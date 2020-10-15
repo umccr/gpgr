@@ -12,7 +12,7 @@
 #' x <- tibble::tibble(a = letters[1:11],
 #'                     b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))),
 #'                     nacol = rep(NA, 11),
-#'                     namix = sample(c(NA, "0.4,0.6"), 11, replace = T))
+#'                     namix = sample(c(NA, "0.4,0.6"), 11, replace = TRUE))
 #' (b <- gpgr:::split_double_col(x, "b"))
 #' (nacol <- gpgr:::split_double_col(x, "nacol"))
 #' (namix <- gpgr:::split_double_col(x, "namix"))
@@ -36,7 +36,7 @@ split_double_col <- function(d, nms) {
                   x2 = round(as.double(.data$x2), 2)) %>%
     dplyr::mutate(avg = round(rowMeans(dplyr::select(., .data$x1, .data$x2), na.rm = TRUE), 2),
                   out = as.character(glue::glue("{avg} ({x1}, {x2})")),
-                  out = ifelse(out == "NaN (NA, NA)", NA_character_, out)) %>%
+                  out = ifelse(.data$out == "NaN (NA, NA)", NA_character_, .data$out)) %>%
     dplyr::select(.data$num, .data$col_nm, .data$out) %>%
     tidyr::pivot_wider(names_from = "col_nm", values_from = "out") %>%
     dplyr::select(-.data$num)
@@ -228,7 +228,9 @@ process_sv <- function(x) {
 
   unmelted_bnd <- dplyr::bind_cols(unmelted_bnd1, unmelted_bnd2) %>%
     dplyr::mutate(
-      BND_mate_chrom = ifelse(is.na(BND_mate_chrom), sub(".*chr(.*):.*", "orphan_\\1", ALT), BND_mate_chrom))
+      BND_mate_chrom = ifelse(is.na(.data$BND_mate_chrom),
+                              sub(".*chr(.*):.*", "orphan_\\1", .data$ALT),
+                              .data$BND_mate_chrom))
 
   unmelted_other <- unmelted %>%
     dplyr::filter(.data$svtype != "BND")
@@ -277,56 +279,84 @@ process_sv <- function(x) {
   )
 }
 
-# histo + density plots of PR - SR for BNDs
-plot_bnd_sr_pr <- function(d, nm) {
+#' Line plot for SR, PR and SR + PR for BNDs
+#'
+#' Plots the number of split reads (`SR`), paired end reads (`PR`), and their
+#' sum (`tot`) across all BNDs, sorted by `tot`.
+#'
+#' @param d A data.frame with an SR_PR_alt column.
+#' @param title Main title of plot.
+#'
+#' @return A ggplot2 plot object.
+#'
+#' @examples
+#' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
+#' d <- process_sv(x)$unmelted
+#' plot_bnd_sr_pr_tot_lines(d, "a title")
+#'
+#' @export
+plot_bnd_sr_pr_tot_lines <- function(d, title = "SR, PR and SR + PR line plot for BNDs") {
   assertthat::assert_that(all(c("Type", "SR_PR_alt") %in% colnames(d)))
   dplot <- d %>%
-    dplyr::filter(Type == "BND") %>%
-    dplyr::select(SR_PR_alt) %>%
-    tidyr::separate(SR_PR_alt, into = c("SR", "PR"), convert = TRUE) %>%
-    dplyr::mutate(PR = ifelse(is.na(PR), 0, PR),
-                  SR = ifelse(is.na(SR), 0, SR),
-                  PR_minus_SR = PR - SR)
-
-  p1 <- dplot %>%
-    ggplot2::ggplot(ggplot2::aes(x = .data$PR_minus_SR)) +
-    ggplot2::geom_histogram(fill = "darkblue", binwidth = 1) +
-    ggplot2::theme_bw()
-  p2 <- dplot %>%
-    ggplot2::ggplot(ggplot2::aes(x = .data$PR_minus_SR)) +
-    ggplot2::geom_density(colour = "darkblue") +
-    ggplot2::theme_bw() +
-    ggplot2::ggtitle(nm)
-
-  p1 / p2
-
-}
-
-# line plot for SR, PR and SR + PR for BNDs
-plot_bnd_sr_pr_tot <- function(d, nm) {
-  assertthat::assert_that(all(c("Type", "SR_PR_alt") %in% colnames(d)))
-  dplot <- d %>%
-    dplyr::filter(Type == "BND") %>%
-    dplyr::select(SR_PR_alt) %>%
-    tidyr::separate(SR_PR_alt, into = c("SR", "PR"), convert = TRUE) %>%
-    dplyr::mutate(PR = ifelse(is.na(PR), 0, PR),
-                  SR = ifelse(is.na(SR), 0, SR)) %>%
+    dplyr::filter(.data$Type == "BND") %>%
+    dplyr::select(.data$SR_PR_alt) %>%
+    tidyr::separate(.data$SR_PR_alt, into = c("SR", "PR"), convert = TRUE) %>%
+    dplyr::mutate(PR = ifelse(is.na(.data$PR), 0, .data$PR),
+                  SR = ifelse(is.na(.data$SR), 0, .data$SR)) %>%
     dplyr::rowwise() %>%
-    dplyr::mutate(tot = sum(SR, PR, na.rm = T)) %>%
+    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = T)) %>%
     dplyr::ungroup() %>%
-    dplyr::arrange(dplyr::desc(tot)) %>%
-    dplyr::mutate(n = dplyr::row_number()) %>%
-    tidyr::pivot_longer(cols = c(SR, PR, tot))
+    dplyr::arrange(dplyr::desc(.data$tot)) %>%
+    dplyr::mutate(bnd_event = dplyr::row_number()) %>%
+    tidyr::pivot_longer(cols = c(.data$SR, .data$PR, .data$tot),
+                        names_to = "Metric", values_to = "Count")
 
-  p <- dplot %>%
-    ggplot2::ggplot(ggplot2::aes(x = .data$n, y = .data$value, colour = .data$name)) +
+  dplot %>%
+    ggplot2::ggplot(ggplot2::aes(x = .data$bnd_event, y = .data$Count, colour = .data$Metric)) +
     ggplot2::geom_line() +
-    ggplot2::scale_x_continuous(breaks=scales::breaks_extended(10)) +
+    ggplot2::geom_jitter(width = 0) +
     ggplot2::theme_bw() +
-    ggplot2::ggtitle(nm)
-
-  p
+    ggplot2::theme(panel.grid.minor.x = ggplot2::element_blank()) +
+    ggplot2::ggtitle(title)
 }
+
+#' Histogram for SR, PR and SR + PR for BNDs
+#'
+#' Plots histograms for the number of split reads (`SR`), paired end reads (`PR`), and their
+#' sum (`tot`) across all BNDs.
+#'
+#' @param d A data.frame with an SR_PR_alt column.
+#' @param title Main title of plot.
+#'
+#' @return A ggplot2 plot object.
+#'
+#' @examples
+#' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
+#' d <- process_sv(x)$unmelted
+#' plot_bnd_sr_pr_tot_hist(d, "a title")
+#'
+#' @export
+plot_bnd_sr_pr_tot_hist <- function(d, title = "SR, PR and SR + PR line plot for BNDs") {
+  assertthat::assert_that(all(c("Type", "SR_PR_alt") %in% colnames(d)))
+  dplot <- d %>%
+    dplyr::filter(.data$Type == "BND") %>%
+    dplyr::select(.data$SR_PR_alt) %>%
+    tidyr::separate(.data$SR_PR_alt, into = c("SR", "PR"), convert = TRUE) %>%
+    dplyr::mutate(PR = ifelse(is.na(.data$PR), 0, .data$PR),
+                  SR = ifelse(is.na(.data$SR), 0, .data$SR)) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = T)) %>%
+    dplyr::ungroup() %>%
+    tidyr::pivot_longer(cols = c(.data$SR, .data$PR, .data$tot),
+                        names_to = "Metric", values_to = "Count")
+
+  dplot %>%
+    ggplot2::ggplot(ggplot2::aes(x = .data$Count, fill = .data$Metric)) +
+    ggplot2::geom_histogram(binwidth = 1) +
+    ggplot2::theme_bw() +
+    ggplot2::ggtitle(title)
+}
+
 
 # sv1 <- process_sv("~/Desktop/tmp/SBJ1_keep_pass.tsv")
 # sv2 <- process_sv("~/Desktop/tmp/SBJ2_keep_pass.tsv")
