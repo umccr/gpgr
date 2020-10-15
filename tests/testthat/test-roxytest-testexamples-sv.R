@@ -15,7 +15,7 @@ test_that("Function split_double_col() @ L26", {
   expect_equal(colnames(b), "b")
   expect_equal(nrow(x), 11)
   expect_error(gpgr:::split_double_col(x, "c"))
-  expect_equal(s$b[1], "0.6 (0.4, 0.8)")
+  expect_equal(b$b[1], "0.6 (0.4, 0.8)")
 })
 
 
@@ -35,7 +35,7 @@ test_that("Function count_pieces() @ L71", {
 })
 
 
-test_that("Function abbreviate_effect() @ L97", {
+test_that("Function abbreviate_effect() @ L113", {
   
   (e1 <- gpgr:::abbreviate_effect("3_prime_UTR_truncation&start_lost&splice_region_variant"))
   (e2 <- gpgr:::abbreviate_effect("duplication&foo&gene_fusion&BOOM&intron_variant"))

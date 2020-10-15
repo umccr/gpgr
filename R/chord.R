@@ -80,6 +80,7 @@ chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL, sample.name =
 #'
 #' @export
 chord_mantavcf2df <- function(in_vcf) {
+  assertthat::assert_that(file.exists(in_vcf))
   assertthat::assert_that(grepl("vcf$", in_vcf) | grepl("vcf\\.gz$", in_vcf))
   d <- bedr::read.vcf(in_vcf, split.info = TRUE, verbose = FALSE)
   tibble::tibble(sv_type = d$vcf$SVTYPE,

@@ -19,6 +19,7 @@
 #'
 #' @export
 hrdetect_read_snvindel_vcf <- function(x) {
+  assertthat::assert_that(file.exists(x))
   ALLOWED_BASES <- c("A", "C", "G", "T")
   d <- x %>%
     readr::read_tsv(
@@ -65,6 +66,7 @@ hrdetect_read_snvindel_vcf <- function(x) {
 #' @export
 hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
 
+  assertthat::assert_that(file.exists(x))
   assertthat::assert_that(!is.null(nm))
   assertthat::assert_that(genome %in% c("hg19", "hg38", "GRCh37"))
   if (genome == "GRCh37") {
@@ -106,6 +108,7 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
 #' @export
 hrdetect_read_purple_cnv <- function(x) {
 
+  assertthat::assert_that(file.exists(x))
   cnv <- readr::read_tsv(x,
                          col_types = readr::cols_only(
                            "chromosome" = "c", "start" = "i", "end" = "i",
@@ -149,7 +152,7 @@ hrdetect_read_purple_cnv <- function(x) {
 hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
                                    sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)) {
 
-  assertthat::assert_that(!is.null(nm), !is.null(outdir),
+  assertthat::assert_that(file.exists(x), !is.null(nm), !is.null(outdir),
                           all(sigsToUse %in% 1:30), all(c(3, 8) %in% sigsToUse))
   assertthat::assert_that(genome %in% c("hg19", "hg38", "GRCh37"))
   if (genome == "GRCh37") {
@@ -220,6 +223,7 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
 #' @export
 hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
 
+  assertthat::assert_that(file.exists(x))
   if (genome == "GRCh37") {
     genome <- "hg19"
   }
@@ -249,6 +253,7 @@ hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
 #' @export
 hrdetect_prep_cnv <- function(x, nm = NULL) {
 
+  assertthat::assert_that(file.exists(x))
   assertthat::assert_that(!is.null(nm))
   cnv <- hrdetect_read_purple_cnv(x)
   cnv_hrd <- signature.tools.lib::ascatToHRDLOH(ascat.data = cnv, SAMPLE.ID = nm)
@@ -264,7 +269,7 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #'
 #' @param snvindel_vcf Path to VCF with SNVs and INDELs.
 #' @param sv_vcf Path to VCF with SVs.
-#' @param cnv_file Path to `purple.cnv.somatic.tsv` file.
+#' @param cnv_tsv Path to `purple.cnv.somatic.tsv` file.
 #' @param nm Sample name.
 #' @param genome Human genome version (default: hg38. hg19 means GRCh37).
 #' @param snvoutdir Directory to output SNV signature analysis results.
@@ -276,11 +281,11 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #'                   "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
 #'                   package = "gpgr")
 #' sv_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
-#' cnv_file <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
+#' cnv_tsv <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' nm <- "SampleA"
 #' genome <- "hg38"
 #' snvoutdir <- tempdir()
-#' (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir))
+#' (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir))
 #'
 #' @testexamples
 #' expect_equal(colnames(res), c("sample", "Probability", "intercept", "del.mh.prop", "SNV3",
@@ -288,9 +293,10 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' expect_true(inherits(res, "data.frame"))
 #'
 #' @export
-hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir,
+hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
                          sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)) {
 
+  assertthat::assert_that(file.exists(snvindel_vcf, sv_vcf, cnv_tsv))
   if (genome == "GRCh37") {
     genome <- "hg19"
   }
@@ -303,7 +309,7 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir,
 
   indel <- snvindel$indel_results$del.mh.prop
   sv <- hrdetect_prep_sv(sv_vcf, nm, genome)
-  cnv <- hrdetect_prep_cnv(cnv_file, nm)
+  cnv <- hrdetect_prep_cnv(cnv_tsv, nm)
 
   tib <- tibble::tibble(
     "del.mh.prop" = indel,

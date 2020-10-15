@@ -8,7 +8,7 @@ hrdetect_run(
   nm,
   snvindel_vcf,
   sv_vcf,
-  cnv_file,
+  cnv_tsv,
   genome,
   snvoutdir,
   sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)
@@ -21,7 +21,7 @@ hrdetect_run(
 
 \item{sv_vcf}{Path to VCF with SVs.}
 
-\item{cnv_file}{Path to \code{purple.cnv.somatic.tsv} file.}
+\item{cnv_tsv}{Path to \code{purple.cnv.somatic.tsv} file.}
 
 \item{genome}{Human genome version (default: hg38. hg19 means GRCh37).}
 
@@ -41,10 +41,10 @@ snvindel_vcf <- system.file(
                   "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
                   package = "gpgr")
 sv_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
-cnv_file <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
+cnv_tsv <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 nm <- "SampleA"
 genome <- "hg38"
 snvoutdir <- tempdir()
-(res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_file, genome, snvoutdir))
+(res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir))
 
 }
