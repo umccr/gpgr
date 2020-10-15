@@ -88,7 +88,7 @@
       <h1 data-toc-skip>PURPLE</h1>
                         <h4 class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-10-12</h4>
+            <h4 class="date">2020-10-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/purple.Rmd"><code>vignettes/purple.Rmd</code></a></small>
       <div class="hidden name"><code>purple.Rmd</code></div>
@@ -117,7 +117,7 @@
 <a href="#somatic-cnvs-per-chromosome" class="anchor"></a>Somatic CNVs (per chromosome)</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="va">cnv_som</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.somatic.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_somatic_process.html">purple_cnv_somatic_process</a></span><span class="op">(</span><span class="op">)</span></pre></div>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_som_process.html">purple_cnv_som_process</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <details><summary>
 Description
 </summary><div class="sourceCode" id="cb3"><pre class="downlit">
@@ -530,7 +530,7 @@ BAF_WEIGHTED
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="va">umccr_key_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/ref/umccr_cancer_genes_2019-03-20.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
 <span class="va">cnv_som_gene</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.gene.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_gene_process.html">purple_cnv_gene_process</a></span><span class="op">(</span>g <span class="op">=</span> <span class="va">umccr_key_genes</span><span class="op">)</span></pre></div>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_som_gene_process.html">purple_cnv_som_gene_process</a></span><span class="op">(</span>g <span class="op">=</span> <span class="va">umccr_key_genes</span><span class="op">)</span></pre></div>
 <details><summary>
 Description
 </summary><div class="sourceCode" id="cb6"><pre class="downlit">
@@ -1175,7 +1175,7 @@ CENTROMERE-NONE (BAF_WEIGHTED)
 <a href="#germline-cnvs-per-chromosome" class="anchor"></a>Germline CNVs (per chromosome)</h3>
 <div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="va">cnv_germ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.germline.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_germline_process.html">purple_cnv_germline_process</a></span><span class="op">(</span><span class="op">)</span></pre></div>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_germ_process.html">purple_cnv_germ_process</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <details><summary>
 Description
 </summary><div class="sourceCode" id="cb9"><pre class="downlit">
@@ -1596,6 +1596,9 @@ GERMLINE_HET2HOM_DELETION
 PURPLE Purity Summary Table.
 </caption>
 <thead><tr>
+<th style="text-align:right;">
+n
+</th>
 <th style="text-align:left;">
 variable
 </th>
@@ -1608,6 +1611,9 @@ details
 </tr></thead>
 <tbody>
 <tr>
+<td style="text-align:right;">
+2
+</td>
 <td style="text-align:left;">
 Purity
 </td>
@@ -1619,6 +1625,9 @@ Purity of tumor in the sample (and min-max with score within 10% of best)
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+3
+</td>
 <td style="text-align:left;">
 Ploidy
 </td>
@@ -1630,6 +1639,9 @@ Average ploidy of tumor sample after adjusting for purity (and min-max with scor
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+4
+</td>
 <td style="text-align:left;">
 Gender
 </td>
@@ -1641,17 +1653,23 @@ Gender as inferred by AMBER/COBALT.
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+7
+</td>
 <td style="text-align:left;">
 WGD
 </td>
 <td style="text-align:left;">
-false
+FALSE
 </td>
 <td style="text-align:left;">
 Whole genome duplication
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+8
+</td>
 <td style="text-align:left;">
 MSI (indels/Mb)
 </td>
@@ -1663,6 +1681,9 @@ MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) &amp; MS Indel
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+9
+</td>
 <td style="text-align:left;">
 Polyclonal Prop
 </td>
@@ -1674,6 +1695,9 @@ Proportion of CN regions that are more than 0.25 from a whole copy number
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+10
+</td>
 <td style="text-align:left;">
 Diploidy Prop
 </td>
@@ -1685,6 +1709,9 @@ Proportion of CN regions that have 1 (+- 0.2) minor and major allele
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+11
+</td>
 <td style="text-align:left;">
 TMB
 </td>
@@ -1696,6 +1723,9 @@ Tumor mutational burden per mega base (Status: ‘HIGH’, ‘LOW’ or ‘UNKNO
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+12
+</td>
 <td style="text-align:left;">
 TML
 </td>
@@ -1723,6 +1753,9 @@ Tumor mutational load (Status: ‘HIGH’, ‘LOW’ or ‘UNKNOWN’ if somatic
 PURPLE QC Summary Table.
 </caption>
 <thead><tr>
+<th style="text-align:right;">
+n
+</th>
 <th style="text-align:left;">
 variable
 </th>
@@ -1735,6 +1768,9 @@ details
 </tr></thead>
 <tbody>
 <tr>
+<td style="text-align:right;">
+1
+</td>
 <td style="text-align:left;">
 QC_Status
 </td>
@@ -1745,6 +1781,9 @@ PASS
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+13
+</td>
 <td style="text-align:left;">
 Segment_Pass
 </td>
@@ -1756,6 +1795,9 @@ Score: 0; Unsupported: 0
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+14
+</td>
 <td style="text-align:left;">
 Gender_Pass
 </td>
@@ -1767,6 +1809,9 @@ Amber: MALE; Cobalt: MALE
 </td>
 </tr>
 <tr>
+<td style="text-align:right;">
+15
+</td>
 <td style="text-align:left;">
 DelGenes_Pass
 </td>
@@ -1866,7 +1911,7 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-10-12
+2020-10-15
 </td>
 </tr>
 </tbody>
@@ -1906,7 +1951,7 @@ gpgr
 0.0.7
 </td>
 <td style="text-align:left;">
-2020-10-12
+2020-10-15
 </td>
 </tr>
 </tbody>

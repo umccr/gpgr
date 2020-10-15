@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read PURPLE Purity file — purple_purity_read • gpgr</title>
+<title>Does the TSV file contain any non-header rows? — tsv_is_empty • gpgr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Read PURPLE Purity file — purple_purity_read" />
-<meta property="og:description" content="Reads the purple.purity.tsv file containing a summary of the purity fit." />
+<meta property="og:title" content="Does the TSV file contain any non-header rows? — tsv_is_empty" />
+<meta property="og:description" content="Checks if the TSV file contains any non-header rows." />
 
 
 
@@ -126,65 +126,67 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read PURPLE Purity file</h1>
-    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/purple.R'><code>R/purple.R</code></a></small>
-    <div class="hidden name"><code>purple_purity_read.Rd</code></div>
+    <h1>Does the TSV file contain any non-header rows?</h1>
+    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>tsv_is_empty.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Reads the <code>purple.purity.tsv</code> file containing a summary of the purity fit.</p>
+    <p>Checks if the TSV file contains any non-header rows.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>purple_purity_read</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>tsv_is_empty</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  comment <span class='op'>=</span> <span class='st'>"##"</span>,
+  col_types <span class='op'>=</span> <span class='fu'>readr</span><span class='fu'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/cols.html'>cols</a></span><span class='op'>(</span>.default <span class='op'>=</span> <span class='st'>"c"</span><span class='op'>)</span>,
+  n_max <span class='op'>=</span> <span class='fl'>1</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Path to the <code>purple.purity.tsv</code> file.</p></td>
+      <td><p>Path to TSV file.</p></td>
+    </tr>
+    <tr>
+      <th>comment</th>
+      <td><p>Taken from <code><a href='https://readr.tidyverse.org/reference/read_delim.html'>readr::read_tsv()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>col_types</th>
+      <td><p>Taken from <code><a href='https://readr.tidyverse.org/reference/read_delim.html'>readr::read_tsv()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>n_max</th>
+      <td><p>Taken from <code><a href='https://readr.tidyverse.org/reference/read_delim.html'>readr::read_tsv()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments to be passed to <code><a href='https://readr.tidyverse.org/reference/read_delim.html'>readr::read_tsv()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The input file as a tibble and a summarised tibble with a
-description of each metric.</p>
+    <p>TRUE if there is at least one non-header row in the TSV, FALSE otherwise.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/purple/purple.purity.tsv"</span>, package <span class='op'>=</span> <span class='st'>"gpgr"</span><span class='op'>)</span>
-<span class='op'>(</span><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'>purple_purity_read</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $raw
-#&gt; <span style='color: #555555;'># A tibble: 23 x 2</span><span>
-#&gt;    column               value 
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> 
-#&gt; </span><span style='color: #555555;'> 1</span><span> purity               0.75  
-#&gt; </span><span style='color: #555555;'> 2</span><span> normFactor           1.05  
-#&gt; </span><span style='color: #555555;'> 3</span><span> score                0.26  
-#&gt; </span><span style='color: #555555;'> 4</span><span> diploidProportion    0.86  
-#&gt; </span><span style='color: #555555;'> 5</span><span> ploidy               1.87  
-#&gt; </span><span style='color: #555555;'> 6</span><span> gender               MALE  
-#&gt; </span><span style='color: #555555;'> 7</span><span> status               NORMAL
-#&gt; </span><span style='color: #555555;'> 8</span><span> polyclonalProportion 0     
-#&gt; </span><span style='color: #555555;'> 9</span><span> minPurity            0.71  
-#&gt; </span><span style='color: #555555;'>10</span><span> maxPurity            0.78  
-#&gt; </span><span style='color: #555555;'># … with 13 more rows</span><span>
-#&gt; 
-#&gt; $summary
-#&gt; </span><span style='color: #555555;'># A tibble: 9 x 4</span><span>
-#&gt;       n variable     value        details                                       
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                                         
-#&gt; </span><span style='color: #555555;'>1</span><span>     2 Purity       0.75 (0.71-… Purity of tumor in the sample (and min-max wi…
-#&gt; </span><span style='color: #555555;'>2</span><span>     3 Ploidy       1.87 (1.86-… Average ploidy of tumor sample after adjustin…
-#&gt; </span><span style='color: #555555;'>3</span><span>     4 Gender       MALE         Gender as inferred by AMBER/COBALT.           
-#&gt; </span><span style='color: #555555;'>4</span><span>     7 WGD          FALSE        Whole genome duplication                      
-#&gt; </span><span style='color: #555555;'>5</span><span>     8 MSI (indels… MSS (0)      MSI status (MSI, MSS or UNKNOWN if somatic va…
-#&gt; </span><span style='color: #555555;'>6</span><span>     9 Polyclonal … 0            Proportion of CN regions that are more than 0…
-#&gt; </span><span style='color: #555555;'>7</span><span>    10 Diploidy Pr… 0.86 (0.86-… Proportion of CN regions that have 1 (+- 0.2)…
-#&gt; </span><span style='color: #555555;'>8</span><span>    11 TMB          0 (LOW)      Tumor mutational burden per mega base (Status…
-#&gt; </span><span style='color: #555555;'>9</span><span>    12 TML          0 (LOW)      Tumor mutational load (Status: 'HIGH', 'LOW' …
-#&gt; </div><div class='input'>
-</div></span></pre>
+    <pre class="examples"><div class='input'>
+<span class='va'>tmp1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"col1\tcol2\tcol3"</span>, <span class='st'>"1\t2\t3"</span><span class='op'>)</span>, con <span class='op'>=</span> <span class='va'>tmp1</span><span class='op'>)</span>
+<span class='op'>(</span><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'>tsv_is_empty</span><span class='op'>(</span><span class='va'>tmp1</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
+<span class='va'>tmp2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"col1\tcol2\tcol3"</span><span class='op'>)</span>, con <span class='op'>=</span> <span class='va'>tmp2</span><span class='op'>)</span>
+<span class='op'>(</span><span class='va'>b</span> <span class='op'>&lt;-</span> <span class='fu'>tsv_is_empty</span><span class='op'>(</span><span class='va'>tmp2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>/tmp/RtmpaHpTyd/file39db555a339f does not contain any non-header rows.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='va'>tmp3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"##meta1"</span>, <span class='st'>"##meta2"</span>, <span class='st'>"col1\tcol2\tcol3"</span><span class='op'>)</span>, con <span class='op'>=</span> <span class='va'>tmp3</span><span class='op'>)</span>
+<span class='op'>(</span><span class='va'>c</span> <span class='op'>&lt;-</span> <span class='fu'>tsv_is_empty</span><span class='op'>(</span><span class='va'>tmp3</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>/tmp/RtmpaHpTyd/file39db103d2ddd does not contain any non-header rows.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

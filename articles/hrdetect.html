@@ -88,7 +88,7 @@
       <h1 data-toc-skip>HRDetect</h1>
                         <h4 class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-10-12</h4>
+            <h4 class="date">2020-10-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/hrdetect.Rmd"><code>vignettes/hrdetect.Rmd</code></a></small>
       <div class="hidden name"><code>hrdetect.Rmd</code></div>
@@ -114,7 +114,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="va">snvindel_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
 <span class="va">sv_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/sv/manta.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
-<span class="va">cnv_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.somatic.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></pre></div>
+<span class="va">cnv_tsv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.somatic.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></pre></div>
 </div>
 <div id="analysis" class="section level2">
 <h2 class="hasAnchor">
@@ -124,7 +124,7 @@
   nm <span class="op">=</span> <span class="st">"sample_A"</span>,
   snvindel_vcf <span class="op">=</span> <span class="va">snvindel_vcf</span>,
   sv_vcf <span class="op">=</span> <span class="va">sv_vcf</span>,
-  cnv_file <span class="op">=</span> <span class="va">cnv_file</span>,
+  cnv_tsv <span class="op">=</span> <span class="va">cnv_tsv</span>,
   genome <span class="op">=</span> <span class="st">"hg38"</span>,
   snvoutdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">)</span> <span class="op">%&gt;%</span>
@@ -172,7 +172,7 @@ sample_A
 Probability
 </td>
 <td style="text-align:left;">
-0.804
+0.806
 </td>
 </tr>
 <tr>
@@ -196,7 +196,7 @@ del.mh.prop
 SNV3
 </td>
 <td style="text-align:left;">
-2.431
+2.443
 </td>
 </tr>
 <tr>
@@ -319,7 +319,7 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-10-12
+2020-10-15
 </td>
 </tr>
 </tbody>
@@ -365,7 +365,7 @@ gpgr
 0.0.7
 </td>
 <td style="text-align:left;">
-2020-10-12
+2020-10-15
 </td>
 <td style="text-align:left;">
 local
