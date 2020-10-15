@@ -2,20 +2,24 @@
 
 context("File R/sv.R: @testexamples")
 
-test_that("Function split_double_col() @ L22", {
+test_that("Function split_double_col() @ L26", {
   
   x <- tibble::tibble(a = letters[1:11],
-                      b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))))
-  (s <- gpgr:::split_double_col(x, "b"))
+                      b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))),
+                      nacol = rep(NA, 11),
+                      namix = sample(c(NA, "0.4,0.6"), 11, replace = T))
+  (b <- gpgr:::split_double_col(x, "b"))
+  (nacol <- gpgr:::split_double_col(x, "nacol"))
+  (namix <- gpgr:::split_double_col(x, "namix"))
   
-  expect_equal(colnames(s), "b")
+  expect_equal(colnames(b), "b")
   expect_equal(nrow(x), 11)
   expect_error(gpgr:::split_double_col(x, "c"))
   expect_equal(s$b[1], "0.6 (0.4, 0.8)")
 })
 
 
-test_that("Function count_pieces() @ L66", {
+test_that("Function count_pieces() @ L71", {
   
   (a <- gpgr:::count_pieces("foo,bar,baz", sep = ","))
   (b <- gpgr:::count_pieces("foo", sep = ","))
@@ -31,7 +35,7 @@ test_that("Function count_pieces() @ L66", {
 })
 
 
-test_that("Function abbreviate_effect() @ L92", {
+test_that("Function abbreviate_effect() @ L97", {
   
   (e1 <- gpgr:::abbreviate_effect("3_prime_UTR_truncation&start_lost&splice_region_variant"))
   (e2 <- gpgr:::abbreviate_effect("duplication&foo&gene_fusion&BOOM&intron_variant"))
@@ -45,7 +49,7 @@ test_that("Function abbreviate_effect() @ L92", {
 })
 
 
-test_that("Function umccrise_read_sv_tsv() @ L141", {
+test_that("Function umccrise_read_sv_tsv() @ L146", {
   
   x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
   (sv <- umccrise_read_sv_tsv(x))
@@ -54,7 +58,7 @@ test_that("Function umccrise_read_sv_tsv() @ L141", {
 })
 
 
-test_that("Function process_sv() @ L176", {
+test_that("Function process_sv() @ L181", {
   
   x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
   (sv <- process_sv(x))

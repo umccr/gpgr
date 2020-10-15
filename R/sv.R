@@ -10,14 +10,18 @@
 #'
 #' @examples
 #' x <- tibble::tibble(a = letters[1:11],
-#'                     b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))))
-#' (s <- gpgr:::split_double_col(x, "b"))
+#'                     b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))),
+#'                     nacol = rep(NA, 11),
+#'                     namix = sample(c(NA, "0.4,0.6"), 11, replace = T))
+#' (b <- gpgr:::split_double_col(x, "b"))
+#' (nacol <- gpgr:::split_double_col(x, "nacol"))
+#' (namix <- gpgr:::split_double_col(x, "namix"))
 #'
 #' @testexamples
-#' expect_equal(colnames(s), "b")
+#' expect_equal(colnames(b), "b")
 #' expect_equal(nrow(x), 11)
 #' expect_error(gpgr:::split_double_col(x, "c"))
-#' expect_equal(s$b[1], "0.6 (0.4, 0.8)")
+#' expect_equal(b$b[1], "0.6 (0.4, 0.8)")
 #'
 split_double_col <- function(d, nms) {
   assertthat::assert_that(inherits(d, "tbl_df"))
@@ -31,7 +35,8 @@ split_double_col <- function(d, nms) {
     dplyr::mutate(x1 = round(as.double(.data$x1), 2),
                   x2 = round(as.double(.data$x2), 2)) %>%
     dplyr::mutate(avg = round(rowMeans(dplyr::select(., .data$x1, .data$x2), na.rm = TRUE), 2),
-                  out = as.character(glue::glue("{avg} ({x1}, {x2})"))) %>%
+                  out = as.character(glue::glue("{avg} ({x1}, {x2})")),
+                  out = ifelse(out == "NaN (NA, NA)", NA_character_, out)) %>%
     dplyr::select(.data$num, .data$col_nm, .data$out) %>%
     tidyr::pivot_wider(names_from = "col_nm", values_from = "out") %>%
     dplyr::select(-.data$num)
