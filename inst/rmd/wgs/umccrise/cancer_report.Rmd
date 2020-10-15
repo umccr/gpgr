@@ -10,7 +10,7 @@ output:
   rmdformats::material:
     highlight: kate
 params:
-  title: "Cancer Report for Sample "
+  title: "UMCCR Cancer Report"
   tumor_name: 'x'
   batch_name: 'x'
   genome_build: 'hg38' # 'hg19'
@@ -20,29 +20,16 @@ params:
   somatic_snv: 'x'
   somatic_sv: 'x'
   somatic_sv_vcf: 'x'
-  purple_gene_cnv: 'x'
-  purple_cnv: 'x'
+  purple_som_gene_cnv: 'x'
+  purple_som_cnv: 'x'
+  purple_germ_cnv: 'x'
   purple_purity: 'x'
   purple_qc: 'x'
   oncoviral_present_viruses: 'x'
   oncoviral_breakpoints_tsv: 'x'
   conda_list: 'x'
-  # genome_build:     'hg38'
-  # tumor_name:       'T_SRR7890902_20pc'
-  # batch_name:       'T_SRR7890902_20pc'
-  # key_genes:        '~/rjn/extras/vlad/synced/NGS_Utils/ngs_utils/reference_data/key_genes/umccr_cancer_genes.latest.tsv'
-  # af_global:        '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/rmd/afs/af_tumor.txt'
-  # af_keygenes:      '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/rmd/afs/af_tumor_keygenes.txt'
-  # somatic_snv:      '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/rmd/dragen-with_chr_prefix.vcf'
-  # somatic_sv:       '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/T_SRR7890902_20pc/structural/T_SRR7890902_20pc-manta.tsv'
-  # somatic_sv_vcf:       '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/T_SRR7890902_20pc/structural/T_SRR7890902_20pc-manta.vcf.gz'
-  # purple_gene_cnv:  '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/purple/T_SRR7890902_20pc.purple.cnv.gene.tsv'
-  # purple_cnv:       '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/purple/T_SRR7890902_20pc.purple.cnv.somatic.tsv'
-  # purple_purity:    '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/purple/T_SRR7890902_20pc.purple.purity.tsv'
-  # purple_qc:        '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/purple/T_SRR7890902_20pc.purple.qc'
-  # conda_list:       '~/rjn/extras/vlad/synced/umccr/umccrise_test_data/results/T_SRR7890902_20pc/work/T_SRR7890902_20pc/rmd/conda_pkg_list.txt'
 description: "Analysis of tumor/normal samples at UMCCR"
-title: "`r paste(params$title, params$batch_name)`"
+title: "`r paste(params$batch_name, params$title)`"
 ---
 
 <style type="text/css">
@@ -75,8 +62,9 @@ params_tmp <- list(
     somatic_snv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/SEQCII_50pc__T_SRR7890936_50pc/small_variants/SEQCII_50pc__T_SRR7890936_50pc-somatic-PASS.vcf.gz',
     somatic_sv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/SEQCII_50pc__T_SRR7890936_50pc/structural/SEQCII_50pc__T_SRR7890936_50pc-manta.tsv',
     somatic_sv_vcf='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/SEQCII_50pc__T_SRR7890936_50pc/structural/SEQCII_50pc__T_SRR7890936_50pc-manta.vcf.gz',
-    purple_gene_cnv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.cnv.gene.tsv',
-    purple_cnv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.cnv.somatic.tsv',
+    purple_som_gene_cnv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.cnv.gene.tsv',
+    purple_som_cnv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.cnv.somatic.tsv',
+    purple_germ_cnv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.cnv.germline.tsv',
     purple_purity='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.purity.tsv',
     purple_qc='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.qc',
     oncoviral_present_viruses='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/oncoviruses/present_viruses.txt',
@@ -90,8 +78,9 @@ params_tmp <- list(
     somatic_snv=glue::glue('{dd}/data/umccrised/{batch_name}/small_variants/{batch_name}-somatic-PASS.vcf.gz'),
     somatic_sv=glue::glue('{dd}/data/umccrised/{batch_name}/structural/{batch_name}-manta.tsv'),
     somatic_sv_vcf=glue::glue('{dd}/data/umccrised/{batch_name}/structural/{batch_name}-manta.vcf.gz'),
-    purple_gene_cnv=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.gene.tsv'),
-    purple_cnv=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.somatic.tsv'),
+    purple_som_gene_cnv=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.gene.tsv'),
+    purple_som_cnv=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.somatic.tsv'),
+    purple_germ_cnv=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.germline.tsv'),
     purple_purity=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.purity.tsv'),
     purple_qc=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.qc'),
     oncoviral_present_viruses=glue::glue('{dd}/data/umccrised/work/{batch_name}/oncoviruses/present_viruses.txt'),
@@ -323,153 +312,24 @@ mut_sig_contr2 <-
 
 ```{r sv_prioritize_prep}
 #---- Structural Variants ----#
-split_sv_field <- function(.data, field, is_pct = FALSE) {
-  # - separate field into two parts
-  # - mutate to pct accordingly
-  # - original field is mean of two parts
-  f_q <- rlang::enquo(field)
-  f_str <- rlang::quo_name(f_q)
-  f1_str <- str_c(f_str, '1')
-  f2_str <- str_c(f_str, '2')
-  f1_q <- sym(f1_str)
-  f2_q <- sym(f2_str)
-  .data %>%
-    tidyr::separate(!!f_q, c(f1_str, f2_str), sep = ",", fill = "right") %>%
-    dplyr::mutate(
-      !!f1_q := round(as.double(!!f1_q) * ifelse(is_pct, 100, 1), 1),
-      !!f2_q := round(as.double(!!f2_q) * ifelse(is_pct, 100, 1), 1),
-      !!f_q  := round(((!!f1_q + ifelse(is.na(!!f2_q), !!f1_q, !!f2_q)) / 2), 1)
-    )
-}
-
-count_pieces <- function(x, sep) {
-  ifelse(nchar(x) == 0, 0, stringr::str_count(x, sep) + 1)
-}
-
-effect_abbreviations <- c(
-  "3_prime_UTR_truncation" = "3UTRtrunc", "3_prime_UTR_variant" = "3UTRvar",
-  "5_prime_UTR_truncation" = "5UTRtrunc",  "5_prime_UTR_variant" = "5UTRvar",
-  "feature_fusion" = "Fus", "bidirectional_gene_fusion" = "BidFusG", "gene_fusion" = "FusG",
-  "chromosome_number_variation" = "ChromNumV", "conservative_inframe_deletion" = "ConsInframeDel",
-  "downstream_gene_variant" = "DnstreamGV", "upstream_gene_variant" = "UpstreamGV",
-  "duplication" = "Dup", "exon_loss_variant" = "ExonLossV",
-  "feature_ablation" = "DelG", "transcript_ablation" = "DelTx",
-  "frameshift_variant" = "FrameshiftV", "intergenic_region" = "IntergenReg", "intragenic_variant" = "IntragenV",
-  "intron_variant" = "IntronV",  "no_func_effect" = "NoFuncEff", "no_prio_effect" = "NoPrioEff",
-  "non_coding_transcript_variant" = "NoncodTxV",
-  "splice_acceptor_variant" = "SpliceAccV",
-  "splice_donor_variant" = "SpliceDonV", "splice_region_variant" = "SpliceRegV",
-  "start_lost" = "StartLoss", "stop_gained" = "StopGain", "stop_lost" = "StopLoss",
-  "TF_binding_site_variant" = "TFBSVar",  "TFBS_ablation" = "TFBSDel")
-effect_abbrev_nms <- names(effect_abbreviations)
-
-abbreviate_effect <- function(effects) {
-  # take string as x&y&z
-  # split by &
-  # abbreviate each piece and glue back with comma
-
-  .abbreviate_effect <- function(effect) {
-    ifelse(effect %in% effect_abbrev_nms, effect_abbreviations[effect], effect)
-  }
-
-  strsplit(effects, "&")[[1]] %>%
-    purrr::map_chr(.abbreviate_effect) %>%
-    paste(collapse = ", ")
-}
-abbreviate_effectv <- Vectorize(abbreviate_effect)
 
 sv_path <- params$somatic_sv
 sv_unmelted <- NULL
 sv_all <- NULL
-somatic_sv_tsv <- NULL
-no_sv_found <- T
+sv <- NULL
+no_sv_found <- TRUE
 if (sv_path == "NA") {
   sv_unmelted <- tibble(WARNING = "Structural variants were not called")
   sv_all <- tibble(WARNING = "Structural variants were not called")
 } else {
-  somatic_sv_tsv = readr::read_tsv(sv_path, col_names = TRUE, col_types = "ccciicccccicccccdciicc")
-  no_sv_found = length(readLines(con = sv_path, n = 2)) < 2  # only header in the file
+  no_sv_found <- gpgr::tsv_is_empty(sv_path)
   if (no_sv_found) {
     sv_unmelted <- tibble(WARNING = "THERE WERE 0 SVs PRIORITISED!")
     sv_all <- tibble(WARNING = "THERE WERE 0 SVs PRIORITISED!")
   } else {
-    sv_unmelted <- somatic_sv_tsv %>%
-      dplyr::select(-caller, -sample) %>%
-      split_sv_field(AF_BPI) %>%
-      split_sv_field(AF_PURPLE) %>%
-      split_sv_field(CN_PURPLE) %>%
-      split_sv_field(CN_change_PURPLE) %>%
-      dplyr::mutate(
-        AF_BPI = ifelse(is.na(AF_BPI), NA, paste0(AF_BPI, " (", AF_BPI1, ",", AF_BPI2, ")")),
-        AF_PURPLE = ifelse(is.na(AF_PURPLE), NA, paste0(AF_PURPLE, " (", AF_PURPLE1, ", ", AF_PURPLE2, ")")),
-        CN_PURPLE = ifelse(is.na(CN_PURPLE), NA, paste0(CN_PURPLE, " (", CN_PURPLE1, ", ", CN_PURPLE2, ")")),
-        CN_change_PURPLE = ifelse(is.na(CN_change_PURPLE), NA, paste0(CN_change_PURPLE, " (", CN_change_PURPLE1, ", ", CN_change_PURPLE2, ")"))
-      ) %>%
-      tidyr::separate(split_read_support, c("SR_ref", "SR_alt"), ",", convert = TRUE) %>%
-      tidyr::separate(paired_support_PR, c("PR_ref", "PR_alt"), ",", convert = TRUE) %>%
-      dplyr::mutate(
-        SR_PR_alt = paste0(SR_alt, ",", PR_alt),
-        SR_PR_ref = paste0(SR_ref, ",", PR_ref),
-        Ploidy = round(as.double(Ploidy_PURPLE), 2),
-        chrom = sub("chr", "", chrom),
-        chrom = as.factor(chrom), # for better DT filtering
-        svtype = ifelse(is.na(PURPLE_status), svtype, "PURPLE_inf"),
-        Start = ifelse(is.na(PURPLE_status), START_BPI, start),
-        nann = count_pieces(annotation, ","),
-        varnum = dplyr::row_number(),
-        varnum = sprintf(glue::glue("%0{nchar(nrow(.))}d"), varnum))
-
-    # Fix BND IDs
-    sv_unmelted_bnd1 <- sv_unmelted %>%
-      dplyr::filter(svtype == "BND") %>%
-      tidyr::separate(ID, into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) %>%
-      dplyr::group_by(BND_group) %>%
-      dplyr::mutate(
-        BND_ID = dplyr::cur_group_id(),
-        BND_ID = sprintf(glue::glue("%0{nchar(nrow(.))}d"), BND_ID),
-        BND_mate = ifelse(BND_mate == 0, "A", "B")) %>%
-      dplyr::ungroup()
-
-    match_id2mateid <- match(sv_unmelted_bnd1$ID, sv_unmelted_bnd1$MATEID)
-
-    sv_unmelted_bnd2 <- sv_unmelted_bnd1[match_id2mateid, c("chrom")] %>%
-      dplyr::rename(BND_mate_chrom = chrom)
-
-    sv_unmelted_bnd <- dplyr::bind_cols(sv_unmelted_bnd1, sv_unmelted_bnd2)
-
-    sv_unmelted_other <- sv_unmelted %>%
-      dplyr::filter(svtype != "BND")
-
-    sv_unmelted <-
-      dplyr::bind_rows(sv_unmelted_bnd,
-                       sv_unmelted_other) %>%
-      dplyr::mutate(
-        END_BPI = base::format(END_BPI, big.mark = ",", trim = TRUE),
-        End = ifelse(svtype == "BND", paste0(BND_mate_chrom, ":", END_BPI), END_BPI)) %>%
-      dplyr::select(varnum, TierTop = tier,
-                    Chr = chrom, Start, End,
-                    Type = svtype,
-                    ID, MATEID, BND_ID, BND_mate,
-                    SR_PR_alt, SR_PR_ref, Ploidy,
-                    AF_PURPLE, AF_BPI,
-                    CNC = CN_change_PURPLE, CN = CN_PURPLE,
-                    SScore = somaticscore, nann, annotation)
-
-    sv_all <- sv_unmelted %>%
-      dplyr::mutate(annotation = strsplit(annotation, ',')) %>%
-      tidyr::unnest(annotation) %>%
-      tidyr::separate(
-        annotation, c('Event', 'Effect', 'Genes', 'Transcript', 'Detail', 'Tier'),
-        sep = '\\|', convert = FALSE) %>%
-      dplyr::mutate(
-        ntrx = count_pieces(Transcript, "&"),
-        ngen = count_pieces(Genes, "&"),
-        neff = count_pieces(Effect, "&"),
-        Transcript = Transcript %>% stringr::str_replace_all('&', ', '),
-        Genes = Genes %>% stringr::str_replace_all('&', ', '),
-        Effect = abbreviate_effectv(Effect)) %>%
-      dplyr::distinct() %>%
-      dplyr::arrange(Tier, Genes, Effect)
+    sv <- gpgr::process_sv(sv_path)
+    sv_unmelted <- sv$unmelted
+    sv_all <- sv$melted
   }
 }
 ```
@@ -1142,7 +1002,7 @@ __Prioritisation process__
 * Use PURPLE copy number caller to infer more SV calls from copy number transitions (marked as 'PURPLE Inferred')
 
 ```{r effect_abbrev_tab}
-effect_abbreviations %>%
+gpgr::EFFECT_ABBREVIATIONS %>%
   tibble::enframe(value = "abbreviation") %>%
   dplyr::arrange(abbreviation) %>%
   dplyr::mutate(name = kableExtra::cell_spec(name, bold = TRUE)) %>%
