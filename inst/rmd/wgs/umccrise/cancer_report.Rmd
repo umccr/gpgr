@@ -1063,7 +1063,10 @@ gpgr::EFFECT_ABBREVIATIONS %>%
 ### Summary
 
 ```{r plot_bnd_sr_pr_tot_lines, fig.width=10, fig.height=6}
-gpgr:::plot_bnd_sr_pr_tot_lines(sv_unmelted)
+p1 <- gpgr:::plot_bnd_sr_pr_tot_lines(sv_unmelted)
+p2 <- gpgr::plot_bnd_sr_pr_tot_hist(sv_unmelted)
+p1
+p2
 ```
 
 

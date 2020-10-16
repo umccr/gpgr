@@ -313,8 +313,8 @@ plot_bnd_sr_pr_tot_lines <- function(d, title = "SR, PR and SR + PR line plot fo
 
   dplot %>%
     ggplot2::ggplot(ggplot2::aes(x = .data$bnd_event, y = .data$Count, colour = .data$Metric)) +
-    ggplot2::geom_line() +
-    ggplot2::geom_jitter(width = 0) +
+    ggplot2::geom_line(alpha = 0.5) +
+    ggplot2::geom_point(alpha = 0.5) +
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid.minor.x = ggplot2::element_blank()) +
     ggplot2::ggtitle(title)
@@ -336,7 +336,7 @@ plot_bnd_sr_pr_tot_lines <- function(d, title = "SR, PR and SR + PR line plot fo
 #' plot_bnd_sr_pr_tot_hist(d, "a title")
 #'
 #' @export
-plot_bnd_sr_pr_tot_hist <- function(d, title = "SR, PR and SR + PR line plot for BNDs") {
+plot_bnd_sr_pr_tot_hist <- function(d, title = "SR, PR and SR + PR histogram for BNDs") {
   assertthat::assert_that(all(c("Type", "SR_PR_alt") %in% colnames(d)))
   dplot <- d %>%
     dplyr::filter(.data$Type == "BND") %>%
@@ -348,13 +348,14 @@ plot_bnd_sr_pr_tot_hist <- function(d, title = "SR, PR and SR + PR line plot for
     dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = T)) %>%
     dplyr::ungroup() %>%
     tidyr::pivot_longer(cols = c(.data$SR, .data$PR, .data$tot),
-                        names_to = "Metric", values_to = "Count")
+                        names_to = "Metric", values_to = "Value")
 
   dplot %>%
-    ggplot2::ggplot(ggplot2::aes(x = .data$Count, fill = .data$Metric)) +
+    ggplot2::ggplot(ggplot2::aes(x = .data$Value, fill = .data$Metric)) +
     ggplot2::geom_histogram(binwidth = 1) +
     ggplot2::theme_bw() +
-    ggplot2::ggtitle(title)
+    ggplot2::labs(title = title) +
+    ggplot2::facet_wrap(~.data$Metric)
 }
 
 
