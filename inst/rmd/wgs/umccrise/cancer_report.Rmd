@@ -1004,7 +1004,8 @@ sv_col_descr <- dplyr::tribble(
   "AF_BPI", "BPI AF at each breakend preceded by their average",
   "CN", "Copy Number at each breakend preceded by their average",
   "CNC", "Copy Number Change at each breakend preceded by their average",
-  "SR_PR_alt", "Number of Split Reads and Paired Reads supporting the alt allele, for reads where P(allele|read)>0.999",
+  "SR_alt", "Number of Split Reads supporting the alt allele, for reads where P(allele|read)>0.999",
+  "PR_alt", "Number of Paired Reads supporting the alt allele, for reads where P(allele|read)>0.999",
   "SR_PR_ref", "Number of Split Reads and Paired Reads supporting the ref allele, for reads where P(allele|read)>0.999",
   "Type", "Type of structural variant",
   "SScore", "Somatic variant quality score",
@@ -1150,7 +1151,7 @@ if (!no_sv_found) {
   sv_BND_main <- sv_BND %>%
     dplyr::select(nrow, vcfnum, Tier, Start, End,
                   ID, BND_ID, BND_mate,
-                  Genes, Effect, Detail, SR_PR_alt, Ploidy, AF_PURPLE)
+                  Genes, Effect, Detail, SR_alt, PR_alt, Ploidy, AF_PURPLE)
 
   sv_BND_other <- sv_BND %>%
     dplyr::select(nrow, AF_BPI, CNC, CN, SR_PR_ref, SScore, ntrx, Transcript)
@@ -1278,7 +1279,7 @@ if (!no_sv_found) {
                                       glue::glue("Many Transcripts ({ntrx})"),
                                       Transcript)) %>%
     dplyr::select(nrow, vcfnum, TierTop, Tier, Type, Start, End, Effect,
-                  Genes, Transcript, Detail, SR_PR_alt, AF_PURPLE)
+                  Genes, Transcript, Detail, SR_alt, PR_alt, AF_PURPLE)
 
   sv_noBND_other <- sv_noBND %>%
     dplyr::select(vcfnum, Ploidy, AF_BPI, CNC, CN, SR_PR_ref, SScore) %>%

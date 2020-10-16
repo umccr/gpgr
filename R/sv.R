@@ -196,7 +196,6 @@ process_sv <- function(x) {
     tidyr::separate(.data$split_read_support, c("SR_ref", "SR_alt"), ",", convert = TRUE) %>%
     tidyr::separate(.data$paired_support_PR, c("PR_ref", "PR_alt"), ",", convert = TRUE) %>%
     dplyr::mutate(
-      SR_PR_alt = paste0(.data$SR_alt, ",", .data$PR_alt),
       SR_PR_ref = paste0(.data$SR_ref, ",", .data$PR_ref),
       Ploidy = round(as.double(.data$Ploidy_PURPLE), 2),
       chrom = sub("chr", "", .data$chrom),
@@ -250,7 +249,7 @@ process_sv <- function(x) {
                   .data$Start, .data$End,
                   Type = .data$svtype,
                   .data$ID, .data$MATEID, .data$BND_ID, .data$BND_mate,
-                  .data$SR_PR_alt, .data$SR_PR_ref, .data$Ploidy,
+                  .data$SR_alt, .data$PR_alt, .data$SR_PR_ref, .data$Ploidy,
                   .data$AF_PURPLE, .data$AF_BPI,
                   CNC = .data$CN_change_PURPLE, CN = .data$CN_PURPLE,
                   SScore = .data$somaticscore, .data$nann, .data$annotation)
@@ -296,11 +295,10 @@ process_sv <- function(x) {
 #'
 #' @export
 plot_bnd_sr_pr_tot_lines <- function(d, title = "SR, PR and SR + PR line plot for BNDs") {
-  assertthat::assert_that(all(c("Type", "SR_PR_alt") %in% colnames(d)))
+  assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d %>%
     dplyr::filter(.data$Type == "BND") %>%
-    dplyr::select(.data$SR_PR_alt) %>%
-    tidyr::separate(.data$SR_PR_alt, into = c("SR", "PR"), convert = TRUE) %>%
+    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt) %>%
     dplyr::mutate(PR = ifelse(is.na(.data$PR), 0, .data$PR),
                   SR = ifelse(is.na(.data$SR), 0, .data$SR)) %>%
     dplyr::rowwise() %>%
@@ -337,11 +335,10 @@ plot_bnd_sr_pr_tot_lines <- function(d, title = "SR, PR and SR + PR line plot fo
 #'
 #' @export
 plot_bnd_sr_pr_tot_hist <- function(d, title = "SR, PR and SR + PR histogram for BNDs") {
-  assertthat::assert_that(all(c("Type", "SR_PR_alt") %in% colnames(d)))
+  assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d %>%
     dplyr::filter(.data$Type == "BND") %>%
-    dplyr::select(.data$SR_PR_alt) %>%
-    tidyr::separate(.data$SR_PR_alt, into = c("SR", "PR"), convert = TRUE) %>%
+    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt) %>%
     dplyr::mutate(PR = ifelse(is.na(.data$PR), 0, .data$PR),
                   SR = ifelse(is.na(.data$SR), 0, .data$SR)) %>%
     dplyr::rowwise() %>%
