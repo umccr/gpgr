@@ -416,3 +416,47 @@ purple_purity_read <- function(x) {
     summary = summary
   )
 }
+
+#' Read PURPLE Somatic SNV VCF
+#'
+#' Reads the `purple.somatic.vcf.gz` file.
+#'
+#' @param x Path to the `purple.somatic.vcf.gz` file.
+#'
+#' @return The input file as a tibble and a summarised tibble with a
+#' description of each metric.
+#'
+#' @examples
+#' x <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr")
+#' (snv <- purple_snv_vcf_read(x))
+#'
+#' @export
+purple_snv_vcf_read <- function(x) {
+  assertthat::assert_that(file.exists(x), is_vcf(x))
+  d <- bedr::read.vcf(x, split.info = TRUE, verbose = FALSE)
+  cols <- c("CHROM", "POS", "AF", "PURPLE_AF", "PURPLE_CN",
+            "PURPLE_GERMLINE", "PURPLE_MAP", "PURPLE_PLOIDY",
+            "HMF_HOTSPOT", "KT", "MH", "SUBCL", "TNC")
+  tibble::as_tibble(d$vcf[cols])
+}
+
+#' Get PURPLE Kataegis Regions
+#'
+#' Reads the `purple.somatic.vcf.gz` file and extracts variants
+#' within kataegis regions.
+#'
+#' @param x Path to the `purple.somatic.vcf.gz` file.
+#'
+#' @return
+#'
+#' @examples
+#' x <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr")
+#' (k <- purple_kataegis(x))
+#'
+#' @export
+purple_kataegis <- function(x) {
+  d <- purple_snv_vcf_read(x)
+  d %>%
+    dplyr::filter(!is.na(.data$KT)) %>%
+    dplyr::select(.data$CHROM, .data$POS, .data$KT)
+}

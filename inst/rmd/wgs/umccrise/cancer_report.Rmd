@@ -25,6 +25,7 @@ params:
   purple_germ_cnv: 'x'
   purple_purity: 'x'
   purple_qc: 'x'
+  purple_som_snv_vcf: 'x'
   oncoviral_present_viruses: 'x'
   oncoviral_breakpoints_tsv: 'x'
   conda_list: 'x'
@@ -32,20 +33,12 @@ description: "Analysis of tumor/normal samples at UMCCR"
 title: "`r paste(params$batch_name, params$title)`"
 ---
 
-<style type="text/css">
-.main-container {
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
 ```{r knitr_opts, include=F}
 knitr::opts_chunk$set(collapse = TRUE, echo = FALSE,
                       warning = FALSE, message = FALSE)
 ```
 
-```{r render_report_interactively, eval=F, echo=F}
+```{r render_report_interactively, echo=F, eval=FALSE}
 batch_name <- "SEQCII_50pc__T_SRR7890936_50pc"
 # tumor_name <- strsplit(batch_name, "__")[[1]][2]
 tumor_name <- "T_SRR7890936_50pc"
@@ -67,6 +60,7 @@ params_tmp <- list(
     purple_germ_cnv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.cnv.germline.tsv',
     purple_purity='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.purity.tsv',
     purple_qc='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.qc',
+    purple_som_snv_vcf='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.somatic.vcf.gz',
     oncoviral_present_viruses='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/oncoviruses/present_viruses.txt',
     oncoviral_breakpoints_tsv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/oncoviruses/oncoviral_breakpoints.tsv',
     conda_list='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/conda_pkg_list.txt'),
@@ -83,6 +77,7 @@ params_tmp <- list(
     purple_germ_cnv=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.cnv.germline.tsv'),
     purple_purity=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.purity.tsv'),
     purple_qc=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.qc'),
+    purple_som_snv_vcf=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.somatic.vcf.gz'),
     oncoviral_present_viruses=glue::glue('{dd}/data/umccrised/work/{batch_name}/oncoviruses/present_viruses.txt'),
     oncoviral_breakpoints_tsv=glue::glue('{dd}/data/umccrised/work/{batch_name}/oncoviruses/oncoviral_breakpoints.tsv'),
     conda_list=glue::glue('{dd}/data/umccrised/work/conda_pkg_list.txt')
@@ -128,6 +123,8 @@ library(gpgr)
 ```
 
 ```{r funcs}
+img_dir <- file.path("img") # created when copying purple files to tmp dir
+
 # for checking if the columns in the dt are all described
 check_cols_described <- function(cols, descr) {
   stopifnot(is.character(cols), is.atomic(cols))
@@ -721,6 +718,18 @@ if (will_work) {
 }
 ```
 
+```{r purple_kataegis_table}
+gpgr::purple_kataegis(params$purple_som_snv_vcf) %>%
+  knitr::kable(escape = FALSE, caption = "Kataegis Regions.", format = "html", table.attr = "style='width:30%;'") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::scroll_box(height = "250px")
+```
+
+```{r purple_plot_somaticrainfall, out.width="90%"}
+knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.somatic.rainfall.png')))
+```
+
+
 ## HRD (Homologous Recombination Deficiency) Detection {#hrd}
 
 ### CHORD
@@ -765,6 +774,7 @@ The user may of course ignore these remarks and proceed with using the raw proba
 
 </details>
 
+
 ```{r chord_res}
 tibble::tibble(col = colnames(chord_res$prediction), val = unlist(chord_res$prediction[1, ])) %>%
   DT::datatable(class = "cell-border display compact",
@@ -773,6 +783,7 @@ tibble::tibble(col = colnames(chord_res$prediction), val = unlist(chord_res$pred
                 options = list(buttons = c('csv', 'excel'), dom = 'Brti', paging = FALSE)) %>%
   DT::formatStyle(columns = c("col"), fontWeight = 'bold', `text-align` = 'left')
 ```
+
 
 ### HRDetect
 
@@ -827,7 +838,6 @@ The first BAF plot is based on PURPLE data and configuration files.
 </details>
 
 ```{r circos_baf_plot, out.width="80%"}
-img_dir <- file.path('img') # created before when copying purple files to tmp dir
 knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.circos_baf.png')))
 ```
 
@@ -1555,15 +1565,10 @@ knitr::include_graphics(c(file.path(img_dir, paste0(params$batch_name, '.copynum
 
 #### Rainfall
 If a somatic variant VCF has been supplied, a figure will be produced
-showing the somatic variant ploidy broken down by copy number as well
-as a rainfall plot with kataegis clusters highlighted in grey.
+showing the somatic variant ploidy broken down by copy number.
 
 ```{r purple_plot_somatic, out.width="40%"}
 knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.somatic.png')))
-```
-
-```{r purple_plot_somaticrainfall, out.width="90%"}
-knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.somatic.rainfall.png')))
 ```
 
 #### Purity/ploidy
