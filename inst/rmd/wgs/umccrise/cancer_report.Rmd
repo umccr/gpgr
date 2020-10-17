@@ -329,6 +329,8 @@ sv <- NULL
 sv_unmelted <- NULL
 sv_all <- NULL
 no_sv_found <- TRUE
+sv_tsv_descr <- NULL
+sv_col_descr <- NULL
 if (sv_path == "NA") {
   sv_unmelted <- tibble(WARNING = "Structural variants were not called")
   sv_all <- tibble(WARNING = "Structural variants were not called")
@@ -337,10 +339,14 @@ if (sv_path == "NA") {
   if (no_sv_found) {
     sv_unmelted <- tibble(WARNING = "THERE WERE 0 SVs PRIORITISED!")
     sv_all <- tibble(WARNING = "THERE WERE 0 SVs PRIORITISED!")
+    sv_tsv_descr <- tibble(Column = "THERE WERE 0 SVs PRIORITISED!")
+    sv_col_descr <- tibble(Column = "THERE WERE 0 SVs PRIORITISED!")
   } else {
     sv <- gpgr::process_sv(sv_path)
     sv_unmelted <- sv$unmelted
     sv_all <- sv$melted
+    sv_tsv_descr <- sv$tsv_descr
+    sv_col_descr <- sv$col_descr
   }
 }
 readr::write_tsv(sv_unmelted, file.path(result_outdir, "sv/01_sv_unmelted.tsv"))
@@ -689,7 +695,7 @@ sig_table <-
 mut_sig_contr %>%
   dplyr::left_join(sig_table, by = "Signature") %>%
   knitr::kable() %>%
-  kableExtra::kable_styling(font_size = 12) %>%
+  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
   kableExtra::scroll_box(height = "400px")
 ```
 
@@ -709,7 +715,7 @@ mut_sig_contr2 %>%
   dplyr::left_join(sig_table2, by = "Signature") %>%
   dplyr::mutate(Signature = ifelse(Signature %in% possible_seq_artefacts, paste0(Signature, " (SA)"), Signature)) %>%
   knitr::kable() %>%
-  kableExtra::kable_styling(font_size = 12) %>%
+  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
   kableExtra::scroll_box(height = "400px")
 ```
 
@@ -754,7 +760,7 @@ along with an ID that is shared by grouped variants.
 gpgr::purple_kataegis(params$purple_som_snv_vcf) %>%
   knitr::kable(escape = FALSE, caption = "Kataegis Regions.",
                format = "html", format.args = list(big.mark = ",")) %>%
-  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::kable_paper("hover", full_width = FALSE, position = "left") %>%
   kableExtra::scroll_box(height = "250px")
 ```
 
@@ -825,10 +831,11 @@ readr::write_tsv(chord_res_tab, file.path(result_outdir, "hrd/chord.tsv"))
 colnames(hrdetect_res_tab) <- c("HRDetect", "Results")
 colnames(chord_res_tab) <- c("CHORD", "Results1")
 
-cnames_final <- c("HRDetect", " ", "CHORD", " ", "CHORD (cont.)", " ")
+cnames_final <- c("HRDetect", " ", " ", "CHORD", " ", "CHORD (cont.)", " ")
 
 dplyr::bind_cols(
   hrdetect_res_tab,
+  tibble::tibble(x = rep("  |", 9)),
   dplyr::bind_rows(chord_res_tab[1:8, ],
                    tibble::tribble(
                      ~CHORD, ~Results1,
@@ -840,7 +847,7 @@ dplyr::bind_cols(
                 CHORD = kableExtra::cell_spec(CHORD, bold = TRUE),
                 CHORD2 = kableExtra::cell_spec(CHORD2, bold = TRUE)) %>%
   knitr::kable(escape = FALSE, caption = "HRD Results", col.names = cnames_final) %>%
-  kableExtra::kable_styling(full_width = FALSE, position = "left")
+  kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "left")
 ```
 
 
@@ -994,75 +1001,12 @@ __Step 4: TSV final output__
 
 
 ```{r manta_tsv_description}
-manta_tsv_col_descr <- dplyr::tribble(
-  ~Column, ~Description,
-  "caller", "Manta SV caller",
-  "sample", "Tumor sample name",
-  "chrom", "CHROM column in VCF",
-  "start", "POS column in VCF",
-  "end", "INFO/END: End position of the variant described in this record",
-  "svtype", "INFO/SVTYPE: Type of structural variant",
-  "split_read_support", "FORMAT/SR of tumor sample: Split reads for the ref and alt alleles in the order listed, for reads where P(allele|read)>0.999",
-  "paired_support_PE", "FORMAT/PE of tumor sample: ??",
-  "paired_support_PR", "FORMAT/PR of tumor sample: Spanning paired-read support for the ref and alt alleles in the order listed, for reads where P(allele|read)>0.999",
-  "AF_BPI", "INFO/BPI_AF: AF at each breakpoint (so AF_BPI1,AF_BPI2)",
-  "somaticscore", "INFO/SOMATICSCORE: Somatic variant quality score",
-  "tier", "INFO/SV_TOP_TIER (or 4 if missing): Highest priority tier for the effects of a variant entry",
-  "annotation", "INFO/SIMPLE_ANN: Simplified structural variant annotation: 'SVTYPE | EFFECT | GENE(s) | TRANSCRIPT | PRIORITY (1-4)'",
-  "AF_PURPLE", "INFO/PURPLE_AF: AF at each breakend (purity adjusted) (so AF_PURPLE1,AF_PURPLE2)",
-  "CN_PURPLE", "INFO/PURPLE_CN: CN at each breakend (purity adjusted) (so CN_PURPLE1,CN_PURPLE2)",
-  "CN_change_PURPLE", "INFO/PURPLE_CN_CHANGE: change in CN at each breakend (purity adjusted) (so CN_change_PURPLE1,CN_change_PURPLE2)",
-  "Ploidy_PURPLE", "INFO/PURPLE_PLOIDY: Ploidy of variant (purity adjusted)",
-  "PURPLE_status", "INFERRED if FILTER=INFERRED, or RECOVERED if has INFO/RECOVERED, else blank. INFERRED: Breakend inferred from copy number transition",
-  "START_BPI", "INFO/BPI_START: BPI adjusted breakend location",
-  "END_BPI", "INFO/BPI_END: BPI adjusted breakend location",
-  "ID", "ID column in VCF",
-  "MATEID", "INFO/MATEID: ID of mate breakend",
-  "ALT", "ALT column in VCF")
-
-manta_tsv_col_descr %>%
+sv_tsv_descr %>%
   dplyr::arrange(Column) %>%
   dplyr::mutate(Column = kableExtra::cell_spec(Column, bold = TRUE)) %>%
   knitr::kable(escape = FALSE, caption = "Description of Manta TSV columns") %>%
-  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "left") %>%
   kableExtra::scroll_box(height = "250px")
-```
-
-```{r sv_table_description}
-sv_col_descr <- dplyr::tribble(
-  ~Column, ~Description,
-  "nrow", "Row number that connects variants between tables in same tab set",
-  "vcfnum", "Original event row number that connects variants to events",
-  "TierTop", "Top priority of the event (from 'simple_sv_annotation': 1 highest, 4 lowest)",
-  "Tier", "Priority of the specific event (from 'simple_sv_annotation': 1 highest, 4 lowest)",
-  "Chr", "Chromosome",
-  "Start", "Start position as inferred by BPI (for PURPLE-inferred SVs we use POS)",
-  "End", paste("End position. For BNDs this has been assigned to the Chr:Start of the BND's mate for convenience.",
-               "Values are inferred by BPI (PURPLE-inferred SVs don't have an End)."),
-  "ID", "ID of BND from Manta (or PURPLE for PURPLE-inferred SVs))",
-  "MATEID", "ID of BND mate from Manta",
-  "BND_ID", "ID of BND pair simplified. BNDs with the same BND_ID belong to the same translocation event",
-  "BND_mate", "'A' or 'B' depending on if it's the first or second mate in the BND pair",
-  "Genes", "Genes involved in the event. DEL/DUP/INS events involving more than 2 genes are shown in separate table.",
-  "Transcript", "Transcripts involved in the event. DEL/DUP/INS events involving more than 2 transcripts are shown in separate table.",
-  "Effect", glue::glue("SV effect (based on ",
-                       "{htmltools::a(href='http://snpeff.sourceforge.net/SnpEff_manual.html#input', 'SnpEff Effect Sequence Ontology')}",
-                       " - abbreviations are shown under {htmltools::a(href='#sv-summary', 'Details')} in the Effects table"),
-  "Detail", "Prioritisation detail (from 'simple_sv_annotation')",
-  "Ploidy", "Ploidy of variant from PURPLE (purity adjusted)",
-  "AF_PURPLE", "PURPLE AF at each breakend preceded by their average",
-  "AF_BPI", "BPI AF at each breakend preceded by their average",
-  "CN", "Copy Number at each breakend preceded by their average",
-  "CNC", "Copy Number Change at each breakend preceded by their average",
-  "SR_alt", "Number of Split Reads supporting the alt allele, for reads where P(allele|read)>0.999",
-  "PR_alt", "Number of Paired Reads supporting the alt allele, for reads where P(allele|read)>0.999",
-  "SR_PR_ref", "Number of Split Reads and Paired Reads supporting the ref allele, for reads where P(allele|read)>0.999",
-  "Type", "Type of structural variant",
-  "SScore", "Somatic variant quality score",
-  "ntrx", "Number of transcripts for given event",
-  "ngen", "Number of genes for given event",
-  "nann", "Number of annotations for given event"
-)
 ```
 
 <p>&nbsp;</p>
@@ -1103,7 +1047,7 @@ gpgr::EFFECT_ABBREVIATIONS %>%
   dplyr::arrange(abbreviation) %>%
   dplyr::mutate(name = kableExtra::cell_spec(name, bold = TRUE)) %>%
   knitr::kable(escape = FALSE) %>%
-  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "left") %>%
   kableExtra::scroll_box(height = "250px")
 ```
 
@@ -1510,25 +1454,11 @@ PURPLE copy number alterations in the UMCCR Cancer Gene panel (~1,200 genes) - d
 is from <https://github.com/hartwigmedical/hmftools/blob/master/purity-ploidy-estimator/README.md#gene-copy-number-file>
 
 ```{r purple_gene_cnv_description}
-dplyr::tribble(
-  ~Column, ~Description,
-  "gene", "Name of gene",
-  "minCN/maxCN", "Min/Max copy number found in gene exons",
-  "chrom/start/end", "Chromosome/start/end location of gene transcript",
-  "chrBand", "Chromosome band of the gene",
-  "onco_or_ts", "oncogene ('oncogene'), tumor suppressor ('tsgene'), or both ('onco+ts'), as reported by [Cancermine](https://github.com/jakelever/cancermine)",
-  "transcriptID", "Ensembl transcript ID (dot version)",
-  "minMinorAllelePloidy", "Minimum allele ploidy found over the gene exons - useful for identifying LOH events",
-  "somReg (somaticRegions)", "Count of somatic copy number regions this gene spans",
-  "germDelReg (germlineHomDeletionRegions / germlineHetToHomDeletionRegions)", "Number of regions spanned by this gene that are (homozygously deleted in the germline / both heterozygously deleted in the germline and homozygously deleted in the tumor)",
-  "minReg (minRegions)", "Number of somatic regions inside the gene that share the min copy number",
-  "minRegStartEnd", "Start/End base of the copy number region overlapping the gene with the minimum copy number",
-  "minRegSupportStartEndMethod", "Start/end support of the CN region overlapping the gene with the min CN (plus determination method)"
-) %>%
+purple_cnv_som_gene$descr %>%
   dplyr::mutate(
     Column = kableExtra::cell_spec(Column, bold = TRUE)) %>%
   knitr::kable(escape = FALSE) %>%
-  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "left") %>%
   kableExtra::scroll_box(height = "200px")
 ```
 
@@ -1560,21 +1490,11 @@ is from <https://github.com/hartwigmedical/hmftools/blob/master/purity-ploidy-es
 
 
 ```{r purple_seg_description}
-dplyr::tribble(
-  ~Column, ~Description,
-  "Chr/Start/End", "Coordinates of copy number segment",
-  "CN", "Fitted absolute copy number of segment adjusted for purity and ploidy",
-  "Ploidy Min+Maj", "Ploidy of minor + major allele adjusted for purity",
-  "BAF", "Tumor BAF after adjusted for purity and ploidy",
-  "BafCount", "Count of AMBER baf points covered by this segment",
-  "Start/End SegSupport", "Type of SV support for the CN breakpoint at start/end of region. Allowed values: CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), SGL (single breakend SV support), NONE (no SV support for CN breakpoint), MULT (multiple SV support at exact breakpoint)",
-  "Method", "Method used to determine the CN of the region. Allowed values: BAF_WEIGHTED (avg of all depth windows for the region), STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), LONG_ARM (inferred from the long arm), GERMLINE_AMPLIFICATION (inferred using special logic to handle regions of germline amplification)",
-  "windowCount", "Count of COBALT windows covered by this segment",
-  "GC", "Proportion of segment that is G or C") %>%
+purple_cnv_som$descr %>%
   dplyr::mutate(
     Column = kableExtra::cell_spec(Column, bold = TRUE)) %>%
   knitr::kable(escape = FALSE) %>%
-  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "left") %>%
   kableExtra::scroll_box(height = "200px")
 ```
 
@@ -1731,7 +1651,7 @@ conda_pkgs %>%
   dplyr::filter(grepl(main_pkgs, name)) %>%
   dplyr::arrange(desc(name)) %>%
   knitr::kable(format = "html") %>%
-  kableExtra::kable_styling(full_width = TRUE, position = "left") %>%
+  kableExtra::kable_paper(c("hover", "striped"), full_width = TRUE, position = "left") %>%
   kableExtra::column_spec(1, bold = TRUE) %>%
   kableExtra::scroll_box(height = "300px")
 ```
@@ -1744,7 +1664,7 @@ readr::write_tsv(report_inputs, file.path(result_outdir, "report_inputs.tsv"))
 
 report_inputs %>%
   knitr::kable(format = "html") %>%
-  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "left") %>%
   kableExtra::column_spec(1, bold = TRUE) %>%
   kableExtra::scroll_box(height = "200px")
 ```

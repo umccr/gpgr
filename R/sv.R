@@ -137,7 +137,7 @@ abbreviate_effect <- function(effects) {
 #'
 #' @examples
 #' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-#' (sv <- umccrise_read_sv_tsv(x))
+#' (sv <- umccrise_read_sv_tsv(x)$data)
 #'
 #' @testexamples
 #' expect_equal(colnames(sv)[ncol(sv)], "ALT")
@@ -145,20 +145,41 @@ abbreviate_effect <- function(effects) {
 #' @export
 umccrise_read_sv_tsv <- function(x) {
 
-  # tsv column names + types
-  nm <- c("caller" = "c", "sample" = "c",
-          "chrom" = "c", "start" = "i", "end" = "i", "svtype" = "c",
-          "split_read_support" = "c", "paired_support_PE" = "c", "paired_support_PR" = "c",
-          "AF_BPI" = "c", "somaticscore" = "i", "tier" = "c", "annotation" = "c",
-          "AF_PURPLE" = "c", "CN_PURPLE" = "c", "CN_change_PURPLE" = "c", "Ploidy_PURPLE" = "d",
-          "PURPLE_status" = "c", "START_BPI" = "i", "END_BPI" = "i", "ID" = "c",
-          "MATEID" = "c", "ALT" = "c")
+  # tsv column names, description and types
+  tab <- dplyr::tribble(
+    ~Column, ~Description, ~Type,
+    "caller", "Manta SV caller", "c",
+    "sample", "Tumor sample name", "c",
+    "chrom", "CHROM column in VCF", "c",
+    "start", "POS column in VCF", "i",
+    "end", "INFO/END: End position of the variant described in this record", "i",
+    "svtype", "INFO/SVTYPE: Type of structural variant", "c",
+    "split_read_support", "FORMAT/SR of tumor sample: Split reads for the ref and alt alleles in the order listed, for reads where P(allele|read)>0.999", "c",
+    "paired_support_PE", "FORMAT/PE of tumor sample: ??", "c",
+    "paired_support_PR", "FORMAT/PR of tumor sample: Spanning paired-read support for the ref and alt alleles in the order listed, for reads where P(allele|read)>0.999", "c",
+    "AF_BPI", "INFO/BPI_AF: AF at each breakpoint (so AF_BPI1,AF_BPI2)", "c",
+    "somaticscore", "INFO/SOMATICSCORE: Somatic variant quality score", "i",
+    "tier", "INFO/SV_TOP_TIER (or 4 if missing): Highest priority tier for the effects of a variant entry", "c",
+    "annotation", "INFO/SIMPLE_ANN: Simplified structural variant annotation: 'SVTYPE | EFFECT | GENE(s) | TRANSCRIPT | PRIORITY (1-4)'", "c",
+    "AF_PURPLE", "INFO/PURPLE_AF: AF at each breakend (purity adjusted) (so AF_PURPLE1,AF_PURPLE2)", "c",
+    "CN_PURPLE", "INFO/PURPLE_CN: CN at each breakend (purity adjusted) (so CN_PURPLE1,CN_PURPLE2)", "c",
+    "CN_change_PURPLE", "INFO/PURPLE_CN_CHANGE: change in CN at each breakend (purity adjusted) (so CN_change_PURPLE1,CN_change_PURPLE2)", "c",
+    "Ploidy_PURPLE", "INFO/PURPLE_PLOIDY: Ploidy of variant (purity adjusted)", "d",
+    "PURPLE_status", "INFERRED if FILTER=INFERRED, or RECOVERED if has INFO/RECOVERED, else blank. INFERRED: Breakend inferred from copy number transition", "c",
+    "START_BPI", "INFO/BPI_START: BPI adjusted breakend location", "i",
+    "END_BPI", "INFO/BPI_END: BPI adjusted breakend location", "i",
+    "ID", "ID column in VCF", "c",
+    "MATEID", "INFO/MATEID: ID of mate breakend", "c",
+    "ALT", "ALT column in VCF", "c")
 
-  ctypes <- paste(nm, collapse = "")
+  ctypes <- paste(tab$Type, collapse = "")
   somatic_sv_tsv <- readr::read_tsv(x, col_names = TRUE, col_types = ctypes)
-  assertthat::assert_that(ncol(somatic_sv_tsv) == length(nm))
-  assertthat::assert_that(all(colnames(somatic_sv_tsv) == names(nm)))
-  somatic_sv_tsv
+  assertthat::assert_that(ncol(somatic_sv_tsv) == nrow(tab))
+  assertthat::assert_that(all(colnames(somatic_sv_tsv) == tab$Column))
+  list(
+    data = somatic_sv_tsv,
+    descr = tab
+  )
 }
 
 #' Process Structural Variants
@@ -180,6 +201,8 @@ umccrise_read_sv_tsv <- function(x) {
 #' @export
 process_sv <- function(x) {
   sv <- umccrise_read_sv_tsv(x)
+  tsv_descr <- sv$descr
+  sv <- sv$data
 
   if (nrow(sv) == 0) {
     return(list(
@@ -187,6 +210,40 @@ process_sv <- function(x) {
       melted = NULL
     ))
   }
+  col_descr <- dplyr::tribble(
+    ~Column, ~Description,
+    "nrow", "Row number that connects variants between tables in same tab set",
+    "vcfnum", "Original event row number that connects variants to events",
+    "TierTop", "Top priority of the event (from 'simple_sv_annotation': 1 highest, 4 lowest)",
+    "Tier", "Priority of the specific event (from 'simple_sv_annotation': 1 highest, 4 lowest)",
+    "Chr", "Chromosome",
+    "Start", "Start position as inferred by BPI (for PURPLE-inferred SVs we use POS)",
+    "End", paste("End position. For BNDs this has been assigned to the Chr:Start of the BND's mate for convenience.",
+                 "Values are inferred by BPI (PURPLE-inferred SVs don't have an End)."),
+    "ID", "ID of BND from Manta (or PURPLE for PURPLE-inferred SVs))",
+    "MATEID", "ID of BND mate from Manta",
+    "BND_ID", "ID of BND pair simplified. BNDs with the same BND_ID belong to the same translocation event",
+    "BND_mate", "'A' or 'B' depending on if it's the first or second mate in the BND pair",
+    "Genes", "Genes involved in the event. DEL/DUP/INS events involving more than 2 genes are shown in separate table.",
+    "Transcript", "Transcripts involved in the event. DEL/DUP/INS events involving more than 2 transcripts are shown in separate table.",
+    "Effect", glue::glue("SV effect (based on ",
+                         "{htmltools::a(href='http://snpeff.sourceforge.net/SnpEff_manual.html#input', 'SnpEff Effect Sequence Ontology')}",
+                         " - abbreviations are shown under {htmltools::a(href='#sv-summary', 'Details')} in the Effects table"),
+    "Detail", "Prioritisation detail (from 'simple_sv_annotation')",
+    "Ploidy", "Ploidy of variant from PURPLE (purity adjusted)",
+    "AF_PURPLE", "PURPLE AF at each breakend preceded by their average",
+    "AF_BPI", "BPI AF at each breakend preceded by their average",
+    "CN", "Copy Number at each breakend preceded by their average",
+    "CNC", "Copy Number Change at each breakend preceded by their average",
+    "SR_alt", "Number of Split Reads supporting the alt allele, for reads where P(allele|read)>0.999",
+    "PR_alt", "Number of Paired Reads supporting the alt allele, for reads where P(allele|read)>0.999",
+    "SR_PR_ref", "Number of Split Reads and Paired Reads supporting the ref allele, for reads where P(allele|read)>0.999",
+    "Type", "Type of structural variant",
+    "SScore", "Somatic variant quality score",
+    "ntrx", "Number of transcripts for given event",
+    "ngen", "Number of genes for given event",
+    "nann", "Number of annotations for given event"
+  )
 
   cols_to_split <- c("AF_BPI", "AF_PURPLE", "CN_PURPLE", "CN_change_PURPLE")
   double_cols <- split_double_col(sv, cols_to_split)
@@ -257,24 +314,26 @@ process_sv <- function(x) {
   abbreviate_effectv <- Vectorize(abbreviate_effect)
 
   melted <- unmelted_all %>%
-      dplyr::mutate(annotation = strsplit(.data$annotation, ',')) %>%
-      tidyr::unnest(.data$annotation) %>%
-      tidyr::separate(
-        .data$annotation, c('Event', 'Effect', 'Genes', 'Transcript', 'Detail', 'Tier'),
-        sep = '\\|', convert = FALSE) %>%
-      dplyr::mutate(
-        ntrx = count_pieces(.data$Transcript, "&"),
-        ngen = count_pieces(.data$Genes, "&"),
-        neff = count_pieces(.data$Effect, "&"),
-        Transcript = .data$Transcript %>% stringr::str_replace_all('&', ', '),
-        Genes = .data$Genes %>% stringr::str_replace_all('&', ', '),
-        Effect = abbreviate_effectv(.data$Effect)) %>%
-      dplyr::distinct() %>%
-      dplyr::arrange(.data$Tier, .data$Genes, .data$Effect)
+    dplyr::mutate(annotation = strsplit(.data$annotation, ',')) %>%
+    tidyr::unnest(.data$annotation) %>%
+    tidyr::separate(
+      .data$annotation, c('Event', 'Effect', 'Genes', 'Transcript', 'Detail', 'Tier'),
+      sep = '\\|', convert = FALSE) %>%
+    dplyr::mutate(
+      ntrx = count_pieces(.data$Transcript, "&"),
+      ngen = count_pieces(.data$Genes, "&"),
+      neff = count_pieces(.data$Effect, "&"),
+      Transcript = .data$Transcript %>% stringr::str_replace_all('&', ', '),
+      Genes = .data$Genes %>% stringr::str_replace_all('&', ', '),
+      Effect = abbreviate_effectv(.data$Effect)) %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(.data$Tier, .data$Genes, .data$Effect)
 
   list(
     unmelted = unmelted_all,
-    melted = melted
+    melted = melted,
+    tsv_descr = tsv_descr,
+    col_descr = col_descr
   )
 }
 
