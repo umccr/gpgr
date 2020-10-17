@@ -29,6 +29,7 @@ params:
   oncoviral_present_viruses: 'x'
   oncoviral_breakpoints_tsv: 'x'
   conda_list: 'x'
+  result_outdir: 'x'
 description: "Analysis of tumor/normal samples at UMCCR"
 title: "`r paste(params$batch_name, params$title)`"
 ---
@@ -63,7 +64,8 @@ params_tmp <- list(
     purple_som_snv_vcf='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/purple/SEQCII_50pc__T_SRR7890936_50pc.purple.somatic.vcf.gz',
     oncoviral_present_viruses='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/oncoviruses/present_viruses.txt',
     oncoviral_breakpoints_tsv='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/SEQCII_50pc__T_SRR7890936_50pc/oncoviruses/oncoviral_breakpoints.tsv',
-    conda_list='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/conda_pkg_list.txt'),
+    conda_list='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/work/conda_pkg_list.txt',
+    result_outdir='/g/data/gx8/projects/diakumis/umccrise/test_umccrise/umccrised/SEQCII_50pc__T_SRR7890936_50pc/cancer_report_results'),
   local = list(
     genome_build='hg38',
     key_genes=glue::glue('{dd}/data/ref/umccr_cancer_genes.latest.tsv'),
@@ -80,7 +82,8 @@ params_tmp <- list(
     purple_som_snv_vcf=glue::glue('{dd}/data/umccrised/work/{batch_name}/purple/{batch_name}.purple.somatic.vcf.gz'),
     oncoviral_present_viruses=glue::glue('{dd}/data/umccrised/work/{batch_name}/oncoviruses/present_viruses.txt'),
     oncoviral_breakpoints_tsv=glue::glue('{dd}/data/umccrised/work/{batch_name}/oncoviruses/oncoviral_breakpoints.tsv'),
-    conda_list=glue::glue('{dd}/data/umccrised/work/conda_pkg_list.txt')
+    conda_list=glue::glue('{dd}/data/umccrised/work/conda_pkg_list.txt'),
+    result_outdir=glue::glue('{dd}/data/umccrised/{batch_name}/cancer_report_results')
   )
 )
 
@@ -124,6 +127,12 @@ library(gpgr)
 
 ```{r funcs}
 img_dir <- file.path("img") # created when copying purple files to tmp dir
+result_outdir <- params$result_outdir # directory to write tables to
+dir.create(result_outdir, recursive = TRUE)
+dir.create(file.path(result_outdir, "hrd"), recursive = TRUE)
+dir.create(file.path(result_outdir, "sv"), recursive = TRUE)
+dir.create(file.path(result_outdir, "purple"), recursive = TRUE)
+dir.create(file.path(result_outdir, "sigs"), recursive = TRUE)
 
 # for checking if the columns in the dt are all described
 check_cols_described <- function(cols, descr) {
@@ -297,15 +306,20 @@ if (nrow(fit_res_contr2) == 0) {
 mut_sig_contr <-
   fit_res_contr %>%
   dplyr::mutate(contr = round(contr, 0),
+                Freq = round(contr / sum(contr), 2),
                 Rank = as.integer(base::rank(-contr))) %>%
-  dplyr::select(Rank, Signature = sig, Contribution = contr) %>%
+  dplyr::select(Rank, Signature = sig, Contribution = contr, Freq) %>%
   dplyr::arrange(Rank)
 mut_sig_contr2 <-
   fit_res_contr2 %>%
   dplyr::mutate(contr = round(contr, 0),
+                Freq = round(contr / sum(contr), 2),
                 Rank = as.integer(base::rank(-contr))) %>%
-  dplyr::select(Rank, Signature = sig, Contribution = contr) %>%
+  dplyr::select(Rank, Signature = sig, Contribution = contr, Freq) %>%
   dplyr::arrange(Rank)
+
+readr::write_tsv(mut_sig_contr, file.path(result_outdir, "sigs/mutsig1.tsv"))
+readr::write_tsv(mut_sig_contr2, file.path(result_outdir, "sigs/mutsig2.tsv"))
 ```
 
 ```{r sv_prep}
@@ -329,6 +343,8 @@ if (sv_path == "NA") {
     sv_all <- sv$melted
   }
 }
+readr::write_tsv(sv_unmelted, file.path(result_outdir, "sv/01_sv_unmelted.tsv"))
+readr::write_tsv(sv_all, file.path(result_outdir, "sv/02_sv_melted.tsv"))
 ```
 
 ```{r purple_prep}
@@ -342,6 +358,9 @@ purple_qc_summary <- dplyr::bind_rows(
 purple_cnv_som <- gpgr::purple_cnv_som_process(params$purple_som_cnv)
 purple_cnv_som_gene <- gpgr::purple_cnv_som_gene_process(params$purple_som_gene_cnv, params$key_genes)
 purple_cnv_germ <- gpgr::purple_cnv_germ_process(params$purple_germ_cnv)
+readr::write_tsv(purple_cnv_som$tab, file.path(result_outdir, "purple/purple_cnv_som.tsv"))
+readr::write_tsv(purple_cnv_som_gene$tab, file.path(result_outdir, "purple/purple_cnv_som_gene.tsv"))
+readr::write_tsv(purple_cnv_germ$tab, file.path(result_outdir, "purple/purple_cnv_germ.tsv"))
 ```
 
 ## Summary
@@ -401,11 +420,6 @@ summarise_sigs <- function(mut_sig_contr) {
 hrd_summary <- list(chord = round(chord_res[["prediction"]][, "p_hrd", drop = TRUE], 3),
                     hrdetect = round(hrdetect_res[, "Probability", drop = TRUE], 3))
 
-af_summary <- af_stats %>%
-  knitr::kable(format = "html", caption = "AF Summary Stats") %>%
-  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
-  kableExtra::column_spec(1, bold = TRUE)
-
 cnv_summary <- purple_cnv_som$tab %>%
   dplyr::summarise(Min = round(min(CN), 2),
                    Max = round(max(CN), 2),
@@ -442,7 +456,11 @@ qc_summary_all <- dplyr::tribble(
   dplyr::bind_rows(
     purple_qc_summary
   ) %>%
-  dplyr::arrange(n) %>%
+  dplyr::arrange(n)
+
+readr::write_tsv(qc_summary_all, file.path(result_outdir, "qc_summary.tsv"))
+
+qc_summary_all %>%
   dplyr::mutate(
     variable = kableExtra::cell_spec(variable, bold = TRUE),
     value = kableExtra::cell_spec(
@@ -456,10 +474,9 @@ qc_summary_all <- dplyr::tribble(
         value == "TRUE" ~ "green",
         value == "FALSE" ~ "red",
         TRUE ~ "black"))) %>%
-      knitr::kable(escape = FALSE) %>%
+  knitr::kable(escape = FALSE) %>%
   kableExtra::kable_styling(full_width = FALSE, position = "left")
 
-qc_summary_all
 ```
 
 ## Somatic Mutation Profiles
@@ -493,6 +510,11 @@ The following post-processing steps occur:
 
 
 ```{r allele_freq_plot_stats, fig.width=10, fig.height=3}
+af_summary <- af_stats %>%
+  knitr::kable(format = "html", caption = "AF Summary Stats") %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+  kableExtra::column_spec(1, bold = TRUE)
+
 af_summary
 
 ggplot2::ggplot(data = af_both, ggplot2::aes(af)) +
@@ -700,7 +722,8 @@ previous mutation, and is log10 transformed. Drop-downs from the plots indicate 
 "hotspots" of mutations.
 
 ```{r mutationalpatterns_rainfall, out.width="90%", fig.width=14}
-# When there is only 1 or lower number of variants on a chromosome, MutationalPatterns::plot_rainfall will crash with an error. So need to check if it will work beforehand.
+# When there is only 1 or lower number of variants on a chromosome,
+# MutationalPatterns::plot_rainfall will crash with an error. So need to check if it will work beforehand.
 chromosomes = GenomeInfoDb::seqnames(base::get(ref_genome))[1:22]
 vcf = somatic_snv[[1]]
 chr_subset = vcf[GenomeInfoDb::seqnames(vcf) == chromosomes[1]]
@@ -714,13 +737,23 @@ for (i in 1:length(chromosomes)) {
   }
 }
 if (will_work) {
-  MutationalPatterns::plot_rainfall(somatic_snv[[1]], chromosomes = GenomeInfoDb::seqnames(base::get(ref_genome))[1:22], cex = 1.2, ylim = 1e+09)
+  MutationalPatterns::plot_rainfall(somatic_snv[[1]],
+                                    chromosomes = GenomeInfoDb::seqnames(base::get(ref_genome))[1:22],
+                                    cex = 1.2, ylim = 1e+09)
 }
 ```
 
+Somatic variants of type C>T and C>G in a TpCpN context are annotated as
+showing Kataegis (Nik Zainal et al., 2012) if there are three or more
+mutations of that type, strand and context localised within a
+region with an average inter-mutation distance of <= 1kb.
+The annotation describes the strand it was found on
+along with an ID that is shared by grouped variants.
+
 ```{r purple_kataegis_table}
 gpgr::purple_kataegis(params$purple_som_snv_vcf) %>%
-  knitr::kable(escape = FALSE, caption = "Kataegis Regions.", format = "html", table.attr = "style='width:30%;'") %>%
+  knitr::kable(escape = FALSE, caption = "Kataegis Regions.",
+               format = "html", format.args = list(big.mark = ",")) %>%
   kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
   kableExtra::scroll_box(height = "250px")
 ```
@@ -732,10 +765,11 @@ knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.somatic.r
 
 ## HRD (Homologous Recombination Deficiency) Detection {#hrd}
 
-### CHORD
 
 <details>
 <summary>Description</summary>
+
+__CHORD__
 
 For more details see <https://github.com/UMCUGenetics/CHORD>.
 
@@ -772,37 +806,43 @@ If this criterion is not met, `hrd_type` will be `cannot_be_determined`, and `re
 The user may of course ignore these remarks and proceed with using the raw probabilities output by CHORD
 (`p_hrd` and/or `p_BRCA1/pBRCA2`).
 
-</details>
-
-
-```{r chord_res}
-tibble::tibble(col = colnames(chord_res$prediction), val = unlist(chord_res$prediction[1, ])) %>%
-  DT::datatable(class = "cell-border display compact",
-                caption = "CHORD Results",
-                rownames = FALSE, extensions = c("Buttons"),
-                options = list(buttons = c('csv', 'excel'), dom = 'Brti', paging = FALSE)) %>%
-  DT::formatStyle(columns = c("col"), fontWeight = 'bold', `text-align` = 'left')
-```
-
-
-### HRDetect
-
-<details>
-<summary>Description</summary>
+__HRDetect__
 
 See https://github.com/Nik-Zainal-Group/signature.tools.lib for the R package
 that includes HRDetect.
 
 </details>
 
-```{r hrdetect_res}
-tibble::tibble(col = colnames(hrdetect_res), val = unlist(hrdetect_res[1, ])) %>%
-  DT::datatable(class = "cell-border display compact",
-                caption = "HRDetect Results",
-                rownames = FALSE, extensions = c("Buttons"),
-                options = list(buttons = c('csv', 'excel'), dom = 'Brti', paging = FALSE)) %>%
-  DT::formatStyle(columns = c("col"), fontWeight = 'bold', `text-align` = 'left')
+
+```{r chord_res}
+hrdetect_res_tab <- tibble::tibble(col = colnames(hrdetect_res),
+                                   val = unlist(hrdetect_res[1, ]))
+chord_res_tab <- tibble::tibble(col = colnames(chord_res$prediction),
+                                val = unlist(chord_res$prediction[1, ]))
+readr::write_tsv(hrdetect_res_tab, file.path(result_outdir, "hrd/hrdetect.tsv"))
+readr::write_tsv(chord_res_tab, file.path(result_outdir, "hrd/chord.tsv"))
+
+colnames(hrdetect_res_tab) <- c("HRDetect", "Results")
+colnames(chord_res_tab) <- c("CHORD", "Results1")
+
+cnames_final <- c("HRDetect", " ", "CHORD", " ", "CHORD (cont.)", " ")
+
+dplyr::bind_cols(
+  hrdetect_res_tab,
+  dplyr::bind_rows(chord_res_tab[1:8, ],
+                   tibble::tribble(
+                     ~CHORD, ~Results1,
+                     " ", " "
+                   )),
+  chord_res_tab[9:17, ] %>%  purrr::set_names(c("CHORD2", "Results2"))
+) %>%
+  dplyr::mutate(HRDetect = kableExtra::cell_spec(HRDetect, bold = TRUE),
+                CHORD = kableExtra::cell_spec(CHORD, bold = TRUE),
+                CHORD2 = kableExtra::cell_spec(CHORD2, bold = TRUE)) %>%
+  knitr::kable(escape = FALSE, caption = "HRD Results", col.names = cnames_final) %>%
+  kableExtra::kable_styling(full_width = FALSE, position = "left")
 ```
+
 
 ## Circos Plots {.tabset .tabset-fade #circos}
 Circos plots are generated by PURPLE.
@@ -1158,6 +1198,7 @@ if (!no_sv_found) {
                   nrow = sprintf(glue::glue("%0{nchar(nrow(.))}d"), nrow)) %>%
     dplyr::select(nrow, dplyr::everything())
 
+
   sv_BND_main <- sv_BND %>%
     dplyr::select(nrow, vcfnum, Tier, Start, End,
                   ID, BND_ID, BND_mate,
@@ -1169,6 +1210,13 @@ if (!no_sv_found) {
   sv_BND_purple <- sv_all %>%
     dplyr::filter(Type %in% c("PURPLE_inf")) %>%
     dplyr::select(Tier, Start, Effect, Detail, Ploidy, CN, CNC, ID)
+
+  readr::write_tsv(
+    dplyr::bind_cols(sv_BND_main, sv_BND_other %>% dplyr::select(-nrow)),
+    file.path(result_outdir, "sv/03_sv_BND_main.tsv"))
+  readr::write_tsv(
+    sv_BND_purple,
+    file.path(result_outdir, "sv/04_sv_BND_purpleinf.tsv"))
 
   sv_BND_maindt <- sv_BND_main %>%
     DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
@@ -1291,19 +1339,29 @@ if (!no_sv_found) {
     dplyr::select(nrow, vcfnum, TierTop, Tier, Type, Start, End, Effect,
                   Genes, Transcript, Detail, SR_alt, PR_alt, AF_PURPLE)
 
+  readr::write_tsv(sv_noBND_main, file.path(result_outdir, "sv/05_sv_noBND_main.tsv"))
+
   sv_noBND_other <- sv_noBND %>%
     dplyr::select(vcfnum, Ploidy, AF_BPI, CNC, CN, SR_PR_ref, SScore) %>%
     dplyr::distinct()
+
+  readr::write_tsv(sv_noBND_other, file.path(result_outdir, "sv/06_sv_noBND_other.tsv"))
 
   sv_noBND_manygenes <- sv_noBND %>%
     dplyr::filter(ngen > max_genes) %>%
     dplyr::select(nrow, vcfnum, Tier, Type, Start, End,
                   Effect, ngen, Genes = Genes_original)
 
+    readr::write_tsv(sv_noBND_manygenes,
+                     file.path(result_outdir, "sv/07_sv_noBND_manygenes.tsv"))
+
   sv_noBND_manytx <- sv_noBND %>%
     dplyr::filter(ntrx > max_transcripts) %>%
     dplyr::select(nrow, vcfnum, Tier, Type, Start, End,
                   Effect, ntrx, Transcript = Transcript_original)
+
+    readr::write_tsv(sv_noBND_manytx,
+                     file.path(result_outdir, "sv/08_sv_noBND_manytranscripts.tsv"))
 
   sv_noBND_maindt <- sv_noBND_main %>%
     DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
@@ -1534,7 +1592,7 @@ purple_cnv_som$tab %>%
   DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
 ```
 
-### Genome-wide Germline CNV Segments
+### Genome-wide __Germline__ CNV Segments
 
 ```{r purple_cnv_germ_tab}
 purple_cnv_germ$tab %>%
@@ -1681,7 +1739,10 @@ conda_pkgs %>%
 ### Report Inputs
 
 ```{r report_inputs}
-dplyr::tibble(key = names(params), value = unlist(params)) %>%
+report_inputs <- dplyr::tibble(key = names(params), value = unlist(params))
+readr::write_tsv(report_inputs, file.path(result_outdir, "report_inputs.tsv"))
+
+report_inputs %>%
   knitr::kable(format = "html") %>%
   kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
   kableExtra::column_spec(1, bold = TRUE) %>%
