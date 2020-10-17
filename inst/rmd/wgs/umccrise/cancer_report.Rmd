@@ -412,7 +412,7 @@ There are several reasons PURPLE may classify a sample as failed:
 summarise_sigs <- function(mut_sig_contr) {
   mut_sig_contr %>%
     head(2) %>%
-    dplyr::mutate(string = paste0(Signature, " (", Contribution, ")")) %>%
+    dplyr::mutate(string = paste0(Signature, " (", Contribution, " - ", Freq, ")")) %>%
     dplyr::pull(string) %>%
     paste(collapse = ", ")
 }
