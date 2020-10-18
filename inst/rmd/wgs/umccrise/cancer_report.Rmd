@@ -109,6 +109,7 @@ tx_ref_genome <- paste0("TxDb.Hsapiens.UCSC.", params$genome_build, ".knownGene"
 library(tx_ref_genome, character.only = TRUE)
 # CRAN
 library(devtools)
+library(details)
 library(DT)
 library(dplyr)
 library(glue)
@@ -157,12 +158,7 @@ sv_detail_table <- function(tab) {
   check_cols_described(colnames(tab), sv_col_descr$Column)
   list(Column = colnames(tab)) %>%
     tibble::as_tibble() %>%
-    dplyr::left_join(sv_col_descr, by = "Column") %>%
-    dplyr::mutate(
-      Column = kableExtra::cell_spec(Column, bold = TRUE)) %>%
-    knitr::kable(escape = FALSE) %>%
-    kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
-    kableExtra::scroll_box(height = "200px")
+    dplyr::left_join(sv_col_descr, by = "Column")
 }
 ```
 
@@ -1065,379 +1061,245 @@ p2
 ```
 
 
-```{r sv_summary, results='asis'}
-if (!no_sv_found) {
-  sv_tier_vs_svtype <- function() {
-    l <- list(unmelted = sv_unmelted %>% dplyr::select(TierTop, Type),
-              melted = sv_all %>% dplyr::select(Tier, Type)) %>%
-      purrr::map(function(x) addmargins(table(x, useNA = 'ifany')))
+```{r sv_summary, results='asis', eval=!no_sv_found}
+sv_tier_vs_svtype <- function() {
+  l <- list(unmelted = sv_unmelted %>% dplyr::select(TierTop, Type),
+            melted = sv_all %>% dplyr::select(Tier, Type)) %>%
+    purrr::map(function(x) addmargins(table(x, useNA = 'ifany')))
 
-    cap_unmelt <- glue::glue("SV type by {htmltools::strong('top')} tier {htmltools::strong('before')}",
-                             "{htmltools::br()}breaking down by annotation")
-    cap_melt <- glue::glue("SV type by {htmltools::strong('individual')} tier {htmltools::strong('after')}",
+  cap_unmelt <- glue::glue("SV type by {htmltools::strong('top')} tier {htmltools::strong('before')}",
                            "{htmltools::br()}breaking down by annotation")
-    unmelted <- knitr::kable(l$unmelted, format = "html", caption = cap_unmelt, output = FALSE) %>%
-      kableExtra::kable_styling(full_width = FALSE, position = "float_right")
-    melted <- knitr::kable(l$melted, format = "html",
-                           caption = cap_melt, output = FALSE) %>%
-      kableExtra::kable_styling(full_width = FALSE, position = "float_right")
+  cap_melt <- glue::glue("SV type by {htmltools::strong('individual')} tier {htmltools::strong('after')}",
+                         "{htmltools::br()}breaking down by annotation")
+  unmelted <- knitr::kable(l$unmelted, format = "html", caption = cap_unmelt, output = FALSE) %>%
+    kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "float_right")
+  melted <- knitr::kable(l$melted, format = "html",
+                         caption = cap_melt, output = FALSE) %>%
+    kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "float_right")
 
-    list(unmelted = unmelted, melted = melted)
-  }
-  cat(c('<table><tr valign="top"><td>', sv_tier_vs_svtype()$unmelted, '</td>', '<td>', sv_tier_vs_svtype()$melted, '</td></tr></table>'), sep = '')
-} else {
-  cat("No SVs called.")
+  list(unmelted = unmelted, melted = melted)
 }
+cat(c(
+  '<table><tr valign="top"><td>',
+  sv_tier_vs_svtype()$unmelted,
+  '</td>', '<td>',
+  sv_tier_vs_svtype()$melted,
+  '</td></tr></table>'),
+  sep = '')
 ```
 
 ### Unmelted Variants {#sv-unmelted}
 
-```{r svtab_raw}
-if (!no_sv_found) {
-  svtab_raw <- sv_unmelted %>%
-    dplyr::select(-annotation) %>%
-    dplyr::arrange(TierTop, vcfnum)
+```{r svtab_raw, eval=!no_sv_found}
+svtab_raw <- sv_unmelted %>%
+  dplyr::select(-annotation) %>%
+  dplyr::arrange(TierTop, vcfnum)
 
-  svtab_rawdt <- svtab_raw %>%
-    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
-                  class = "cell-border display compact",
-                  rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-                  options = list(
-                    scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
-                    buttons = c('csv'), dom = 'Blfrtip'))
-} else {
-  svtab_raw <- NULL
-  svtab_rawdt <- NULL
-}
+svtab_rawdt <- svtab_raw %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(
+                  scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+                  buttons = c('csv'), dom = 'Blfrtip'))
 ```
 
-<details>
-<summary>Description</summary>
 
-```{r}
-if (!no_sv_found) {
-  sv_detail_table(svtab_raw)
-} else {
-  cat("No SVs called.")
-}
-```
-
-</details>
-
-```{r svtab_rawdt}
-if (!no_sv_found) {
-  svtab_rawdt
-} else {
-  cat("No SVs called.")
-}
+```{r svtab_raw_details, eval=!no_sv_found}
+details::details(sv_detail_table(svtab_raw))
+svtab_rawdt
 ```
 
 ### Translocations (BNDs) {.tabset .tabset-fade #translocations}
 
-```{r svtab_BND}
-if (!no_sv_found) {
-  sv_BND <- sv_all %>%
-    dplyr::filter(Type == "BND") %>%
-    dplyr::mutate(nrow = dplyr::row_number(),
-                  nrow = sprintf(glue::glue("%0{nchar(nrow(.))}d"), nrow)) %>%
-    dplyr::select(nrow, dplyr::everything())
+```{r svtab_BND, eval=!no_sv_found}
+sv_BND <- sv_all %>%
+  dplyr::filter(Type == "BND") %>%
+  dplyr::mutate(nrow = dplyr::row_number(),
+                nrow = sprintf(glue::glue("%0{nchar(nrow(.))}d"), nrow)) %>%
+  dplyr::select(nrow, dplyr::everything())
 
 
-  sv_BND_main <- sv_BND %>%
-    dplyr::select(nrow, vcfnum, Tier, Start, End,
-                  ID, BND_ID, BND_mate,
-                  Genes, Effect, Detail, SR_alt, PR_alt, Ploidy, AF_PURPLE)
+sv_BND_main <- sv_BND %>%
+  dplyr::select(nrow, vcfnum, Tier, Start, End,
+                ID, BND_ID, BND_mate,
+                Genes, Effect, Detail, SR_alt, PR_alt, Ploidy, AF_PURPLE)
 
-  sv_BND_other <- sv_BND %>%
-    dplyr::select(nrow, AF_BPI, CNC, CN, SR_PR_ref, SScore, ntrx, Transcript)
+sv_BND_other <- sv_BND %>%
+  dplyr::select(nrow, AF_BPI, CNC, CN, SR_PR_ref, SScore, ntrx, Transcript)
 
-  sv_BND_purple <- sv_all %>%
-    dplyr::filter(Type %in% c("PURPLE_inf")) %>%
-    dplyr::select(Tier, Start, Effect, Detail, Ploidy, CN, CNC, ID)
+sv_BND_purple <- sv_all %>%
+  dplyr::filter(Type %in% c("PURPLE_inf")) %>%
+  dplyr::select(Tier, Start, Effect, Detail, Ploidy, CN, CNC, ID)
 
-  readr::write_tsv(
-    dplyr::bind_cols(sv_BND_main, sv_BND_other %>% dplyr::select(-nrow)),
-    file.path(result_outdir, "sv/03_sv_BND_main.tsv"))
-  readr::write_tsv(
-    sv_BND_purple,
-    file.path(result_outdir, "sv/04_sv_BND_purpleinf.tsv"))
+readr::write_tsv(
+  dplyr::bind_cols(sv_BND_main, sv_BND_other %>% dplyr::select(-nrow)),
+  file.path(result_outdir, "sv/03_sv_BND_main.tsv"))
+readr::write_tsv(
+  sv_BND_purple,
+  file.path(result_outdir, "sv/04_sv_BND_purpleinf.tsv"))
 
-  sv_BND_maindt <- sv_BND_main %>%
-    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
-                  class = "cell-border display compact",
-                  rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-                  options = list(
-                    scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
-                    buttons = c('csv'), dom = 'Blfrtip'))
+sv_BND_maindt <- sv_BND_main %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(
+                  scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+                  buttons = c('csv'), dom = 'Blfrtip'))
 
-  sv_BND_otherdt <- sv_BND_other %>%
-    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
-                  class = "cell-border display compact",
-                  rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-                  options = list(
-                    scroller = TRUE, scrollY = 400, scrollX = TRUE, keys = TRUE, autoWidth = FALSE,
-                    buttons = c('csv'), dom = 'Blfrtip'))
+sv_BND_otherdt <- sv_BND_other %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(
+                  scroller = TRUE, scrollY = 400, scrollX = TRUE, keys = TRUE, autoWidth = FALSE,
+                  buttons = c('csv'), dom = 'Blfrtip'))
 
-  sv_BND_purpledt <- sv_BND_purple %>%
-    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
-                  class = "cell-border display compact",
-                  rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-                  options = list(
-                    scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = TRUE,
-                    buttons = c('csv'),
-                    dom = 'Blfrtip'))
-}
+sv_BND_purpledt <- sv_BND_purple %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+                options = list(
+                  scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = TRUE,
+                  buttons = c('csv'),
+                  dom = 'Blfrtip'))
 ```
 
 #### Main Columns
 
-<details>
-<summary>Description</summary>
-
-```{r}
-if (!no_sv_found) {
-  sv_detail_table(sv_BND_main)
-} else {
-  cat("No SVs called.")
-}
-```
-
-</details>
-
-```{r sv_BND_maindt}
-if (!no_sv_found) {
-  sv_BND_maindt
-} else {
-  cat("No SVs called.")
-}
+```{r sv_BND_main, eval=!no_sv_found}
+details::details(sv_detail_table(sv_BND_main))
+sv_BND_maindt
 ```
 
 #### Other Columns
 
-<details>
-<summary>Description</summary>
-
-```{r}
-if (!no_sv_found) {
-  sv_detail_table(sv_BND_other)
-} else {
-  cat("No SVs called.")
-}
-```
-
-</details>
-
-```{r sv_BND_otherdt}
-if (!no_sv_found) {
-  sv_BND_otherdt
-} else {
-  cat("No SVs called.")
-}
+```{r sv_BND_otherdt, eval=!no_sv_found}
+details::details(sv_detail_table(sv_BND_other))
+sv_BND_otherdt
 ```
 
 #### PURPLE Inferred
 
-<details>
-<summary>Description</summary>
-
-```{r}
-if (!no_sv_found) {
-  sv_detail_table(sv_BND_purple)
-} else {
-  cat("No SVs called.")
-}
-```
-
-</details>
-
-```{r sv_BND_purpledt}
-if (!no_sv_found) {
-  sv_BND_purpledt
-} else {
-  cat("No SVs called.")
-}
+```{r sv_BND_purple, eval=!no_sv_found}
+details::details(sv_detail_table(sv_BND_purple))
+sv_BND_purpledt
 ```
 
 ### DEL/DUP/INS {.tabset .tabset-fade #deldupins}
 
-```{r svtab_noBND}
-if (!no_sv_found) {
-  sv_noBND <- sv_all %>%
-    dplyr::filter(!Type %in% c("BND", "PURPLE_inf")) %>%
-    dplyr::mutate(nrow = dplyr::row_number(),
-                  nrow = sprintf(glue::glue("%0{nchar(nrow(.))}d"), nrow),
-                  Genes_original = Genes,
-                  Transcript_original = Transcript) %>%
-    dplyr::select(-ID)
+```{r svtab_noBND, eval=!no_sv_found}
+sv_noBND <- sv_all %>%
+  dplyr::filter(!Type %in% c("BND", "PURPLE_inf")) %>%
+  dplyr::mutate(nrow = dplyr::row_number(),
+                nrow = sprintf(glue::glue("%0{nchar(nrow(.))}d"), nrow),
+                Genes_original = Genes,
+                Transcript_original = Transcript) %>%
+  dplyr::select(-ID)
 
-  max_genes <- 2
-  max_transcripts <- 2
+max_genes <- 2
+max_transcripts <- 2
 
-  sv_noBND_main <- sv_noBND %>%
-    dplyr::mutate(Genes = ifelse(ngen > max_genes,
-                                 glue::glue("Many Genes ({ngen})"),
-                                 Genes),
-                  Transcript = ifelse(ntrx > max_transcripts,
-                                      glue::glue("Many Transcripts ({ntrx})"),
-                                      Transcript)) %>%
-    dplyr::select(nrow, vcfnum, TierTop, Tier, Type, Start, End, Effect,
-                  Genes, Transcript, Detail, SR_alt, PR_alt, AF_PURPLE)
+sv_noBND_main <- sv_noBND %>%
+  dplyr::mutate(Genes = ifelse(ngen > max_genes,
+                               glue::glue("Many Genes ({ngen})"),
+                               Genes),
+                Transcript = ifelse(ntrx > max_transcripts,
+                                    glue::glue("Many Transcripts ({ntrx})"),
+                                    Transcript)) %>%
+  dplyr::select(nrow, vcfnum, TierTop, Tier, Type, Start, End, Effect,
+                Genes, Transcript, Detail, SR_alt, PR_alt, AF_PURPLE)
 
-  readr::write_tsv(sv_noBND_main, file.path(result_outdir, "sv/05_sv_noBND_main.tsv"))
+readr::write_tsv(sv_noBND_main, file.path(result_outdir, "sv/05_sv_noBND_main.tsv"))
 
-  sv_noBND_other <- sv_noBND %>%
-    dplyr::select(vcfnum, Ploidy, AF_BPI, CNC, CN, SR_PR_ref, SScore) %>%
-    dplyr::distinct()
+sv_noBND_other <- sv_noBND %>%
+  dplyr::select(vcfnum, Ploidy, AF_BPI, CNC, CN, SR_PR_ref, SScore) %>%
+  dplyr::distinct()
 
-  readr::write_tsv(sv_noBND_other, file.path(result_outdir, "sv/06_sv_noBND_other.tsv"))
+readr::write_tsv(sv_noBND_other, file.path(result_outdir, "sv/06_sv_noBND_other.tsv"))
 
-  sv_noBND_manygenes <- sv_noBND %>%
-    dplyr::filter(ngen > max_genes) %>%
-    dplyr::select(nrow, vcfnum, Tier, Type, Start, End,
-                  Effect, ngen, Genes = Genes_original)
+sv_noBND_manygenes <- sv_noBND %>%
+  dplyr::filter(ngen > max_genes) %>%
+  dplyr::select(nrow, vcfnum, Tier, Type, Start, End,
+                Effect, ngen, Genes = Genes_original)
 
-    readr::write_tsv(sv_noBND_manygenes,
-                     file.path(result_outdir, "sv/07_sv_noBND_manygenes.tsv"))
+readr::write_tsv(sv_noBND_manygenes,
+                 file.path(result_outdir, "sv/07_sv_noBND_manygenes.tsv"))
 
-  sv_noBND_manytx <- sv_noBND %>%
-    dplyr::filter(ntrx > max_transcripts) %>%
-    dplyr::select(nrow, vcfnum, Tier, Type, Start, End,
-                  Effect, ntrx, Transcript = Transcript_original)
+sv_noBND_manytx <- sv_noBND %>%
+  dplyr::filter(ntrx > max_transcripts) %>%
+  dplyr::select(nrow, vcfnum, Tier, Type, Start, End,
+                Effect, ntrx, Transcript = Transcript_original)
 
-    readr::write_tsv(sv_noBND_manytx,
-                     file.path(result_outdir, "sv/08_sv_noBND_manytranscripts.tsv"))
+readr::write_tsv(sv_noBND_manytx,
+                 file.path(result_outdir, "sv/08_sv_noBND_manytranscripts.tsv"))
 
-  sv_noBND_maindt <- sv_noBND_main %>%
-    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
-                  class = "cell-border display compact",
-                  rownames = FALSE, extensions = c("Buttons"),
-                  options = list(
-                    pageLength = 20,
-                    autoWidth = FALSE,
-                    buttons = c('csv'), dom = 'Blfrtip'))
+sv_noBND_maindt <- sv_noBND_main %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Buttons"),
+                options = list(
+                  pageLength = 20,
+                  autoWidth = FALSE,
+                  buttons = c('csv'), dom = 'Blfrtip'))
 
-  sv_noBND_otherdt <- sv_noBND_other %>%
-    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
-                  class = "cell-border display compact",
-                  rownames = FALSE, extensions = c("Buttons"),
-                  options = list(
-                    pageLength = 20,
-                    autoWidth = FALSE,
-                    buttons = c('csv'),
-                    dom = 'Blfrtip'))
+sv_noBND_otherdt <- sv_noBND_other %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Buttons"),
+                options = list(
+                  pageLength = 20,
+                  autoWidth = FALSE,
+                  buttons = c('csv'),
+                  dom = 'Blfrtip'))
 
-  sv_noBND_manygenesdt <- sv_noBND_manygenes %>%
-    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
-                  class = "cell-border display compact",
-                  rownames = FALSE, extensions = c("Buttons", "KeyTable"),
-                  options = list(
-                    pageLength = 10,
-                    autoWidth = FALSE, keys = TRUE,
-                    buttons = c('csv'),
-                    dom = 'Blfrtip'))
+sv_noBND_manygenesdt <- sv_noBND_manygenes %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Buttons", "KeyTable"),
+                options = list(
+                  pageLength = 10,
+                  autoWidth = FALSE, keys = TRUE,
+                  buttons = c('csv'),
+                  dom = 'Blfrtip'))
 
-  sv_noBND_manytxdt <- sv_noBND_manytx %>%
-    DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
-                  class = "cell-border display compact",
-                  rownames = FALSE, extensions = c("Buttons", "KeyTable"),
-                  options = list(
-                    pageLength = 10,
-                    autoWidth = FALSE, keys = TRUE,
-                    buttons = c('csv'),
-                    dom = 'Blfrtip'))
-}
+sv_noBND_manytxdt <- sv_noBND_manytx %>%
+  DT::datatable(filter = list(position = "top", clear = FALSE, plain = TRUE),
+                class = "cell-border display compact",
+                rownames = FALSE, extensions = c("Buttons", "KeyTable"),
+                options = list(
+                  pageLength = 10,
+                  autoWidth = FALSE, keys = TRUE,
+                  buttons = c('csv'),
+                  dom = 'Blfrtip'))
 ```
 
 #### Main Columns
 
-<details>
-<summary>Description</summary>
-
-```{r}
-if (!no_sv_found) {
-  sv_detail_table(sv_noBND_main)
-} else {
-  cat("No SVs called.")
-}
-```
-
-</details>
-
-```{r sv_noBND_maindt}
-if (!no_sv_found) {
-  sv_noBND_maindt
-} else {
-  cat("No SVs called.")
-}
+```{r sv_noBND_main, eval=!no_sv_found}
+details::details(sv_detail_table(sv_noBND_main))
+sv_noBND_maindt
 ```
 
 #### Other Columns
 
-<details>
-<summary>Description</summary>
-
-```{r}
-if (!no_sv_found) {
-  sv_detail_table(sv_noBND_other)
-} else {
-  cat("No SVs called.")
-}
-```
-
-</details>
-
-```{r sv_noBND2_dt}
-if (!no_sv_found) {
-  sv_noBND_otherdt
-} else {
-  cat("No SVs called.")
-}
+```{r sv_noBND2_other, eval=!no_sv_found}
+details::details(sv_detail_table(sv_noBND_other))
+sv_noBND_otherdt
 ```
 
 #### Many Genes
 
-<details>
-<summary>Description</summary>
-
-```{r}
-if (!no_sv_found) {
-  sv_detail_table(sv_noBND_manygenes)
-} else {
-  cat("No SVs called.")
-}
-```
-
-</details>
-
-```{r sv_noBND_manygenesdt}
-if (!no_sv_found) {
-  sv_noBND_manygenesdt
-} else {
-  cat("No SVs called.")
-}
+```{r sv_noBND_manygenes, eval=!no_sv_found}
+details::details(sv_detail_table(sv_noBND_manygenes))
+sv_noBND_manygenesdt
 ```
 
 #### Many Transcripts
 
-<details>
-<summary>Description</summary>
-
-```{r}
-if (!no_sv_found) {
-  sv_detail_table(sv_noBND_manytx)
-} else {
-  cat("No SVs called.")
-}
-```
-
-</details>
-
-```{r sv_noBND_manytxdt}
-if (!no_sv_found) {
-  sv_noBND_manytxdt
-} else {
-  cat("No SVs called.")
-}
+```{r sv_noBND_manytx, eval=!no_sv_found}
+details::details(sv_detail_table(sv_noBND_manytx))
+sv_noBND_manytxdt
 ```
 
 ## Copy Number Variants
