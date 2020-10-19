@@ -445,8 +445,10 @@ if (no_sv_found) {
 
 qc_summary_all <- dplyr::tribble(
   ~n, ~variable, ~value, ~details,
-  5, "Top MutSigs", glue::glue("Old: {summarise_sigs(mut_sig_contr)} ",
-                                "- New: {summarise_sigs(mut_sig_contr2)}"), "",
+  5, "Top MutSigs", glue::glue("Old: {summarise_sigs(mut_sig_contr)}",
+                                "New: {summarise_sigs(mut_sig_contr2)}", .sep = "\n"),
+  glue::glue("Old: v2 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
+             "New: v3 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)", .sep = "\n"),
   6, "HRD", glue::glue("CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"), "",
   16, "CNVs (Somatic)", glue::glue("Min: {cnv_summary['Min']}; ",
                                    "Max: {cnv_summary['Max']}; ",
@@ -464,6 +466,7 @@ readr::write_tsv(qc_summary_all, file.path(result_outdir, "qc_summary.tsv"))
 
 qc_summary_all %>%
   dplyr::mutate(
+    details = kableExtra::cell_spec(details),
     variable = kableExtra::cell_spec(variable, bold = TRUE),
     value = kableExtra::cell_spec(
       value,
