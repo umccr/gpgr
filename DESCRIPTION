@@ -1,6 +1,6 @@
 Package: gpgr
 Title: Genomics Platform Group Reporting
-Version: 0.0.10
+Version: 0.0.11
 Description: Reports and functions used in the Genomics Platform Group
              at the University of Melbourne Centre for Cancer Research.
 Authors@R: 
