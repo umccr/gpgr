@@ -447,7 +447,7 @@ purple_snv_vcf_read <- function(x) {
 #'
 #' @param x Path to the `purple.somatic.vcf.gz` file.
 #'
-#' @return
+#' @return A tibble with the chr:pos of the mutation, and its kataegis cluster ID.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr")

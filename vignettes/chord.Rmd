@@ -92,7 +92,7 @@ si_pl <- unclass(si$platform) %>% as_tibble() %>% t()
 pkgs_of_interest <- c("base", "gpgr", "CHORD", "mutSigExtractor")
 si_pkg <- unclass(si$packages) %>%
   dplyr::as_tibble() %>%
-  dplyr::select(package, version = ondiskversion, datestamp = date, source) %>%
+  dplyr::select(package, version = ondiskversion, datestamp = date) %>%
   dplyr::filter(package %in% pkgs_of_interest)
 
 dplyr::tibble(var = row.names(si_pl),

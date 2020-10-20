@@ -17,6 +17,6 @@ Reads the Manta TSV file output by umccrise.
 }
 \examples{
 x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-(sv <- umccrise_read_sv_tsv(x))
+(sv <- umccrise_read_sv_tsv(x)$data)
 
 }

@@ -7,7 +7,7 @@ test_that("Function split_double_col() @ L26", {
   x <- tibble::tibble(a = letters[1:11],
                       b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))),
                       nacol = rep(NA, 11),
-                      namix = sample(c(NA, "0.4,0.6"), 11, replace = T))
+                      namix = sample(c(NA, "0.4,0.6"), 11, replace = TRUE))
   (b <- gpgr:::split_double_col(x, "b"))
   (nacol <- gpgr:::split_double_col(x, "nacol"))
   (namix <- gpgr:::split_double_col(x, "namix"))
@@ -52,19 +52,19 @@ test_that("Function abbreviate_effect() @ L113", {
 test_that("Function umccrise_read_sv_tsv() @ L146", {
   
   x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-  (sv <- umccrise_read_sv_tsv(x))
+  (sv <- umccrise_read_sv_tsv(x)$data)
   
   expect_equal(colnames(sv)[ncol(sv)], "ALT")
 })
 
 
-test_that("Function process_sv() @ L181", {
+test_that("Function process_sv() @ L202", {
   
   x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
   (sv <- process_sv(x))
   
   expect_true(inherits(sv, "list"))
-  expect_equal(length(sv), 2)
-  expect_equal(names(sv), c("unmelted", "melted"))
+  expect_equal(length(sv), 4)
+  expect_equal(names(sv), c("unmelted", "melted", "tsv_descr", "col_descr"))
 })
 

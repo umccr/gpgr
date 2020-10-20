@@ -195,8 +195,8 @@ umccrise_read_sv_tsv <- function(x) {
 #'
 #' @testexamples
 #' expect_true(inherits(sv, "list"))
-#' expect_equal(length(sv), 2)
-#' expect_equal(names(sv), c("unmelted", "melted"))
+#' expect_equal(length(sv), 4)
+#' expect_equal(names(sv), c("unmelted", "melted", "tsv_descr", "col_descr"))
 #'
 #' @export
 process_sv <- function(x) {
