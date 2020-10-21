@@ -130,11 +130,6 @@ library(gpgr)
 ```{r funcs}
 img_dir <- file.path("img") # created when copying purple files to tmp dir
 result_outdir <- params$result_outdir # directory to write tables to
-dir.create(result_outdir, recursive = TRUE)
-dir.create(file.path(result_outdir, "hrd"), recursive = TRUE)
-dir.create(file.path(result_outdir, "sv"), recursive = TRUE)
-dir.create(file.path(result_outdir, "purple"), recursive = TRUE)
-dir.create(file.path(result_outdir, "sigs"), recursive = TRUE)
 
 # for checking if the columns in the dt are all described
 check_cols_described <- function(cols, descr) {
@@ -162,14 +157,26 @@ sv_detail_table <- function(tab) {
     dplyr::left_join(sv_col_descr, by = "Column")
 }
 
+mkdir <- function(d) {
+  if (!dir.exists(d)) {
+    dir.create(d, recursive = TRUE)
+  }
+}
+
 write_tsvgz <- function(x, path, ...) {
   assertthat::assert_that(endsWith(path, ".gz"))
-  readr::write_tsv(x = x, path = file.path(result_outdir, path), ...)
+  tsv_path <- file.path(result_outdir, path)
+  mkdir(dirname(tsv_path))
+  readr::write_tsv(x = x, path = tsv_path, ...)
 }
 
 write_jsongz <- function(x, path, ...) {
   assertthat::assert_that(endsWith(path, ".gz"))
-  jsonlite::write_json(x = x, path = gzfile(file.path(result_outdir, "json",  path), open = "w"), ...)
+  json_path <- file.path(result_outdir, "json",  path)
+  mkdir(dirname(json_path))
+  gz <- gzfile(json_path, open = "w")
+  jsonlite::write_json(x = x, path = gz, ...)
+  close(gz)
 }
 
 write_tsvjsongz <- function(x, path, ...) {
@@ -212,7 +219,7 @@ af_stats <- af_both %>%
   tidyr::complete(set, fill = list(n = 0))
 ```
 
-```{r hrd_prep, results='hide'}
+```{r hrd_prep}
 #---- Homologous Recombination Deficiency ----#
 chord_sv_df <- gpgr::chord_mantavcf2df(params$somatic_sv_vcf)
 chord_res <- gpgr::chord_run(
@@ -433,7 +440,7 @@ There are several reasons PURPLE may classify a sample as failed:
 
 ```{r summary_tables}
 summarise_sigs <- function(mut_sig_contr) {
-  mut_sig_contr %>%
+  mut_sig_contr1 %>%
     head(2) %>%
     dplyr::mutate(string = paste0(Signature, " (", Contribution, " - ", Freq, ")")) %>%
     dplyr::pull(string) %>%
@@ -466,7 +473,7 @@ if (no_sv_found) {
 
 qc_summary_all <- dplyr::tribble(
   ~n, ~variable, ~value, ~details,
-  5, "Top MutSigs", glue::glue("Old: {summarise_sigs(mut_sig_contr)}",
+  5, "Top MutSigs", glue::glue("Old: {summarise_sigs(mut_sig_contr1)}",
                                 "New: {summarise_sigs(mut_sig_contr2)}", .sep = "\n"),
   glue::glue("Old: v2 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
              "New: v3 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)", .sep = "\n"),
@@ -482,8 +489,6 @@ qc_summary_all <- dplyr::tribble(
     purple_qc_summary
   ) %>%
   dplyr::arrange(n)
-
-write_tsvjsongz(qc_summary_all, "qc_summary")
 
 qc_summary_all %>%
   dplyr::mutate(
@@ -502,7 +507,6 @@ qc_summary_all %>%
         TRUE ~ "black"))) %>%
   knitr::kable(escape = FALSE) %>%
   kableExtra::kable_styling(full_width = FALSE, position = "left")
-
 ```
 
 ## Somatic Mutation Profiles
@@ -712,7 +716,7 @@ sig_table <-
                 signature = paste0("Sig", signature)) %>%
   dplyr::select(Signature = signature, Description = description, Plot)
 
-mut_sig_contr %>%
+mut_sig_contr1 %>%
   dplyr::left_join(sig_table, by = "Signature") %>%
   knitr::kable() %>%
   kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
