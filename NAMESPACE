@@ -3,6 +3,7 @@
 export("%>%")
 export(chord_mantavcf2df)
 export(chord_run)
+export(hrd_summary)
 export(hrdetect_prep_cnv)
 export(hrdetect_prep_snvindel)
 export(hrdetect_prep_sv)
