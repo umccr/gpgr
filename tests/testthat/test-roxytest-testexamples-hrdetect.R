@@ -82,7 +82,7 @@ test_that("Function hrdetect_run() @ L296", {
   (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir))
   
   expect_equal(colnames(res), c("sample", "Probability", "intercept", "del.mh.prop", "SNV3",
-                                "SV3", "SV5", "hrd", "SNV8"))
+                                "SV3", "SV5", "hrdloh_index", "SNV8"))
   expect_true(inherits(res, "data.frame"))
 })
 

@@ -56,6 +56,17 @@ chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL, sample.name =
                                     rf.model = CHORD::CHORD,
                                     do.bootstrap = TRUE, verbose = FALSE)
 
+  # custom order of prediction rows
+  col_order <- c("sample", "p_hrd", "hr_status",
+                 "hrd_type", "p_BRCA1", "p_BRCA2",
+                 "remarks_hr_status", "remarks_hrd_type",
+                 "p_hrd.5%", "p_hrd.50%", "p_hrd.95%",
+                 "p_BRCA1.5%", "p_BRCA1.50%", "p_BRCA1.95%",
+                 "p_BRCA2.5%", "p_BRCA2.50%", "p_BRCA2.95%")
+
+  assertthat::assert_that(all(names(prediction) %in% col_order))
+  prediction <- prediction[col_order]
+
   list(
     contexts = contexts,
     prediction = prediction

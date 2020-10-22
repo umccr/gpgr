@@ -52,8 +52,7 @@ res <- gpgr::hrdetect_run(
   cnv_tsv = cnv_tsv,
   genome = "hg38",
   snvoutdir = tempdir()
-) %>%
-  dplyr::mutate(dplyr::across(where(is.numeric), ~ round(.x, 3)))
+)
 ```
 
 ## Results

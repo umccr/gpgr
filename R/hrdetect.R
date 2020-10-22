@@ -289,7 +289,7 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #'
 #' @testexamples
 #' expect_equal(colnames(res), c("sample", "Probability", "intercept", "del.mh.prop", "SNV3",
-#'                               "SV3", "SV5", "hrd", "SNV8"))
+#'                               "SV3", "SV5", "hrdloh_index", "SNV8"))
 #' expect_true(inherits(res, "data.frame"))
 #'
 #' @export
@@ -335,5 +335,8 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
 
   res %>%
     tibble::as_tibble(rownames = "sample", .name_repair = "check_unique") %>%
-    dplyr::relocate(.data$Probability, .after = .data$sample)
+    dplyr::relocate(.data$Probability, .after = .data$sample) %>%
+    dplyr::rename(hrdloh_index = .data$hrd) %>%
+    dplyr::mutate(
+      dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 3))
 }
