@@ -158,34 +158,6 @@ sv_detail_table <- function(tab) {
     dplyr::left_join(sv_col_descr, by = "Column")
 }
 
-mkdir <- function(d) {
-  if (!dir.exists(d)) {
-    dir.create(d, recursive = TRUE)
-  }
-}
-
-write_tsvgz <- function(x, path, ...) {
-  assertthat::assert_that(endsWith(path, ".gz"))
-  tsv_path <- file.path(result_outdir, path)
-  mkdir(dirname(tsv_path))
-  readr::write_tsv(x = x, file = tsv_path, ...)
-}
-
-write_jsongz <- function(x, path, ...) {
-  assertthat::assert_that(endsWith(path, ".gz"))
-  json_path <- file.path(result_outdir, "json",  path)
-  mkdir(dirname(json_path))
-  gz <- gzfile(json_path, open = "w")
-  jsonlite::write_json(x = x, path = gz, ...)
-  close(gz)
-}
-
-write_tsvjsongz <- function(x, path, ...) {
-  json_path <- paste0(path, ".json.gz")
-  tsv_path <- paste0(path, ".tsv.gz")
-  write_tsvgz(x, tsv_path)
-  write_jsongz(x, json_path)
-}
 ```
 
 ```{r allele_freq_prep}

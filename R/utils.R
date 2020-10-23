@@ -136,3 +136,71 @@ tsv_is_empty <- function(x, comment = "##", col_types = readr::cols(.default = "
   }
   return(FALSE)
 }
+
+#' Make Directory
+#'
+#' Creates a directory.
+#'
+#' @param d Directory to create.
+#'
+#' @return If directory exists, do nothing. If it doesn't, create it and return
+#' invisibly a logical indicating if the operation succeeded.
+#'
+#' @export
+mkdir <- function(d) {
+  if (!dir.exists(d)) {
+    dir.create(d, recursive = TRUE)
+  }
+}
+
+#' Write a data frame to a tab delimited gzipped file
+#'
+#' Writes a data frame to a tab delimited gzipped file.
+#'
+#' @param x A data frame or tibble to write to disk.
+#' @param file File or connection to write to.
+#' @param ... Additional arguments passed to [readr::write_tsv()].
+#'
+#' @return Returns the input `x` invisibly.
+#'
+#' @export
+write_tsvgz <- function(x, file, ...) {
+  assertthat::assert_that(endsWith(file, ".gz"), inherits(x, "data.frame"))
+  mkdir(dirname(path))
+  readr::write_tsv(x = x, file = file, ...)
+}
+
+#' Write gzipped JSON
+#'
+#' Serializes an object to JSON and writes to a gzipped file.
+#'
+#' @param x An object to be serialized to JSON.
+#' @param path File on disk.
+#' @param ... Additional arguments passed to [jsonlite::write_json()]
+#'
+#' @export
+write_jsongz <- function(x, path, ...) {
+  assertthat::assert_that(endsWith(path, ".gz"))
+  mkdir(dirname(json_path))
+  gz <- gzfile(path, open = "w")
+  jsonlite::write_json(x = x, path = gz, ...)
+  close(gz)
+}
+
+#' Write a data frame to gzipped TSV and JSON files
+#'
+#' Writes a data frame to gzipped TSV and JSON files. Files
+#' will be written to `maindir/<path>.tsv.gz` and `maindir/json/<path>.json.gz`.
+#'
+#' @param x The data frame to write.
+#' @param path Relative path to write the files to, sans the file extensions -
+#' these will be appended appropriately.
+#' @param maindir Main directory to write the files to.
+#'
+#' @export
+write_tsvjsongz <- function(x, path, maindir) {
+  json_path <- paste0(path, ".json.gz")
+  tsv_path <- paste0(path, ".tsv.gz")
+  write_tsvgz(x, file.path(maindir, tsv_path))
+  write_jsongz(x, file.path(maindir, json_path))
+}
