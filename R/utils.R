@@ -166,7 +166,7 @@ mkdir <- function(d) {
 #' @export
 write_tsvgz <- function(x, file, ...) {
   assertthat::assert_that(endsWith(file, ".gz"), inherits(x, "data.frame"))
-  mkdir(dirname(path))
+  mkdir(dirname(file))
   readr::write_tsv(x = x, file = file, ...)
 }
 
@@ -181,7 +181,7 @@ write_tsvgz <- function(x, file, ...) {
 #' @export
 write_jsongz <- function(x, path, ...) {
   assertthat::assert_that(endsWith(path, ".gz"))
-  mkdir(dirname(json_path))
+  mkdir(dirname(path))
   gz <- gzfile(path, open = "w")
   jsonlite::write_json(x = x, path = gz, ...)
   close(gz)
@@ -202,5 +202,5 @@ write_tsvjsongz <- function(x, path, maindir) {
   json_path <- paste0(path, ".json.gz")
   tsv_path <- paste0(path, ".tsv.gz")
   write_tsvgz(x, file.path(maindir, tsv_path))
-  write_jsongz(x, file.path(maindir, json_path))
+  write_jsongz(x, file.path(maindir, "json", json_path))
 }
