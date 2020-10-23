@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read PURPLE QC file — purple_qc_read • gpgr</title>
+<title>Write gzipped JSON — write_jsongz • gpgr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Read PURPLE QC file — purple_qc_read" />
-<meta property="og:description" content="Reads the purple.qc file." />
+<meta property="og:title" content="Write gzipped JSON — write_jsongz" />
+<meta property="og:description" content="Serializes an object to JSON and writes to a gzipped file." />
 
 
 
@@ -126,59 +126,35 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read PURPLE QC file</h1>
-    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/purple.R'><code>R/purple.R</code></a></small>
-    <div class="hidden name"><code>purple_qc_read.Rd</code></div>
+    <h1>Write gzipped JSON</h1>
+    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>write_jsongz.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Reads the <code>purple.qc</code> file.</p>
+    <p>Serializes an object to JSON and writes to a gzipped file.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>purple_qc_read</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>write_jsongz</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>path</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>Path to the <code>purple.qc</code> file.</p></td>
+      <td><p>An object to be serialized to JSON.</p></td>
+    </tr>
+    <tr>
+      <th>path</th>
+      <td><p>File on disk.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional arguments passed to <code><a href='https://rdrr.io/pkg/jsonlite/man/read_json.html'>jsonlite::write_json()</a></code></p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The input file as a tibble and a summarised tibble with a
-description of each metric.</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/purple/purple.qc"</span>, package <span class='op'>=</span> <span class='st'>"gpgr"</span><span class='op'>)</span>
-<span class='op'>(</span><span class='va'>q</span> <span class='op'>&lt;-</span> <span class='fu'>purple_qc_read</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $raw
-#&gt; <span style='color: #555555;'># A tibble: 10 x 2</span><span>
-#&gt;    key                 value 
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>               </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> 
-#&gt; </span><span style='color: #555555;'> 1</span><span> QCStatus            PASS  
-#&gt; </span><span style='color: #555555;'> 2</span><span> SegmentPass         TRUE  
-#&gt; </span><span style='color: #555555;'> 3</span><span> GenderPass          TRUE  
-#&gt; </span><span style='color: #555555;'> 4</span><span> DeletedGenesPass    TRUE  
-#&gt; </span><span style='color: #555555;'> 5</span><span> SegmentScore        0     
-#&gt; </span><span style='color: #555555;'> 6</span><span> UnsupportedSegments 0     
-#&gt; </span><span style='color: #555555;'> 7</span><span> Ploidy              1.8658
-#&gt; </span><span style='color: #555555;'> 8</span><span> AmberGender         MALE  
-#&gt; </span><span style='color: #555555;'> 9</span><span> CobaltGender        MALE  
-#&gt; </span><span style='color: #555555;'>10</span><span> DeletedGenes        0     
-#&gt; 
-#&gt; $summary
-#&gt; </span><span style='color: #555555;'># A tibble: 4 x 4</span><span>
-#&gt;       n variable      value  details                    
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span>                     
-#&gt; </span><span style='color: #555555;'>1</span><span>     1 QC_Status     PASS   </span><span style='color: #555555;'>""</span><span>                         
-#&gt; </span><span style='color: #555555;'>2</span><span>    13 Segment_Pass  TRUE   </span><span style='color: #555555;'>"</span><span>Score: 0; Unsupported: 0</span><span style='color: #555555;'>"</span><span> 
-#&gt; </span><span style='color: #555555;'>3</span><span>    14 Gender_Pass   TRUE   </span><span style='color: #555555;'>"</span><span>Amber: MALE; Cobalt: MALE</span><span style='color: #555555;'>"</span><span>
-#&gt; </span><span style='color: #555555;'>4</span><span>    15 DelGenes_Pass TRUE   </span><span style='color: #555555;'>"</span><span>count: 0</span><span style='color: #555555;'>"</span><span>                 
-#&gt; </div><div class='input'>
-</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

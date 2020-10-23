@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.12</span>
       </span>
     </div>
 
@@ -82,13 +82,14 @@
 
       
 
-      </header><script src="hrdetect_files/header-attrs-2.4/header-attrs.js"></script><div class="row">
+      </header><script src="hrdetect_files/header-attrs-2.5/header-attrs.js"></script><link href="hrdetect_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="hrdetect_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>HRDetect</h1>
                         <h4 class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-10-20</h4>
+            <h4 class="date">2020-10-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/hrdetect.Rmd"><code>vignettes/hrdetect.Rmd</code></a></small>
       <div class="hidden name"><code>hrdetect.Rmd</code></div>
@@ -127,8 +128,7 @@
   cnv_tsv <span class="op">=</span> <span class="va">cnv_tsv</span>,
   genome <span class="op">=</span> <span class="st">"hg38"</span>,
   snvoutdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu">where</span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">.x</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span>
 <span class="co">#&gt; [info HRDetect_pipeline] Single Nucleotide Variations</span>
 <span class="co">#&gt; [info HRDetect_pipeline] Structural Variants (Rearrangements)</span>
 <span class="co">#&gt; [info HRDetect_pipeline] Some samples in the input data_matrix do not have the exposures for SV3 and SV5, checking if the user supplied SV catalogues or BEDPE files for those samples.</span>
@@ -172,7 +172,7 @@ sample_A
 Probability
 </td>
 <td style="text-align:left;">
-0.805
+0.806
 </td>
 </tr>
 <tr>
@@ -196,7 +196,7 @@ del.mh.prop
 SNV3
 </td>
 <td style="text-align:left;">
-2.437
+2.442
 </td>
 </tr>
 <tr>
@@ -217,7 +217,7 @@ SV5
 </tr>
 <tr>
 <td style="text-align:left;">
-hrd
+hrdloh_index
 </td>
 <td style="text-align:left;">
 -1.952
@@ -319,7 +319,7 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-10-20
+2020-10-23
 </td>
 </tr>
 </tbody>
@@ -356,10 +356,10 @@ base
 gpgr
 </td>
 <td style="text-align:left;">
-0.0.11
+0.0.12
 </td>
 <td style="text-align:left;">
-2020-10-20
+2020-10-23
 </td>
 </tr>
 <tr>
@@ -370,7 +370,7 @@ signature.tools.lib
 0.0.0.9000
 </td>
 <td style="text-align:left;">
-2020-09-29
+2020-10-22
 </td>
 </tr>
 </tbody>

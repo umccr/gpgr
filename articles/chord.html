@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.12</span>
       </span>
     </div>
 
@@ -82,13 +82,14 @@
 
       
 
-      </header><script src="chord_files/header-attrs-2.4/header-attrs.js"></script><div class="row">
+      </header><script src="chord_files/header-attrs-2.5/header-attrs.js"></script><link href="chord_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="chord_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>CHORD</h1>
                         <h4 class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-10-20</h4>
+            <h4 class="date">2020-10-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/chord.Rmd"><code>vignettes/chord.Rmd</code></a></small>
       <div class="hidden name"><code>chord.Rmd</code></div>
@@ -205,9 +206,9 @@
 <span class="co">#&gt;   .. ..$ : chr [1:145] "A[C&gt;A]A" "A[C&gt;A]C" "A[C&gt;A]G" "A[C&gt;A]T" ...</span>
 <span class="co">#&gt;  $ prediction:'data.frame':  1 obs. of  17 variables:</span>
 <span class="co">#&gt;   ..$ sample           : chr "sample_A"</span>
-<span class="co">#&gt;   ..$ p_BRCA1          : num 0.156</span>
-<span class="co">#&gt;   ..$ p_BRCA2          : num 0.648</span>
 <span class="co">#&gt;   ..$ p_hrd            : num 0.804</span>
+<span class="co">#&gt;   ..$ hr_status        : chr "HR_deficient"</span>
+<span class="co">#&gt;   ..$ hrd_type         : chr "BRCA2_type"</span>
 <span class="co">#&gt;   .. [list output truncated]</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">prediction</span><span class="op">)</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">prediction</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -236,22 +237,6 @@ sample_A
 </tr>
 <tr>
 <td style="text-align:left;">
-p_BRCA1
-</td>
-<td style="text-align:left;">
-0.156
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_BRCA2
-</td>
-<td style="text-align:left;">
-0.648
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 p_hrd
 </td>
 <td style="text-align:left;">
@@ -276,6 +261,22 @@ BRCA2_type
 </tr>
 <tr>
 <td style="text-align:left;">
+p_BRCA1
+</td>
+<td style="text-align:left;">
+0.156
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p_BRCA2
+</td>
+<td style="text-align:left;">
+0.648
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 remarks_hr_status
 </td>
 <td style="text-align:left;">
@@ -290,58 +291,10 @@ remarks_hrd_type
 </tr>
 <tr>
 <td style="text-align:left;">
-p_BRCA1.5%
-</td>
-<td style="text-align:left;">
-0.0997
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_BRCA1.50%
-</td>
-<td style="text-align:left;">
-0.178
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_BRCA1.95%
-</td>
-<td style="text-align:left;">
-0.2939
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_BRCA2.5%
-</td>
-<td style="text-align:left;">
-0.5171
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_BRCA2.50%
-</td>
-<td style="text-align:left;">
-0.615
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_BRCA2.95%
-</td>
-<td style="text-align:left;">
-0.6773
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 p_hrd.5%
 </td>
 <td style="text-align:left;">
-0.746
+0.784
 </td>
 </tr>
 <tr>
@@ -349,7 +302,7 @@ p_hrd.5%
 p_hrd.50%
 </td>
 <td style="text-align:left;">
-0.797
+0.802
 </td>
 </tr>
 <tr>
@@ -357,7 +310,55 @@ p_hrd.50%
 p_hrd.95%
 </td>
 <td style="text-align:left;">
-0.8205
+0.811
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p_BRCA1.5%
+</td>
+<td style="text-align:left;">
+0.081
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p_BRCA1.50%
+</td>
+<td style="text-align:left;">
+0.18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p_BRCA1.95%
+</td>
+<td style="text-align:left;">
+0.307
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p_BRCA2.5%
+</td>
+<td style="text-align:left;">
+0.517
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p_BRCA2.50%
+</td>
+<td style="text-align:left;">
+0.61
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p_BRCA2.95%
+</td>
+<td style="text-align:left;">
+0.706
 </td>
 </tr>
 </tbody>
@@ -665,7 +666,7 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-10-20
+2020-10-23
 </td>
 </tr>
 </tbody>
@@ -705,7 +706,7 @@ CHORD
 2.0
 </td>
 <td style="text-align:left;">
-2020-09-08
+2020-10-22
 </td>
 </tr>
 <tr>
@@ -713,10 +714,10 @@ CHORD
 gpgr
 </td>
 <td style="text-align:left;">
-0.0.11
+0.0.12
 </td>
 <td style="text-align:left;">
-2020-10-20
+2020-10-23
 </td>
 </tr>
 <tr>
@@ -727,7 +728,7 @@ mutSigExtractor
 1.13
 </td>
 <td style="text-align:left;">
-2020-09-08
+2020-10-22
 </td>
 </tr>
 </tbody>
