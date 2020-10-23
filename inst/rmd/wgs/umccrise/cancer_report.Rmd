@@ -768,7 +768,7 @@ gpgr::purple_kataegis(params$purple_som_snv_vcf) %>%
   kableExtra::scroll_box(height = "250px")
 ```
 
-```{r purple_plot_somaticrainfall, out.width="90%"}
+```{r purple_plot_somaticrainfall, out.width="80%"}
 knitr::include_graphics(file.path(img_dir, paste0(params$batch_name, '.somatic.rainfall.png')))
 ```
 

@@ -35,6 +35,7 @@ requirements:
     - r-dplyr
     - r-ggplot2
     - r-glue
+    - r-gt
     - r-gtools
     - r-jsonlite
     - r-purrr
@@ -58,6 +59,7 @@ requirements:
     - r-dplyr
     - r-ggplot2
     - r-glue
+    - r-gt
     - r-gtools
     - r-jsonlite
     - r-purrr
