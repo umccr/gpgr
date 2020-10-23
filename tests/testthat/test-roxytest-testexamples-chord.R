@@ -16,7 +16,7 @@ test_that("Function chord_run() @ L32", {
 })
 
 
-test_that("Function chord_mantavcf2df() @ L93", {
+test_that("Function chord_mantavcf2df() @ L97", {
   
   in_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
   d <- chord_mantavcf2df(in_vcf)

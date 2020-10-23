@@ -417,18 +417,16 @@ summarise_sigs <- function(mut_sig_contr) {
     paste(collapse = ", ")
 }
 
-hrd_summary <- list(chord = round(chord_res[["prediction"]][, "p_hrd", drop = TRUE], 3),
-                    hrdetect = round(hrdetect_res[, "Probability", drop = TRUE], 3))
+hrd_summary <- list(chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
+                    hrdetect = hrdetect_res[, "Probability", drop = TRUE])
 
 cnv_summary <-
   list(som = purple_cnv_som$tab, germ = purple_cnv_germ$tab) %>%
-  dplyr::bind_rows(.id = "group") %>%
-  dplyr::group_by(group) %>%
-  dplyr::summarise(
+  purrr::map(~ dplyr::summarise(
+    .x,
     Min = round(min(CN), 2),
     Max = round(max(CN), 2),
-    N = dplyr::n(), .groups = "drop_last") %>%
-  base::split(.$group)
+    N = dplyr::n(), .groups = "drop_last"))
 
 if (no_sv_found) {
   sv_summary <- tibble(unmelted = c(0), melted = c(0))
@@ -840,7 +838,7 @@ that includes HRDetect.
 </details>
 
 ```{r chord_hrdetect_res}
-hrd_results <- gpgr::hrd_summary(hrdetect_res, chord_res)
+hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, chord_res)
 gpgr::write_tsvjsongz(hrd_results$hrd_results_tab, "hrd/chord_hrdetect", result_outdir)
 hrd_results$hrd_results_gt
 ```

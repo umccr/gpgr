@@ -17,11 +17,11 @@
 #' snvoutdir <- tempdir()
 #' hrdetect_res <- hrdetect_run(nm, snv, sv, cnv, genome, snvoutdir)
 #' chord_res <- chord_run(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = nm)
-#' hrd_summary(hrdetect_res = hrdetect_res, chord_res = chord_res)
+#' hrd_results_tabs(hrdetect_res = hrdetect_res, chord_res = chord_res)
 #' }
 #'
 #' @export
-hrd_summary <- function(hrdetect_res, chord_res) {
+hrd_results_tabs <- function(hrdetect_res, chord_res) {
 
   sn <- chord_res$prediction[, "sample", drop = T]
   assertthat::are_equal(hrdetect_res[, "sample", drop = T], sn)
