@@ -103,11 +103,82 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
         columns = c("CHORD"),
         rows = dplyr::everything()
       )
-    )
+    ) %>%
+    gt::tab_options(table.align = "left")
 
   list(sample = sn,
        hrd_results_tab = hrd_results_tab,
        hrd_results_gt = hrd_results_gt
   )
+
+}
+
+
+#' umccrise AF summary
+#'
+#' Get summary table and plot for SNV allele frequencies output by umccrise.
+#'
+#' @param af_global_file Path to 'global' AF file.
+#' @param af_keygenes_file Path to 'keygenes' AF file.
+#'
+#' @return A list containing a gt table and a plot summarising AFs.
+#'
+#' @export
+af_summary <- function(af_global_file, af_keygenes_file) {
+  af_global <-
+    readr::read_tsv(af_global_file, col_types = "d") %>%
+    dplyr::mutate(set = "Global")
+
+  af_keygenes <-
+    readr::read_tsv(af_keygenes_file, col_types = "cicccd") %>%
+    dplyr::select(.data$af) %>%
+    dplyr::mutate(set = 'Key genes CDS')
+
+  af_both <-
+    dplyr::bind_rows(af_global, af_keygenes) %>%
+    dplyr::mutate(set = factor(.data$set, levels = c("Global", "Key genes CDS")))
+
+  mode2 <- function(x) {
+    ux <- unique(x)
+    ux[which.max(tabulate(match(x, ux)))]
+  }
+
+  af_stats <- af_both %>%
+    dplyr::group_by(.data$set) %>%
+    dplyr::summarise(n = dplyr::n(),
+                     mean = round(base::mean(.data$af), 2),
+                     median = round(stats::median(.data$af), 2),
+                     mode = round(mode2(.data$af), 2),
+                     .groups = "drop_last") %>%
+    tidyr::complete(.data$set, fill = list(n = 0))
+
+  af_stats_gt <- af_stats %>%
+    gt::gt(rowname_col = "set") %>%
+    gt::tab_header(
+      title = "AF Summary Stats"
+    ) %>%
+    gt::tab_stubhead(label = "Set") %>%
+    gt::tab_style(
+      style = list(
+        gt::cell_text(weight = "bold")
+      ),
+      locations = gt::cells_stub(rows = TRUE)
+    ) %>%
+    gt::tab_options(table.align = "left")
+
+  af_plot <-
+    ggplot2::ggplot(data = af_both, ggplot2::aes(.data$af)) +
+    ggplot2::geom_histogram(stat = 'bin', binwidth = 0.01, fill = "#008080") +
+    ggplot2::facet_wrap(~.data$set, scales = 'free_y', drop = FALSE) +
+    ggplot2::scale_x_continuous(name = "Allele Frequency",
+                                breaks = seq(0, 1, by = 0.1),
+                                limits = c(0, 1), expand = c(0, 0)) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1),
+                   panel.grid.minor = ggplot2::element_blank()) +
+    ggplot2::labs(title = "AF count distribution")
+
+  list(af_stats_gt = af_stats_gt,
+       af_plot = af_plot)
 
 }

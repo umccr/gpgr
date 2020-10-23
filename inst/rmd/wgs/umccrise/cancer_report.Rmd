@@ -159,36 +159,6 @@ sv_detail_table <- function(tab) {
 }
 ```
 
-```{r allele_freq_prep}
-#---- Allele Frequencies ----#
-set.seed(42)
-af_global <-
-  readr::read_tsv(params$af_global, col_types = "d") %>%
-  dplyr::mutate(set = "Global")
-
-af_keygenes <-
-  readr::read_tsv(params$af_keygenes, col_types = "cicccd") %>%
-  dplyr::select(af) %>%
-  dplyr::mutate(set = 'Key genes CDS')
-
-af_both <-
-  dplyr::bind_rows(af_global, af_keygenes) %>%
-  dplyr::mutate(set = factor(set, levels = c("Global", "Key genes CDS")))
-
-mode2 <- function(x) {
-  ux <- unique(x)
-  ux[which.max(tabulate(match(x, ux)))]
-}
-
-af_stats <- af_both %>%
-  dplyr::group_by(set) %>%
-  dplyr::summarise(n = n(),
-                   mean = round(mean(af), 2),
-                   median = round(median(af), 2),
-                   mode = round(mode2(af), 2),
-                   .groups = "drop_last") %>%
-  tidyr::complete(set, fill = list(n = 0))
-```
 
 ```{r hrd_prep, results='hide'}
 #---- Homologous Recombination Deficiency ----#
@@ -527,30 +497,9 @@ The following post-processing steps occur:
 
 
 ```{r allele_freq_plot_stats, fig.width=10, fig.height=3}
-af_stats %>%
-  gt::gt(rowname_col = "set") %>%
-  gt::tab_header(
-    title = "AF Summary Stats"
-  ) %>%
-  gt::tab_stubhead(label = "Set") %>%
-  gt::tab_style(
-    style = list(
-      cell_text(weight = "bold")
-    ),
-    locations = cells_stub(rows = TRUE)
-  ) %>%
-  gt::tab_options(table.align = "left")
-
-ggplot2::ggplot(data = af_both, ggplot2::aes(af)) +
-  ggplot2::geom_histogram(stat = 'bin', binwidth = 0.01, fill = "#008080") +
-  ggplot2::facet_wrap(~set, scales = 'free_y', drop = FALSE) +
-  ggplot2::scale_x_continuous(name = "Allele Frequency",
-                     breaks = seq(0, 1, by = 0.1),
-                     limits = c(0, 1), expand = c(0, 0)) +
-  ggplot2::theme_bw() +
-  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1),
-        panel.grid.minor = ggplot2::element_blank()) +
-  ggplot2::labs(title = "AF count distribution")
+af_summary_results <- gpgr::af_summary(params$af_global, params$af_keygenes)
+af_summary_results$af_stats_gt
+af_summary_results$af_plot
 ```
 
 ### Mutational Signatures {.tabset .tabset-fade #signatures}
@@ -778,7 +727,7 @@ along with an ID that is shared by grouped variants.
 gpgr::purple_kataegis(params$purple_som_snv_vcf) %>%
   knitr::kable(escape = FALSE, caption = "Kataegis Regions.",
                format = "html", format.args = list(big.mark = ",")) %>%
-  kableExtra::kable_paper("hover", full_width = FALSE, position = "left") %>%
+  kableExtra::kable_minimal("hover", full_width = FALSE, position = "left") %>%
   kableExtra::scroll_box(height = "250px")
 ```
 
