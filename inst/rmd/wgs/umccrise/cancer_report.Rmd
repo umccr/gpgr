@@ -1007,31 +1007,33 @@ p2
 ```
 
 
-```{r sv_summary, results='asis', eval=!no_sv_found}
-sv_tier_vs_svtype <- function() {
-  l <- list(unmelted = sv_unmelted %>% dplyr::select(TierTop, Type),
-            melted = sv_all %>% dplyr::select(Tier, Type)) %>%
-    purrr::map(function(x) addmargins(table(x, useNA = 'ifany')))
+```{r sv_summary, eval=!no_sv_found}
+d <-
+  list(unmelted = sv_unmelted %>% dplyr::select(Tier = TierTop, Type),
+       melted = sv_all %>% dplyr::select(Tier, Type)) %>%
+  dplyr::bind_rows(.id = "group") %>%
+  dplyr::mutate(group = factor(group, levels = c("unmelted", "melted"))) %>%
+  dplyr::group_by(group) %>%
+  dplyr::count(Tier, Type) %>%
+  tidyr::pivot_wider(names_from = Type, values_from = n) %>%
+  dplyr::ungroup() %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(tot = sum(dplyr::c_across(!(c(group, Tier))), na.rm = TRUE))
 
-  cap_unmelt <- glue::glue("SV type by {htmltools::strong('top')} tier {htmltools::strong('before')}",
-                           "{htmltools::br()}breaking down by annotation")
-  cap_melt <- glue::glue("SV type by {htmltools::strong('individual')} tier {htmltools::strong('after')}",
-                         "{htmltools::br()}breaking down by annotation")
-  unmelted <- knitr::kable(l$unmelted, format = "html", caption = cap_unmelt, output = FALSE) %>%
-    kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "float_right")
-  melted <- knitr::kable(l$melted, format = "html",
-                         caption = cap_melt, output = FALSE) %>%
-    kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "float_right")
-
-  list(unmelted = unmelted, melted = melted)
-}
-cat(c(
-  '<table><tr valign="top"><td>',
-  sv_tier_vs_svtype()$unmelted,
-  '</td>', '<td>',
-  sv_tier_vs_svtype()$melted,
-  '</td></tr></table>'),
-  sep = '')
+d %>%
+  gt::gt(
+    groupname_col = "group",
+    rowname_col = "Tier") %>%
+  gt::tab_header(
+    title = "SV type counts by tier",
+    subtitle = "(TopTier used for melted variants)"
+  ) %>%
+  gt::tab_stubhead(label = "Tier") %>%
+  gt::summary_rows(groups = TRUE,
+                   fns = list(tot = ~sum(., na.rm = TRUE)),
+                   drop_trailing_zeros = TRUE) %>%
+  gt::fmt_missing(columns = dplyr::everything()) %>%
+  gt::cols_align("right")
 ```
 
 ### Unmelted Variants {#sv-unmelted}
