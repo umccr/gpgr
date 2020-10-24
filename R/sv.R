@@ -334,6 +334,7 @@ process_sv <- function(x) {
 #'
 #' @param d A data.frame with an SR_PR_alt column.
 #' @param title Main title of plot.
+#' @param subtitle Subtitle of plot.
 #'
 #' @return A ggplot2 plot object.
 #'
@@ -343,7 +344,9 @@ process_sv <- function(x) {
 #' plot_bnd_sr_pr_tot_lines(d, "a title")
 #'
 #' @export
-plot_bnd_sr_pr_tot_lines <- function(d, title = "SR, PR and SR + PR line plot for BNDs") {
+plot_bnd_sr_pr_tot_lines <- function(d,
+                                     title = "SR, PR and SR + PR line plot for BNDs",
+                                     subtitle = "Events are sorted by decreasing tot values.") {
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d %>%
     dplyr::filter(.data$Type == "BND") %>%
@@ -364,16 +367,17 @@ plot_bnd_sr_pr_tot_lines <- function(d, title = "SR, PR and SR + PR line plot fo
     ggplot2::geom_point(alpha = 0.5) +
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid.minor.x = ggplot2::element_blank()) +
-    ggplot2::ggtitle(title)
+    ggplot2::labs(title = title, subtitle = subtitle)
 }
 
 #' Histogram for SR, PR and SR + PR for BNDs
 #'
 #' Plots histograms for the number of split reads (`SR`), paired end reads (`PR`), and their
-#' sum (`tot`) across all BNDs.
+#' sum (`tot`) across all BNDs. Observations where the SR or PR value is 0 (NA) are not shown.
 #'
 #' @param d A data.frame with an SR_PR_alt column.
 #' @param title Main title of plot.
+#' @param subtitle Subtitle of plot.
 #'
 #' @return A ggplot2 plot object.
 #'
@@ -383,7 +387,9 @@ plot_bnd_sr_pr_tot_lines <- function(d, title = "SR, PR and SR + PR line plot fo
 #' plot_bnd_sr_pr_tot_hist(d, "a title")
 #'
 #' @export
-plot_bnd_sr_pr_tot_hist <- function(d, title = "SR, PR and SR + PR histogram for BNDs") {
+plot_bnd_sr_pr_tot_hist <- function(d,
+                                    title = "SR, PR and SR + PR histogram for BNDs",
+                                    subtitle = "Values of 0 (NA) are not shown.") {
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d %>%
     dplyr::filter(.data$Type == "BND") %>%
@@ -391,30 +397,16 @@ plot_bnd_sr_pr_tot_hist <- function(d, title = "SR, PR and SR + PR histogram for
     dplyr::mutate(PR = ifelse(is.na(.data$PR), 0, .data$PR),
                   SR = ifelse(is.na(.data$SR), 0, .data$SR)) %>%
     dplyr::rowwise() %>%
-    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = T)) %>%
+    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = TRUE)) %>%
     dplyr::ungroup() %>%
     tidyr::pivot_longer(cols = c(.data$SR, .data$PR, .data$tot),
                         names_to = "Metric", values_to = "Value")
 
   dplot %>%
+    dplyr::filter(.data$Value > 0) %>%
     ggplot2::ggplot(ggplot2::aes(x = .data$Value, fill = .data$Metric)) +
     ggplot2::geom_histogram(binwidth = 1) +
     ggplot2::theme_bw() +
-    ggplot2::labs(title = title) +
-    ggplot2::facet_wrap(~.data$Metric)
+    ggplot2::labs(title = title, subtitle = subtitle) +
+    ggplot2::facet_wrap(~.data$Metric, ncol = 1, scales = "free_y")
 }
-
-
-# sv1 <- process_sv("~/Desktop/tmp/SBJ1_keep_pass.tsv")
-# sv2 <- process_sv("~/Desktop/tmp/SBJ2_keep_pass.tsv")
-# sv3 <- process_sv("~/Desktop/tmp/SEQC_keep_pass.tsv")
-#
-# p1 <- plot_bnd_sr_pr(sv1$unmelted, "574_1")
-# p2 <- plot_bnd_sr_pr(sv2$unmelted, "574_2")
-# p3 <- plot_bnd_sr_pr(sv3$unmelted, "SEQC")
-# p1 | p2 | p3
-#
-# p1 <- plot_bnd_sr_pr_tot(sv1$unmelted, "574_1")
-# p2 <- plot_bnd_sr_pr_tot(sv2$unmelted, "574_2")
-# p3 <- plot_bnd_sr_pr_tot(sv3$unmelted, "SEQC")
-# p1 | p2 | p3

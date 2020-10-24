@@ -4,12 +4,18 @@
 \alias{plot_bnd_sr_pr_tot_lines}
 \title{Line plot for SR, PR and SR + PR for BNDs}
 \usage{
-plot_bnd_sr_pr_tot_lines(d, title = "SR, PR and SR + PR line plot for BNDs")
+plot_bnd_sr_pr_tot_lines(
+  d,
+  title = "SR, PR and SR + PR line plot for BNDs",
+  subtitle = "Events are sorted by decreasing tot values."
+)
 }
 \arguments{
 \item{d}{A data.frame with an SR_PR_alt column.}
 
 \item{title}{Main title of plot.}
+
+\item{subtitle}{Subtitle of plot.}
 }
 \value{
 A ggplot2 plot object.
