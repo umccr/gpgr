@@ -1,9 +1,9 @@
-pandoc: 2.11.0.2
+pandoc: 2.11.0.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   chord: chord.html
   hrdetect: hrdetect.html
   purple: purple.html
-last_built: 2020-10-23T09:07Z
+last_built: 2020-10-24T07:06Z
 
