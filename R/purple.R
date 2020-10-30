@@ -13,7 +13,7 @@
 #' (p <- purple_cnv_som_gene_read(x))
 #'
 #' @testexamples
-#' expect_equal(colnames(p)[ncol(p)], "minMinorAllelePloidy")
+#' expect_equal(colnames(p)[ncol(p)], "minMinorAlleleCopyNumber")
 #'
 #' @export
 purple_cnv_som_gene_read <- function(x) {
@@ -25,7 +25,7 @@ purple_cnv_som_gene_read <- function(x) {
           "transcriptId" = "c", "transcriptVersion" = "c", "chromosomeBand" = "c",
           "minRegions" = "d", "minRegionStart" = "i", "minRegionEnd" = "i",
           "minRegionStartSupport" = "c", "minRegionEndSupport" = "c",
-          "minRegionMethod" = "c", "minMinorAllelePloidy" = "d")
+          "minRegionMethod" = "c", "minMinorAlleleCopyNumber" = "d")
 
   ctypes <- paste(nm, collapse = "")
   purple_cnv_gene <- readr::read_tsv(x, col_types = ctypes)
@@ -89,7 +89,7 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
     dplyr::select(.data$gene, minCN = .data$minCopyNumber, maxCN = .data$maxCopyNumber,
                   chrom = .data$chromosome, .data$start, .data$end,
                   chrBand = .data$chromosomeBand, .data$onco_or_ts,
-                  .data$transcriptID, .data$minMinorAllelePloidy,
+                  .data$transcriptID, .data$minMinorAlleleCopyNumber,
                   somReg = .data$somaticRegions, .data$germDelReg, minReg = .data$minRegions,
                   .data$minRegStartEnd, .data$minRegSupportStartEndMethod)
 
@@ -101,7 +101,7 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
     "chrBand", "Chromosome band of the gene",
     "onco_or_ts", "oncogene ('oncogene'), tumor suppressor ('tsgene'), or both ('onco+ts'), as reported by [Cancermine](https://github.com/jakelever/cancermine)",
     "transcriptID", "Ensembl transcript ID (dot version)",
-    "minMinorAllelePloidy", "Minimum allele ploidy found over the gene exons - useful for identifying LOH events",
+    "minMinorAlleleCopyNumber", "Minimum allele ploidy found over the gene exons - useful for identifying LOH events",
     "somReg (somaticRegions)", "Count of somatic copy number regions this gene spans",
     "germDelReg (germlineHomDeletionRegions / germlineHetToHomDeletionRegions)", "Number of regions spanned by this gene that are (homozygously deleted in the germline / both heterozygously deleted in the germline and homozygously deleted in the tumor)",
     "minReg (minRegions)", "Number of somatic regions inside the gene that share the min copy number",
@@ -127,7 +127,7 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
 #' (p <- purple_cnv_som_read(x))
 #'
 #' @testexamples
-#' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
+#' expect_equal(colnames(p)[ncol(p)], "majorAlleleCopyNumber")
 #'
 #' @export
 purple_cnv_som_read <- function(x) {
@@ -135,8 +135,8 @@ purple_cnv_som_read <- function(x) {
           "copyNumber" = "d", "bafCount" = "d", "observedBAF" = "d",
           "baf" = "d", "segmentStartSupport" = "c", "segmentEndSupport" = "c",
           "method" = "c", "depthWindowCount" = "i", "gcContent" = "d",
-          "minStart" = "i", "maxStart" = "i", "minorAllelePloidy" = "d",
-          "majorAllelePloidy" = "d")
+          "minStart" = "i", "maxStart" = "i", "minorAlleleCopyNumber" = "d",
+          "majorAlleleCopyNumber" = "d")
   ctypes <- paste(nm, collapse = "")
   purple_cnv_somatic <- readr::read_tsv(x, col_types = ctypes)
   assertthat::assert_that(ncol(purple_cnv_somatic) == length(nm))
@@ -169,9 +169,9 @@ purple_cnv_som_process <- function(x) {
   purple_cnv_somatic <- purple_cnv_somatic %>%
     dplyr::mutate(
       Chr = as.factor(.data$chromosome),
-      minorAllelePloidy = round(.data$minorAllelePloidy, 1),
-      majorAllelePloidy = round(.data$majorAllelePloidy, 1),
-      `Ploidy Min+Maj` = paste0(.data$minorAllelePloidy, "+", .data$majorAllelePloidy),
+      minorAlleleCopyNumber = round(.data$minorAlleleCopyNumber, 1),
+      majorAlleleCopyNumber = round(.data$majorAlleleCopyNumber, 1),
+      `CopyNumber Min+Maj` = paste0(.data$minorAlleleCopyNumber, "+", .data$majorAlleleCopyNumber),
       copyNumber = round(.data$copyNumber, 1),
       bafAdj = round(.data$baf, 2),
       gcContent = round(.data$gcContent, 2),
@@ -180,7 +180,7 @@ purple_cnv_som_process <- function(x) {
       `GC (windowCount)` = paste0(.data$gcContent, " (", .data$depthWindowCount, ")")) %>%
     dplyr::select(
       .data$Chr, Start = .data$start, End = .data$end, CN = .data$copyNumber,
-      .data$`Ploidy Min+Maj`, .data$`Start/End SegSupport`, Method = .data$method,
+      .data$`CopyNumber Min+Maj`, .data$`Start/End SegSupport`, Method = .data$method,
       .data$`BAF (count)`, .data$`GC (windowCount)`)
 
 
@@ -188,7 +188,7 @@ purple_cnv_som_process <- function(x) {
     ~Column, ~Description,
     "Chr/Start/End", "Coordinates of copy number segment",
     "CN", "Fitted absolute copy number of segment adjusted for purity and ploidy",
-    "Ploidy Min+Maj", "Ploidy of minor + major allele adjusted for purity",
+    "CopyNumber Min+Maj", "CopyNumber of minor + major allele adjusted for purity",
     "Start/End SegSupport", paste0("Type of SV support for the CN breakpoint at ",
                                    "start/end of region. Allowed values: ",
                                    "CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), ",
@@ -220,7 +220,7 @@ purple_cnv_som_process <- function(x) {
 #' (p <- purple_cnv_germ_read(x))
 #'
 #' @testexamples
-#' expect_equal(colnames(p)[ncol(p)], "majorAllelePloidy")
+#' expect_equal(colnames(p)[ncol(p)], "majorAlleleCopyNumber")
 #'
 #' @export
 purple_cnv_germ_read <- function(x) {
@@ -271,7 +271,7 @@ purple_cnv_germ_process <- function(x) {
 #' @testexamples
 #' expect_equal(length(v), 2)
 #' expect_equal(names(v), c("version", "build_date"))
-#' expect_equal(v$version, "2.39")
+#' expect_equal(v$version, "2.51")
 #'
 #' @export
 purple_version_read <- function(x) {
@@ -296,7 +296,7 @@ purple_version_read <- function(x) {
 #' (q <- purple_qc_read(x))
 #'
 #' @testexamples
-#' expect_true(q$raw[1, "value", drop = TRUE] == "PASS")
+#' expect_true(q$raw[1, "value", drop = TRUE] == "WARN_DELETED_GENES")
 #'
 #' @export
 purple_qc_read <- function(x) {
@@ -304,22 +304,31 @@ purple_qc_read <- function(x) {
     readr::read_tsv(x, col_names = c("key", "value"), col_types = "cc") %>%
     dplyr::mutate(value = toupper(.data$value))
 
-  nm <- c("QCStatus", "SegmentPass", "GenderPass", "DeletedGenesPass",
-          "SegmentScore", "UnsupportedSegments", "Ploidy", "AmberGender",
-          "CobaltGender", "DeletedGenes")
+  nm <- c("QCStatus", "Method", "CopyNumberSegments",
+          "UnsupportedCopyNumberSegments", "Purity", "AmberGender",
+          "CobaltGender", "DeletedGenes", "Contamination", "GermlineAberrations")
 
   assertthat::assert_that(all(purple_qc$key == nm))
   q <- structure(purple_qc$value, names = purple_qc$key)
   summary <- dplyr::tribble(
     ~n, ~variable, ~value, ~details,
     1, 'QC_Status', glue::glue('{q["QCStatus"]}'),
-    "",
-    13, 'Segment_Pass', glue::glue('{q["SegmentPass"]}'),
-    glue::glue('Score: {q["SegmentScore"]}; Unsupported: {q["UnsupportedSegments"]}'),
-    14, 'Gender_Pass', glue::glue('{q["GenderPass"]}'),
-    glue::glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'),
-    15, 'DelGenes_Pass', glue::glue('{q["DeletedGenesPass"]}'),
-    glue::glue('count: {q["DeletedGenes"]}'),
+    paste("Either PASS or one or more warnings or fail statuses.",
+          "Warnings include WARN_DELETED_GENES, WARN_HIGH_COPY_NUMBER_NOISE,",
+          "FAIL_CONTAMINATION, FAIL_NO_TUMOR, WARN_GENDER_MISMATCH or WARN_LOW_PURITY"),
+    13, 'Method', glue::glue('{q["Method"]}'),
+    glue::glue(''),
+    14, 'CopyNumberSegments',
+    glue::glue('{q["CopyNumberSegments"]} (Unsupported: {q["UnsupportedCopyNumberSegments"]})'),
+    paste("Total count of CN segments. A high number of segments with no SV support on either side",
+          "is an indicator of poor sample quality."),
+    2, 'Purity', glue::glue('{q["Purity"]}'), "",
+    14, 'Gender', glue::glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'), "",
+    15, 'DeletedGenes', glue::glue('{q["DeletedGenes"]}'), "",
+    16, 'Contamination', glue::glue('{q["Contamination"]}'),
+    "Rate of contamination in tumor sample as determined by AMBER.",
+    17, 'GermlineAberrations', glue::glue('{q["GermlineAberrations"]}'),
+    "Any germline chromosomal abberations detected. Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.",
   )
 
   list(
@@ -343,7 +352,7 @@ purple_qc_read <- function(x) {
 #'
 #' @testexamples
 #' expect_equal(p$raw[1, "column", drop = TRUE], "purity")
-#' expect_equal(p$raw[nrow(p$raw), "column", drop = TRUE], "tmbStatus")
+#' expect_equal(p$raw[nrow(p$raw), "column", drop = TRUE], "svTumorMutationalBurden")
 #'
 #' @export
 purple_purity_read <- function(x) {
@@ -371,7 +380,8 @@ purple_purity_read <- function(x) {
     "tml", "d",
     "tmlStatus", "c",
     "tmbPerMb", "d",
-    "tmbStatus", "c")
+    "tmbStatus", "c",
+    "svTumorMutationalBurden", "d")
 
   ctypes <- paste(tab$type, collapse = "")
   purple_purity <- readr::read_tsv(x, col_types = ctypes)
@@ -406,9 +416,13 @@ purple_purity_read <- function(x) {
     10, 'Diploidy Prop', glue::glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'),
     'Proportion of CN regions that have 1 (+- 0.2) minor and major allele',
     11, 'TMB', glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
-    "Tumor mutational burden per mega base (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)",
+    paste("Tumor mutational burden (# PASS variants per Megabase)",
+          "(Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied.",
+          "High = >10 PASS variants per Mb)."),
     12, 'TML', glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
-    "Tumor mutational load (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)"
+    "Tumor mutational load (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)",
+    12, 'TMB-SV', glue::glue('{p["svTumorMutationalBurden"]}'),
+    "Total number of non inferred, non single passing structural variants detected"
   )
 
   list(

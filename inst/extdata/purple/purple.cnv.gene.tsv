@@ -1,4 +1,4 @@
-chromosome	start	end	gene	minCopyNumber	maxCopyNumber	unused	somaticRegions	germlineHomDeletionRegions	germlineHetToHomDeletionRegions	transcriptId	transcriptVersion	chromosomeBand	minRegions	minRegionStart	minRegionEnd	minRegionStartSupport	minRegionEndSupport	minRegionMethod	minMinorAllelePloidy
+chromosome	start	end	gene	minCopyNumber	maxCopyNumber	unused	somaticRegions	germlineHomDeletionRegions	germlineHetToHomDeletionRegions	transcriptId	transcriptVersion	chromosomeBand	minRegions	minRegionStart	minRegionEnd	minRegionStartSupport	minRegionEndSupport	minRegionMethod	minMinorAlleleCopyNumber
 chr1	11869	14409	DDX11L1	1.0249	1.0249	0	1	0	0	ENST00000456328	2	p36.33	1	1	123605522	TELOMERE	CENTROMERE	BAF_WEIGHTED	0.0184
 chr1	14404	29570	WASH7P	1.0249	1.0249	0	1	0	0	ENST00000488147	1	p36.33	1	1	123605522	TELOMERE	CENTROMERE	BAF_WEIGHTED	0.0184
 chr1	17369	17436	MIR6859-1	1.0249	1.0249	0	1	0	0	ENST00000619216	1	p36.33	1	1	123605522	TELOMERE	CENTROMERE	BAF_WEIGHTED	0.0184
