@@ -21,7 +21,7 @@ test_that("Function purple_cnv_som_gene_process() @ L63", {
 })
 
 
-test_that("Function purple_cnv_som_read() @ L133", {
+test_that("Function purple_cnv_som_read() @ L135", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (p <- purple_cnv_som_read(x))
@@ -30,7 +30,7 @@ test_that("Function purple_cnv_som_read() @ L133", {
 })
 
 
-test_that("Function purple_cnv_som_process() @ L166", {
+test_that("Function purple_cnv_som_process() @ L168", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (pp <- purple_cnv_som_process(x))
@@ -39,7 +39,7 @@ test_that("Function purple_cnv_som_process() @ L166", {
 })
 
 
-test_that("Function purple_cnv_germ_read() @ L226", {
+test_that("Function purple_cnv_germ_read() @ L228", {
   
   x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
   (p <- purple_cnv_germ_read(x))
@@ -48,7 +48,7 @@ test_that("Function purple_cnv_germ_read() @ L226", {
 })
 
 
-test_that("Function purple_cnv_germ_process() @ L251", {
+test_that("Function purple_cnv_germ_process() @ L253", {
   
   x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
   (pp <- purple_cnv_germ_process(x))
@@ -57,7 +57,7 @@ test_that("Function purple_cnv_germ_process() @ L251", {
 })
 
 
-test_that("Function purple_version_read() @ L277", {
+test_that("Function purple_version_read() @ L279", {
   
   x <- system.file("extdata/purple/purple.version", package = "gpgr")
   (v <- purple_version_read(x))
@@ -68,7 +68,7 @@ test_that("Function purple_version_read() @ L277", {
 })
 
 
-test_that("Function purple_qc_read() @ L302", {
+test_that("Function purple_qc_read() @ L304", {
   
   x <- system.file("extdata/purple/purple.qc", package = "gpgr")
   (q <- purple_qc_read(x))
@@ -77,7 +77,7 @@ test_that("Function purple_qc_read() @ L302", {
 })
 
 
-test_that("Function purple_purity_read() @ L358", {
+test_that("Function purple_purity_read() @ L361", {
   
   x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
   (p <- purple_purity_read(x))

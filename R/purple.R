@@ -65,7 +65,9 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
   if (is.null(g)) {
     g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
   }
-  genes <- readr::read_tsv(g, col_types = readr::cols(symbol = "c", oncogene = "l", tumorsuppressor = "l")) %>%
+  genes <-
+    readr::read_tsv(g, col_types = readr::cols(
+      symbol = "c", oncogene = "l", tumorsuppressor = "l")) %>%
     dplyr::select(.data$symbol, .data$oncogene, .data$tumorsuppressor)
   oncogenes <- genes %>% dplyr::filter(.data$oncogene) %>% dplyr::pull(.data$symbol)
   tsgenes <- genes %>% dplyr::filter(.data$tumorsuppressor) %>% dplyr::pull(.data$symbol)
@@ -89,7 +91,7 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
     dplyr::select(.data$gene, minCN = .data$minCopyNumber, maxCN = .data$maxCopyNumber,
                   chrom = .data$chromosome, .data$start, .data$end,
                   chrBand = .data$chromosomeBand, .data$onco_or_ts,
-                  .data$transcriptID, .data$minMinorAlleleCopyNumber,
+                  .data$transcriptID, minMinorAlleleCN = .data$minMinorAlleleCopyNumber,
                   somReg = .data$somaticRegions, .data$germDelReg, minReg = .data$minRegions,
                   .data$minRegStartEnd, .data$minRegSupportStartEndMethod)
 
@@ -101,7 +103,7 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
     "chrBand", "Chromosome band of the gene",
     "onco_or_ts", "oncogene ('oncogene'), tumor suppressor ('tsgene'), or both ('onco+ts'), as reported by [Cancermine](https://github.com/jakelever/cancermine)",
     "transcriptID", "Ensembl transcript ID (dot version)",
-    "minMinorAlleleCopyNumber", "Minimum allele ploidy found over the gene exons - useful for identifying LOH events",
+    "minMinorAlleleCN", "Minimum allele ploidy found over the gene exons - useful for identifying LOH events",
     "somReg (somaticRegions)", "Count of somatic copy number regions this gene spans",
     "germDelReg (germlineHomDeletionRegions / germlineHetToHomDeletionRegions)", "Number of regions spanned by this gene that are (homozygously deleted in the germline / both heterozygously deleted in the germline and homozygously deleted in the tumor)",
     "minReg (minRegions)", "Number of somatic regions inside the gene that share the min copy number",
@@ -180,7 +182,7 @@ purple_cnv_som_process <- function(x) {
       `GC (windowCount)` = paste0(.data$gcContent, " (", .data$depthWindowCount, ")")) %>%
     dplyr::select(
       .data$Chr, Start = .data$start, End = .data$end, CN = .data$copyNumber,
-      .data$`CopyNumber Min+Maj`, .data$`Start/End SegSupport`, Method = .data$method,
+      `CN Min+Maj` = .data$`CopyNumber Min+Maj`, .data$`Start/End SegSupport`, Method = .data$method,
       .data$`BAF (count)`, .data$`GC (windowCount)`)
 
 
@@ -188,7 +190,7 @@ purple_cnv_som_process <- function(x) {
     ~Column, ~Description,
     "Chr/Start/End", "Coordinates of copy number segment",
     "CN", "Fitted absolute copy number of segment adjusted for purity and ploidy",
-    "CopyNumber Min+Maj", "CopyNumber of minor + major allele adjusted for purity",
+    "CN Min+Maj", "CopyNumber of minor + major allele adjusted for purity",
     "Start/End SegSupport", paste0("Type of SV support for the CN breakpoint at ",
                                    "start/end of region. Allowed values: ",
                                    "CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), ",
@@ -310,6 +312,7 @@ purple_qc_read <- function(x) {
 
   assertthat::assert_that(all(purple_qc$key == nm))
   q <- structure(purple_qc$value, names = purple_qc$key)
+  # the n column is used for arranging the final summary table rows in the report
   summary <- dplyr::tribble(
     ~n, ~variable, ~value, ~details,
     1, 'QC_Status', glue::glue('{q["QCStatus"]}'),
