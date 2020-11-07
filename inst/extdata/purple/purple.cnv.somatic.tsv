@@ -1,4 +1,4 @@
-chromosome	start	end	copyNumber	bafCount	observedBAF	baf	segmentStartSupport	segmentEndSupport	method	depthWindowCount	gcContent	minStart	maxStart	minorAllelePloidy	majorAllelePloidy
+chromosome	start	end	copyNumber	bafCount	observedBAF	baf	segmentStartSupport	segmentEndSupport	method	depthWindowCount	gcContent	minStart	maxStart	minorAlleleCopyNumber	majorAlleleCopyNumber
 chr1	1	123605522	1.0249	20830	0.7924	0.9821	TELOMERE	CENTROMERE	BAF_WEIGHTED	107822	0.4222	1	1	0.0184	1.0066
 chr1	123605523	200044314	1.9907	10239	0.5402	0.5034	CENTROMERE	DUP	BAF_WEIGHTED	47332	0.3971	123605523	123605523	0.9886	1.0021
 chr1	200044315	200044570	2.8330	0	0.0000	0.6494	DUP	DUP	STRUCTURAL_VARIANT	0	0.0000	200044315	200044315	0.9931	1.8399

@@ -18,6 +18,14 @@ s <- tibble::tribble(
   "SBJ00603",   "SBJ00603__SBJ00603_PRJ200489_L2000843", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00605",   "SBJ00605__SBJ00605_PRJ200504_L2000847", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00607",   "SBJ00607__SBJ00607_MDX200165_L2000857", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00608", "SBJ00608__SBJ00608_MDX200170_L2000872", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00609", "SBJ00609__SBJ00609_PRJ200508_L2000874", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00610", "SBJ00610__SBJ00610_PRJ200511_L2000876", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00611", "SBJ00611__SBJ00611_PRJ200514_L2000878", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00614", "SBJ00614__SBJ00614_PRJ200523_L2000916", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00615", "SBJ00615__SBJ00615_MDX200175_L2000910", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00616", "SBJ00616__SBJ00616_MDX200183_L2000912", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00617", "SBJ00617__SBJ00617_MDX200173_L2000908", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
 ) %>%
   dplyr::mutate(
     dd = file.path(here::here("nogit")),
@@ -43,7 +51,7 @@ res <- seq_len(nrow(s)) %>%
       nm = s$sample[i],
       snvindel_vcf = s$snv[i],
       sv_vcf = s$sv[i],
-      cnv_file = s$cnv[i],
+      cnv_tsv = s$cnv[i],
       genome = s$genome[i],
       snvoutdir = file.path(here::here("nogit"), "results", "hrdetect", s$sample[i])
     )
@@ -51,9 +59,9 @@ res <- seq_len(nrow(s)) %>%
          hrdetect = hrdetect)
   })
 
-saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-10-13.rds"))
+saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-10-28.rds"))
 
-res <- readRDS(here::here("nogit/results/chord_hrdetect_2020-10-13.rds"))
+res <- readRDS(here::here("nogit/results/chord_hrdetect_2020-10-28.rds"))
 
 chord <- purrr::map(res, "chord") %>% dplyr::bind_rows()
 hrdetect <- purrr::map(res, "hrdetect") %>% dplyr::bind_rows()

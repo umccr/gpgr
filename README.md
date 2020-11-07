@@ -1,5 +1,4 @@
 [![Conda install](https://anaconda.org/pdiakumis/r-gpgr/badges/installer/conda.svg)](https://anaconda.org/pdiakumis/r-gpgr)
-[![Conda pkgdown github action status](https://github.com/umccr/gpgr/workflows/conda-pkgdown/badge.svg)](https://github.com/umccr/gpgr/actions?query=workflow%3Aconda-pkgdown)
 
 * See <https://umccr.github.io/gpgr/>
 
@@ -9,19 +8,20 @@ at the University of Melbourne Centre for Cancer Research.
 
 ## PURPLE
 
-Read and process output files from PURPLE (https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator).
+Read and process output files from
+[PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator) - see
+vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
 
 ## HRDetect
 
-Wraps functionality from the HRDetect framework (https://github.com/Nik-Zainal-Group/signature.tools.lib).
+Wraps functionality from the [HRDetect](https://github.com/Nik-Zainal-Group/signature.tools.lib)
+framework - see
+vignette at <https://umccr.github.io/gpgr/articles/hrdetect.html>.
 
 ## CHORD
 
-Wraps functionality from CHORD (https://github.com/UMCUGenetics/CHORD)
-
-## Sigminer
-
-Wraps functionality from Sigminer (https://github.com/ShixiangWang/sigminer)
+Wraps functionality from CHORD (https://github.com/UMCUGenetics/CHORD) - see
+vignette at <https://umccr.github.io/gpgr/articles/chord.html>.
 
 ## MutationalPatterns
 

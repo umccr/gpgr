@@ -112,7 +112,7 @@ hrdetect_read_purple_cnv <- function(x) {
   cnv <- readr::read_tsv(x,
                          col_types = readr::cols_only(
                            "chromosome" = "c", "start" = "i", "end" = "i",
-                           "copyNumber" = "d", "minorAllelePloidy" = "d"))
+                           "copyNumber" = "d", "minorAlleleCopyNumber" = "d"))
 
   cnv %>%
     dplyr::rename(
@@ -120,7 +120,7 @@ hrdetect_read_purple_cnv <- function(x) {
       chromStart = .data$start,
       chromEnd = .data$end,
       total.copy.number.inTumour = .data$copyNumber,
-      minor.copy.number.inTumour = .data$minorAllelePloidy,
+      minor.copy.number.inTumour = .data$minorAlleleCopyNumber,
     ) %>%
     dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome))
 }

@@ -1,4 +1,4 @@
-chromosome	start	end	copyNumber	bafCount	observedBAF	baf	segmentStartSupport	segmentEndSupport	method	depthWindowCount	gcContent	minStart	maxStart	minorAllelePloidy	majorAllelePloidy
+chromosome	start	end	copyNumber	bafCount	observedBAF	baf	segmentStartSupport	segmentEndSupport	method	depthWindowCount	gcContent	minStart	maxStart	minorAlleleCopyNumber	majorAlleleCopyNumber
 chr1	7510001	7511000	-0.0049	0	0.0000	0.9821	NONE	UNKNOWN	GERMLINE_HET2HOM_DELETION	1	0.5160	7510001	7510001	0.0000	-0.0049
 chr1	14110001	14113000	0.4163	0	0.0000	0.9821	NONE	UNKNOWN	GERMLINE_HET2HOM_DELETION	3	0.4733	14110001	14110001	0.0075	0.4088
 chr1	15825001	15829000	0.3501	0	0.0000	0.9821	NONE	UNKNOWN	GERMLINE_HET2HOM_DELETION	2	0.4855	15825001	15825001	0.0063	0.3439
