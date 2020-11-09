@@ -20,7 +20,7 @@ vignette at <https://umccr.github.io/gpgr/articles/hrdetect.html>.
 
 ## CHORD
 
-Wraps functionality from CHORD (https://github.com/UMCUGenetics/CHORD) - see
+Wraps functionality from [CHORD](https://github.com/UMCUGenetics/CHORD) - see
 vignette at <https://umccr.github.io/gpgr/articles/chord.html>.
 
 ## MutationalPatterns

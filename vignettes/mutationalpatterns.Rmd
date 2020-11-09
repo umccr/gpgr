@@ -1,0 +1,141 @@
+---
+title: "MutationalPatterns"
+author: "Peter Diakumis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+
+vignette: >
+  %\VignetteIndexEntry{CHORD}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r knitr_opts, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+require(gpgr)
+require(MutationalPatterns)
+ref_genome <- "BSgenome.Hsapiens.UCSC.hg38"
+require(ref_genome, character.only = TRUE)
+require(devtools)
+require(dplyr)
+require(knitr)
+```
+
+```{r}
+vcf <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
+somatic_snv <- MutationalPatterns::read_vcfs_as_granges(
+  vcf_files = params$somatic_snv,
+  sample_names = params$tumor_name,
+  genome = ref_genome,
+  group = "auto+sex")
+
+mut_mat <- MutationalPatterns::mut_matrix(vcf_list = somatic_snv, ref_genome = ref_genome)
+
+###--- OLD Sigs ---###
+# Get Sanger sigs from "http://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt"
+sig_probs1 <- file.path("misc/sig/v2_mar2015/signatures_probabilities.txt")
+# better be explicit - the sig_probs file has 7 extra empty columns
+ctypes <- paste0(c("ccc", paste0(rep("d", 30), collapse = ""), "ccccccc"), collapse = "")
+cnames <- c("SubstType", "Trinucleotide", "SomMutType", paste0("Sig", 1:30), paste0("foo", 1:7))
+cancer_signatures1 <-
+  readr::read_tsv(sig_probs1, col_names = cnames, col_types = ctypes, skip = 1) %>%
+  dplyr::arrange(SubstType)
+
+# sanity check - need to be in same order
+stopifnot(all(cancer_signatures1$SomMutType == rownames(mut_mat)))
+# select only 30 sig columns, 96 mut types
+cancer_signatures1 <- cancer_signatures1 %>%
+  dplyr::select(4:33) %>%
+  as.matrix()
+
+###--- NEW Sigs ---###
+sig_probs2 <- file.path("misc/sig/v3_may2019/sigProfiler_SBS_signatures_2019_05_22.csv")
+cancer_signatures2 <-
+  readr::read_csv(sig_probs2, col_types = cols(.default = "d", Type = "c", SubType = "c")) %>%
+  dplyr::mutate(SomMutType = paste0(substr(SubType, 1, 1),
+                                    "[", Type, "]",
+                                    substr(SubType, 3, 3))) %>%
+  dplyr::select(SomMutType, SBS1:SBS85)
+
+# sanity check - need to be in same order
+stopifnot(all(cancer_signatures2$SomMutType == rownames(mut_mat)))
+# select only 67 sig columns, 96 mut types
+cancer_signatures2 <- cancer_signatures2 %>%
+  dplyr::select(-1) %>%
+  as.matrix()
+
+# Fit mutation matrix to cancer signatures
+fit_res1 <- MutationalPatterns::fit_to_signatures(mut_matrix = mut_mat, signatures = cancer_signatures1)
+fit_res2 <- MutationalPatterns::fit_to_signatures(mut_matrix = mut_mat, signatures = cancer_signatures2)
+
+# Convert to tibbles for more bullet-proof subsetting
+fit_res1 <- tibble::tibble(
+  sig = rownames(fit_res1$contribution), # matrix rownames
+  contr = unname(fit_res1$contribution[, 1])) # matrix single column -> vector
+
+fit_res2 <- tibble::tibble(
+  sig = rownames(fit_res2$contribution),
+  contr = unname(fit_res2$contribution[, 1]))
+
+# Select signatures with some contribution
+fit_res_contr1 <- dplyr::filter(fit_res1, contr > 0)
+fit_res_contr2 <- dplyr::filter(fit_res2, contr > 0)
+
+# If there are no signatures, return a dummy tibble
+if (nrow(fit_res_contr1) == 0) {
+  fit_res_contr1 <- tibble::tibble(
+    sig = "NOSIGS",
+    contr = 0
+  )
+}
+
+if (nrow(fit_res_contr2) == 0) {
+  fit_res_contr2 <- tibble::tibble(
+    sig = "NOSIGS",
+    contr = 0
+  )
+}
+
+mut_sig_contr1 <-
+  fit_res_contr1 %>%
+  dplyr::mutate(contr = round(contr, 0),
+                Freq = round(contr / sum(contr), 2),
+                Rank = as.integer(base::rank(-contr))) %>%
+  dplyr::select(Rank, Signature = sig, Contribution = contr, Freq) %>%
+  dplyr::arrange(Rank)
+mut_sig_contr2 <-
+  fit_res_contr2 %>%
+  dplyr::mutate(contr = round(contr, 0),
+                Freq = round(contr / sum(contr), 2),
+                Rank = as.integer(base::rank(-contr))) %>%
+  dplyr::select(Rank, Signature = sig, Contribution = contr, Freq) %>%
+  dplyr::arrange(Rank)
+
+```
+
+
+## Session Info
+
+```{r session_info, echo=FALSE}
+si <- devtools::session_info(include_base = TRUE)
+si_pl <- unclass(si$platform) %>% as_tibble() %>% t()
+pkgs_of_interest <- c("base", "gpgr", "MutationalPatterns")
+si_pkg <- unclass(si$packages) %>%
+  dplyr::as_tibble() %>%
+  dplyr::select(package, version = ondiskversion, datestamp = date) %>%
+  dplyr::filter(package %in% pkgs_of_interest)
+
+dplyr::tibble(var = row.names(si_pl),
+              value = si_pl[, , drop = TRUE]) %>%
+  knitr::kable(format = "html", caption = "Platform information.")
+
+  
+si_pkg %>%
+  knitr::kable(format = "html", caption = "Main packages used in this vignette.")
+```

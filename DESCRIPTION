@@ -32,6 +32,7 @@ Imports:
     gt,
     gtools,
     jsonlite,
+    MutationalPatterns,
     mutSigExtractor,
     purrr,
     readr,
