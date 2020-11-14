@@ -20,22 +20,55 @@ knitr::opts_chunk$set(
 ```{r setup, message=FALSE}
 require(gpgr)
 require(MutationalPatterns)
-ref_genome <- "BSgenome.Hsapiens.UCSC.hg38"
-require(ref_genome, character.only = TRUE)
+ref_genome38 <- "BSgenome.Hsapiens.UCSC.hg38"
+require(ref_genome38, character.only = TRUE)
 require(devtools)
 require(dplyr)
 require(knitr)
 ```
 
 ```{r}
-vcf <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
-somatic_snv <- MutationalPatterns::read_vcfs_as_granges(
-  vcf_files = params$somatic_snv,
-  sample_names = params$tumor_name,
-  genome = ref_genome,
-  group = "auto+sex")
+params <- list(
+  vcf = system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr"),
+  nm = "sampleA"
+)
+gr <- MutationalPatterns::read_vcfs_as_granges(
+  vcf_files = params$vcf,
+  sample_names = params$nm,
+  genome = ref_genome38,
+  group = "auto+sex",
+  type = "all")
 
-mut_mat <- MutationalPatterns::mut_matrix(vcf_list = somatic_snv, ref_genome = ref_genome)
+gr_snv <- get_mut_type(gr, type = "snv")
+gr_indel <- get_mut_type(gr, type = "indel")
+gr_dbs <- get_mut_type(gr, type = "dbs")
+
+# snvs
+type_occurrences <- mut_type_occurrences(gr_snv, ref_genome38)
+plot_spectrum(type_occurrences, CT = TRUE, condensed = TRUE, error_bars = "none")
+mut_mat <- mut_matrix(vcf_list = gr_snv, ref_genome = ref_genome38)
+plot_96_profile(mut_matrix = mut_mat, condensed = TRUE)
+mut_mat_ext_context <- mut_matrix(gr_snv, ref_genome = ref_genome38, extension = 2)
+plot_profile_heatmap(mut_mat_ext_context)
+plot_river(mut_mat_ext_context)
+
+# indels
+gr_indel <- get_indel_context(gr_indel, ref_genome = ref_genome38)
+indel_counts <- count_indel_contexts(gr_indel)
+p1 <- plot_main_indel_contexts(indel_counts) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 30, vjust = 0.9, hjust = 1)) +
+  ggplot2::theme(axis.text.x = ggplot2::element_blank())
+p2 <- plot_indel_contexts(indel_counts, condensed = TRUE) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 30, vjust = 0.9, hjust = 1),
+                 legend.position="top")
+p1 / p2
+
+# dbs
+gr_dbs <- get_dbs_context(gr_dbs)
+dbs_counts <- count_dbs_contexts(gr_dbs)
+p1 <- plot_main_dbs_contexts(dbs_counts)
+p2 <- plot_dbs_contexts(dbs_counts, condensed = TRUE)
+p1 / p2
 
 ###--- OLD Sigs ---###
 # Get Sanger sigs from "http://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt"
@@ -116,7 +149,6 @@ mut_sig_contr2 <-
                 Rank = as.integer(base::rank(-contr))) %>%
   dplyr::select(Rank, Signature = sig, Contribution = contr, Freq) %>%
   dplyr::arrange(Rank)
-
 ```
 
 
@@ -135,7 +167,6 @@ dplyr::tibble(var = row.names(si_pl),
               value = si_pl[, , drop = TRUE]) %>%
   knitr::kable(format = "html", caption = "Platform information.")
 
-  
 si_pkg %>%
   knitr::kable(format = "html", caption = "Main packages used in this vignette.")
 ```
