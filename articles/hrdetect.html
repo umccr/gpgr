@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.15</span>
       </span>
     </div>
 
@@ -58,6 +58,9 @@
     </li>
     <li>
       <a href="../articles/hrdetect.html">HRDetect</a>
+    </li>
+    <li>
+      <a href="../articles/mutationalpatterns.html">MutationalPatterns</a>
     </li>
     <li>
       <a href="../articles/purple.html">PURPLE</a>
@@ -89,7 +92,7 @@
       <h1 data-toc-skip>HRDetect</h1>
                         <h4 class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-10-24</h4>
+            <h4 class="date">2020-11-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/hrdetect.Rmd"><code>vignettes/hrdetect.Rmd</code></a></small>
       <div class="hidden name"><code>hrdetect.Rmd</code></div>
@@ -98,11 +101,11 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/umccr/gpgr">gpgr</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/umccr/gpgr">gpgr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span></code></pre></div>
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
@@ -112,16 +115,16 @@
 <h2 class="hasAnchor">
 <a href="#data" class="anchor"></a>Data</h2>
 <p>HRDetect takes as input somatic SNV, INDEL, SV and CNV files. We have made it somewhat easier to feed SNV/INDEL and Manta SV VCFs, together with PURPLE somatic CNV files, with the <code><a href="../reference/hrdetect_run.html">gpgr::hrdetect_run</a></code> wrapper.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">snvindel_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">snvindel_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
 <span class="va">sv_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/sv/manta.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
-<span class="va">cnv_tsv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.somatic.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></pre></div>
+<span class="va">cnv_tsv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.somatic.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="analysis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#analysis" class="anchor"></a>Analysis</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/hrdetect_run.html">hrdetect_run</a></span><span class="op">(</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/hrdetect_run.html">hrdetect_run</a></span><span class="op">(</span>
   nm <span class="op">=</span> <span class="st">"sample_A"</span>,
   snvindel_vcf <span class="op">=</span> <span class="va">snvindel_vcf</span>,
   sv_vcf <span class="op">=</span> <span class="va">sv_vcf</span>,
@@ -137,15 +140,15 @@
 <span class="co">#&gt; [info HRDetect_pipeline] Deletions at Micro-homology (Indels)</span>
 <span class="co">#&gt; [info HRDetect_pipeline] HRD-LOH index (CNV)</span>
 <span class="co">#&gt; [info HRDetect_pipeline] Computing HRDetect score and feature contributions for the following samples: sample_A</span>
-<span class="co">#&gt; [info HRDetect_pipeline] HRDetect pipeline completed!</span></pre></div>
+<span class="co">#&gt; [info HRDetect_pipeline] HRDetect pipeline completed!</span></code></pre></div>
 </div>
 <div id="results" class="section level2">
 <h2 class="hasAnchor">
 <a href="#results" class="anchor"></a>Results</h2>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">res</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">res</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span>.name_repair <span class="op">=</span> <span class="st">"check_unique"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"HRDetect results."</span><span class="op">)</span></pre></div>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"HRDetect results."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 HRDetect results.
@@ -172,7 +175,7 @@ sample_A
 Probability
 </td>
 <td style="text-align:left;">
-0.807
+0.806
 </td>
 </tr>
 <tr>
@@ -196,7 +199,7 @@ del.mh.prop
 SNV3
 </td>
 <td style="text-align:left;">
-2.446
+2.444
 </td>
 </tr>
 <tr>
@@ -319,7 +322,7 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-10-24
+2020-11-15
 </td>
 </tr>
 </tbody>
@@ -356,10 +359,10 @@ base
 gpgr
 </td>
 <td style="text-align:left;">
-0.0.13
+0.0.15
 </td>
 <td style="text-align:left;">
-2020-10-24
+2020-11-15
 </td>
 </tr>
 <tr>

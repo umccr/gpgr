@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.15</span>
       </span>
     </div>
 
@@ -99,6 +99,9 @@
     </li>
     <li>
       <a href="../articles/hrdetect.html">HRDetect</a>
+    </li>
+    <li>
+      <a href="../articles/mutationalpatterns.html">MutationalPatterns</a>
     </li>
     <li>
       <a href="../articles/purple.html">PURPLE</a>
@@ -156,27 +159,31 @@ description of each metric.</p>
 <span class='op'>(</span><span class='va'>q</span> <span class='op'>&lt;-</span> <span class='fu'>purple_qc_read</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $raw
 #&gt; <span style='color: #555555;'># A tibble: 10 x 2</span><span>
-#&gt;    key                 value 
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>               </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> 
-#&gt; </span><span style='color: #555555;'> 1</span><span> QCStatus            PASS  
-#&gt; </span><span style='color: #555555;'> 2</span><span> SegmentPass         TRUE  
-#&gt; </span><span style='color: #555555;'> 3</span><span> GenderPass          TRUE  
-#&gt; </span><span style='color: #555555;'> 4</span><span> DeletedGenesPass    TRUE  
-#&gt; </span><span style='color: #555555;'> 5</span><span> SegmentScore        0     
-#&gt; </span><span style='color: #555555;'> 6</span><span> UnsupportedSegments 0     
-#&gt; </span><span style='color: #555555;'> 7</span><span> Ploidy              1.8658
-#&gt; </span><span style='color: #555555;'> 8</span><span> AmberGender         MALE  
-#&gt; </span><span style='color: #555555;'> 9</span><span> CobaltGender        MALE  
-#&gt; </span><span style='color: #555555;'>10</span><span> DeletedGenes        0     
+#&gt;    key                           value             
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                         </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>             
+#&gt; </span><span style='color: #555555;'> 1</span><span> QCStatus                      WARN_DELETED_GENES
+#&gt; </span><span style='color: #555555;'> 2</span><span> Method                        NORMAL            
+#&gt; </span><span style='color: #555555;'> 3</span><span> CopyNumberSegments            1428              
+#&gt; </span><span style='color: #555555;'> 4</span><span> UnsupportedCopyNumberSegments 0                 
+#&gt; </span><span style='color: #555555;'> 5</span><span> Purity                        0.8600            
+#&gt; </span><span style='color: #555555;'> 6</span><span> AmberGender                   MALE              
+#&gt; </span><span style='color: #555555;'> 7</span><span> CobaltGender                  MALE              
+#&gt; </span><span style='color: #555555;'> 8</span><span> DeletedGenes                  7782              
+#&gt; </span><span style='color: #555555;'> 9</span><span> Contamination                 0.0               
+#&gt; </span><span style='color: #555555;'>10</span><span> GermlineAberrations           NONE              
 #&gt; 
 #&gt; $summary
-#&gt; </span><span style='color: #555555;'># A tibble: 4 x 4</span><span>
-#&gt;       n variable      value  details                    
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span>                     
-#&gt; </span><span style='color: #555555;'>1</span><span>     1 QC_Status     PASS   </span><span style='color: #555555;'>""</span><span>                         
-#&gt; </span><span style='color: #555555;'>2</span><span>    13 Segment_Pass  TRUE   </span><span style='color: #555555;'>"</span><span>Score: 0; Unsupported: 0</span><span style='color: #555555;'>"</span><span> 
-#&gt; </span><span style='color: #555555;'>3</span><span>    14 Gender_Pass   TRUE   </span><span style='color: #555555;'>"</span><span>Amber: MALE; Cobalt: MALE</span><span style='color: #555555;'>"</span><span>
-#&gt; </span><span style='color: #555555;'>4</span><span>    15 DelGenes_Pass TRUE   </span><span style='color: #555555;'>"</span><span>count: 0</span><span style='color: #555555;'>"</span><span>                 
+#&gt; </span><span style='color: #555555;'># A tibble: 8 x 4</span><span>
+#&gt;       n variable       value           details                                  
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;glue&gt;</span><span>                                   
+#&gt; </span><span style='color: #555555;'>1</span><span>     1 QC_Status      WARN_DELETED_G… </span><span style='color: #555555;'>"</span><span>Either PASS or one or more warnings or …
+#&gt; </span><span style='color: #555555;'>2</span><span>    13 Method         NORMAL          </span><span style='color: #555555;'>""</span><span>                                       
+#&gt; </span><span style='color: #555555;'>3</span><span>    14 CopyNumberSeg… 1428 (Unsuppor… </span><span style='color: #555555;'>"</span><span>Total count of CN segments. A high numb…
+#&gt; </span><span style='color: #555555;'>4</span><span>     2 Purity         0.8600          </span><span style='color: #555555;'>""</span><span>                                       
+#&gt; </span><span style='color: #555555;'>5</span><span>    14 Gender         Amber: MALE; C… </span><span style='color: #555555;'>""</span><span>                                       
+#&gt; </span><span style='color: #555555;'>6</span><span>    15 DeletedGenes   7782            </span><span style='color: #555555;'>""</span><span>                                       
+#&gt; </span><span style='color: #555555;'>7</span><span>    16 Contamination  0.0             </span><span style='color: #555555;'>"</span><span>Rate of contamination in tumor sample a…
+#&gt; </span><span style='color: #555555;'>8</span><span>    17 GermlineAberr… NONE            </span><span style='color: #555555;'>"</span><span>Any germline chromosomal abberations de…
 #&gt; </div><div class='input'>
 </div></span></pre>
   </div>

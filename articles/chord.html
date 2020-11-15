@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.15</span>
       </span>
     </div>
 
@@ -58,6 +58,9 @@
     </li>
     <li>
       <a href="../articles/hrdetect.html">HRDetect</a>
+    </li>
+    <li>
+      <a href="../articles/mutationalpatterns.html">MutationalPatterns</a>
     </li>
     <li>
       <a href="../articles/purple.html">PURPLE</a>
@@ -89,7 +92,7 @@
       <h1 data-toc-skip>CHORD</h1>
                         <h4 class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-10-24</h4>
+            <h4 class="date">2020-11-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/chord.Rmd"><code>vignettes/chord.Rmd</code></a></small>
       <div class="hidden name"><code>chord.Rmd</code></div>
@@ -98,11 +101,11 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/umccr/gpgr">gpgr</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/umccr/gpgr">gpgr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span></code></pre></div>
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
@@ -115,15 +118,15 @@
 <h2 class="hasAnchor">
 <a href="#data" class="anchor"></a>Data</h2>
 <p>CHORD takes as input somatic VCFs containing SNVs, INDELs and SVs. The former two can be in the same VCF. It is also able to take data.frames with those variants as input. Due to the annotation size in some of our processed Manta VCFs, we prefer to feed it a pre-processed SV data.frame instead of a VCF, thus we use the <code><a href="../reference/chord_mantavcf2df.html">gpgr::chord_mantavcf2df</a></code> function.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">snvindel_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
-<span class="va">sv_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/sv/manta.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">snvindel_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
+<span class="va">sv_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/sv/manta.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="analysis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#analysis" class="anchor"></a>Analysis</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">sv_df</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/chord_mantavcf2df.html">chord_mantavcf2df</a></span><span class="op">(</span><span class="va">sv_vcf</span><span class="op">)</span> <span class="co"># prepare SV VCF as data.frame</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sv_df</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/chord_mantavcf2df.html">chord_mantavcf2df</a></span><span class="op">(</span><span class="va">sv_vcf</span><span class="op">)</span> <span class="co"># prepare SV VCF as data.frame</span>
 <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/chord_run.html">chord_run</a></span><span class="op">(</span>
   vcf.snv <span class="op">=</span> <span class="va">snvindel_vcf</span>,
   df.sv <span class="op">=</span> <span class="va">sv_df</span>,
@@ -149,6 +152,44 @@
 <span class="co">#&gt;       extractSigsSnv(..., ref.genome=BSgenome.Hsapiens.UCSC.hg19)</span>
 <span class="co">#&gt; Reading in vcf file...</span>
 <span class="co">#&gt; Converting chrom name style to style in ref.genome...</span>
+<span class="co">#&gt; Loading required package: BiocGenerics</span>
+<span class="co">#&gt; Loading required package: parallel</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'BiocGenerics'</span>
+<span class="co">#&gt; The following objects are masked from 'package:parallel':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
+<span class="co">#&gt;     clusterExport, clusterMap, parApply, parCapply, parLapply,</span>
+<span class="co">#&gt;     parLapplyLB, parRapply, parSapply, parSapplyLB</span>
+<span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     combine, intersect, setdiff, union</span>
+<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     IQR, mad, sd, var, xtabs</span>
+<span class="co">#&gt; The following objects are masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     anyDuplicated, append, as.data.frame, basename, cbind, colnames,</span>
+<span class="co">#&gt;     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,</span>
+<span class="co">#&gt;     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,</span>
+<span class="co">#&gt;     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,</span>
+<span class="co">#&gt;     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,</span>
+<span class="co">#&gt;     union, unique, unsplit, which.max, which.min</span>
+<span class="co">#&gt; Loading required package: S4Vectors</span>
+<span class="co">#&gt; Loading required package: stats4</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'S4Vectors'</span>
+<span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     first, rename</span>
+<span class="co">#&gt; The following object is masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     expand.grid</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'IRanges'</span>
+<span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     collapse, desc, slice</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ## Indels</span>
 <span class="co">#&gt; vcf file is the same for both SNVs and indels. Skipping reading vcf for indels</span>
@@ -192,13 +233,13 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; #====== Exporting output =========#</span>
 <span class="co">#&gt; output.path not specified. Directly returning output</span>
-<span class="co">#&gt; </span></pre></div>
+<span class="co">#&gt; </span></code></pre></div>
 </div>
 <div id="results" class="section level2">
 <h2 class="hasAnchor">
 <a href="#results" class="anchor"></a>Results</h2>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">res</span>, list.len <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">res</span>, list.len <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
 <span class="co">#&gt; List of 2</span>
 <span class="co">#&gt;  $ contexts  : num [1, 1:145] 123 82 18 91 92 98 21 94 51 55 ...</span>
 <span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span>
@@ -213,7 +254,7 @@
 
 <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">prediction</span><span class="op">)</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">prediction</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span>.name_repair <span class="op">=</span> <span class="st">"check_unique"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"CHORD results."</span><span class="op">)</span></pre></div>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"CHORD results."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 CHORD results.
@@ -294,7 +335,7 @@ remarks_hrd_type
 p_hrd.5%
 </td>
 <td style="text-align:left;">
-0.765
+0.774
 </td>
 </tr>
 <tr>
@@ -310,7 +351,7 @@ p_hrd.50%
 p_hrd.95%
 </td>
 <td style="text-align:left;">
-0.82
+0.814
 </td>
 </tr>
 <tr>
@@ -318,7 +359,7 @@ p_hrd.95%
 p_BRCA1.5%
 </td>
 <td style="text-align:left;">
-0.096
+0.09
 </td>
 </tr>
 <tr>
@@ -326,7 +367,7 @@ p_BRCA1.5%
 p_BRCA1.50%
 </td>
 <td style="text-align:left;">
-0.197
+0.194
 </td>
 </tr>
 <tr>
@@ -334,7 +375,7 @@ p_BRCA1.50%
 p_BRCA1.95%
 </td>
 <td style="text-align:left;">
-0.332
+0.296
 </td>
 </tr>
 <tr>
@@ -342,7 +383,7 @@ p_BRCA1.95%
 p_BRCA2.5%
 </td>
 <td style="text-align:left;">
-0.492
+0.498
 </td>
 </tr>
 <tr>
@@ -350,7 +391,7 @@ p_BRCA2.5%
 p_BRCA2.50%
 </td>
 <td style="text-align:left;">
-0.602
+0.591
 </td>
 </tr>
 <tr>
@@ -358,13 +399,13 @@ p_BRCA2.50%
 p_BRCA2.95%
 </td>
 <td style="text-align:left;">
-0.7
+0.71
 </td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
 <span class="co"># grab first and last few of the contexts</span>
 <span class="va">col_ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">contexts</span><span class="op">)</span> <span class="op">-</span> <span class="fl">10</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">contexts</span><span class="op">)</span><span class="op">)</span>
 <span class="va">res</span><span class="op">$</span><span class="va">contexts</span> <span class="op">%&gt;%</span>
@@ -374,7 +415,7 @@ p_BRCA2.95%
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="va">col_ind</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Sample of rows from contexts counts."</span><span class="op">)</span></pre></div>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Sample of rows from contexts counts."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 Sample of rows from contexts counts.
@@ -666,7 +707,7 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-10-24
+2020-11-15
 </td>
 </tr>
 </tbody>
@@ -714,10 +755,10 @@ CHORD
 gpgr
 </td>
 <td style="text-align:left;">
-0.0.13
+0.0.15
 </td>
 <td style="text-align:left;">
-2020-10-24
+2020-11-15
 </td>
 </tr>
 <tr>

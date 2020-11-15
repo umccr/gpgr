@@ -74,7 +74,7 @@ and selects columns of interest." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.15</span>
       </span>
     </div>
 
@@ -101,6 +101,9 @@ and selects columns of interest." />
     </li>
     <li>
       <a href="../articles/hrdetect.html">HRDetect</a>
+    </li>
+    <li>
+      <a href="../articles/mutationalpatterns.html">MutationalPatterns</a>
     </li>
     <li>
       <a href="../articles/purple.html">PURPLE</a>
@@ -187,7 +190,7 @@ and selects columns of interest.</p>
 #&gt; </span><span style='color: #555555;'>11</span><span> TYMS  2.01  2.01  chr18 6.58</span><span style='color: #555555;'>e</span><span>5 6.74</span><span style='color: #555555;'>e</span><span>5 p11.32  </span><span style='color: #555555;'>""</span><span>         ENST0000032…
 #&gt; </span><span style='color: #555555;'>12</span><span> CRLF2 0.997 0.997 chrX  1.19</span><span style='color: #555555;'>e</span><span>6 1.21</span><span style='color: #555555;'>e</span><span>6 p22.33  </span><span style='color: #555555;'>"</span><span>oncogene</span><span style='color: #555555;'>"</span><span> ENST0000040…
 #&gt; </span><span style='color: #555555;'>13</span><span> SRY   1.01  1.01  chrY  2.79</span><span style='color: #555555;'>e</span><span>6 2.79</span><span style='color: #555555;'>e</span><span>6 p11.2   </span><span style='color: #555555;'>""</span><span>         ENST0000038…
-#&gt; </span><span style='color: #555555;'># … with 6 more variables: minMinorAllelePloidy </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, somReg </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'># … with 6 more variables: minMinorAlleleCN </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, somReg </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   germDelReg </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, minReg </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, minRegStartEnd </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   minRegSupportStartEndMethod </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
 #&gt; 
@@ -201,7 +204,7 @@ and selects columns of interest.</p>
 #&gt; </span><span style='color: #555555;'> 4</span><span> chrBand                              Chromosome band of the gene             
 #&gt; </span><span style='color: #555555;'> 5</span><span> onco_or_ts                           oncogene ('oncogene'), tumor suppressor…
 #&gt; </span><span style='color: #555555;'> 6</span><span> transcriptID                         Ensembl transcript ID (dot version)     
-#&gt; </span><span style='color: #555555;'> 7</span><span> minMinorAllelePloidy                 Minimum allele ploidy found over the ge…
+#&gt; </span><span style='color: #555555;'> 7</span><span> minMinorAlleleCN                     Minimum allele ploidy found over the ge…
 #&gt; </span><span style='color: #555555;'> 8</span><span> somReg (somaticRegions)              Count of somatic copy number regions th…
 #&gt; </span><span style='color: #555555;'> 9</span><span> germDelReg (germlineHomDeletionRegi… Number of regions spanned by this gene …
 #&gt; </span><span style='color: #555555;'>10</span><span> minReg (minRegions)                  Number of somatic regions inside the ge…

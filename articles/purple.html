@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.15</span>
       </span>
     </div>
 
@@ -58,6 +58,9 @@
     </li>
     <li>
       <a href="../articles/hrdetect.html">HRDetect</a>
+    </li>
+    <li>
+      <a href="../articles/mutationalpatterns.html">MutationalPatterns</a>
     </li>
     <li>
       <a href="../articles/purple.html">PURPLE</a>
@@ -89,7 +92,7 @@
       <h1 data-toc-skip>PURPLE</h1>
                         <h4 class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-10-24</h4>
+            <h4 class="date">2020-11-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/purple.Rmd"><code>vignettes/purple.Rmd</code></a></small>
       <div class="hidden name"><code>purple.Rmd</code></div>
@@ -98,11 +101,11 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/umccr/gpgr">gpgr</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/umccr/gpgr">gpgr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span></code></pre></div>
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
@@ -116,14 +119,14 @@
 <div id="somatic-cnvs-per-chromosome" class="section level3">
 <h3 class="hasAnchor">
 <a href="#somatic-cnvs-per-chromosome" class="anchor"></a>Somatic CNVs (per chromosome)</h3>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">cnv_som</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.somatic.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_som_process.html">purple_cnv_som_process</a></span><span class="op">(</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cnv_som</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.somatic.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_som_process.html">purple_cnv_som_process</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <details><summary>
 Description
-</summary><div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">cnv_som</span><span class="op">$</span><span class="va">descr</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Columns."</span><span class="op">)</span></pre></div>
+</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cnv_som</span><span class="op">$</span><span class="va">descr</span> <span class="op">%&gt;%</span>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Columns."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Somatic CNVs (per chromosome) Columns.
@@ -155,10 +158,10 @@ Fitted absolute copy number of segment adjusted for purity and ploidy
 </tr>
 <tr>
 <td style="text-align:left;">
-Ploidy Min+Maj
+CN Min+Maj
 </td>
 <td style="text-align:left;">
-Ploidy of minor + major allele adjusted for purity
+CopyNumber of minor + major allele adjusted for purity
 </td>
 </tr>
 <tr>
@@ -194,10 +197,10 @@ Proportion of segment that is G or C (Count of COBALT windows covered by this se
 </td>
 </tr>
 </tbody>
-</table></details><div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="va">cnv_som</span><span class="op">$</span><span class="va">tab</span> <span class="op">%&gt;%</span>
+</table></details><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cnv_som</span><span class="op">$</span><span class="va">tab</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Summary Table."</span><span class="op">)</span></pre></div>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Summary Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Somatic CNVs (per chromosome) Summary Table.
@@ -216,7 +219,7 @@ End
 CN
 </th>
 <th style="text-align:left;">
-Ploidy Min+Maj
+CN Min+Maj
 </th>
 <th style="text-align:left;">
 Start/End SegSupport
@@ -528,15 +531,15 @@ BAF_WEIGHTED
 <div id="somatic-cnvs-per-gene" class="section level3">
 <h3 class="hasAnchor">
 <a href="#somatic-cnvs-per-gene" class="anchor"></a>Somatic CNVs (per gene)</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="va">umccr_key_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/ref/umccr_cancer_genes_2019-03-20.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">umccr_key_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/ref/umccr_cancer_genes_2019-03-20.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
 <span class="va">cnv_som_gene</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.gene.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_som_gene_process.html">purple_cnv_som_gene_process</a></span><span class="op">(</span>g <span class="op">=</span> <span class="va">umccr_key_genes</span><span class="op">)</span></pre></div>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_som_gene_process.html">purple_cnv_som_gene_process</a></span><span class="op">(</span>g <span class="op">=</span> <span class="va">umccr_key_genes</span><span class="op">)</span></code></pre></div>
 <details><summary>
 Description
-</summary><div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="va">cnv_som_gene</span><span class="op">$</span><span class="va">descr</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Columns."</span><span class="op">)</span></pre></div>
+</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cnv_som_gene</span><span class="op">$</span><span class="va">descr</span> <span class="op">%&gt;%</span>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Columns."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Somatic CNVs (per gene) Columns.
@@ -600,7 +603,7 @@ Ensembl transcript ID (dot version)
 </tr>
 <tr>
 <td style="text-align:left;">
-minMinorAllelePloidy
+minMinorAlleleCN
 </td>
 <td style="text-align:left;">
 Minimum allele ploidy found over the gene exons - useful for identifying LOH events
@@ -647,10 +650,10 @@ Start/end support of the CN region overlapping the gene with the min CN (plus de
 </td>
 </tr>
 </tbody>
-</table></details><div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">cnv_som_gene</span><span class="op">$</span><span class="va">tab</span> <span class="op">%&gt;%</span>
+</table></details><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cnv_som_gene</span><span class="op">$</span><span class="va">tab</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Summary Table."</span><span class="op">)</span></pre></div>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Summary Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Somatic CNVs (per gene) Summary Table.
@@ -684,7 +687,7 @@ onco_or_ts
 transcriptID
 </th>
 <th style="text-align:right;">
-minMinorAllelePloidy
+minMinorAlleleCN
 </th>
 <th style="text-align:right;">
 somReg
@@ -1174,14 +1177,14 @@ CENTROMERE-NONE (BAF_WEIGHTED)
 <div id="germline-cnvs-per-chromosome" class="section level3">
 <h3 class="hasAnchor">
 <a href="#germline-cnvs-per-chromosome" class="anchor"></a>Germline CNVs (per chromosome)</h3>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="va">cnv_germ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.germline.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_germ_process.html">purple_cnv_germ_process</a></span><span class="op">(</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cnv_germ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.germline.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_germ_process.html">purple_cnv_germ_process</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <details><summary>
 Description
-</summary><div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">cnv_germ</span><span class="op">$</span><span class="va">descr</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Germline CNVs (per chromosome) Columns."</span><span class="op">)</span></pre></div>
+</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cnv_germ</span><span class="op">$</span><span class="va">descr</span> <span class="op">%&gt;%</span>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Germline CNVs (per chromosome) Columns."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Germline CNVs (per chromosome) Columns.
@@ -1213,10 +1216,10 @@ Fitted absolute copy number of segment adjusted for purity and ploidy
 </tr>
 <tr>
 <td style="text-align:left;">
-Ploidy Min+Maj
+CN Min+Maj
 </td>
 <td style="text-align:left;">
-Ploidy of minor + major allele adjusted for purity
+CopyNumber of minor + major allele adjusted for purity
 </td>
 </tr>
 <tr>
@@ -1252,10 +1255,10 @@ Proportion of segment that is G or C (Count of COBALT windows covered by this se
 </td>
 </tr>
 </tbody>
-</table></details><div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="va">cnv_germ</span><span class="op">$</span><span class="va">tab</span> <span class="op">%&gt;%</span>
+</table></details><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cnv_germ</span><span class="op">$</span><span class="va">tab</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Germline CNVs (per chromosome) Summary Table."</span><span class="op">)</span></pre></div>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Germline CNVs (per chromosome) Summary Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Germline CNVs (per chromosome) Summary Table.
@@ -1274,7 +1277,7 @@ End
 CN
 </th>
 <th style="text-align:left;">
-Ploidy Min+Maj
+CN Min+Maj
 </th>
 <th style="text-align:left;">
 Start/End SegSupport
@@ -1586,12 +1589,12 @@ GERMLINE_HET2HOM_DELETION
 <div id="purity" class="section level3">
 <h3 class="hasAnchor">
 <a href="#purity" class="anchor"></a>Purity</h3>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="va">purity</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.purity.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">purity</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.purity.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_purity_read.html">purple_purity_read</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="va">purity</span><span class="op">$</span><span class="va">summary</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Purity Summary Table."</span><span class="op">)</span></pre></div>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Purity Summary Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Purity Summary Table.
@@ -1720,7 +1723,7 @@ TMB
 0 (LOW)
 </td>
 <td style="text-align:left;">
-Tumor mutational burden per mega base (Status: ‘HIGH’, ‘LOW’ or ‘UNKNOWN’ if somatic variants not supplied)
+Tumor mutational burden (# PASS variants per Megabase) (Status: ‘HIGH’, ‘LOW’ or ‘UNKNOWN’ if somatic variants not supplied. High = &gt;10 PASS variants per Mb).
 </td>
 </tr>
 <tr>
@@ -1737,18 +1740,32 @@ TML
 Tumor mutational load (Status: ‘HIGH’, ‘LOW’ or ‘UNKNOWN’ if somatic variants not supplied)
 </td>
 </tr>
+<tr>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+TMB-SV
+</td>
+<td style="text-align:left;">
+713
+</td>
+<td style="text-align:left;">
+Total number of non inferred, non single passing structural variants detected
+</td>
+</tr>
 </tbody>
 </table>
 </div>
 <div id="qc" class="section level3">
 <h3 class="hasAnchor">
 <a href="#qc" class="anchor"></a>QC</h3>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="va">qc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.qc"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">qc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.qc"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_qc_read.html">purple_qc_read</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="va">qc</span><span class="op">$</span><span class="va">summary</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE QC Summary Table."</span><span class="op">)</span></pre></div>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE QC Summary Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE QC Summary Table.
@@ -1776,9 +1793,10 @@ details
 QC_Status
 </td>
 <td style="text-align:left;">
-PASS
+WARN_DELETED_GENES
 </td>
 <td style="text-align:left;">
+Either PASS or one or more warnings or fail statuses. Warnings include WARN_DELETED_GENES, WARN_HIGH_COPY_NUMBER_NOISE, FAIL_CONTAMINATION, FAIL_NO_TUMOR, WARN_GENDER_MISMATCH or WARN_LOW_PURITY
 </td>
 </tr>
 <tr>
@@ -1786,13 +1804,12 @@ PASS
 13
 </td>
 <td style="text-align:left;">
-Segment_Pass
+Method
 </td>
 <td style="text-align:left;">
-TRUE
+NORMAL
 </td>
 <td style="text-align:left;">
-Score: 0; Unsupported: 0
 </td>
 </tr>
 <tr>
@@ -1800,13 +1817,39 @@ Score: 0; Unsupported: 0
 14
 </td>
 <td style="text-align:left;">
-Gender_Pass
+CopyNumberSegments
 </td>
 <td style="text-align:left;">
-TRUE
+1428 (Unsupported: 0)
+</td>
+<td style="text-align:left;">
+Total count of CN segments. A high number of segments with no SV support on either side is an indicator of poor sample quality.
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Purity
+</td>
+<td style="text-align:left;">
+0.8600
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:left;">
+Gender
 </td>
 <td style="text-align:left;">
 Amber: MALE; Cobalt: MALE
+</td>
+<td style="text-align:left;">
 </td>
 </tr>
 <tr>
@@ -1814,13 +1857,40 @@ Amber: MALE; Cobalt: MALE
 15
 </td>
 <td style="text-align:left;">
-DelGenes_Pass
+DeletedGenes
 </td>
 <td style="text-align:left;">
-TRUE
+7782
 </td>
 <td style="text-align:left;">
-count: 0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:left;">
+Contamination
+</td>
+<td style="text-align:left;">
+0.0
+</td>
+<td style="text-align:left;">
+Rate of contamination in tumor sample as determined by AMBER.
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:left;">
+GermlineAberrations
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:left;">
+Any germline chromosomal abberations detected. Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.
 </td>
 </tr>
 </tbody>
@@ -1912,7 +1982,7 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-10-24
+2020-11-15
 </td>
 </tr>
 </tbody>
@@ -1949,10 +2019,10 @@ base
 gpgr
 </td>
 <td style="text-align:left;">
-0.0.13
+0.0.15
 </td>
 <td style="text-align:left;">
-2020-10-24
+2020-11-15
 </td>
 </tr>
 </tbody>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>umccrise AF summary — af_summary • gpgr</title>
+<title>Plot INDEL Mutation Characteristics — sig_plot_indel • gpgr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="umccrise AF summary — af_summary" />
-<meta property="og:description" content="Get summary table and plot for SNV allele frequencies output by umccrise." />
+<meta property="og:title" content="Plot INDEL Mutation Characteristics — sig_plot_indel" />
+<meta property="og:description" content="Plots INDEL mutation characteristics." />
 
 
 
@@ -129,33 +129,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>umccrise AF summary</h1>
-    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/umccrise.R'><code>R/umccrise.R</code></a></small>
-    <div class="hidden name"><code>af_summary.Rd</code></div>
+    <h1>Plot INDEL Mutation Characteristics</h1>
+    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/mutationalpatterns.R'><code>R/mutationalpatterns.R</code></a></small>
+    <div class="hidden name"><code>sig_plot_indel.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Get summary table and plot for SNV allele frequencies output by umccrise.</p>
+    <p>Plots INDEL mutation characteristics.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>af_summary</span><span class='op'>(</span><span class='va'>af_global_file</span>, <span class='va'>af_keygenes_file</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>sig_plot_indel</span><span class='op'>(</span><span class='va'>indel_counts</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>af_global_file</th>
-      <td><p>Path to 'global' AF file.</p></td>
-    </tr>
-    <tr>
-      <th>af_keygenes_file</th>
-      <td><p>Path to 'keygenes' AF file.</p></td>
+      <th>indel_counts</th>
+      <td><p>INDEL context counts.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list containing a gt table and a plot summarising AFs.</p>
+    <p>A list with two ggplot2 objects:</p><ul>
+<li><p>p_indel_main: the main INDEL contexts.</p></li>
+<li><p>p_indel_cont: the INDEL contexts.</p></li>
+</ul>
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

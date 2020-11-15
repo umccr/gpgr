@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>umccrise AF summary — af_summary • gpgr</title>
+<title>Calculate COSMIC Signature Contribution — sig_contribution • gpgr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="umccrise AF summary — af_summary" />
-<meta property="og:description" content="Get summary table and plot for SNV allele frequencies output by umccrise." />
+<meta property="og:title" content="Calculate COSMIC Signature Contribution — sig_contribution" />
+<meta property="og:description" content="Finds the linear combination of COSMIC (2015 and 2020) mutation signatures that
+most closely reconstructs the SNV mutation matrix by solving the
+nonnegative least-squares constraints problem." />
 
 
 
@@ -129,33 +131,36 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>umccrise AF summary</h1>
-    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/umccrise.R'><code>R/umccrise.R</code></a></small>
-    <div class="hidden name"><code>af_summary.Rd</code></div>
+    <h1>Calculate COSMIC Signature Contribution</h1>
+    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/mutationalpatterns.R'><code>R/mutationalpatterns.R</code></a></small>
+    <div class="hidden name"><code>sig_contribution.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Get summary table and plot for SNV allele frequencies output by umccrise.</p>
+    <p>Finds the linear combination of COSMIC (2015 and 2020) mutation signatures that
+most closely reconstructs the SNV mutation matrix by solving the
+nonnegative least-squares constraints problem.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>af_summary</span><span class='op'>(</span><span class='va'>af_global_file</span>, <span class='va'>af_keygenes_file</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>sig_contribution</span><span class='op'>(</span><span class='va'>mut_mat</span>, <span class='va'>signatures</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>af_global_file</th>
-      <td><p>Path to 'global' AF file.</p></td>
+      <th>mut_mat</th>
+      <td><p>Mutation count matrix (dimensions: m rows (mutation types) X 1 column (sample)).</p></td>
     </tr>
     <tr>
-      <th>af_keygenes_file</th>
-      <td><p>Path to 'keygenes' AF file.</p></td>
+      <th>signatures</th>
+      <td><p>Signature matrix (dimensions: m rows (mutation types) X n columns (signatures))</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list containing a gt table and a plot summarising AFs.</p>
+    <p>A list with the COSMIC 2015 and 2020 signature contributions to the
+sample's signature.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
