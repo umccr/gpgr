@@ -4,10 +4,12 @@
 \alias{sig_contribution}
 \title{Calculate COSMIC Signature Contribution}
 \usage{
-sig_contribution(mut_mat)
+sig_contribution(mut_mat, signatures)
 }
 \arguments{
 \item{mut_mat}{Mutation count matrix (dimensions: m rows (mutation types) X 1 column (sample)).}
+
+\item{signatures}{Signature matrix (dimensions: m rows (mutation types) X n columns (signatures))}
 }
 \value{
 A list with the COSMIC 2015 and 2020 signature contributions to the

@@ -4,12 +4,14 @@
 \alias{sig_plot_snv}
 \title{Plot SNV Mutation Characteristics}
 \usage{
-sig_plot_snv(vcf_gr, ref_genome)
+sig_plot_snv(gr_snv, snv_counts, ref_genome)
 }
 \arguments{
-\item{vcf_gr}{GRanges containing all mutation types from a single sample.}
+\item{gr_snv}{GRanges containing SNVs from a single sample.}
 
-\item{ref_genome}{The BSGenome reference genome object.}
+\item{snv_counts}{A matrix with counts of SNV contexts.}
+
+\item{ref_genome}{The BSGenome reference genome to use.}
 }
 \value{
 A list with four ggplot2 objects:

@@ -9,7 +9,7 @@ sig_count_indel(vcf_gr, ref_genome)
 \arguments{
 \item{vcf_gr}{GRanges containing all mutation types from a single sample.}
 
-\item{ref_genome}{The BSGenome reference genome object.}
+\item{ref_genome}{The BSGenome reference genome to use.}
 }
 \value{
 A tibble containing the number of INDELs per COSMIC context per gr.
