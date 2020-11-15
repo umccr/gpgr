@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 
 vignette: >
-  %\VignetteIndexEntry{CHORD}
+  %\VignetteIndexEntry{MutationalPatterns}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,14 +20,16 @@ knitr::opts_chunk$set(
 ```{r setup, message=FALSE}
 require(gpgr)
 require(MutationalPatterns)
-ref_genome38 <- "BSgenome.Hsapiens.UCSC.hg38"
-require(ref_genome38, character.only = TRUE)
+ref_genome <- "BSgenome.Hsapiens.UCSC.hg38"
+require(ref_genome, character.only = TRUE)
 require(devtools)
 require(dplyr)
-require(knitr)
+require(patchwork)
 ```
 
-```{r}
+## Data Preparation
+
+```{r data_prep}
 params <- list(
   vcf = system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr"),
   nm = "sampleA"
@@ -35,120 +37,74 @@ params <- list(
 gr <- MutationalPatterns::read_vcfs_as_granges(
   vcf_files = params$vcf,
   sample_names = params$nm,
-  genome = ref_genome38,
+  genome = ref_genome,
   group = "auto+sex",
   type = "all")
+```
 
-gr_snv <- get_mut_type(gr, type = "snv")
-gr_indel <- get_mut_type(gr, type = "indel")
-gr_dbs <- get_mut_type(gr, type = "dbs")
+## SNVs (SBS)
 
-# snvs
-type_occurrences <- mut_type_occurrences(gr_snv, ref_genome38)
-plot_spectrum(type_occurrences, CT = TRUE, condensed = TRUE, error_bars = "none")
-mut_mat <- mut_matrix(vcf_list = gr_snv, ref_genome = ref_genome38)
-plot_96_profile(mut_matrix = mut_mat, condensed = TRUE)
-mut_mat_ext_context <- mut_matrix(gr_snv, ref_genome = ref_genome38, extension = 2)
-plot_profile_heatmap(mut_mat_ext_context)
-plot_river(mut_mat_ext_context)
+### Plots
 
-# indels
-gr_indel <- get_indel_context(gr_indel, ref_genome = ref_genome38)
-indel_counts <- count_indel_contexts(gr_indel)
-p1 <- plot_main_indel_contexts(indel_counts) +
-  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 30, vjust = 0.9, hjust = 1)) +
-  ggplot2::theme(axis.text.x = ggplot2::element_blank())
-p2 <- plot_indel_contexts(indel_counts, condensed = TRUE) +
-  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 30, vjust = 0.9, hjust = 1),
-                 legend.position="top")
-p1 / p2
+```{r snv_plots, fig.width=12, fig.height=10, out.width="90%"}
+snv_counts <- gpgr::sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
+p_snvs <- gpgr::sig_plot_snv(gr_snv = snv_counts$gr_snv, snv_counts = snv_counts$snv_counts,
+                             ref_genome = ref_genome)
+p_snvs$p_river + p_snvs$p_heatmap + p_snvs$p_spectrum + p_snvs$p_96_profile + patchwork::plot_layout(ncol = 1)
+```
 
-# dbs
-gr_dbs <- get_dbs_context(gr_dbs)
-dbs_counts <- count_dbs_contexts(gr_dbs)
-p1 <- plot_main_dbs_contexts(dbs_counts)
-p2 <- plot_dbs_contexts(dbs_counts, condensed = TRUE)
-p1 / p2
+### Signature Contributions
 
-###--- OLD Sigs ---###
-# Get Sanger sigs from "http://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt"
-sig_probs1 <- file.path("misc/sig/v2_mar2015/signatures_probabilities.txt")
-# better be explicit - the sig_probs file has 7 extra empty columns
-ctypes <- paste0(c("ccc", paste0(rep("d", 30), collapse = ""), "ccccccc"), collapse = "")
-cnames <- c("SubstType", "Trinucleotide", "SomMutType", paste0("Sig", 1:30), paste0("foo", 1:7))
-cancer_signatures1 <-
-  readr::read_tsv(sig_probs1, col_names = cnames, col_types = ctypes, skip = 1) %>%
-  dplyr::arrange(SubstType)
+```{r snv_contributions}
+sigs_snv_2015 <-
+  gpgr::cosmic_signatures_2015 %>%
+  gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = .)
 
-# sanity check - need to be in same order
-stopifnot(all(cancer_signatures1$SomMutType == rownames(mut_mat)))
-# select only 30 sig columns, 96 mut types
-cancer_signatures1 <- cancer_signatures1 %>%
-  dplyr::select(4:33) %>%
-  as.matrix()
+sigs_snv_2020 <-
+  MutationalPatterns::get_known_signatures(muttype = "snv",
+                                           incl_poss_artifacts = TRUE) %>%
+  gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = .)
 
-###--- NEW Sigs ---###
-sig_probs2 <- file.path("misc/sig/v3_may2019/sigProfiler_SBS_signatures_2019_05_22.csv")
-cancer_signatures2 <-
-  readr::read_csv(sig_probs2, col_types = cols(.default = "d", Type = "c", SubType = "c")) %>%
-  dplyr::mutate(SomMutType = paste0(substr(SubType, 1, 1),
-                                    "[", Type, "]",
-                                    substr(SubType, 3, 3))) %>%
-  dplyr::select(SomMutType, SBS1:SBS85)
+sigs_snv_2015
+sigs_snv_2020
+```
 
-# sanity check - need to be in same order
-stopifnot(all(cancer_signatures2$SomMutType == rownames(mut_mat)))
-# select only 67 sig columns, 96 mut types
-cancer_signatures2 <- cancer_signatures2 %>%
-  dplyr::select(-1) %>%
-  as.matrix()
+## DBS
 
-# Fit mutation matrix to cancer signatures
-fit_res1 <- MutationalPatterns::fit_to_signatures(mut_matrix = mut_mat, signatures = cancer_signatures1)
-fit_res2 <- MutationalPatterns::fit_to_signatures(mut_matrix = mut_mat, signatures = cancer_signatures2)
+### Plots
 
-# Convert to tibbles for more bullet-proof subsetting
-fit_res1 <- tibble::tibble(
-  sig = rownames(fit_res1$contribution), # matrix rownames
-  contr = unname(fit_res1$contribution[, 1])) # matrix single column -> vector
+```{r dbs_plots, fig.width=12, fig.height=10, out.width="90%"}
+dbs_counts <- gpgr::sig_count_dbs(vcf_gr = gr)
+p_dbs <- gpgr::sig_plot_dbs(dbs_counts = dbs_counts)
+p_dbs$p_dbs_main / p_dbs$p_dbs_cont
+```
 
-fit_res2 <- tibble::tibble(
-  sig = rownames(fit_res2$contribution),
-  contr = unname(fit_res2$contribution[, 1]))
+### Signature Contributions
 
-# Select signatures with some contribution
-fit_res_contr1 <- dplyr::filter(fit_res1, contr > 0)
-fit_res_contr2 <- dplyr::filter(fit_res2, contr > 0)
+```{r dbs_contributions}
+sigs_dbs <-
+  MutationalPatterns::get_known_signatures(muttype = "dbs") %>%
+  gpgr::sig_contribution(mut_mat = dbs_counts, signatures = .)
+sigs_dbs
+```
 
-# If there are no signatures, return a dummy tibble
-if (nrow(fit_res_contr1) == 0) {
-  fit_res_contr1 <- tibble::tibble(
-    sig = "NOSIGS",
-    contr = 0
-  )
-}
+## INDELs
 
-if (nrow(fit_res_contr2) == 0) {
-  fit_res_contr2 <- tibble::tibble(
-    sig = "NOSIGS",
-    contr = 0
-  )
-}
+### Plots
 
-mut_sig_contr1 <-
-  fit_res_contr1 %>%
-  dplyr::mutate(contr = round(contr, 0),
-                Freq = round(contr / sum(contr), 2),
-                Rank = as.integer(base::rank(-contr))) %>%
-  dplyr::select(Rank, Signature = sig, Contribution = contr, Freq) %>%
-  dplyr::arrange(Rank)
-mut_sig_contr2 <-
-  fit_res_contr2 %>%
-  dplyr::mutate(contr = round(contr, 0),
-                Freq = round(contr / sum(contr), 2),
-                Rank = as.integer(base::rank(-contr))) %>%
-  dplyr::select(Rank, Signature = sig, Contribution = contr, Freq) %>%
-  dplyr::arrange(Rank)
+```{r indel_plots, fig.width=12, fig.height=10, out.width="90%"}
+indel_counts <- gpgr::sig_count_indel(vcf_gr = gr, ref_genome = ref_genome)
+p_indels <- gpgr::sig_plot_indel(indel_counts = indel_counts)
+p_indels$p_indel_main / p_indels$p_indel_cont
+```
+
+### Signature Contributions
+
+```{r indel_contributions}
+sigs_indel <-
+  MutationalPatterns::get_known_signatures(muttype = "indel") %>%
+  gpgr::sig_contribution(mut_mat = indel_counts, signatures = .)
+sigs_indel
 ```
 
 
