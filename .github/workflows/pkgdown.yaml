@@ -1,9 +1,6 @@
 name: conda-pkgdown
 
-on:
-  push:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   build-conda-deploy-pkgdown:
