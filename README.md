@@ -25,4 +25,5 @@ vignette at <https://umccr.github.io/gpgr/articles/chord.html>.
 
 ## MutationalPatterns
 
-Wraps functionality from MutationalPatterns (https://github.com/UMCUGenetics/MutationalPatterns)
+Wraps functionality from [MutationalPatterns](https://github.com/UMCUGenetics/MutationalPatterns) - see
+vignette at <https://umccr.github.io/gpgr/articles/mutationalpatterns.html>.
