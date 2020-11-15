@@ -4,12 +4,10 @@
 \alias{sig_plot_indel}
 \title{Plot INDEL Mutation Characteristics}
 \usage{
-sig_plot_indel(vcf_gr, ref_genome)
+sig_plot_indel(indel_counts)
 }
 \arguments{
-\item{vcf_gr}{GRanges containing all mutation types from a single sample.}
-
-\item{ref_genome}{The BSGenome reference genome object.}
+\item{indel_counts}{INDEL context counts.}
 }
 \value{
 A list with two ggplot2 objects:

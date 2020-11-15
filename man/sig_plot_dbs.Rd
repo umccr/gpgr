@@ -4,10 +4,10 @@
 \alias{sig_plot_dbs}
 \title{Plot DBS Mutation Characteristics}
 \usage{
-sig_plot_dbs(vcf_gr)
+sig_plot_dbs(dbs_counts)
 }
 \arguments{
-\item{vcf_gr}{GRanges containing all mutation types from a single sample.}
+\item{dbs_counts}{DBS context counts.}
 }
 \value{
 A list with two ggplot2 objects:
