@@ -1,0 +1,128 @@
+---
+title: "MutationalPatterns"
+author: "Peter Diakumis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+
+vignette: >
+  %\VignetteIndexEntry{MutationalPatterns}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r knitr_opts, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+require(gpgr)
+require(MutationalPatterns)
+ref_genome <- "BSgenome.Hsapiens.UCSC.hg38"
+require(ref_genome, character.only = TRUE)
+require(devtools)
+require(dplyr)
+require(patchwork)
+```
+
+## Data Preparation
+
+```{r data_prep}
+params <- list(
+  vcf = system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr"),
+  nm = "sampleA"
+)
+gr <- MutationalPatterns::read_vcfs_as_granges(
+  vcf_files = params$vcf,
+  sample_names = params$nm,
+  genome = ref_genome,
+  group = "auto+sex",
+  type = "all")
+```
+
+## SNVs (SBS)
+
+### Plots
+
+```{r snv_plots, fig.width=12, fig.height=10, out.width="90%"}
+snv_counts <- gpgr::sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
+p_snvs <- gpgr::sig_plot_snv(gr_snv = snv_counts$gr_snv, snv_counts = snv_counts$snv_counts,
+                             ref_genome = ref_genome)
+p_snvs$p_river + p_snvs$p_heatmap + p_snvs$p_spectrum + p_snvs$p_96_profile + patchwork::plot_layout(ncol = 1)
+```
+
+### Signature Contributions
+
+```{r snv_contributions}
+sigs_snv_2015 <-
+  gpgr::cosmic_signatures_2015 %>%
+  gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = .)
+
+sigs_snv_2020 <-
+  MutationalPatterns::get_known_signatures(muttype = "snv",
+                                           incl_poss_artifacts = TRUE) %>%
+  gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = .)
+
+sigs_snv_2015
+sigs_snv_2020
+```
+
+## DBS
+
+### Plots
+
+```{r dbs_plots, fig.width=12, fig.height=10, out.width="90%"}
+dbs_counts <- gpgr::sig_count_dbs(vcf_gr = gr)
+p_dbs <- gpgr::sig_plot_dbs(dbs_counts = dbs_counts)
+p_dbs$p_dbs_main / p_dbs$p_dbs_cont
+```
+
+### Signature Contributions
+
+```{r dbs_contributions}
+sigs_dbs <-
+  MutationalPatterns::get_known_signatures(muttype = "dbs") %>%
+  gpgr::sig_contribution(mut_mat = dbs_counts, signatures = .)
+sigs_dbs
+```
+
+## INDELs
+
+### Plots
+
+```{r indel_plots, fig.width=12, fig.height=10, out.width="90%"}
+indel_counts <- gpgr::sig_count_indel(vcf_gr = gr, ref_genome = ref_genome)
+p_indels <- gpgr::sig_plot_indel(indel_counts = indel_counts)
+p_indels$p_indel_main / p_indels$p_indel_cont
+```
+
+### Signature Contributions
+
+```{r indel_contributions}
+sigs_indel <-
+  MutationalPatterns::get_known_signatures(muttype = "indel") %>%
+  gpgr::sig_contribution(mut_mat = indel_counts, signatures = .)
+sigs_indel
+```
+
+
+## Session Info
+
+```{r session_info, echo=FALSE}
+si <- devtools::session_info(include_base = TRUE)
+si_pl <- unclass(si$platform) %>% as_tibble() %>% t()
+pkgs_of_interest <- c("base", "gpgr", "MutationalPatterns")
+si_pkg <- unclass(si$packages) %>%
+  dplyr::as_tibble() %>%
+  dplyr::select(package, version = ondiskversion, datestamp = date) %>%
+  dplyr::filter(package %in% pkgs_of_interest)
+
+dplyr::tibble(var = row.names(si_pl),
+              value = si_pl[, , drop = TRUE]) %>%
+  knitr::kable(format = "html", caption = "Platform information.")
+
+si_pkg %>%
+  knitr::kable(format = "html", caption = "Main packages used in this vignette.")
+```

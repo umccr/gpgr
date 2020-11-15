@@ -30,48 +30,34 @@ requirements:
     - r-base
     - r-assertthat
     - r-bedr
-    - bioconductor-bsgenome.hsapiens.ucsc.hg38
     - r-chord
-    - r-dplyr
     - r-ggplot2
-    - r-glue
     - r-gt
     - r-gtools
     - r-jsonlite
-    - r-purrr
+    - bioconductor-mutationalpatterns
     - r-readr
-    - r-rlang
-    - r-scales
     - r-signature.tools.lib
     - r-stringr
     - bioconductor-structuralvariantannotation
-    - r-tibble
     - r-tidyr
-    - r-tidyselect
     - bioconductor-variantannotation
 
   run:
     - r-base
     - r-assertthat
     - r-bedr
-    - bioconductor-bsgenome.hsapiens.ucsc.hg38
     - r-chord
-    - r-dplyr
     - r-ggplot2
-    - r-glue
     - r-gt
     - r-gtools
     - r-jsonlite
-    - r-purrr
+    - bioconductor-mutationalpatterns
     - r-readr
-    - r-rlang
-    - r-scales
     - r-signature.tools.lib
     - r-stringr
     - bioconductor-structuralvariantannotation
-    - r-tibble
     - r-tidyr
-    - r-tidyselect
     - bioconductor-variantannotation
 
 test:
