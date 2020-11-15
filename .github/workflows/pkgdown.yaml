@@ -34,7 +34,13 @@ jobs:
 
       - name: Install conda packages
         shell: bash -l {0}
-        run: mamba create -n pkgdown_gpgr --use-local r-gpgr r-pkgdown r-devtools r-patchwork bioconductor-bsgenome.hsapiens.ucsc.hg38 pandoc
+        run: mamba create -n pkgdown_gpgr --use-local \
+          r-gpgr \
+          r-pkgdown \
+          r-devtools \
+          r-patchwork \
+          bioconductor-bsgenome.hsapiens.ucsc.hg38 \
+          pandoc
 
       - name: Publish pkgdown website
         shell: bash -l {0}
