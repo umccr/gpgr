@@ -26,6 +26,13 @@ s <- tibble::tribble(
   "SBJ00615", "SBJ00615__SBJ00615_MDX200175_L2000910", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00616", "SBJ00616__SBJ00616_MDX200183_L2000912", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00617", "SBJ00617__SBJ00617_MDX200173_L2000908", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00620", "SBJ00620__SBJ00620_PRJ200532_L2000960", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00621", "SBJ00621__SBJ00621_MDX200196_L2000955", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00622", "SBJ00622__SBJ00622_MDX200190_L2000951", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00623", "SBJ00623__SBJ00623_MDX200193_L2000953", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00624", "SBJ00624__SBJ00624_MDX200199_L2000957", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00481", "SBJ00481__SBJ00481_PTC_TsqN200327_L2000243", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00037", "SBJ00037__SBJ00037_PRJ200529_L2000958", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
 ) %>%
   dplyr::mutate(
     dd = file.path(here::here("nogit")),
@@ -59,9 +66,9 @@ res <- seq_len(nrow(s)) %>%
          hrdetect = hrdetect)
   })
 
-saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-10-28.rds"))
+saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-11-16.rds"))
 
-res <- readRDS(here::here("nogit/results/chord_hrdetect_2020-10-28.rds"))
+res <- readRDS(here::here("nogit/results/chord_hrdetect_2020-11-16.rds"))
 
 chord <- purrr::map(res, "chord") %>% dplyr::bind_rows()
 hrdetect <- purrr::map(res, "hrdetect") %>% dplyr::bind_rows()
