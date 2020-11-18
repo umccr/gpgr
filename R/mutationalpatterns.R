@@ -192,3 +192,33 @@ sig_plot_dbs <- function(dbs_counts) {
     p_dbs_cont = p_dbs_cont
   )
 }
+
+sig_contribution_table <- function() {
+  sig_table <-
+    readr::read_tsv(file = "misc/sig/v2_mar2015/signatures_description.tsv", col_types = "cc") %>%
+    dplyr::mutate(Plot = paste0("![](misc/sig/v2_mar2015/img/sig-", signature, ".png)"),
+                  signature = paste0("Sig", signature)) %>%
+    dplyr::select(Signature = signature, Description = description, Plot)
+
+  mut_sig_contr1 %>%
+    dplyr::left_join(sig_table, by = "Signature") %>%
+    knitr::kable() %>%
+    kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
+    kableExtra::scroll_box(height = "400px")
+
+  sig_table2 <-
+    readr::read_tsv(file = "misc/sig/v3_may2019/signatures_description.tsv", col_types = "cc") %>%
+    dplyr::mutate(Plot = paste0("![](misc/sig/v3_may2019/img/sbs", signature, ".png)"),
+                  signature = paste0("SBS", signature)) %>%
+    dplyr::select(Signature = signature, Description = description, Plot)
+
+  possible_seq_artefacts <- c("SBS27", "SBS43", "SBS45", "SBS46", "SBS47", "SBS48", "SBS49", "SBS50", "SBS51", "SBS52",
+                              "SBS53", "SBS54", "SBS55", "SBS56", "SBS57", "SBS58", "SBS59", "SBS60")
+
+  mut_sig_contr2 %>%
+    dplyr::left_join(sig_table2, by = "Signature") %>%
+    dplyr::mutate(Signature = ifelse(Signature %in% possible_seq_artefacts, paste0(Signature, " (SA)"), Signature)) %>%
+    knitr::kable() %>%
+    kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
+    kableExtra::scroll_box(height = "400px")
+}
