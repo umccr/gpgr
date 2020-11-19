@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write a data frame to gzipped TSV and JSON files — write_tsvjsongz • gpgr</title>
+<title>Create COSMIC Signature Table — sig_contribution_table • gpgr</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Write a data frame to gzipped TSV and JSON files — write_tsvjsongz" />
-<meta property="og:description" content="Writes a data frame to gzipped TSV and JSON files. Files
-will be written to maindir/&amp;lt;path&amp;gt;.tsv.gz and maindir/json/&amp;lt;path&amp;gt;.json.gz." />
+<meta property="og:title" content="Create COSMIC Signature Table — sig_contribution_table" />
+<meta property="og:description" content="Creates a COSMIC signature table for display in an RMarkdown report." />
 
 
 
@@ -130,36 +129,39 @@ will be written to maindir/&amp;lt;path&amp;gt;.tsv.gz and maindir/json/&amp;lt;
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Write a data frame to gzipped TSV and JSON files</h1>
-    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
-    <div class="hidden name"><code>write_tsvjsongz.Rd</code></div>
+    <h1>Create COSMIC Signature Table</h1>
+    <small class="dont-index">Source: <a href='https://github.com/umccr/gpgr/blob/master/R/mutationalpatterns.R'><code>R/mutationalpatterns.R</code></a></small>
+    <div class="hidden name"><code>sig_contribution_table.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Writes a data frame to gzipped TSV and JSON files. Files
-will be written to <code>maindir/&lt;path&gt;.tsv.gz</code> and <code>maindir/json/&lt;path&gt;.json.gz</code>.</p>
+    <p>Creates a COSMIC signature table for display in an RMarkdown report.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>write_tsvjsongz</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>path</span>, <span class='va'>maindir</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>sig_contribution_table</span><span class='op'>(</span><span class='va'>contr</span>, <span class='va'>type</span>, <span class='va'>outdir</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>The data frame to write.</p></td>
+      <th>contr</th>
+      <td><p>A tibble with Rank, Signature, Contribution and RelFreq columns.</p></td>
     </tr>
     <tr>
-      <th>path</th>
-      <td><p>Relative path to write the files to, sans the file extensions -
-these will be appended appropriately.</p></td>
+      <th>type</th>
+      <td><p>One of Sig (old COSMIC), SBS, DBS or ID.</p></td>
     </tr>
     <tr>
-      <th>maindir</th>
-      <td><p>Main directory to write the files to.</p></td>
+      <th>outdir</th>
+      <td><p>Relative directory to write signature plots to for incorporating
+in an RMarkdown report.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>The <code>contr</code> tibble with an additional <code>Plot</code> column pointing to
+the local path to the corresponding signature plot (in markdown syntax).</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
