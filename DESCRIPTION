@@ -49,6 +49,7 @@ Suggests:
     BSgenome.Hsapiens.1000genomes.hs37d5,
     devtools,
     glue,
+    kableExtra,
     knitr,
     patchwork,
     purrr,

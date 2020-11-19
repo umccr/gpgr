@@ -48,6 +48,45 @@ sig_contribution <- function(mut_mat, signatures) {
   fit_res_contr
 }
 
+#' Create COSMIC Signature Table
+#'
+#' Creates a COSMIC signature table for display in an RMarkdown report.
+#'
+#' @param contr A tibble with Rank, Signature, Contribution and RelFreq columns.
+#' @param type One of Sig (old COSMIC), SBS, DBS or ID.
+#' @param outdir Relative directory to write signature plots to for incorporating
+#' in an RMarkdown report.
+#'
+#' @return The `contr` tibble with an additional `Plot` column pointing to
+#' the local path to the corresponding signature plot (in markdown syntax).
+#'
+#' @export
+sig_contribution_table <- function(contr, type, outdir) {
+  available_types <- c("Sig" = "v2_2015/Sig",
+                       "SBS" = "v3_2020-june/SBS",
+                       "DBS" = "v3_2020-june/DBS",
+                       "ID" = "v3_2020-june/ID")
+  assertthat::assert_that(length(type) == 1, type %in% names(available_types))
+  assertthat::assert_that(all(colnames(contr) == c("Rank", "Signature", "Contribution", "RelFreq")))
+
+  sig_dir <- system.file(file.path("extdata/sigs", available_types[type]), package = "gpgr")
+  img_cp_dir <- file.path(outdir, "sig_plots", type)
+  mkdir(img_cp_dir)
+  sig_table <-
+    readr::read_tsv(file = file.path(sig_dir, "description.tsv"), col_types = "cc") %>%
+    dplyr::mutate(Plot_original = file.path(sig_dir, paste0(.data$signature, ".png")),
+                  Plot_copy = file.path(img_cp_dir, paste0(.data$signature, ".png")),
+                  signature = paste0(type, .data$signature)) %>%
+    dplyr::rename(Signature = .data$signature)
+
+  contr %>%
+    dplyr::left_join(sig_table, by = "Signature") %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(cp = file.copy(from = .data$Plot_original, to = .data$Plot_copy)) %>%
+    dplyr::mutate(plot_in_md = paste0("![](", .data$Plot_copy,  ")")) %>%
+    dplyr::select(.data$Rank, .data$Signature, .data$Contribution, .data$RelFreq,
+                  Description = .data$description, Plot = .data$plot_in_md)
+}
 
 #' Count SNV Contexts
 #'
@@ -192,3 +231,5 @@ sig_plot_dbs <- function(dbs_counts) {
     p_dbs_cont = p_dbs_cont
   )
 }
+
+

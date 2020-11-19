@@ -65,8 +65,18 @@ sigs_snv_2020 <-
                                            incl_poss_artifacts = TRUE) %>%
   gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = .)
 
-sigs_snv_2015
-sigs_snv_2020
+
+sigs_snv_2015 %>%
+  gpgr::sig_contribution_table(type = "Sig", outdir = "out1") %>%
+  knitr::kable(format = "html") %>%
+  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
+  kableExtra::scroll_box(height = "400px")
+
+sigs_snv_2020 %>%
+  gpgr::sig_contribution_table(type = "SBS", outdir = "out1") %>%
+  knitr::kable(format = "html") %>%
+  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
+  kableExtra::scroll_box(height = "400px")
 ```
 
 ## DBS
@@ -85,7 +95,11 @@ p_dbs$p_dbs_main / p_dbs$p_dbs_cont
 sigs_dbs <-
   MutationalPatterns::get_known_signatures(muttype = "dbs") %>%
   gpgr::sig_contribution(mut_mat = dbs_counts, signatures = .)
-sigs_dbs
+sigs_dbs %>%
+  gpgr::sig_contribution_table(type = "DBS", outdir = "out1") %>%
+  knitr::kable(format = "html") %>%
+  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
+  kableExtra::scroll_box(height = "400px")
 ```
 
 ## INDELs
@@ -104,7 +118,11 @@ p_indels$p_indel_main / p_indels$p_indel_cont
 sigs_indel <-
   MutationalPatterns::get_known_signatures(muttype = "indel") %>%
   gpgr::sig_contribution(mut_mat = indel_counts, signatures = .)
-sigs_indel
+sigs_indel %>%
+  gpgr::sig_contribution_table(type = "ID", outdir = "out1") %>%
+  knitr::kable(format = "html") %>%
+  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
+  kableExtra::scroll_box(height = "400px")
 ```
 
 
