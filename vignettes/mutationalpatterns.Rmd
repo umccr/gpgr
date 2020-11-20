@@ -3,6 +3,8 @@ title: "MutationalPatterns"
 author: "Peter Diakumis"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+resource_files:
+  - outputs
 
 vignette: >
   %\VignetteIndexEntry{MutationalPatterns}
