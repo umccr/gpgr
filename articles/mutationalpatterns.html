@@ -123,7 +123,9 @@
   sample_names <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">nm</span>,
   genome <span class="op">=</span> <span class="va">ref_genome</span>,
   group <span class="op">=</span> <span class="st">"auto+sex"</span>,
-  type <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></code></pre></div>
+  type <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span>
+
+<span class="va">outdir</span> <span class="op">&lt;-</span> <span class="st">"outputs"</span></code></pre></div>
 </div>
 <div id="snvs-sbs" class="section level2">
 <h2 class="hasAnchor">
@@ -153,7 +155,7 @@
 
 
 <span class="va">sigs_snv_2015</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"Sig"</span>, outdir <span class="op">=</span> <span class="st">"out1"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"Sig"</span>, outdir <span class="op">=</span> <span class="va">outdir</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
@@ -197,7 +199,7 @@ Sig3
 Breast, ovarian, pancreatic; germline + somatic BRCA1/BRCA2 mut; failure of DNA ds break-repair; many large indels.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/3.png">
+<img src="outputs/sig_plots/Sig/3.png">
 </td>
 </tr>
 <tr>
@@ -217,7 +219,7 @@ Sig8
 Breast cancer, medulloblastoma; many CC&gt;AA subs; weak strand bias for C&gt;A subs.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/8.png">
+<img src="outputs/sig_plots/Sig/8.png">
 </td>
 </tr>
 <tr>
@@ -237,7 +239,7 @@ Sig1
 All cancers; correlates with age of diagnosis; few small indels
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/1.png">
+<img src="outputs/sig_plots/Sig/1.png">
 </td>
 </tr>
 <tr>
@@ -257,7 +259,7 @@ Sig13
 In 22 cancers; mostly cervical, bladder, breast; AID/APOBEC; C&gt;G mut; similar to sig2; maybe viral infection, retrotransposon jumping or tissue inflammation; kataegis.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/13.png">
+<img src="outputs/sig_plots/Sig/13.png">
 </td>
 </tr>
 <tr>
@@ -277,7 +279,7 @@ Sig2
 In 22 cancers; mostly cervical + bladder; AID/APOBEC; similar to sig13; maybe viral infection, retrotransposon jumping or tissue inflammation; exon TSB.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/2.png">
+<img src="outputs/sig_plots/Sig/2.png">
 </td>
 </tr>
 <tr>
@@ -297,7 +299,7 @@ Sig6
 In 17 cancers; mostly colorectal + uterine; associated with defective DNA mismatch repair; found in microsatellite unstable tumors; many small indels.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/6.png">
+<img src="outputs/sig_plots/Sig/6.png">
 </td>
 </tr>
 <tr>
@@ -317,7 +319,7 @@ Sig7
 Skin, lip, head, neck or oral squamous cancers; ultraviolet light exposure; many CC&gt;TT subs; strong TSB with many C&gt;T mut.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/7.png">
+<img src="outputs/sig_plots/Sig/7.png">
 </td>
 </tr>
 <tr>
@@ -337,7 +339,7 @@ Sig9
 Chronic lymphocytic leukaemias, malignant B-cell lymphomas; mut pattern associated with polymerase H (implicated with AID during som hypermutation).
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/9.png">
+<img src="outputs/sig_plots/Sig/9.png">
 </td>
 </tr>
 <tr>
@@ -357,7 +359,7 @@ Sig26
 Breast, cervical, stomach cancer, uterine carcinoma; defective DNA mismatch repair.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/26.png">
+<img src="outputs/sig_plots/Sig/26.png">
 </td>
 </tr>
 <tr>
@@ -377,7 +379,7 @@ Sig16
 Liver; strong TSB for T&gt;C at ATN context.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/16.png">
+<img src="outputs/sig_plots/Sig/16.png">
 </td>
 </tr>
 <tr>
@@ -397,7 +399,7 @@ Sig22
 Urothelial (renal pelvis) carcinoma and liver cancers (very high and lower TMB, respectively); exposure to aristolochic acid; strong TSB for T&gt;A.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/22.png">
+<img src="outputs/sig_plots/Sig/22.png">
 </td>
 </tr>
 <tr>
@@ -417,7 +419,7 @@ Sig25
 Hodgkin lymphoma cell lines (not primary); TSB for T&gt;A.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/25.png">
+<img src="outputs/sig_plots/Sig/25.png">
 </td>
 </tr>
 <tr>
@@ -437,7 +439,7 @@ Sig15
 Stomach cancers and a single small cell lung carcinoma; defective DNA mismatch repair; many small indels;
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/15.png">
+<img src="outputs/sig_plots/Sig/15.png">
 </td>
 </tr>
 <tr>
@@ -457,7 +459,7 @@ Sig17
 Oesophagus, breast, liver, lung adenocarcinoma, B-cell lymphoma, stomach and melanoma.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/17.png">
+<img src="outputs/sig_plots/Sig/17.png">
 </td>
 </tr>
 <tr>
@@ -477,7 +479,7 @@ Sig27
 Subset of kidney clear cell carcinomas; strong TSB for T&gt;A; many small indels.
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/Sig/27.png">
+<img src="outputs/sig_plots/Sig/27.png">
 </td>
 </tr>
 </tbody>
@@ -486,7 +488,7 @@ Subset of kidney clear cell carcinomas; strong TSB for T&gt;A; many small indels
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">sigs_snv_2020</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"SBS"</span>, outdir <span class="op">=</span> <span class="st">"out1"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"SBS"</span>, outdir <span class="op">=</span> <span class="va">outdir</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
@@ -530,7 +532,7 @@ SBS8
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS8.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS8.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/8.png">
+<img src="outputs/sig_plots/SBS/8.png">
 </td>
 </tr>
 <tr>
@@ -550,7 +552,7 @@ SBS39
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS39.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS39.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/39.png">
+<img src="outputs/sig_plots/SBS/39.png">
 </td>
 </tr>
 <tr>
@@ -570,7 +572,7 @@ SBS40
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS40.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS40.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/40.png">
+<img src="outputs/sig_plots/SBS/40.png">
 </td>
 </tr>
 <tr>
@@ -590,7 +592,7 @@ SBS1
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS1.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS1.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/1.png">
+<img src="outputs/sig_plots/SBS/1.png">
 </td>
 </tr>
 <tr>
@@ -610,7 +612,7 @@ SBS13
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS13.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS13.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/13.png">
+<img src="outputs/sig_plots/SBS/13.png">
 </td>
 </tr>
 <tr>
@@ -630,7 +632,7 @@ SBS44
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS44.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS44.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/44.png">
+<img src="outputs/sig_plots/SBS/44.png">
 </td>
 </tr>
 <tr>
@@ -650,7 +652,7 @@ SBS7a
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS7a.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS7a.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/7a.png">
+<img src="outputs/sig_plots/SBS/7a.png">
 </td>
 </tr>
 <tr>
@@ -670,7 +672,7 @@ SBS25
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS25.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS25.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/25.png">
+<img src="outputs/sig_plots/SBS/25.png">
 </td>
 </tr>
 <tr>
@@ -690,7 +692,7 @@ SBS3
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS3.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS3.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/3.png">
+<img src="outputs/sig_plots/SBS/3.png">
 </td>
 </tr>
 <tr>
@@ -710,7 +712,7 @@ SBS5
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS5.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS5.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/5.png">
+<img src="outputs/sig_plots/SBS/5.png">
 </td>
 </tr>
 <tr>
@@ -730,7 +732,7 @@ SBS2
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS2.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS2.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/2.png">
+<img src="outputs/sig_plots/SBS/2.png">
 </td>
 </tr>
 <tr>
@@ -750,7 +752,7 @@ SBS12
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS12.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS12.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/12.png">
+<img src="outputs/sig_plots/SBS/12.png">
 </td>
 </tr>
 <tr>
@@ -770,7 +772,7 @@ SBS58
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS58.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS58.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/58.png">
+<img src="outputs/sig_plots/SBS/58.png">
 </td>
 </tr>
 <tr>
@@ -790,7 +792,7 @@ SBS46
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS46.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS46.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/46.png">
+<img src="outputs/sig_plots/SBS/46.png">
 </td>
 </tr>
 <tr>
@@ -810,7 +812,7 @@ SBS15
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS15.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS15.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/15.png">
+<img src="outputs/sig_plots/SBS/15.png">
 </td>
 </tr>
 <tr>
@@ -830,7 +832,7 @@ SBS17b
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS17b.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS17b.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/17b.png">
+<img src="outputs/sig_plots/SBS/17b.png">
 </td>
 </tr>
 <tr>
@@ -850,7 +852,7 @@ SBS30
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS30.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS30.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/30.png">
+<img src="outputs/sig_plots/SBS/30.png">
 </td>
 </tr>
 <tr>
@@ -870,7 +872,7 @@ SBS51
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS51.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS51.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/51.png">
+<img src="outputs/sig_plots/SBS/51.png">
 </td>
 </tr>
 <tr>
@@ -890,7 +892,7 @@ SBS35
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS35.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS35.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/35.png">
+<img src="outputs/sig_plots/SBS/35.png">
 </td>
 </tr>
 <tr>
@@ -910,7 +912,7 @@ SBS7d
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS7d.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS7d.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/7d.png">
+<img src="outputs/sig_plots/SBS/7d.png">
 </td>
 </tr>
 <tr>
@@ -930,7 +932,7 @@ SBS34
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS34.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS34.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/34.png">
+<img src="outputs/sig_plots/SBS/34.png">
 </td>
 </tr>
 <tr>
@@ -950,7 +952,7 @@ SBS16
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS16.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS16.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/16.png">
+<img src="outputs/sig_plots/SBS/16.png">
 </td>
 </tr>
 <tr>
@@ -970,7 +972,7 @@ SBS84
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS84.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS84.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/84.png">
+<img src="outputs/sig_plots/SBS/84.png">
 </td>
 </tr>
 <tr>
@@ -990,7 +992,7 @@ SBS10b
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS10b.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS10b.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/10b.png">
+<img src="outputs/sig_plots/SBS/10b.png">
 </td>
 </tr>
 <tr>
@@ -1010,7 +1012,7 @@ SBS10a
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS10a.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS10a.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/10a.png">
+<img src="outputs/sig_plots/SBS/10a.png">
 </td>
 </tr>
 <tr>
@@ -1030,7 +1032,7 @@ SBS88
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS88.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS88.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/88.png">
+<img src="outputs/sig_plots/SBS/88.png">
 </td>
 </tr>
 <tr>
@@ -1050,7 +1052,7 @@ SBS43
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS43.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS43.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/43.png">
+<img src="outputs/sig_plots/SBS/43.png">
 </td>
 </tr>
 <tr>
@@ -1070,7 +1072,7 @@ SBS32
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS32.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS32.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/32.png">
+<img src="outputs/sig_plots/SBS/32.png">
 </td>
 </tr>
 <tr>
@@ -1090,7 +1092,7 @@ SBS6
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS6.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS6.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/6.png">
+<img src="outputs/sig_plots/SBS/6.png">
 </td>
 </tr>
 <tr>
@@ -1110,7 +1112,7 @@ SBS90
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS90.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS90.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/90.png">
+<img src="outputs/sig_plots/SBS/90.png">
 </td>
 </tr>
 <tr>
@@ -1130,7 +1132,7 @@ SBS41
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS41.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS41.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/41.png">
+<img src="outputs/sig_plots/SBS/41.png">
 </td>
 </tr>
 <tr>
@@ -1150,7 +1152,7 @@ SBS49
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS49.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS49.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/49.png">
+<img src="outputs/sig_plots/SBS/49.png">
 </td>
 </tr>
 <tr>
@@ -1170,7 +1172,7 @@ SBS60
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS60.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS60.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/SBS/60.png">
+<img src="outputs/sig_plots/SBS/60.png">
 </td>
 </tr>
 </tbody>
@@ -1198,7 +1200,7 @@ SBS60
   <span class="fu">MutationalPatterns</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MutationalPatterns/man/get_known_signatures.html">get_known_signatures</a></span><span class="op">(</span>muttype <span class="op">=</span> <span class="st">"dbs"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution.html">sig_contribution</a></span><span class="op">(</span>mut_mat <span class="op">=</span> <span class="va">dbs_counts</span>, signatures <span class="op">=</span> <span class="va">.</span><span class="op">)</span>
 <span class="va">sigs_dbs</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"DBS"</span>, outdir <span class="op">=</span> <span class="st">"out1"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"DBS"</span>, outdir <span class="op">=</span> <span class="va">outdir</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
@@ -1242,7 +1244,7 @@ DBS4
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS4.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS4.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/DBS/4.png">
+<img src="outputs/sig_plots/DBS/4.png">
 </td>
 </tr>
 <tr>
@@ -1262,7 +1264,7 @@ DBS2
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS2.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS2.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/DBS/2.png">
+<img src="outputs/sig_plots/DBS/2.png">
 </td>
 </tr>
 <tr>
@@ -1282,7 +1284,7 @@ DBS6
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS6.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS6.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/DBS/6.png">
+<img src="outputs/sig_plots/DBS/6.png">
 </td>
 </tr>
 <tr>
@@ -1302,7 +1304,7 @@ DBS1
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS1.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS1.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/DBS/1.png">
+<img src="outputs/sig_plots/DBS/1.png">
 </td>
 </tr>
 <tr>
@@ -1322,7 +1324,7 @@ DBS7
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS7.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS7.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/DBS/7.png">
+<img src="outputs/sig_plots/DBS/7.png">
 </td>
 </tr>
 <tr>
@@ -1342,7 +1344,7 @@ DBS9
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS9.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS9.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/DBS/9.png">
+<img src="outputs/sig_plots/DBS/9.png">
 </td>
 </tr>
 <tr>
@@ -1362,7 +1364,7 @@ DBS10
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS10.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS10.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/DBS/10.png">
+<img src="outputs/sig_plots/DBS/10.png">
 </td>
 </tr>
 <tr>
@@ -1382,7 +1384,7 @@ DBS11
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS11.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS11.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/DBS/11.png">
+<img src="outputs/sig_plots/DBS/11.png">
 </td>
 </tr>
 </tbody>
@@ -1410,7 +1412,7 @@ DBS11
   <span class="fu">MutationalPatterns</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MutationalPatterns/man/get_known_signatures.html">get_known_signatures</a></span><span class="op">(</span>muttype <span class="op">=</span> <span class="st">"indel"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution.html">sig_contribution</a></span><span class="op">(</span>mut_mat <span class="op">=</span> <span class="va">indel_counts</span>, signatures <span class="op">=</span> <span class="va">.</span><span class="op">)</span>
 <span class="va">sigs_indel</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"ID"</span>, outdir <span class="op">=</span> <span class="st">"out1"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"ID"</span>, outdir <span class="op">=</span> <span class="va">outdir</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
@@ -1454,7 +1456,7 @@ ID6
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID6.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID6.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/6.png">
+<img src="outputs/sig_plots/ID/6.png">
 </td>
 </tr>
 <tr>
@@ -1474,7 +1476,7 @@ ID8
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID8.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID8.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/8.png">
+<img src="outputs/sig_plots/ID/8.png">
 </td>
 </tr>
 <tr>
@@ -1494,7 +1496,7 @@ ID1
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID1.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID1.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/1.png">
+<img src="outputs/sig_plots/ID/1.png">
 </td>
 </tr>
 <tr>
@@ -1514,7 +1516,7 @@ ID4
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID4.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID4.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/4.png">
+<img src="outputs/sig_plots/ID/4.png">
 </td>
 </tr>
 <tr>
@@ -1534,7 +1536,7 @@ ID9
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID9.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID9.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/9.png">
+<img src="outputs/sig_plots/ID/9.png">
 </td>
 </tr>
 <tr>
@@ -1554,7 +1556,7 @@ ID2
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID2.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID2.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/2.png">
+<img src="outputs/sig_plots/ID/2.png">
 </td>
 </tr>
 <tr>
@@ -1574,7 +1576,7 @@ ID5
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID5.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID5.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/5.png">
+<img src="outputs/sig_plots/ID/5.png">
 </td>
 </tr>
 <tr>
@@ -1594,7 +1596,7 @@ ID3
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID3.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID3.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/3.png">
+<img src="outputs/sig_plots/ID/3.png">
 </td>
 </tr>
 <tr>
@@ -1614,7 +1616,7 @@ ID7
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID7.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID7.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/7.png">
+<img src="outputs/sig_plots/ID/7.png">
 </td>
 </tr>
 <tr>
@@ -1634,7 +1636,7 @@ ID16
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID16.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID16.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/16.png">
+<img src="outputs/sig_plots/ID/16.png">
 </td>
 </tr>
 <tr>
@@ -1654,7 +1656,7 @@ ID17
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID17.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID17.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/17.png">
+<img src="outputs/sig_plots/ID/17.png">
 </td>
 </tr>
 <tr>
@@ -1674,7 +1676,7 @@ ID14
 <a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID14.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID14.tt</a>
 </td>
 <td style="text-align:left;">
-<img src="out1/sig_plots/ID/14.png">
+<img src="outputs/sig_plots/ID/14.png">
 </td>
 </tr>
 </tbody>
