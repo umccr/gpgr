@@ -1,0 +1,11 @@
+channels:
+  - local
+dependencies:
+  - r-gpgr
+  - bioconductor-bsgenome.hsapiens.ucsc.hg38
+  - r-devtools
+  - r-kableextra
+  - r-patchwork
+  - r-pkgdown
+  - pandoc
+
