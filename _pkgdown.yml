@@ -14,13 +14,33 @@ reference:
     Functions related to PURPLE (https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator)
 - contents:
   - starts_with("purple")
-- title: "Others"
+- title: "MutationalPatterns"
+  desc: >
+    Functions related to MutationalPatterns (https://github.com/UMCUGenetics/MutationalPatterns)
+- contents:
+  - cosmic_signatures_2015
+  - starts_with("sig")
+- title: "umccrise"
+  desc: >
+    Functions related to umccrise (https://github.com/umccr/umccrise)
 - contents:
   - abbreviate_effect
-  - count_pieces
+  - af_summary
+  - EFFECT_ABBREVIATIONS
+  - hrd_results_tabs
+  - plot_bnd_sr_pr_tot_lines
+  - plot_bnd_sr_pr_tot_hist
   - process_sv
-  - read_sv_tsv
-  - split_double_col
+  - umccrise_read_sv_tsv
+  - write_jsongz
+  - write_tsvgz
+  - write_tsvjsongz
+- title: "Others"
+- contents:
+  - count_pieces
   - is_vcf
+  - mkdir
+  - split_double_col
+  - tsv_is_empty
   - vcf_is_empty
 
