@@ -4,7 +4,10 @@ author: "Peter Diakumis"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 resource_files:
-  - outputs
+  - outputs/sig_plots/Sig
+  - outputs/sig_plots/SBS
+  - outputs/sig_plots/DBS
+  - outputs/sig_plots/ID
 
 vignette: >
   %\VignetteIndexEntry{MutationalPatterns}
@@ -34,8 +37,10 @@ require(patchwork)
 ```{r data_prep}
 params <- list(
   vcf = system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr"),
-  nm = "sampleA"
+  nm = "sampleA",
+  outdir = "outputs"
 )
+
 gr <- MutationalPatterns::read_vcfs_as_granges(
   vcf_files = params$vcf,
   sample_names = params$nm,
@@ -43,7 +48,6 @@ gr <- MutationalPatterns::read_vcfs_as_granges(
   group = "auto+sex",
   type = "all")
 
-outdir <- "outputs"
 ```
 
 ## SNVs (SBS)
@@ -71,13 +75,13 @@ sigs_snv_2020 <-
 
 
 sigs_snv_2015 %>%
-  gpgr::sig_contribution_table(type = "Sig", outdir = outdir) %>%
+  gpgr::sig_contribution_table(type = "Sig", outdir = params$outdir) %>%
   knitr::kable(format = "html") %>%
   kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
   kableExtra::scroll_box(height = "400px")
 
 sigs_snv_2020 %>%
-  gpgr::sig_contribution_table(type = "SBS", outdir = outdir) %>%
+  gpgr::sig_contribution_table(type = "SBS", outdir = params$outdir) %>%
   knitr::kable(format = "html") %>%
   kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
   kableExtra::scroll_box(height = "400px")
@@ -100,7 +104,7 @@ sigs_dbs <-
   MutationalPatterns::get_known_signatures(muttype = "dbs") %>%
   gpgr::sig_contribution(mut_mat = dbs_counts, signatures = .)
 sigs_dbs %>%
-  gpgr::sig_contribution_table(type = "DBS", outdir = outdir) %>%
+  gpgr::sig_contribution_table(type = "DBS", outdir = params$outdir) %>%
   knitr::kable(format = "html") %>%
   kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
   kableExtra::scroll_box(height = "400px")
@@ -123,7 +127,7 @@ sigs_indel <-
   MutationalPatterns::get_known_signatures(muttype = "indel") %>%
   gpgr::sig_contribution(mut_mat = indel_counts, signatures = .)
 sigs_indel %>%
-  gpgr::sig_contribution_table(type = "ID", outdir = outdir) %>%
+  gpgr::sig_contribution_table(type = "ID", outdir = params$outdir) %>%
   knitr::kable(format = "html") %>%
   kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
   kableExtra::scroll_box(height = "400px")
