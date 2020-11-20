@@ -10,4 +10,4 @@
 ^docs$
 ^pkgdown$
 ^\.github$
-^inst/rmd/wgs/umccrise$
+^inst/rmd$

@@ -1,7 +1,7 @@
 ---
 title: "MutationalPatterns"
 author: "Peter Diakumis"
-date: "`r Sys.Date()`"
+date: "`r Sys.time()`"
 output: rmarkdown::html_vignette
 resource_files:
   - outputs/sig_plots/Sig
