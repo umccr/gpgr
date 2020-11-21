@@ -31,7 +31,7 @@ sig_contribution <- function(mut_mat, signatures) {
     dplyr::filter(.data$contr > 0)
 
   if (nrow(fit_res) == 0) {
-    fit_res1 <- tibble::tribble(
+    fit_res <- tibble::tribble(
       ~sig, ~contr,
       "No Signatures found!", 0)
   }
