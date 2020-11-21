@@ -462,6 +462,8 @@ qc_summary_all %>%
   gt::cols_align("left") %>%
   gt::opt_row_striping() %>%
   gt::tab_options(table.align = "left")
+
+gpgr::write_tsvjsongz(qc_summary_all, "qc_summary", result_outdir)
 ```
 
 ```{r, results='asis'}
