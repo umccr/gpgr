@@ -416,7 +416,8 @@ qc_summary_all <- dplyr::tribble(
   "v2 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(mut_sig_contr2)}"),
   "v3 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)",
-  6, "HRD", glue::glue("CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"), "",
+  6, "HRD", glue::glue("CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"),
+  "Homologous recombination deficiency probability.",
   20, "CNVs (Somatic)", glue::glue("Min: {cnv_summary[['som']]$Min}; ",
                                    "Max: {cnv_summary[['som']]$Max}; ",
                                    "N: {cnv_summary[['som']]$N} "), "",
@@ -425,7 +426,7 @@ qc_summary_all <- dplyr::tribble(
                                    "N: {cnv_summary[['germ']]$N} "), "",
   18, "SVs (unmelted)", paste(rev(sv_summary$unmelted), collapse = ", "), "",
   19, "SVs (melted)", paste(rev(sv_summary$melted), collapse = ", "), "",
-  22, "Genome", params$genome_build, ""
+  22, "Genome", params$genome_build, "Human genome assembly used."
 ) %>%
   dplyr::bind_rows(
     purple_qc_summary
@@ -455,7 +456,8 @@ qc_summary_all %>%
     style = list(
       cell_text(weight = "bold")
     ),
-    locations = cells_stub(rows = TRUE)
+    locations = list(cells_stub(rows = TRUE),
+                     cells_body(columns = vars(value)))
   ) %>%
   gt::cols_align("left") %>%
   gt::opt_row_striping() %>%
