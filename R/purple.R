@@ -316,9 +316,7 @@ purple_qc_read <- function(x) {
   summary <- dplyr::tribble(
     ~n, ~variable, ~value, ~details,
     1, 'QC_Status', glue::glue('{q["QCStatus"]}'),
-    paste("Either PASS or one or more warnings or fail statuses.",
-          "Warnings include WARN_DELETED_GENES, WARN_HIGH_COPY_NUMBER_NOISE,",
-          "FAIL_CONTAMINATION, FAIL_NO_TUMOR, WARN_GENDER_MISMATCH or WARN_LOW_PURITY"),
+    paste("See 'Description'."),
     13, 'Method', glue::glue('{q["Method"]}'),
     glue::glue(''),
     14, 'CopyNumberSegments',
@@ -326,12 +324,12 @@ purple_qc_read <- function(x) {
     paste("Total count of CN segments. A high number of segments with no SV support on either side",
           "is an indicator of poor sample quality."),
     2, 'Purity', glue::glue('{q["Purity"]}'), "",
-    14, 'Gender', glue::glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'), "",
-    15, 'DeletedGenes', glue::glue('{q["DeletedGenes"]}'), "",
-    16, 'Contamination', glue::glue('{q["Contamination"]}'),
+    17, 'Gender', glue::glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'), "",
+    14, 'DeletedGenes', glue::glue('{q["DeletedGenes"]}'), "",
+    15, 'Contamination', glue::glue('{q["Contamination"]}'),
     "Rate of contamination in tumor sample as determined by AMBER.",
-    17, 'GermlineAberrations', glue::glue('{q["GermlineAberrations"]}'),
-    "Any germline chromosomal abberations detected. Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.",
+    16, 'GermlineAberrations', glue::glue('{q["GermlineAberrations"]}'),
+    "Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.",
   )
 
   list(
@@ -411,7 +409,7 @@ purple_purity_read <- function(x) {
     4, 'Gender', glue::glue('{p["gender"]}'),
     "Gender as inferred by AMBER/COBALT.",
     7, 'WGD', glue::glue('{p["wholeGenomeDuplication"]}'),
-    "Whole genome duplication",
+    "Whole genome duplication (more than 10 autosomes have average major allele ploidy > 1.5)",
     8, 'MSI (indels/Mb)', glue::glue('{p["msStatus"]} ({p["msIndelsPerMb"]})'),
     "MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) & MS Indels per Mb",
     9, 'Polyclonal Prop', glue::glue('{p["polyclonalProportion"]}'),
@@ -420,12 +418,11 @@ purple_purity_read <- function(x) {
     'Proportion of CN regions that have 1 (+- 0.2) minor and major allele',
     11, 'TMB', glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
     paste("Tumor mutational burden (# PASS variants per Megabase)",
-          "(Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied.",
-          "High = >10 PASS variants per Mb)."),
+          "(Status: 'HIGH' (>10 PASS per Mb), 'LOW' or 'UNKNOWN'."),
     12, 'TML', glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
-    "Tumor mutational load (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)",
-    12, 'TMB-SV', glue::glue('{p["svTumorMutationalBurden"]}'),
-    "Total number of non inferred, non single passing structural variants detected"
+    "Tumor mutational load (# of missense variants) (Status: 'HIGH', 'LOW' or 'UNKNOWN' if somatic variants not supplied)",
+    13, 'TMB-SV', glue::glue('{p["svTumorMutationalBurden"]}'),
+    "# of non inferred, non single passing SVs"
   )
 
   list(

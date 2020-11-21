@@ -321,7 +321,8 @@ gpgr::write_tsvjsongz(sv_all, "sv/02_sv_melted", result_outdir)
 ```{r purple_prep}
 #---- PURPLE QC Table ----#
 purple_qc_summary <- dplyr::bind_rows(
-  gpgr::purple_qc_read(params$purple_qc)[["summary"]],
+  gpgr::purple_qc_read(params$purple_qc)[["summary"]] %>%
+    dplyr::filter(!variable %in% c("Purity", "Gender")),
   gpgr::purple_purity_read(params$purple_purity)[["summary"]]
 )
 
@@ -346,40 +347,29 @@ blank_lines(2)
 
 PURPLE outputs a QC status along with a summary
 for the inferred purity and ploidy of the somatic sample.
-A failed QC status can be attributed to several factors.
+The 'QC Status' field reflects how we have determined the purity of the sample.
+A 'FAIL' or 'WARN' QC status can be attributed to several factors:
 
-__QC Status__
-
-The QC Status field reflects how we have determined the purity of the sample:
-
-* `NORMAL` - PURPLE fit the purity using COBALT and AMBER output.
-* `HIGHLY_DIPLOID` - The fitted purity solution is highly diploid (> 95%)
-  with a large range of potential solutions, but somatic variants are unable to
-  help either because they were not supplied or because their implied purity was too low.
-* `SOMATIC` - Somatic variants have improved the otherwise highly diploid solution.
-* `NO_TUMOR` - PURPLE failed to find any aneuploidy and somatic variants were
-  supplied but there were fewer than 300 with observed VAF > 0.1.
-
-__QC Failure__
-
-There are several reasons PURPLE may classify a sample as failed:
-
-* `FAIL_SEGMENT`: more than 220 copy number segments __not__ supported at either end
-  by SV breakpoints. Indicates samples with extreme GC bias, with differences
+* `FAIL_CONTAMINATION`: measured contamination in the tumor (by Amber) is >10%
+* `FAIL_NO_TUMOR`: no evidence of tumor is found in the sample, when all
+  following criteria are satisfied:
+  - tumor has one or more HOTSPOT SV or point mutation
+  - SNV sum(allele read count) > 5000
+  - SV sum(startTumorVariantFragmentSupport) > 1000 (excluding SGL breakends)
+* `WARN_DELETED_GENES`: more than 280 homozygously deleted genes.
+  This sometimes occurs in samples with very high MB scale GC bias, and
+  particularly affects high GC content regions such as CHR 19.
+  It may also indicate a poor fit.
+* `WARN_HIGH_COPY_NUMBER_NOISE`: more than 220 copy number segments __not__
+  supported at either end by SV breakpoints.
+  Indicates samples with extreme GC bias, with differences
   in depth of >= 10x between high and low GC regions. GC normalisation is
   unreliable when the corrections are so extreme so it is recommended to fail
   the sample (concerns with miscalled deletions or amplifications or have
   poor sensitivity in high GC regions.
-* `NO_TUMOR`: no aneuploidy found and the number of somatic SNVs found is
-  less than 1,000
-* `MIN_PURITY`: fitted purity < 20%
-* `FAIL_DELETED_GENES`: more than 280 deleted genes. This QC step was added
-  after observing that in a handful of samples with high MB scale positive GC
-  bias we sometimes systematically underestimate the copy number in high GC
-  regions. This can lead us to incorrectly infer homozygous loss of entire
-  chromosomes, particularly on chromosomes 17 and 19.
-* `FAIL_GENDER`: if the AMBER and COBALT inferred genders are inconsistent
-  then the COBALT one is used but the sample is failed.
+* `WARN_GENDER_MISMATCH`: if the AMBER and COBALT inferred genders are
+  inconsistent then the COBALT one is used but the sample is failed.
+* `WARN_LOW_PURITY`: fitted purity < 20%
 
 </details>
 
@@ -427,15 +417,15 @@ qc_summary_all <- dplyr::tribble(
   5, "MutSigs (New)", glue::glue("{summarise_sigs(mut_sig_contr2)}"),
   "v3 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)",
   6, "HRD", glue::glue("CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"), "",
-  16, "CNVs (Somatic)", glue::glue("Min: {cnv_summary[['som']]$Min}; ",
+  20, "CNVs (Somatic)", glue::glue("Min: {cnv_summary[['som']]$Min}; ",
                                    "Max: {cnv_summary[['som']]$Max}; ",
                                    "N: {cnv_summary[['som']]$N} "), "",
-  16, "CNVs (Germline)", glue::glue("Min: {cnv_summary[['germ']]$Min}; ",
+  21, "CNVs (Germline)", glue::glue("Min: {cnv_summary[['germ']]$Min}; ",
                                    "Max: {cnv_summary[['germ']]$Max}; ",
                                    "N: {cnv_summary[['germ']]$N} "), "",
-  17, "SVs (unmelted)", paste(rev(sv_summary$unmelted), collapse = ", "), "",
-  18, "SVs (melted)", paste(rev(sv_summary$melted), collapse = ", "), "",
-  19, "Genome", params$genome_build, ""
+  18, "SVs (unmelted)", paste(rev(sv_summary$unmelted), collapse = ", "), "",
+  19, "SVs (melted)", paste(rev(sv_summary$melted), collapse = ", "), "",
+  22, "Genome", params$genome_build, ""
 ) %>%
   dplyr::bind_rows(
     purple_qc_summary
@@ -455,12 +445,12 @@ qc_summary_all %>%
       rows = grepl("FAIL", value) & variable == "QC_Status")) %>%
   gt::tab_style(
     style = list(
-      cell_fill(color = "#FF4646"),
+      cell_fill(color = "#FED8B1"),
       cell_text(weight = "bold")
     ),
     locations = cells_body(
       columns = vars(value),
-      rows = grepl("FALSE", value) & variable %in% c("Segment_Pass", "Gender_Pass", "DelGenes_Pass"))) %>%
+      rows = grepl("WARN_", value) & variable == "QC_Status")) %>%
   gt::tab_style(
     style = list(
       cell_text(weight = "bold")
