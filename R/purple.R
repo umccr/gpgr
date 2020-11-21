@@ -452,7 +452,7 @@ purple_snv_vcf_read <- function(x) {
   assertthat::assert_that(file.exists(x), is_vcf(x))
   d <- bedr::read.vcf(x, split.info = TRUE, verbose = FALSE)
   cols <- c("CHROM", "POS", "AF", "PURPLE_AF", "PURPLE_CN",
-            "PURPLE_GERMLINE", "PURPLE_MAP", "PURPLE_PLOIDY",
+            "PURPLE_GERMLINE", "PURPLE_MACN", "PURPLE_VCN",
             "HMF_HOTSPOT", "KT", "MH", "SUBCL", "TNC")
   tibble::as_tibble(d$vcf[cols])
 }
