@@ -292,14 +292,14 @@ process_sv <- function(x) {
         ":",
         .data$END_BPI),
       Start = paste0(.data$chrom, ":", .data$Start)) %>%
-    dplyr::select(.data$vcfnum, TierTop = .data$tier,
+    dplyr::select(.data$vcfnum, .data$nann, TierTop = .data$tier,
                   .data$Start, .data$End,
                   Type = .data$svtype,
                   .data$ID, .data$MATEID, .data$BND_ID, .data$BND_mate,
                   .data$SR_alt, .data$PR_alt, .data$SR_PR_ref, .data$Ploidy,
                   .data$AF_PURPLE, .data$AF_BPI,
                   CNC = .data$CN_change_PURPLE, CN = .data$CN_PURPLE,
-                  SScore = .data$somaticscore, .data$nann, .data$annotation)
+                  SScore = .data$somaticscore, .data$annotation)
 
   abbreviate_effectv <- Vectorize(abbreviate_effect)
 
