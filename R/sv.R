@@ -350,24 +350,29 @@ plot_bnd_sr_pr_tot_lines <- function(d,
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d %>%
     dplyr::filter(.data$Type == "BND") %>%
-    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt) %>%
+    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt, Tier = .data$TierTop) %>%
     dplyr::mutate(PR = ifelse(is.na(.data$PR), 0, .data$PR),
                   SR = ifelse(is.na(.data$SR), 0, .data$SR)) %>%
     dplyr::rowwise() %>%
-    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = T)) %>%
+    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = TRUE)) %>%
     dplyr::ungroup() %>%
     dplyr::arrange(dplyr::desc(.data$tot)) %>%
     dplyr::mutate(bnd_event = dplyr::row_number()) %>%
     tidyr::pivot_longer(cols = c(.data$SR, .data$PR, .data$tot),
                         names_to = "Metric", values_to = "Count")
 
-  dplot %>%
+  p_all <- dplot %>%
     ggplot2::ggplot(ggplot2::aes(x = .data$bnd_event, y = .data$Count, colour = .data$Metric)) +
     ggplot2::geom_line(alpha = 0.5) +
     ggplot2::geom_point(alpha = 0.5) +
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid.minor.x = ggplot2::element_blank()) +
     ggplot2::labs(title = title, subtitle = subtitle)
+  p_tier <- p_all +
+    ggplot2::facet_wrap(~Tier) +
+    ggplot2::labs(title = NULL, subtitle = paste(subtitle, "Faceted by Tier."))
+  list(p_all = p_all,
+       p_tier = p_tier)
 }
 
 #' Histogram for SR, PR and SR + PR for BNDs

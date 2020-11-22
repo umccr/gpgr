@@ -1015,7 +1015,7 @@ DEL    | intergenic_region       | TXNIP-HFE2 | ENSG00000265972-ENSG00000168509 
 ```{r plot_bnd_sr_pr_tot_lines, fig.width=12, fig.height=6, out.width="90%"}
 p1 <- gpgr:::plot_bnd_sr_pr_tot_lines(sv_unmelted)
 p2 <- gpgr::plot_bnd_sr_pr_tot_hist(sv_unmelted) + ggplot2::theme(legend.position = "none")
-(p1 | p2) + patchwork::plot_layout(widths = c(3, 2))
+((p1$p_all / p1$p_tier) | p2) + patchwork::plot_layout(widths = c(3, 2))
 ```
 
 #### Counts
