@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -92,7 +92,7 @@
       <h1 data-toc-skip>PURPLE</h1>
                         <h4 class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-11-20</h4>
+            <h4 class="date">2020-11-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/purple.Rmd"><code>vignettes/purple.Rmd</code></a></small>
       <div class="hidden name"><code>purple.Rmd</code></div>
@@ -1625,7 +1625,7 @@ Purity
 0.75 (0.71-0.78)
 </td>
 <td style="text-align:left;">
-Purity of tumor in the sample (and min-max with score within 10% of best)
+Purity of tumor in the sample (and min-max with score within 10% of best).
 </td>
 </tr>
 <tr>
@@ -1639,7 +1639,7 @@ Ploidy
 1.87 (1.86-1.88)
 </td>
 <td style="text-align:left;">
-Average ploidy of tumor sample after adjusting for purity (and min-max with score within 10% of best)
+Average ploidy of tumor sample after adjusting for purity (and min-max with score within 10% of best).
 </td>
 </tr>
 <tr>
@@ -1667,7 +1667,7 @@ WGD
 FALSE
 </td>
 <td style="text-align:left;">
-Whole genome duplication
+Whole genome duplication (more than 10 autosomes have average major allele ploidy &gt; 1.5).
 </td>
 </tr>
 <tr>
@@ -1681,7 +1681,7 @@ MSI (indels/Mb)
 MSS (0)
 </td>
 <td style="text-align:left;">
-MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) &amp; MS Indels per Mb
+MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) &amp; MS Indels per Mb.
 </td>
 </tr>
 <tr>
@@ -1689,13 +1689,13 @@ MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) &amp; MS Indel
 9
 </td>
 <td style="text-align:left;">
-Polyclonal Prop
+PolyclonalProp
 </td>
 <td style="text-align:left;">
 0
 </td>
 <td style="text-align:left;">
-Proportion of CN regions that are more than 0.25 from a whole copy number
+Proportion of CN regions that are more than 0.25 from a whole CN
 </td>
 </tr>
 <tr>
@@ -1703,13 +1703,13 @@ Proportion of CN regions that are more than 0.25 from a whole copy number
 10
 </td>
 <td style="text-align:left;">
-Diploidy Prop
+DiploidyProp
 </td>
 <td style="text-align:left;">
 0.86 (0.86-0.86)
 </td>
 <td style="text-align:left;">
-Proportion of CN regions that have 1 (+- 0.2) minor and major allele
+Proportion of CN regions that have 1 (+- 0.2) minor and major allele.
 </td>
 </tr>
 <tr>
@@ -1723,7 +1723,7 @@ TMB
 0 (LOW)
 </td>
 <td style="text-align:left;">
-Tumor mutational burden (# PASS variants per Megabase) (Status: ‘HIGH’, ‘LOW’ or ‘UNKNOWN’ if somatic variants not supplied. High = &gt;10 PASS variants per Mb).
+Tumor mutational burden (# PASS variants per Megabase) (Status: ‘HIGH’ (&gt;10 PASS per Mb), ‘LOW’ or ‘UNKNOWN’.
 </td>
 </tr>
 <tr>
@@ -1737,12 +1737,12 @@ TML
 0 (LOW)
 </td>
 <td style="text-align:left;">
-Tumor mutational load (Status: ‘HIGH’, ‘LOW’ or ‘UNKNOWN’ if somatic variants not supplied)
+Tumor mutational load (# of missense variants) (Status: ‘HIGH’, ‘LOW’ or ‘UNKNOWN’.)
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-12
+13
 </td>
 <td style="text-align:left;">
 TMB-SV
@@ -1751,7 +1751,7 @@ TMB-SV
 713
 </td>
 <td style="text-align:left;">
-Total number of non inferred, non single passing structural variants detected
+# of non inferred, non single passing SVs.
 </td>
 </tr>
 </tbody>
@@ -1796,7 +1796,7 @@ QC_Status
 WARN_DELETED_GENES
 </td>
 <td style="text-align:left;">
-Either PASS or one or more warnings or fail statuses. Warnings include WARN_DELETED_GENES, WARN_HIGH_COPY_NUMBER_NOISE, FAIL_CONTAMINATION, FAIL_NO_TUMOR, WARN_GENDER_MISMATCH or WARN_LOW_PURITY
+See ‘Description’.
 </td>
 </tr>
 <tr>
@@ -1810,6 +1810,7 @@ Method
 NORMAL
 </td>
 <td style="text-align:left;">
+Fit method (NORMAL, HIGHLY_DIPLOID, SOMATIC or NO_TUMOR).
 </td>
 </tr>
 <tr>
@@ -1823,7 +1824,7 @@ CopyNumberSegments
 1428 (Unsupported: 0)
 </td>
 <td style="text-align:left;">
-Total count of CN segments. A high number of segments with no SV support on either side is an indicator of poor sample quality.
+# of CN segments.
 </td>
 </tr>
 <tr>
@@ -1841,7 +1842,7 @@ Purity
 </tr>
 <tr>
 <td style="text-align:right;">
-14
+17
 </td>
 <td style="text-align:left;">
 Gender
@@ -1854,7 +1855,7 @@ Amber: MALE; Cobalt: MALE
 </tr>
 <tr>
 <td style="text-align:right;">
-15
+14
 </td>
 <td style="text-align:left;">
 DeletedGenes
@@ -1863,11 +1864,12 @@ DeletedGenes
 7782
 </td>
 <td style="text-align:left;">
+# of homozygously deleted genes.
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-16
+15
 </td>
 <td style="text-align:left;">
 Contamination
@@ -1881,7 +1883,7 @@ Rate of contamination in tumor sample as determined by AMBER.
 </tr>
 <tr>
 <td style="text-align:right;">
-17
+16
 </td>
 <td style="text-align:left;">
 GermlineAberrations
@@ -1890,7 +1892,7 @@ GermlineAberrations
 NONE
 </td>
 <td style="text-align:left;">
-Any germline chromosomal abberations detected. Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.
+Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.
 </td>
 </tr>
 </tbody>
@@ -1982,7 +1984,7 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-11-20
+2020-11-22
 </td>
 </tr>
 </tbody>
@@ -2019,10 +2021,10 @@ base
 gpgr
 </td>
 <td style="text-align:left;">
-0.1.0
+0.1.1
 </td>
 <td style="text-align:left;">
-2020-11-20
+2020-11-22
 </td>
 </tr>
 </tbody>
