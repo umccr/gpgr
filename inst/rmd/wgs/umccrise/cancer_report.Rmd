@@ -357,9 +357,9 @@ if (no_sv_found) {
 qc_summary_all <- dplyr::tribble(
   ~n, ~variable, ~value, ~details,
   5, "MutSigs (Old)", glue::glue("{summarise_sigs(sigs_snv_2015)}"),
-  "v2 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
+  "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
-  "v3 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)",
+  "2020 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)",
   6, "HRD", glue::glue("CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"),
   "Homologous recombination deficiency probability.",
   20, "CNVs (Somatic)", glue::glue("Min: {cnv_summary[['som']]$Min}; ",
@@ -483,7 +483,7 @@ See [MutationalPatterns SNV Characteristics](http://bioconductor.org/packages/re
 </details>
 
 
-```{r mp_snv_plots, out.width="90%", fig.width=16, fig.height = 10}
+```{r mp_snv_plots, out.width="90%", fig.width=18, fig.height = 10}
 (mp_snv_plots$p_river / mp_snv_plots$p_heatmap) |
   (mp_snv_plots$p_spectrum / mp_snv_plots$p_96_profile)
 ```
@@ -497,7 +497,7 @@ See [MutationalPatterns Strand Bias Analysis](http://bioconductor.org/packages/r
 
 </details>
 
-```{r mutationalpatterns_strand_bias, out.width="90%", fig.width=12, fig.height=10}
+```{r mutationalpatterns_strand_bias, fig.width=7, fig.height=7}
 ## ---- Transcriptional ---- ##
 # Get known genes table from UCSC
 genes_list <- GenomicFeatures::genes(base::get(tx_ref_genome))
@@ -1012,7 +1012,7 @@ DEL    | intergenic_region       | TXNIP-HFE2 | ENSG00000265972-ENSG00000168509 
 
 #### Plots
 
-```{r plot_bnd_sr_pr_tot_lines, fig.width=12, fig.height=6, out.width="90%"}
+```{r plot_bnd_sr_pr_tot_lines, fig.width=12, fig.height=12, out.width="90%"}
 p1 <- gpgr:::plot_bnd_sr_pr_tot_lines(sv_unmelted)
 p2 <- gpgr::plot_bnd_sr_pr_tot_hist(sv_unmelted) + ggplot2::theme(legend.position = "none")
 ((p1$p_all / p1$p_tier) | p2) + patchwork::plot_layout(widths = c(3, 2))
@@ -1504,7 +1504,9 @@ tibble::tibble(
   name = c(
     "umccrise", "r-gpgr", "r-base", "pcgr", "cpsr", "cacao",
     "hmftools-purple", "hmftools-amber", "hmftools-cobalt", "hmftools-sage",
+    "gridss", "hmftools-linx",
     "multiqc", "multiqc-bcbio", "reference-data",
+    "bed_annotation", "vcf-stuff", "snakemake",
     "samtools", "bcftools", "htslib", "ngs_utils", "python", "pandoc"
   )
 ) %>%
