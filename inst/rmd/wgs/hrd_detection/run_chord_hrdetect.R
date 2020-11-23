@@ -1,6 +1,6 @@
 suppressPackageStartupMessages(require(BSgenome.Hsapiens.UCSC.hg38))
-suppressPackageStartupMessages(require(furrr))
-suppressPackageStartupMessages(require(future))
+#suppressPackageStartupMessages(require(furrr))
+#suppressPackageStartupMessages(require(future))
 suppressPackageStartupMessages(require(glue))
 suppressPackageStartupMessages(require(gpgr))
 suppressPackageStartupMessages(require(here))
@@ -22,10 +22,12 @@ s <- tibble::tribble(
   "SBJ00609", "SBJ00609__SBJ00609_PRJ200508_L2000874", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00610", "SBJ00610__SBJ00610_PRJ200511_L2000876", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00611", "SBJ00611__SBJ00611_PRJ200514_L2000878", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00612", "SBJ00612__SBJ00612_PRJ200517_L2000880", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00614", "SBJ00614__SBJ00614_PRJ200523_L2000916", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00615", "SBJ00615__SBJ00615_MDX200175_L2000910", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00616", "SBJ00616__SBJ00616_MDX200183_L2000912", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00617", "SBJ00617__SBJ00617_MDX200173_L2000908", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00618", "SBJ00618__SBJ00618_MDX200185_L2000914", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00620", "SBJ00620__SBJ00620_PRJ200532_L2000960", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00621", "SBJ00621__SBJ00621_MDX200196_L2000955", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00622", "SBJ00622__SBJ00622_MDX200190_L2000951", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
@@ -33,7 +35,9 @@ s <- tibble::tribble(
   "SBJ00624", "SBJ00624__SBJ00624_MDX200199_L2000957", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00481", "SBJ00481__SBJ00481_PTC_TsqN200327_L2000243", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00037", "SBJ00037__SBJ00037_PRJ200529_L2000958", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00197", "SBJ00197__SBJ00197_MDX190186_L1900909", "-somatic-ensemble-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv", "GRCh37",
 ) %>%
+  dplyr::filter(sample %in% c("", "")) %>%
   dplyr::mutate(
     dd = file.path(here::here("nogit")),
     snv = file.path(dd, "snv", paste0(prefix, snv)),
@@ -41,9 +45,10 @@ s <- tibble::tribble(
     cnv = file.path(dd, "cnv", paste0(prefix, cnv))
   )
 
-future::plan(multicore)
+# future::plan(multicore)
 res <- seq_len(nrow(s)) %>%
-  furrr::future_map(function(i) {
+  # furrr::future_map(function(i) {
+  purrr::map(function(i) {
     cat(s$sample[i], "CHORD\n")
     chord_sv_df <- gpgr::chord_mantavcf2df(s$sv[i])
     chord <- gpgr::chord_run(
@@ -66,9 +71,18 @@ res <- seq_len(nrow(s)) %>%
          hrdetect = hrdetect)
   })
 
-saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-11-16.rds"))
+saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-11-23.rds"))
 
-res <- readRDS(here::here("nogit/results/chord_hrdetect_2020-11-16.rds"))
+res <- readRDS(here::here("nogit/results/chord_hrdetect_2020-11-23.rds"))
 
 chord <- purrr::map(res, "chord") %>% dplyr::bind_rows()
 hrdetect <- purrr::map(res, "hrdetect") %>% dplyr::bind_rows()
+
+print(chord)
+print(hrdetect)
+
+chord %>%
+  t()
+
+hrdetect %>%
+  t()
