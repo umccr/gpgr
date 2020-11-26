@@ -250,7 +250,10 @@ process_sv <- function(x) {
       Start = ifelse(is.na(.data$PURPLE_status), .data$START_BPI, .data$start),
       nann = count_pieces(.data$annotation, ","),
       vcfnum = dplyr::row_number(),
-      vcfnum = sprintf(glue::glue("%0{nchar(nrow(.))}d"), .data$vcfnum))
+      vcfnum = sprintf(glue::glue("%0{nchar(nrow(.))}d"), .data$vcfnum)) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(SR_PR_sum = sum(.data$SR_alt, .data$PR_alt, na.rm = TRUE)) %>%
+    dplyr::ungroup()
 
   # BND IDs
   # Two BND mates share the same ID up to the last digit (0 or 1)
@@ -296,7 +299,7 @@ process_sv <- function(x) {
                   .data$Start, .data$End,
                   Type = .data$svtype,
                   .data$ID, .data$MATEID, .data$BND_ID, .data$BND_mate,
-                  .data$SR_alt, .data$PR_alt, .data$SR_PR_ref, .data$Ploidy,
+                  .data$SR_alt, .data$PR_alt, .data$SR_PR_sum, .data$SR_PR_ref, .data$Ploidy,
                   .data$AF_PURPLE, .data$AF_BPI,
                   CNC = .data$CN_change_PURPLE, CN = .data$CN_PURPLE,
                   SScore = .data$somaticscore, .data$annotation)
