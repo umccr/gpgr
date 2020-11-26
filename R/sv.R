@@ -298,7 +298,7 @@ process_sv <- function(x) {
     dplyr::select(.data$vcfnum, .data$nann, TierTop = .data$tier,
                   .data$Start, .data$End,
                   Type = .data$svtype,
-                  .data$ID, .data$MATEID, .data$BND_ID, .data$BND_mate,
+                  .data$BND_ID, .data$BND_mate,
                   .data$SR_alt, .data$PR_alt, .data$SR_PR_sum, .data$SR_PR_ref, .data$Ploidy,
                   .data$AF_PURPLE, .data$AF_BPI,
                   CNC = .data$CN_change_PURPLE, CN = .data$CN_PURPLE,
