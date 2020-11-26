@@ -344,7 +344,7 @@ process_sv <- function(x) {
 #' @examples
 #' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
 #' d <- process_sv(x)$unmelted
-#' plot_bnd_sr_pr_tot_lines(d, "a title")
+#' plot_bnd_sr_pr_tot_lines(d)
 #'
 #' @export
 plot_bnd_sr_pr_tot_lines <- function(d,
@@ -353,7 +353,8 @@ plot_bnd_sr_pr_tot_lines <- function(d,
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d %>%
     dplyr::filter(.data$Type == "BND") %>%
-    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt, Tier = .data$TierTop) %>%
+    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt, Tier = .data$TierTop, .data$BND_ID) %>%
+    dplyr::distinct() %>%
     dplyr::mutate(PR = ifelse(is.na(.data$PR), 0, .data$PR),
                   SR = ifelse(is.na(.data$SR), 0, .data$SR)) %>%
     dplyr::rowwise() %>%
@@ -401,7 +402,8 @@ plot_bnd_sr_pr_tot_hist <- function(d,
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d %>%
     dplyr::filter(.data$Type == "BND") %>%
-    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt) %>%
+    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt, .data$BND_ID) %>%
+    dplyr::distinct() %>%
     dplyr::mutate(PR = ifelse(is.na(.data$PR), 0, .data$PR),
                   SR = ifelse(is.na(.data$SR), 0, .data$SR)) %>%
     dplyr::rowwise() %>%

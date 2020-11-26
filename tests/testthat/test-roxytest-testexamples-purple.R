@@ -77,7 +77,7 @@ test_that("Function purple_qc_read() @ L304", {
 })
 
 
-test_that("Function purple_purity_read() @ L361", {
+test_that("Function purple_purity_read() @ L358", {
   
   x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
   (p <- purple_purity_read(x))

@@ -27,6 +27,6 @@ sum (\code{tot}) across all BNDs, sorted by \code{tot}.
 \examples{
 x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
 d <- process_sv(x)$unmelted
-plot_bnd_sr_pr_tot_lines(d, "a title")
+plot_bnd_sr_pr_tot_lines(d)
 
 }
