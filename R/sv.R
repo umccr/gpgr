@@ -228,6 +228,7 @@ process_sv <- function(x) {
     "SR_alt", "Number of Split Reads supporting the alt allele, where P(allele|read)>0.999.",
     "PR_alt", "Number of Paired Reads supporting the alt allele, where P(allele|read)>0.999.",
     "SR_PR_ref", "Number of Split Reads and Paired Reads supporting the ref allele, where P(allele|read)>0.999.",
+    "SR_PR_sum", "Sum of SR_alt and PR_alt.",
     "Type", "Type of structural variant.",
     "SScore", "Somatic variant quality score.",
     "ntrx", "Number of transcripts for given event.",
