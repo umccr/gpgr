@@ -209,6 +209,7 @@ process_sv <- function(x) {
     "vcfnum", "Original event row number that connects variants to events.",
     "TierTop", "Top priority of the event (from simple_sv_annotation: 1 highest, 4 lowest).",
     "Tier", "Priority of the specific event (from simple_sv_annotation: 1 highest, 4 lowest).",
+    "Tier (Top)", "Priority of the specific event (Top tier of all event's annotations): 1 highest, 4 lowest. ",
     "Chr", "Chromosome.",
     "Start", "Start position as inferred by BPI. For PURPLE-inferred SVs we use POS.",
     "End", "End position. For BNDs = Chr:Start of the mate.Values are inferred by BPI (PURPLE-inferred SVs do not have an End).",
@@ -319,9 +320,10 @@ process_sv <- function(x) {
       neff = count_pieces(.data$Effect, "&"),
       Transcript = .data$Transcript %>% stringr::str_replace_all('&', ', '),
       Genes = .data$Genes %>% stringr::str_replace_all('&', ', '),
-      Effect = abbreviate_effectv(.data$Effect)) %>%
+      Effect = abbreviate_effectv(.data$Effect),
+      `Tier (Top)` = glue::glue("{Tier} ({TierTop})")) %>%
     dplyr::distinct() %>%
-    dplyr::arrange(.data$Tier, .data$Genes, .data$Effect)
+    dplyr::arrange(.data$`Tier (Top)`, .data$Genes, .data$Effect)
 
   list(
     unmelted = unmelted_all,
