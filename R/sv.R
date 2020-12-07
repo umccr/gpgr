@@ -375,9 +375,18 @@ plot_bnd_sr_pr_tot_lines <- function(d,
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid.minor.x = ggplot2::element_blank()) +
     ggplot2::labs(title = title, subtitle = subtitle)
-  p_tier <- p_all +
-    ggplot2::facet_wrap(~Tier) +
-    ggplot2::labs(title = NULL, subtitle = paste(subtitle, "Faceted by Tier."))
+
+  # handle cases where no BNDs were detected
+  p_tier <- ggplot2::ggplot() +
+    ggplot2::theme_void() +
+    ggplot2::geom_text(ggplot2::aes(x = 0, y = 0, label = "No BNDs detected!")) +
+    ggplot2::xlab(NULL)
+
+  if (nrow(dplot) > 0) {
+    p_tier <- p_all +
+      ggplot2::facet_wrap(~Tier) +
+      ggplot2::labs(title = NULL, subtitle = paste(subtitle, "Faceted by Tier."))
+  }
   list(p_all = p_all,
        p_tier = p_tier)
 }
@@ -415,11 +424,20 @@ plot_bnd_sr_pr_tot_hist <- function(d,
     tidyr::pivot_longer(cols = c(.data$SR, .data$PR, .data$tot),
                         names_to = "Metric", values_to = "Value")
 
-  dplot %>%
-    dplyr::filter(.data$Value > 0) %>%
-    ggplot2::ggplot(ggplot2::aes(x = .data$Value, fill = .data$Metric)) +
-    ggplot2::geom_histogram(binwidth = 1) +
-    ggplot2::theme_bw() +
-    ggplot2::labs(title = title, subtitle = subtitle) +
-    ggplot2::facet_wrap(~.data$Metric, ncol = 1, scales = "free_y")
+  if (nrow(dplot) > 0) {
+    dplot %>%
+      dplyr::filter(.data$Value > 0) %>%
+      ggplot2::ggplot(ggplot2::aes(x = .data$Value, fill = .data$Metric)) +
+      ggplot2::geom_histogram(binwidth = 1) +
+      ggplot2::theme_bw() +
+      ggplot2::labs(title = title, subtitle = subtitle) +
+      ggplot2::facet_wrap(~.data$Metric, ncol = 1, scales = "free_y")
+  } else {
+    # handle cases where no BNDs were detected
+    ggplot2::ggplot() +
+      ggplot2::theme_void() +
+      ggplot2::geom_text(ggplot2::aes(x = 0, y = 0, label = "No BNDs detected!")) +
+      ggplot2::xlab(NULL)
+  }
+
 }
