@@ -454,7 +454,7 @@ purple_snv_vcf_read <- function(x) {
   info_cols <- c("AF", "PURPLE_AF", "PURPLE_CN",
                  "PURPLE_GERMLINE", "PURPLE_MACN", "PURPLE_VCN",
                  "HMF_HOTSPOT", "KT", "MH", "SUBCL", "TNC")
-  description <- dplyr::filter(info, ID %in% info_cols)
+  description <- dplyr::filter(info, .data$ID %in% info_cols)
 
   d <- tibble::as_tibble(d$vcf[c("CHROM", "POS", info_cols)])
   list(data = d,
