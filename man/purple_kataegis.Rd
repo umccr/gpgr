@@ -10,7 +10,9 @@ purple_kataegis(x)
 \item{x}{Path to the \code{purple.somatic.vcf.gz} file.}
 }
 \value{
-A tibble with the chr:pos of the mutation, and its kataegis cluster ID.
+A list with a tibble containing variants in kataegis clusters and
+various metrics for each variant, and a tibble with a description of each
+metric.
 }
 \description{
 Reads the \code{purple.somatic.vcf.gz} file and extracts variants

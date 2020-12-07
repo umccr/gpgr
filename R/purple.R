@@ -436,8 +436,8 @@ purple_purity_read <- function(x) {
 #'
 #' @param x Path to the `purple.somatic.vcf.gz` file.
 #'
-#' @return The input file as a tibble and a summarised tibble with a
-#' description of each metric.
+#' @return A list with the input file as a tibble (with specific INFO fields)
+#' and a tibble with a description of each INFO field.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr")
@@ -447,10 +447,18 @@ purple_purity_read <- function(x) {
 purple_snv_vcf_read <- function(x) {
   assertthat::assert_that(file.exists(x), is_vcf(x))
   d <- bedr::read.vcf(x, split.info = TRUE, verbose = FALSE)
-  cols <- c("CHROM", "POS", "AF", "PURPLE_AF", "PURPLE_CN",
-            "PURPLE_GERMLINE", "PURPLE_MACN", "PURPLE_VCN",
-            "HMF_HOTSPOT", "KT", "MH", "SUBCL", "TNC")
-  tibble::as_tibble(d$vcf[cols])
+  info <-
+    tibble::as_tibble(d$header[["INFO"]]) %>%
+    dplyr::select(.data$ID, .data$Description)
+
+  info_cols <- c("AF", "PURPLE_AF", "PURPLE_CN",
+                 "PURPLE_GERMLINE", "PURPLE_MACN", "PURPLE_VCN",
+                 "HMF_HOTSPOT", "KT", "MH", "SUBCL", "TNC")
+  description <- dplyr::filter(info, ID %in% info_cols)
+
+  d <- tibble::as_tibble(d$vcf[c("CHROM", "POS", info_cols)])
+  list(data = d,
+       description = description)
 }
 
 #' Get PURPLE Kataegis Regions
@@ -460,7 +468,9 @@ purple_snv_vcf_read <- function(x) {
 #'
 #' @param x Path to the `purple.somatic.vcf.gz` file.
 #'
-#' @return A tibble with the chr:pos of the mutation, and its kataegis cluster ID.
+#' @return A list with a tibble containing variants in kataegis clusters and
+#' various metrics for each variant, and a tibble with a description of each
+#' metric.
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr")
@@ -469,7 +479,18 @@ purple_snv_vcf_read <- function(x) {
 #' @export
 purple_kataegis <- function(x) {
   d <- purple_snv_vcf_read(x)
-  d %>%
+  info_cols <- c("KT", "AF", "PURPLE_AF", "PURPLE_CN",
+                 "PURPLE_MACN", "PURPLE_VCN", "SUBCL",
+                 "MH", "TNC")
+
+  data <- d$data %>%
     dplyr::filter(!is.na(.data$KT)) %>%
-    dplyr::select(.data$CHROM, .data$POS, .data$KT)
+    dplyr::select(c("CHROM", "POS", info_cols))
+
+  description <- d$description %>%
+    dplyr::filter(.data$ID %in% info_cols) %>%
+    dplyr::arrange(.data$ID)
+
+  list(data = data,
+       description = description)
 }

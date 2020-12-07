@@ -10,8 +10,8 @@ purple_snv_vcf_read(x)
 \item{x}{Path to the \code{purple.somatic.vcf.gz} file.}
 }
 \value{
-The input file as a tibble and a summarised tibble with a
-description of each metric.
+A list with the input file as a tibble (with specific INFO fields)
+and a tibble with a description of each INFO field.
 }
 \description{
 Reads the \code{purple.somatic.vcf.gz} file.
