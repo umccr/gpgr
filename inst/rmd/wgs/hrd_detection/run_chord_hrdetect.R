@@ -9,6 +9,9 @@ suppressPackageStartupMessages(require(tidyverse))
 
 s <- tibble::tribble(
   ~sample, ~prefix, ~snv, ~sv, ~cnv, ~genome,
+  "SBJ00037", "SBJ00037__SBJ00037_PRJ200529_L2000958", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00197", "SBJ00197__SBJ00197_MDX190186_L1900909", "-somatic-ensemble-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv", "GRCh37",
+  "SBJ00481", "SBJ00481__SBJ00481_PTC_TsqN200327_L2000243", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00574_1", "SBJ00574_1__SBJ00574_PRJ200428_L2000802", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00574_2", "SBJ00574_2__SBJ00574_PRJ200429_L2000803", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00590",   "SBJ00590__SBJ00590_MDX200156_L2000853", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
@@ -33,15 +36,19 @@ s <- tibble::tribble(
   "SBJ00622", "SBJ00622__SBJ00622_MDX200190_L2000951", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00623", "SBJ00623__SBJ00623_MDX200193_L2000953", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00624", "SBJ00624__SBJ00624_MDX200199_L2000957", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
-  "SBJ00481", "SBJ00481__SBJ00481_PTC_TsqN200327_L2000243", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
-  "SBJ00037", "SBJ00037__SBJ00037_PRJ200529_L2000958", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
-  "SBJ00197", "SBJ00197__SBJ00197_MDX190186_L1900909", "-somatic-ensemble-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv", "GRCh37",
   "SBJ00625", "SBJ00625__SBJ00625_PRJ200539_L2000962", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00627", "SBJ00627__SBJ00627_MDX200205_L2000998", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00628", "SBJ00628__SBJ00628_PRJ200545_L2000983", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00629", "SBJ00629__SBJ00629_PRJ200542_L2000981", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00630", "SBJ00630__SBJ00630_MDX200202_L2000979", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00631", "SBJ00631__SBJ00631_PRJ200548_L2000985", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00632", "SBJ00632__SBJ00632_PRJ200550_L2000987", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00633", "SBJ00633__SBJ00633_MDX200211_L2000991", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00635", "SBJ00635__SBJ00635_MDX200214_L2001000", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00636", "SBJ00636__SBJ00636_PRJ200552_L2001002", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00637", "SBJ00637__SBJ00637_PRJ200555_L2001004", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00638", "SBJ00638__SBJ00638_PRJ200576_L2001006", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00639", "SBJ00639__SBJ00639_PRJ200579_L2001008", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
 ) %>%
   #dplyr::filter(sample %in% c("", "")) %>%
   dplyr::mutate(
@@ -77,9 +84,9 @@ res <- seq_len(nrow(s)) %>%
          hrdetect = hrdetect)
   })
 
-saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-12-01.rds"))
+saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-12-08.rds"))
 
-res <- readRDS(here::here("nogit/results/chord_hrdetect_2020-12-01.rds"))
+res <- readRDS(here::here("nogit/results/chord_hrdetect_2020-12-08.rds"))
 
 chord <- purrr::map(res, "chord") %>% dplyr::bind_rows()
 hrdetect <- purrr::map(res, "hrdetect") %>% dplyr::bind_rows()
@@ -87,7 +94,7 @@ hrdetect <- purrr::map(res, "hrdetect") %>% dplyr::bind_rows()
 print(chord)
 print(hrdetect)
 
-s <- "SBJ00633"
+s <- "SBJ00632"
 chord %>%
   filter(sample == s) %>%
   t()
