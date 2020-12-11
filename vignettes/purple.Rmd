@@ -124,9 +124,16 @@ kat <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr") %>%
   purple_kataegis()
 kat$data %>%
   knitr::kable(format = "html", caption = "PURPLE Kataegis Table.")
+```
 
+<details>
+<summary>Description</summary>
+
+```{r kataegis_descr}
 knitr::kable(kat$description, format = "html", caption = "Kataegis column description.")
 ```
+
+</details>
 
 ### QC
 

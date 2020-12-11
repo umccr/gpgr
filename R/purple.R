@@ -417,9 +417,9 @@ purple_purity_read <- function(x) {
     'Proportion of CN regions that have 1 (+- 0.2) minor and major allele.',
     11, 'TMB', glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
     paste("Tumor mutational burden (# PASS variants per Megabase)",
-          "(Status: 'HIGH' (>10 PASS per Mb), 'LOW' or 'UNKNOWN'."),
+          "(Status: 'HIGH' (>10 PASS per Mb), 'LOW' or 'UNKNOWN')."),
     12, 'TML', glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
-    "Tumor mutational load (# of missense variants) (Status: 'HIGH', 'LOW' or 'UNKNOWN'.)",
+    "Tumor mutational load (# of missense variants) (Status: 'HIGH', 'LOW' or 'UNKNOWN').",
     13, 'TMB-SV', glue::glue('{p["svTumorMutationalBurden"]}'),
     "# of non inferred, non single passing SVs."
   )
