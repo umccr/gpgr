@@ -30,7 +30,7 @@ jobs:
         shell: bash -l {0}
         run: |
           mamba install conda-build conda-verify anaconda-client
-          mamba build --R 4.0 deploy/conda-recipe/
+          mamba build --R 4.1 deploy/conda-recipe/
           PKG_PATH="/usr/share/miniconda/conda-bld/linux-64/r-gpgr-*.tar.bz2"
           anaconda -t ${{ secrets.ANACONDA_UPLOAD_TOKEN }} upload --force $PKG_PATH
 
