@@ -22,7 +22,7 @@ jobs:
           auto-activate-base: true
           activate-environment: ""
           mamba-version: "*"
-          channels: "pdiakumis,conda-forge,bioconda"
+          channels: "umccr,conda-forge,bioconda"
 
       - name: Conda package build and upload
         shell: bash -l {0}
