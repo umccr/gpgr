@@ -1,12 +1,14 @@
 name: conda-pkgdown
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build-conda-deploy-pkgdown:
-    # For tag pushes, we want to assure only the tag event triggers CI,
-    # not the accompanying commit:
-    if: "! startsWith(github.event.head_commit.message, 'Bump ') || startsWith(github.ref, 'refs/tags/')"
+    # When merging to main and the commit message starts with 'Bump version:'
+    if: "startsWith(github.event.head_commit.message, 'Bump version:')"
     name: Build conda package & deploy pkgdown website
     runs-on: ubuntu-latest
 
@@ -22,13 +24,13 @@ jobs:
           auto-activate-base: true
           activate-environment: ""
           mamba-version: "*"
-          channels: "pdiakumis,conda-forge,bioconda"
+          channels: "umccr,conda-forge,bioconda"
 
       - name: Conda package build and upload
         shell: bash -l {0}
         run: |
           mamba install conda-build conda-verify anaconda-client
-          mamba build --R 4.0 deploy/conda-recipe/
+          mamba build --R 4.1 deploy/conda-recipe/
           PKG_PATH="/usr/share/miniconda/conda-bld/linux-64/r-gpgr-*.tar.bz2"
           anaconda -t ${{ secrets.ANACONDA_UPLOAD_TOKEN }} upload --force $PKG_PATH
 
