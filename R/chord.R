@@ -95,9 +95,11 @@ chord_mantavcf2df <- function(in_vcf) {
 
 #' Get BSgenome Object for CHORD
 #'
-#' Returns BSgenome object for CHORD.
+#' Gets BSgenome object for use in CHORD.
 #'
 #' @param genome Human genome assembly: hg38 (default), hg19 or GRCh37.
+#'
+#' @return BSgenome object.
 #'
 #' @examples
 #' \dontrun{

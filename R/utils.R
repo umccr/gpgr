@@ -210,6 +210,7 @@ write_tsvjsongz <- function(x, path, maindir) {
 #' Checks if the specified R package exists on the local system.
 #'
 #' @param p The R package to check for.
+#' @return TRUE if package exists, FALSE otherwise.
 #'
 pkg_exists <- function(p) {
   assertthat::assert_that(is.character(p))
