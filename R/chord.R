@@ -16,8 +16,8 @@
 #'
 #' snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
-#' chord_res <- chord_run(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = "foo")
-#' # chord_res <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo") # a bit slower
+#' chord_res <- chord_run(vcf.snv = snv, df.sv = chord_mantavcf2df(sv), sample.name = "foo")
+#' # chord_res2 <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo") # a bit slower
 #'
 #' @testexamples
 #'
@@ -30,17 +30,8 @@
 #'
 #' @export
 chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL, sample.name = NULL, ref.genome = "hg38", sv.caller = "manta", ...) {
-  avail_genomes <- c("hg19", "hg38", "GRCh37")
-  g <- NULL
-  if (ref.genome == "hg38") {
-    g <- BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
-  } else if (ref.genome == "hg19") {
-    g <- BSgenome.Hsapiens.UCSC.hg19::BSgenome.Hsapiens.UCSC.hg19
-  } else if (ref.genome == "GRCh37") {
-    g <- BSgenome.Hsapiens.1000genomes.hs37d5::BSgenome.Hsapiens.1000genomes.hs37d5
-  } else {
-    stop(glue::glue("ref.genome should be one of {paste(avail_genomes, collapse = ', ')}"))
-  }
+
+  g <- chord_get_genome_obj(ref.genome)
 
   contexts <- CHORD::extractSigsChord(
     vcf.snv = vcf.snv,
@@ -100,4 +91,34 @@ chord_mantavcf2df <- function(in_vcf) {
   d <- bedr::read.vcf(in_vcf, split.info = TRUE, verbose = FALSE)
   tibble::tibble(sv_type = d$vcf$SVTYPE,
                  sv_len = d$vcf$SVLEN)
+}
+
+#' Get BSgenome Object for CHORD
+#'
+#' Returns BSgenome object for CHORD.
+#'
+#' @param genome Human genome assembly: hg38 (default), hg19 or GRCh37.
+#'
+#' @examples
+#' \dontrun{
+#' chord_get_genome_obj("hg38")
+#' }
+#' @testexamples
+#' expect_error(chord_get_genome_obj("FOO"))
+#'
+#' @export
+chord_get_genome_obj <- function(genome = "hg38") {
+  bsgenome <- c(hg19 = "BSgenome.Hsapiens.UCSC.hg19",
+                hg38 = "BSgenome.Hsapiens.UCSC.hg38",
+                GRCh37 = "BSgenome.Hsapiens.1000genomes.hs37d5")
+  pkg <- bsgenome[genome]
+  assertthat::assert_that(
+    genome %in% names(bsgenome),
+    msg = glue::glue("Instead of '{genome}', pick one of: ",
+                     "{paste(names(bsgenome), collapse = ', ')}"))
+  if (!pkg_exists(pkg)) {
+    stop(glue::glue("{pkg} is not installed on your system.\n",
+                    "Please install with:\n'BiocManager::install(\"{pkg}\")'"))
+  }
+  return(eval(parse(text = glue::glue("{pkg}::{pkg}"))))
 }
