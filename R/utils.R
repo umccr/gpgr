@@ -204,3 +204,15 @@ write_tsvjsongz <- function(x, path, maindir) {
   write_tsvgz(x, file.path(maindir, tsv_path))
   write_jsongz(x, file.path(maindir, "json", json_path))
 }
+
+#' Does R Package Exist
+#'
+#' Checks if the specified R package exists on the local system.
+#'
+#' @param p The R package to check for.
+#' @return TRUE if package exists, FALSE otherwise.
+#'
+pkg_exists <- function(p) {
+  assertthat::assert_that(is.character(p))
+  nzchar(system.file(package = p))
+}

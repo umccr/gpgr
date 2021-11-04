@@ -2,6 +2,7 @@
 
 export("%>%")
 export(af_summary)
+export(chord_get_genome_obj)
 export(chord_mantavcf2df)
 export(chord_run)
 export(hrd_results_tabs)
