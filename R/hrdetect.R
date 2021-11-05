@@ -21,6 +21,7 @@
 hrdetect_read_snvindel_vcf <- function(x) {
   assertthat::assert_that(file.exists(x))
   ALLOWED_BASES <- c("A", "C", "G", "T")
+  readr::local_edition(1)
   d <- x %>%
     readr::read_tsv(
       comment = "##",
