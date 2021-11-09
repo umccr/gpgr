@@ -13,6 +13,8 @@ signature	description
 9	https://cancer.sanger.ac.uk/signatures/sbs/sbs9/
 10a	https://cancer.sanger.ac.uk/signatures/sbs/sbs10a/
 10b	https://cancer.sanger.ac.uk/signatures/sbs/sbs10b/
+10c	https://cancer.sanger.ac.uk/signatures/sbs/sbs10c/
+10d	https://cancer.sanger.ac.uk/signatures/sbs/sbs10d/
 11	https://cancer.sanger.ac.uk/signatures/sbs/sbs11/
 12	https://cancer.sanger.ac.uk/signatures/sbs/sbs12/
 13	https://cancer.sanger.ac.uk/signatures/sbs/sbs13/
@@ -71,3 +73,7 @@ signature	description
 88	https://cancer.sanger.ac.uk/signatures/sbs/sbs88/
 89	https://cancer.sanger.ac.uk/signatures/sbs/sbs89/
 90	https://cancer.sanger.ac.uk/signatures/sbs/sbs90/
+91	https://cancer.sanger.ac.uk/signatures/sbs/sbs91/
+92	https://cancer.sanger.ac.uk/signatures/sbs/sbs92/
+93	https://cancer.sanger.ac.uk/signatures/sbs/sbs93/
+94	https://cancer.sanger.ac.uk/signatures/sbs/sbs94/
