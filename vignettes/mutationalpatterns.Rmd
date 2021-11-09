@@ -64,25 +64,24 @@ p_snvs$p_river + p_snvs$p_heatmap + p_snvs$p_spectrum + p_snvs$p_96_profile + pa
 
 ```{r snv_contributions}
 sigs_snv_2015 <-
-  gpgr::cosmic_signatures_2015 %>%
-  gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = .)
+  gpgr::cosmic_signatures_2015 |>
+  {\(sigs) gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)}()
 
 sigs_snv_2020 <-
   MutationalPatterns::get_known_signatures(muttype = "snv",
-                                           incl_poss_artifacts = TRUE) %>%
-  gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = .)
+                                           incl_poss_artifacts = TRUE) |>
+  {\(sigs) gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)}()
 
-
-sigs_snv_2015 %>%
-  gpgr::sig_contribution_table(type = "Sig", outdir = params$outdir) %>%
-  knitr::kable(format = "html") %>%
-  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
+sigs_snv_2015 |>
+  gpgr::sig_contribution_table(type = "Sig", outdir = params$outdir) |>
+  knitr::kable(format = "html") |>
+  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) |>
   kableExtra::scroll_box(height = "400px")
 
-sigs_snv_2020 %>%
-  gpgr::sig_contribution_table(type = "SBS", outdir = params$outdir) %>%
-  knitr::kable(format = "html") %>%
-  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
+sigs_snv_2020 |>
+  gpgr::sig_contribution_table(type = "SBS", outdir = params$outdir) |>
+  knitr::kable(format = "html") |>
+  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) |>
   kableExtra::scroll_box(height = "400px")
 ```
 
@@ -100,12 +99,12 @@ p_dbs$p_dbs_main / p_dbs$p_dbs_cont
 
 ```{r dbs_contributions}
 sigs_dbs <-
-  MutationalPatterns::get_known_signatures(muttype = "dbs") %>%
-  gpgr::sig_contribution(mut_mat = dbs_counts, signatures = .)
-sigs_dbs %>%
-  gpgr::sig_contribution_table(type = "DBS", outdir = params$outdir) %>%
-  knitr::kable(format = "html") %>%
-  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
+  MutationalPatterns::get_known_signatures(muttype = "dbs") |>
+  {\(sigs) gpgr::sig_contribution(mut_mat = dbs_counts, signatures = sigs)}()
+sigs_dbs |>
+  gpgr::sig_contribution_table(type = "DBS", outdir = params$outdir) |>
+  knitr::kable(format = "html") |>
+  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) |>
   kableExtra::scroll_box(height = "400px")
 ```
 
@@ -123,12 +122,12 @@ p_indels$p_indel_main / p_indels$p_indel_cont
 
 ```{r indel_contributions}
 sigs_indel <-
-  MutationalPatterns::get_known_signatures(muttype = "indel") %>%
-  gpgr::sig_contribution(mut_mat = indel_counts, signatures = .)
-sigs_indel %>%
-  gpgr::sig_contribution_table(type = "ID", outdir = params$outdir) %>%
-  knitr::kable(format = "html") %>%
-  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
+  MutationalPatterns::get_known_signatures(muttype = "indel") |>
+  {\(sigs) gpgr::sig_contribution(mut_mat = indel_counts, signatures = sigs)}()
+sigs_indel |>
+  gpgr::sig_contribution_table(type = "ID", outdir = params$outdir) |>
+  knitr::kable(format = "html") |>
+  kableExtra::kable_styling(c("hover", "striped"), font_size = 12) |>
   kableExtra::scroll_box(height = "400px")
 ```
 
@@ -137,17 +136,17 @@ sigs_indel %>%
 
 ```{r session_info, echo=FALSE}
 si <- devtools::session_info(include_base = TRUE)
-si_pl <- unclass(si$platform) %>% as_tibble() %>% t()
+si_pl <- unclass(si$platform) |> as_tibble() |> t()
 pkgs_of_interest <- c("base", "gpgr", "MutationalPatterns")
-si_pkg <- unclass(si$packages) %>%
-  dplyr::as_tibble() %>%
-  dplyr::select(package, version = ondiskversion, datestamp = date) %>%
+si_pkg <- unclass(si$packages) |>
+  dplyr::as_tibble() |>
+  dplyr::select(package, version = ondiskversion, datestamp = date) |>
   dplyr::filter(package %in% pkgs_of_interest)
 
 dplyr::tibble(var = row.names(si_pl),
-              value = si_pl[, , drop = TRUE]) %>%
+              value = si_pl[, , drop = TRUE]) |>
   knitr::kable(format = "html", caption = "Platform information.")
 
-si_pkg %>%
+si_pkg |>
   knitr::kable(format = "html", caption = "Main packages used in this vignette.")
 ```

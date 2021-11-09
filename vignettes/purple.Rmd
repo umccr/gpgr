@@ -40,7 +40,7 @@ It outputs several files, some of which are displayed below.
 ### Somatic CNVs (per chromosome)
 
 ```{r cnv_som}
-cnv_som <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr") %>%
+cnv_som <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr") |>
   gpgr::purple_cnv_som_process()
 ```
 
@@ -48,15 +48,15 @@ cnv_som <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr"
 <summary>Description</summary>
 
 ```{r cnv_som_descr}
-cnv_som$descr %>%
+cnv_som$descr |>
   knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per chromosome) Columns.")
 ```
 
 </details>
 
 ```{r cnv_som_tab}
-cnv_som$tab %>%
-  dplyr::slice(1:10) %>%
+cnv_som$tab |>
+  dplyr::slice(1:10) |>
   knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per chromosome) Summary Table.")
 ```
 
@@ -64,7 +64,7 @@ cnv_som$tab %>%
 
 ```{r cnv_som_gene}
 umccr_key_genes <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
-cnv_som_gene <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr") %>%
+cnv_som_gene <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr") |>
   gpgr::purple_cnv_som_gene_process(g = umccr_key_genes)
 ```
 
@@ -72,22 +72,22 @@ cnv_som_gene <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpg
 <summary>Description</summary>
 
 ```{r cnv_som_gene_descr}
-cnv_som_gene$descr %>%
+cnv_som_gene$descr |>
   knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per gene) Columns.")
 ```
 
 </details>
 
 ```{r cnv_som_gene_tab}
-cnv_som_gene$tab %>%
-  dplyr::slice(1:10) %>%
+cnv_som_gene$tab |>
+  dplyr::slice(1:10) |>
   knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per gene) Summary Table.")
 ```
 
 ### Germline CNVs (per chromosome)
 
 ```{r cnv_germ}
-cnv_germ <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr") %>%
+cnv_germ <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr") |>
   gpgr::purple_cnv_germ_process()
 ```
 
@@ -95,34 +95,34 @@ cnv_germ <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpg
 <summary>Description</summary>
 
 ```{r cnv_germ_descr}
-cnv_germ$descr %>%
+cnv_germ$descr |>
   knitr::kable(format = "html", caption = "PURPLE Germline CNVs (per chromosome) Columns.")
 ```
 
 </details>
 
 ```{r cnv_germ_tab}
-cnv_germ$tab %>%
-  dplyr::slice(1:10) %>%
+cnv_germ$tab |>
+  dplyr::slice(1:10) |>
   knitr::kable(format = "html", caption = "PURPLE Germline CNVs (per chromosome) Summary Table.")
 ```
 
 ### Purity
 
 ```{r purity}
-purity <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr") %>%
+purity <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr") |>
   gpgr::purple_purity_read()
 
-purity$summary %>%
+purity$summary |>
   knitr::kable(format = "html", caption = "PURPLE Purity Summary Table.")
 ```
 
 ### Kataegis
 
 ```{r kataegis}
-kat <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr") %>%
+kat <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr") |>
   purple_kataegis()
-kat$data %>%
+kat$data |>
   knitr::kable(format = "html", caption = "PURPLE Kataegis Table.")
 ```
 
@@ -138,10 +138,10 @@ knitr::kable(kat$description, format = "html", caption = "Kataegis column descri
 ### QC
 
 ```{r qc}
-qc <- system.file("extdata/purple/purple.qc", package = "gpgr") %>%
+qc <- system.file("extdata/purple/purple.qc", package = "gpgr") |>
   gpgr::purple_qc_read()
 
-qc$summary %>%
+qc$summary |>
   knitr::kable(format = "html", caption = "PURPLE QC Summary Table.")
 ```
 
@@ -149,17 +149,17 @@ qc$summary %>%
 
 ```{r session_info, echo=FALSE}
 si <- devtools::session_info(include_base = TRUE)
-si_pl <- unclass(si$platform) %>% dplyr::as_tibble() %>% t()
+si_pl <- unclass(si$platform) |> dplyr::as_tibble() |> t()
 pkgs_of_interest <- c("base", "gpgr")
-si_pkg <- unclass(si$packages) %>%
-  dplyr::as_tibble() %>%
-  dplyr::select(package, version = ondiskversion, datestamp = date) %>%
+si_pkg <- unclass(si$packages) |>
+  dplyr::as_tibble() |>
+  dplyr::select(package, version = ondiskversion, datestamp = date) |>
   dplyr::filter(package %in% pkgs_of_interest)
 
 dplyr::tibble(var = row.names(si_pl),
-              value = si_pl[, , drop = TRUE]) %>%
+              value = si_pl[, , drop = TRUE]) |>
   knitr::kable(format = "html", caption = "Platform information.")
 
-si_pkg %>%
+si_pkg |>
   knitr::kable(format = "html", caption = "Main packages used in this vignette.")
 ```

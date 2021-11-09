@@ -22,17 +22,17 @@ hrdetect_read_snvindel_vcf <- function(x) {
   assertthat::assert_that(file.exists(x))
   ALLOWED_BASES <- c("A", "C", "G", "T")
   readr::local_edition(1)
-  d <- x %>%
+  d <- x |>
     readr::read_tsv(
       comment = "##",
-      col_types = readr::cols_only("#CHROM" = "c", "POS" = "i", "REF" = "c", "ALT" = "c")) %>%
+      col_types = readr::cols_only("#CHROM" = "c", "POS" = "i", "REF" = "c", "ALT" = "c")) |>
     dplyr::mutate(vartype = dplyr::case_when(
       .data$REF %in% ALLOWED_BASES & .data$ALT %in% ALLOWED_BASES ~ "SNV",
-      TRUE ~ "INDEL")) %>%
+      TRUE ~ "INDEL")) |>
     dplyr::rename(chr = "#CHROM", position = "POS")
 
-  snv <- d %>% dplyr::filter(.data$vartype == "SNV") %>% dplyr::select(-.data$vartype)
-  indel <- d %>% dplyr::filter(.data$vartype == "INDEL") %>% dplyr::select(-.data$vartype)
+  snv <- d |> dplyr::filter(.data$vartype == "SNV") |> dplyr::select(-.data$vartype)
+  indel <- d |> dplyr::filter(.data$vartype == "INDEL") |> dplyr::select(-.data$vartype)
 
   list(
     snv = snv,
@@ -76,9 +76,9 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
 
   vcf <- VariantAnnotation::readVcf(x, genome)
   gr <- StructuralVariantAnnotation::breakpointRanges(vcf)
-  bedpe <- StructuralVariantAnnotation::breakpointgr2bedpe(gr) %>%
-    dplyr::mutate_if(is.factor, as.character) %>%
-    dplyr::mutate(sample = nm) %>%
+  bedpe <- StructuralVariantAnnotation::breakpointgr2bedpe(gr) |>
+    dplyr::mutate_if(is.factor, as.character) |>
+    dplyr::mutate(sample = nm) |>
     dplyr::select(.data$chrom1, .data$start1, .data$end1,
                   .data$chrom2, .data$start2, .data$end2,
                   .data$sample, .data$strand1, .data$strand2)
@@ -115,14 +115,14 @@ hrdetect_read_purple_cnv <- function(x) {
                            "chromosome" = "c", "start" = "i", "end" = "i",
                            "copyNumber" = "d", "minorAlleleCopyNumber" = "d"))
 
-  cnv %>%
+  cnv |>
     dplyr::rename(
       Chromosome = .data$chromosome,
       chromStart = .data$start,
       chromEnd = .data$end,
       total.copy.number.inTumour = .data$copyNumber,
       minor.copy.number.inTumour = .data$minorAlleleCopyNumber,
-    ) %>%
+    ) |>
     dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome))
 }
 
@@ -178,22 +178,22 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
     nboot = 100,
     nparallel = 2)
 
-  snv_exp <- subs_fit_res$E_median_filtered %>%
-    tibble::as_tibble(rownames = "sig") %>%
+  snv_exp <- subs_fit_res$E_median_filtered |>
+    tibble::as_tibble(rownames = "sig") |>
     dplyr::rename(exposure = .data$catalogue)
 
-  snv_pval <- subs_fit_res$E_p.values %>%
-    tibble::as_tibble(rownames = "sig") %>%
+  snv_pval <- subs_fit_res$E_p.values |>
+    tibble::as_tibble(rownames = "sig") |>
     dplyr::rename(pvalue = .data$catalogue)
 
-  snv_results <- snv_exp %>%
+  snv_results <- snv_exp |>
     dplyr::left_join(snv_pval, by = "sig")
 
   ##--- INDELs ---##
   indel_count_proportion <- signature.tools.lib::tabToIndelsClassification(
     indel.data = snvindel_tabs[["indel"]],
     sampleID = nm,
-    genome.v = genome)[["count_proportion"]] %>%
+    genome.v = genome)[["count_proportion"]] |>
     tibble::as_tibble()
 
   list(
@@ -303,8 +303,8 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
   }
 
   snvindel <- hrdetect_prep_snvindel(snvindel_vcf, nm, genome, snvoutdir, sigsToUse = sigsToUse)
-  snv <- snvindel$snv_results %>%
-    dplyr::filter(.data$sig %in% c("Signature.3", "Signature.8")) %>%
+  snv <- snvindel$snv_results |>
+    dplyr::filter(.data$sig %in% c("Signature.3", "Signature.8")) |>
     tidyr::pivot_wider(id_cols = c("sig", "exposure"),
                        names_from = "sig", values_from = "exposure")
 
@@ -334,10 +334,10 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
     res <- cbind(intercept, mat, Probability)
   }
 
-  res %>%
-    tibble::as_tibble(rownames = "sample", .name_repair = "check_unique") %>%
-    dplyr::relocate(.data$Probability, .after = .data$sample) %>%
-    dplyr::rename(hrdloh_index = .data$hrd) %>%
+  res |>
+    tibble::as_tibble(rownames = "sample", .name_repair = "check_unique") |>
+    dplyr::relocate(.data$Probability, .after = .data$sample) |>
+    dplyr::rename(hrdloh_index = .data$hrd) |>
     dplyr::mutate(
       dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 3))
 }

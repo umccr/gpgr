@@ -47,7 +47,7 @@ chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL, sample.name =
     CHORD::chordPredict(
       features = contexts,
       rf.model = CHORD::CHORD,
-      do.bootstrap = TRUE, verbose = FALSE) %>%
+      do.bootstrap = TRUE, verbose = FALSE) |>
     dplyr::mutate(
       dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 3))
 

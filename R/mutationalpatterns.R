@@ -25,9 +25,9 @@
 sig_contribution <- function(mut_mat, signatures) {
   # Fit mutation matrix to cancer signatures
   fit_res <-
-    MutationalPatterns::fit_to_signatures(mut_mat, signatures)$contribution %>%
-    tibble::as_tibble(rownames = "sig") %>%
-    dplyr::rename(contr = 2) %>%
+    MutationalPatterns::fit_to_signatures(mut_mat, signatures)$contribution |>
+    tibble::as_tibble(rownames = "sig") |>
+    dplyr::rename(contr = 2) |>
     dplyr::filter(.data$contr > 0)
 
   if (nrow(fit_res) == 0) {
@@ -36,13 +36,13 @@ sig_contribution <- function(mut_mat, signatures) {
       "No Signatures found!", 0)
   }
 
-  fit_res_contr <- fit_res %>%
+  fit_res_contr <- fit_res |>
     dplyr::mutate(
       contr = round(.data$contr, 0),
       RelFreq = round(.data$contr / sum(.data$contr), 2),
-      Rank = as.integer(base::rank(-.data$contr))) %>%
+      Rank = as.integer(base::rank(-.data$contr))) |>
     dplyr::select(.data$Rank, Signature = .data$sig,
-                  Contribution = .data$contr, .data$RelFreq) %>%
+                  Contribution = .data$contr, .data$RelFreq) |>
     dplyr::arrange(.data$Rank)
 
   fit_res_contr
@@ -73,17 +73,17 @@ sig_contribution_table <- function(contr, type, outdir) {
   img_cp_dir <- file.path(outdir, "sig_plots", type)
   mkdir(img_cp_dir)
   sig_table <-
-    readr::read_tsv(file = file.path(sig_dir, "description.tsv"), col_types = "cc") %>%
+    readr::read_tsv(file = file.path(sig_dir, "description.tsv"), col_types = "cc") |>
     dplyr::mutate(Plot_original = file.path(sig_dir, paste0(.data$signature, ".png")),
                   Plot_copy = file.path(img_cp_dir, paste0(.data$signature, ".png")),
-                  signature = paste0(type, .data$signature)) %>%
+                  signature = paste0(type, .data$signature)) |>
     dplyr::rename(Signature = .data$signature)
 
-  contr %>%
-    dplyr::left_join(sig_table, by = "Signature") %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(cp = file.copy(from = .data$Plot_original, to = .data$Plot_copy)) %>%
-    dplyr::mutate(plot_in_md = paste0("![](", .data$Plot_copy,  ")")) %>%
+  contr |>
+    dplyr::left_join(sig_table, by = "Signature") |>
+    dplyr::rowwise() |>
+    dplyr::mutate(cp = file.copy(from = .data$Plot_original, to = .data$Plot_copy)) |>
+    dplyr::mutate(plot_in_md = paste0("![](", .data$Plot_copy,  ")")) |>
     dplyr::select(.data$Rank, .data$Signature, .data$Contribution, .data$RelFreq,
                   Description = .data$description, Plot = .data$plot_in_md)
 }

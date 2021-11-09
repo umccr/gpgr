@@ -19,12 +19,12 @@ get_2015_signatures <- function(prob_file = "http://cancer.sanger.ac.uk/cancerge
   ctypes <- paste0(c("ccc", paste0(rep("d", 30), collapse = ""), "ccccccc"), collapse = "")
   cnames <- c("SubstType", "Trinucleotide", "SomMutType", paste0("Sig", 1:30), paste0("foo", 1:7))
   cancer_signatures_2015 <-
-    readr::read_tsv(prob_file, col_names = cnames, col_types = ctypes, skip = 1) %>%
+    readr::read_tsv(prob_file, col_names = cnames, col_types = ctypes, skip = 1) |>
     dplyr::arrange(.data$SubstType)
 
   # select only 30 sig columns, 96 mut types
-  cancer_signatures_2015 %>%
-    dplyr::select(4:33) %>%
+  cancer_signatures_2015 |>
+    dplyr::select(4:33) |>
     as.matrix()
 }
 

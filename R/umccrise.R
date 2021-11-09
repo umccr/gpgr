@@ -28,12 +28,12 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
 
   hrdetect_res_tab <-
     tibble::tibble(col = colnames(hrdetect_res),
-                   val = unlist(hrdetect_res[1, ])) %>%
+                   val = unlist(hrdetect_res[1, ])) |>
     dplyr::filter(.data$col != "sample")
 
   chord_res_tab <-
     tibble::tibble(col = colnames(chord_res$prediction),
-                   val = unlist(chord_res$prediction[1, ])) %>%
+                   val = unlist(chord_res$prediction[1, ])) |>
     dplyr::filter(col != "sample")
 
 
@@ -53,25 +53,25 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
         ~CHORD, ~results_chord,
         " ", " ",
         " ", " "))
-  tab3 <- chord_res_tab[8:16, ] %>%
+  tab3 <- chord_res_tab[8:16, ] |>
     purrr::set_names(c("CHORD2", "results_chord2"))
 
   hrd_results_tab <- dplyr::bind_cols(tab1, tab2, tab3)
 
   hrd_results_gt <-
-    hrd_results_tab %>%
-    gt::gt() %>%
+    hrd_results_tab |>
+    gt::gt() |>
     gt::tab_header(
       title = glue::glue("HRD Results for {sn}")
-    ) %>%
+    ) |>
     gt::tab_spanner(
       label = "HRDetect",
       columns =  c("HRDetect", "results_hrdetect")
-    ) %>%
+    ) |>
     gt::tab_spanner(
       label = "CHORD",
       columns = c("CHORD", "results_chord", "CHORD2", "results_chord2")
-    ) %>%
+    ) |>
     gt::cols_label(
       HRDetect = "",
       results_hrdetect = "",
@@ -79,7 +79,7 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
       results_chord = "",
       CHORD2 = "",
       results_chord2 = ""
-    ) %>%
+    ) |>
     gt::tab_style(
       style = list(
         gt::cell_text(weight = "bold")
@@ -87,11 +87,11 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
       locations = gt::cells_body(
         columns = c("HRDetect", "CHORD", "CHORD2")
       )
-    ) %>%
+    ) |>
     gt::cols_align(
       align = "right",
       columns = c("results_hrdetect")
-    ) %>%
+    ) |>
     gt::tab_style(
       style = gt::cell_borders(
         sides = "left",
@@ -103,7 +103,7 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
         columns = c("CHORD"),
         rows = dplyr::everything()
       )
-    ) %>%
+    ) |>
     gt::tab_options(table.align = "left")
 
   list(sample = sn,
@@ -126,16 +126,16 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
 #' @export
 af_summary <- function(af_global_file, af_keygenes_file) {
   af_global <-
-    readr::read_tsv(af_global_file, col_types = "d") %>%
+    readr::read_tsv(af_global_file, col_types = "d") |>
     dplyr::mutate(set = "Global")
 
   af_keygenes <-
-    readr::read_tsv(af_keygenes_file, col_types = "cicccd") %>%
-    dplyr::select(.data$af) %>%
+    readr::read_tsv(af_keygenes_file, col_types = "cicccd") |>
+    dplyr::select(.data$af) |>
     dplyr::mutate(set = 'Key genes CDS')
 
   af_both <-
-    dplyr::bind_rows(af_global, af_keygenes) %>%
+    dplyr::bind_rows(af_global, af_keygenes) |>
     dplyr::mutate(set = factor(.data$set, levels = c("Global", "Key genes CDS")))
 
   mode2 <- function(x) {
@@ -143,27 +143,27 @@ af_summary <- function(af_global_file, af_keygenes_file) {
     ux[which.max(tabulate(match(x, ux)))]
   }
 
-  af_stats <- af_both %>%
-    dplyr::group_by(.data$set) %>%
+  af_stats <- af_both |>
+    dplyr::group_by(.data$set) |>
     dplyr::summarise(n = dplyr::n(),
                      mean = round(base::mean(.data$af), 2),
                      median = round(stats::median(.data$af), 2),
                      mode = round(mode2(.data$af), 2),
-                     .groups = "drop_last") %>%
+                     .groups = "drop_last") |>
     tidyr::complete(.data$set, fill = list(n = 0))
 
-  af_stats_gt <- af_stats %>%
-    gt::gt(rowname_col = "set") %>%
+  af_stats_gt <- af_stats |>
+    gt::gt(rowname_col = "set") |>
     gt::tab_header(
       title = "AF Summary Stats"
-    ) %>%
-    gt::tab_stubhead(label = "Set") %>%
+    ) |>
+    gt::tab_stubhead(label = "Set") |>
     gt::tab_style(
       style = list(
         gt::cell_text(weight = "bold")
       ),
       locations = gt::cells_stub(rows = TRUE)
-    ) %>%
+    ) |>
     gt::tab_options(table.align = "left")
 
   af_plot <-
