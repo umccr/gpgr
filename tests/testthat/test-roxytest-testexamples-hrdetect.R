@@ -14,7 +14,7 @@ test_that("Function hrdetect_read_snvindel_vcf() @ L21", {
 })
 
 
-test_that("Function hrdetect_read_sv_vcf() @ L67", {
+test_that("Function hrdetect_read_sv_vcf() @ L68", {
   
   x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
   sv_bedpe <- hrdetect_read_sv_vcf(x, nm = "SAMPLE")
@@ -26,7 +26,7 @@ test_that("Function hrdetect_read_sv_vcf() @ L67", {
 })
 
 
-test_that("Function hrdetect_read_purple_cnv() @ L109", {
+test_that("Function hrdetect_read_purple_cnv() @ L110", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (cnv <- hrdetect_read_purple_cnv(x))
@@ -37,7 +37,7 @@ test_that("Function hrdetect_read_purple_cnv() @ L109", {
 })
 
 
-test_that("Function hrdetect_prep_snvindel() @ L152", {
+test_that("Function hrdetect_prep_snvindel() @ L153", {
   
   x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   (l <- hrdetect_prep_snvindel(x, nm = "sampleA", outdir = tempdir()))
@@ -48,7 +48,7 @@ test_that("Function hrdetect_prep_snvindel() @ L152", {
 })
 
 
-test_that("Function hrdetect_prep_sv() @ L224", {
+test_that("Function hrdetect_prep_sv() @ L225", {
   
   x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
   nm <- "SampleA"
@@ -59,7 +59,7 @@ test_that("Function hrdetect_prep_sv() @ L224", {
 })
 
 
-test_that("Function hrdetect_prep_cnv() @ L254", {
+test_that("Function hrdetect_prep_cnv() @ L255", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (l <- hrdetect_prep_cnv(x, nm = "SampleA"))
@@ -69,7 +69,7 @@ test_that("Function hrdetect_prep_cnv() @ L254", {
 })
 
 
-test_that("Function hrdetect_run() @ L296", {
+test_that("Function hrdetect_run() @ L297", {
   
   snvindel_vcf <- system.file(
                     "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
