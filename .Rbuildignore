@@ -11,3 +11,5 @@
 ^pkgdown$
 ^\.github$
 ^inst/rmd$
+^outputs$
+^\.bumpversion\.cfg$

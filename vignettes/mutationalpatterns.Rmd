@@ -47,7 +47,6 @@ gr <- MutationalPatterns::read_vcfs_as_granges(
   genome = ref_genome,
   group = "auto+sex",
   type = "all")
-
 ```
 
 ## SNVs (SBS)
