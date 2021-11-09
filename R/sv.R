@@ -27,18 +27,20 @@ split_double_col <- function(d, nms) {
   assertthat::assert_that(inherits(d, "tbl_df"))
   assertthat::assert_that(is.character(nms))
 
-  d %>%
-    dplyr::select(nms) %>%
-    dplyr::mutate(num = dplyr::row_number()) %>%
-    tidyr::pivot_longer(cols = nms, names_to = "col_nm", values_to = "x1_x2") %>%
-    tidyr::separate(.data$x1_x2, into = c("x1", "x2"), sep = ",", fill = "right") %>%
+  outd <- d |>
+    dplyr::select(nms) |>
+    dplyr::mutate(num = dplyr::row_number()) |>
+    tidyr::pivot_longer(cols = nms, names_to = "col_nm", values_to = "x1_x2") |>
+    tidyr::separate(.data$x1_x2, into = c("x1", "x2"), sep = ",", fill = "right") |>
     dplyr::mutate(x1 = round(as.double(.data$x1), 2),
-                  x2 = round(as.double(.data$x2), 2)) %>%
-    dplyr::mutate(avg = round(rowMeans(dplyr::select(., .data$x1, .data$x2), na.rm = TRUE), 2),
+                  x2 = round(as.double(.data$x2), 2))
+
+  outd |>
+    dplyr::mutate(avg = round(rowMeans(dplyr::select(outd, .data$x1, .data$x2), na.rm = TRUE), 2),
                   out = as.character(glue::glue("{avg} ({x1}, {x2})")),
-                  out = ifelse(.data$out == "NaN (NA, NA)", NA_character_, .data$out)) %>%
-    dplyr::select(.data$num, .data$col_nm, .data$out) %>%
-    tidyr::pivot_wider(names_from = "col_nm", values_from = "out") %>%
+                  out = ifelse(.data$out == "NaN (NA, NA)", NA_character_, .data$out)) |>
+    dplyr::select(.data$num, .data$col_nm, .data$out) |>
+    tidyr::pivot_wider(names_from = "col_nm", values_from = "out") |>
     dplyr::select(-.data$num)
 }
 
@@ -114,9 +116,9 @@ abbreviate_effect <- function(effects) {
     ifelse(effect %in% effect_abbrev_nms, gpgr::EFFECT_ABBREVIATIONS[effect], effect)
   }
 
-  strsplit(effects, "&")[[1]] %>%
-    purrr::map_chr(.abbreviate_effect) %>%
-    stringr::str_sort() %>%
+  strsplit(effects, "&")[[1]] |>
+    purrr::map_chr(.abbreviate_effect) |>
+    stringr::str_sort() |>
     paste(collapse = ", ")
 }
 
@@ -239,11 +241,12 @@ process_sv <- function(x) {
 
   cols_to_split <- c("AF_BPI", "AF_PURPLE", "CN_PURPLE", "CN_change_PURPLE")
   double_cols <- split_double_col(sv, cols_to_split)
-  unmelted <- sv %>%
-    dplyr::select(-dplyr::all_of(c(cols_to_split, "caller", "sample"))) %>%
-    dplyr::bind_cols(double_cols) %>%
-    tidyr::separate(.data$split_read_support, c("SR_ref", "SR_alt"), ",", convert = TRUE) %>%
-    tidyr::separate(.data$paired_support_PR, c("PR_ref", "PR_alt"), ",", convert = TRUE) %>%
+  unmelted <- sv |>
+    dplyr::select(-dplyr::all_of(c(cols_to_split, "caller", "sample"))) |>
+    dplyr::bind_cols(double_cols) |>
+    tidyr::separate(.data$split_read_support, c("SR_ref", "SR_alt"), ",", convert = TRUE) |>
+    tidyr::separate(.data$paired_support_PR, c("PR_ref", "PR_alt"), ",", convert = TRUE)
+  unmelted <- unmelted |>
     dplyr::mutate(
       SR_PR_ref = paste0(.data$SR_ref, ",", .data$PR_ref),
       Ploidy = round(as.double(.data$Ploidy_PURPLE), 2),
@@ -252,43 +255,44 @@ process_sv <- function(x) {
       Start = ifelse(is.na(.data$PURPLE_status), .data$START_BPI, .data$start),
       nann = count_pieces(.data$annotation, ","),
       vcfnum = dplyr::row_number(),
-      vcfnum = sprintf(glue::glue("%0{nchar(nrow(.))}d"), .data$vcfnum)) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(SR_PR_sum = sum(.data$SR_alt, .data$PR_alt, na.rm = TRUE)) %>%
+      vcfnum = sprintf(glue::glue("%0{nchar(nrow(unmelted))}d"), .data$vcfnum)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(SR_PR_sum = sum(.data$SR_alt, .data$PR_alt, na.rm = TRUE)) |>
     dplyr::ungroup()
 
   # BND IDs
   # Two BND mates share the same ID up to the last digit (0 or 1)
-  unmelted_bnd1 <- unmelted %>%
-    dplyr::filter(.data$svtype == "BND") %>%
-    tidyr::separate(.data$ID, into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) %>%
-    dplyr::group_by(.data$BND_group) %>%
+  unmelted_bnd1 <- unmelted |>
+    dplyr::filter(.data$svtype == "BND") |>
+    tidyr::separate(.data$ID, into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) |>
+    dplyr::group_by(.data$BND_group)
+  unmelted_bnd1 <- unmelted_bnd1 |>
     dplyr::mutate(
       # index per group 1, 2, 3..
       BND_ID = dplyr::cur_group_id(),
       # turns into 001, 002, 003... if you've got 100+ rows
-      BND_ID = sprintf(glue::glue("%0{nchar(nrow(.))}d"), .data$BND_ID),
-      BND_mate = ifelse(.data$BND_mate == 0, "A", "B")) %>%
+      BND_ID = sprintf(glue::glue("%0{nchar(nrow(unmelted_bnd1))}d"), .data$BND_ID),
+      BND_mate = ifelse(.data$BND_mate == 0, "A", "B")) |>
     dplyr::ungroup()
 
   # Grab each BND mate's chrom
   # Orphan mates have that info in the ALT field
   match_id2mateid <- match(unmelted_bnd1$ID, unmelted_bnd1$MATEID)
-  unmelted_bnd2 <- unmelted_bnd1[match_id2mateid, c("chrom")] %>%
+  unmelted_bnd2 <- unmelted_bnd1[match_id2mateid, c("chrom")] |>
     dplyr::rename(BND_mate_chrom = .data$chrom)
 
-  unmelted_bnd <- dplyr::bind_cols(unmelted_bnd1, unmelted_bnd2) %>%
+  unmelted_bnd <- dplyr::bind_cols(unmelted_bnd1, unmelted_bnd2) |>
     dplyr::mutate(
       BND_mate_chrom = ifelse(is.na(.data$BND_mate_chrom),
                               sub(".*chr(.*):.*", "orphan_\\1", .data$ALT),
                               .data$BND_mate_chrom))
 
-  unmelted_other <- unmelted %>%
+  unmelted_other <- unmelted |>
     dplyr::filter(.data$svtype != "BND")
 
   unmelted_all <-
     dplyr::bind_rows(unmelted_bnd,
-                     unmelted_other) %>%
+                     unmelted_other) |>
     dplyr::mutate(
       END_BPI = base::format(.data$END_BPI, big.mark = ",", trim = TRUE),
       Start = base::format(.data$Start, big.mark = ",", trim = TRUE),
@@ -296,7 +300,7 @@ process_sv <- function(x) {
         ifelse(.data$svtype == "BND", .data$BND_mate_chrom, .data$chrom),
         ":",
         .data$END_BPI),
-      Start = paste0(.data$chrom, ":", .data$Start)) %>%
+      Start = paste0(.data$chrom, ":", .data$Start)) |>
     dplyr::select(.data$vcfnum, .data$nann, TierTop = .data$tier,
                   .data$Start, .data$End,
                   Type = .data$svtype,
@@ -308,21 +312,21 @@ process_sv <- function(x) {
 
   abbreviate_effectv <- Vectorize(abbreviate_effect)
 
-  melted <- unmelted_all %>%
-    dplyr::mutate(annotation = strsplit(.data$annotation, ',')) %>%
-    tidyr::unnest(.data$annotation) %>%
+  melted <- unmelted_all |>
+    dplyr::mutate(annotation = strsplit(.data$annotation, ',')) |>
+    tidyr::unnest(.data$annotation) |>
     tidyr::separate(
       .data$annotation, c('Event', 'Effect', 'Genes', 'Transcript', 'Detail', 'Tier'),
-      sep = '\\|', convert = FALSE) %>%
+      sep = '\\|', convert = FALSE) |>
     dplyr::mutate(
       ntrx = count_pieces(.data$Transcript, "&"),
       ngen = count_pieces(.data$Genes, "&"),
       neff = count_pieces(.data$Effect, "&"),
-      Transcript = .data$Transcript %>% stringr::str_replace_all('&', ', '),
-      Genes = .data$Genes %>% stringr::str_replace_all('&', ', '),
+      Transcript = .data$Transcript |> stringr::str_replace_all('&', ', '),
+      Genes = .data$Genes |> stringr::str_replace_all('&', ', '),
       Effect = abbreviate_effectv(.data$Effect),
-      `Tier (Top)` = glue::glue("{Tier} ({TierTop})")) %>%
-    dplyr::distinct() %>%
+      `Tier (Top)` = glue::glue("{Tier} ({TierTop})")) |>
+    dplyr::distinct() |>
     dplyr::arrange(.data$`Tier (Top)`, .data$Genes, .data$Effect)
 
   list(
@@ -354,21 +358,21 @@ plot_bnd_sr_pr_tot_lines <- function(d,
                                      title = "SR, PR and SR + PR line plot for BNDs",
                                      subtitle = "Events are sorted by decreasing tot values.") {
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
-  dplot <- d %>%
-    dplyr::filter(.data$Type == "BND") %>%
-    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt, Tier = .data$TierTop, .data$BND_ID) %>%
-    dplyr::distinct() %>%
+  dplot <- d |>
+    dplyr::filter(.data$Type == "BND") |>
+    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt, Tier = .data$TierTop, .data$BND_ID) |>
+    dplyr::distinct() |>
     dplyr::mutate(PR = ifelse(is.na(.data$PR), 0, .data$PR),
-                  SR = ifelse(is.na(.data$SR), 0, .data$SR)) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = TRUE)) %>%
-    dplyr::ungroup() %>%
-    dplyr::arrange(dplyr::desc(.data$tot)) %>%
-    dplyr::mutate(bnd_event = dplyr::row_number()) %>%
+                  SR = ifelse(is.na(.data$SR), 0, .data$SR)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = TRUE)) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(dplyr::desc(.data$tot)) |>
+    dplyr::mutate(bnd_event = dplyr::row_number()) |>
     tidyr::pivot_longer(cols = c(.data$SR, .data$PR, .data$tot),
                         names_to = "Metric", values_to = "Count")
 
-  p_all <- dplot %>%
+  p_all <- dplot |>
     ggplot2::ggplot(ggplot2::aes(x = .data$bnd_event, y = .data$Count, colour = .data$Metric)) +
     ggplot2::geom_line(alpha = 0.5) +
     ggplot2::geom_point(alpha = 0.5) +
@@ -412,21 +416,21 @@ plot_bnd_sr_pr_tot_hist <- function(d,
                                     title = "SR, PR and SR + PR histogram for BNDs",
                                     subtitle = "Values of 0 (NA) are not shown.") {
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
-  dplot <- d %>%
-    dplyr::filter(.data$Type == "BND") %>%
-    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt, .data$BND_ID) %>%
-    dplyr::distinct() %>%
+  dplot <- d |>
+    dplyr::filter(.data$Type == "BND") |>
+    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt, .data$BND_ID) |>
+    dplyr::distinct() |>
     dplyr::mutate(PR = ifelse(is.na(.data$PR), 0, .data$PR),
-                  SR = ifelse(is.na(.data$SR), 0, .data$SR)) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = TRUE)) %>%
-    dplyr::ungroup() %>%
+                  SR = ifelse(is.na(.data$SR), 0, .data$SR)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = TRUE)) |>
+    dplyr::ungroup() |>
     tidyr::pivot_longer(cols = c(.data$SR, .data$PR, .data$tot),
                         names_to = "Metric", values_to = "Value")
 
   if (nrow(dplot) > 0) {
-    dplot %>%
-      dplyr::filter(.data$Value > 0) %>%
+    dplot |>
+      dplyr::filter(.data$Value > 0) |>
       ggplot2::ggplot(ggplot2::aes(x = .data$Value, fill = .data$Metric)) +
       ggplot2::geom_histogram(binwidth = 1) +
       ggplot2::theme_bw() +
