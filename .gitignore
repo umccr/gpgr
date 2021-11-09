@@ -43,3 +43,4 @@ vignettes/*.pdf
 nogit/
 docs
 inst/doc
+outputs/

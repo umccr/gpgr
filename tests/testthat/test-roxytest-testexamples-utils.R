@@ -15,7 +15,7 @@ test_that("Function is_vcf() @ L22", {
 })
 
 
-test_that("Function vcf_is_empty() @ L88", {
+test_that("Function vcf_is_empty() @ L89", {
   
   x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   (y <- vcf_is_empty(x))
@@ -40,7 +40,7 @@ test_that("Function vcf_is_empty() @ L88", {
 })
 
 
-test_that("Function tsv_is_empty() @ L125", {
+test_that("Function tsv_is_empty() @ L126", {
   
   
   tmp1 <- tempfile()

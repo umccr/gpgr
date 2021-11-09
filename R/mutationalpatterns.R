@@ -63,9 +63,9 @@ sig_contribution <- function(mut_mat, signatures) {
 #' @export
 sig_contribution_table <- function(contr, type, outdir) {
   available_types <- c("Sig" = "v2_2015/Sig",
-                       "SBS" = "v3_2020-june/SBS",
-                       "DBS" = "v3_2020-june/DBS",
-                       "ID" = "v3_2020-june/ID")
+                       "SBS" = "v3.2_2021-march/SBS",
+                       "DBS" = "v3.2_2021-march/DBS",
+                       "ID" = "v3.2_2021-march/ID")
   assertthat::assert_that(length(type) == 1, type %in% names(available_types))
   assertthat::assert_that(all(colnames(contr) == c("Rank", "Signature", "Contribution", "RelFreq")))
 
