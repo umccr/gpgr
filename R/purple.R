@@ -67,13 +67,13 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
   }
   genes <-
     readr::read_tsv(g, col_types = readr::cols(
-      symbol = "c", oncogene = "l", tumorsuppressor = "l")) %>%
+      symbol = "c", oncogene = "l", tumorsuppressor = "l")) |>
     dplyr::select(.data$symbol, .data$oncogene, .data$tumorsuppressor)
-  oncogenes <- genes %>% dplyr::filter(.data$oncogene) %>% dplyr::pull(.data$symbol)
-  tsgenes <- genes %>% dplyr::filter(.data$tumorsuppressor) %>% dplyr::pull(.data$symbol)
+  oncogenes <- genes |> dplyr::filter(.data$oncogene) |> dplyr::pull(.data$symbol)
+  tsgenes <- genes |> dplyr::filter(.data$tumorsuppressor) |> dplyr::pull(.data$symbol)
 
-  purple_cnv_gene <- purple_cnv_gene %>%
-    dplyr::filter(.data$gene %in% genes$symbol) %>%
+  purple_cnv_gene <- purple_cnv_gene |>
+    dplyr::filter(.data$gene %in% genes$symbol) |>
     dplyr::mutate(
       chromosome = as.factor(.data$chromosome),
       transcriptID = paste0(.data$transcriptId, ".", .data$transcriptVersion),
@@ -87,7 +87,7 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
         .data$oncogene & .data$tsgene ~ "onco+ts",
         .data$oncogene ~ "oncogene",
         .data$tsgene ~ "tsgene",
-        TRUE ~ "")) %>%
+        TRUE ~ "")) |>
     dplyr::select(.data$gene, minCN = .data$minCopyNumber, maxCN = .data$maxCopyNumber,
                   chrom = .data$chromosome, .data$start, .data$end,
                   chrBand = .data$chromosomeBand, .data$onco_or_ts,
@@ -168,7 +168,7 @@ purple_cnv_som_read <- function(x) {
 purple_cnv_som_process <- function(x) {
 
   purple_cnv_somatic <- purple_cnv_som_read(x)
-  purple_cnv_somatic <- purple_cnv_somatic %>%
+  purple_cnv_somatic <- purple_cnv_somatic |>
     dplyr::mutate(
       Chr = as.factor(.data$chromosome),
       minorAlleleCopyNumber = round(.data$minorAlleleCopyNumber, 1),
@@ -179,7 +179,7 @@ purple_cnv_som_process <- function(x) {
       gcContent = round(.data$gcContent, 2),
       `Start/End SegSupport` = paste0(.data$segmentStartSupport, "-", .data$segmentEndSupport),
       `BAF (count)` = paste0(.data$bafAdj, " (", .data$bafCount, ")"),
-      `GC (windowCount)` = paste0(.data$gcContent, " (", .data$depthWindowCount, ")")) %>%
+      `GC (windowCount)` = paste0(.data$gcContent, " (", .data$depthWindowCount, ")")) |>
     dplyr::select(
       .data$Chr, Start = .data$start, End = .data$end, CN = .data$copyNumber,
       `CN Min+Maj` = .data$`CopyNumber Min+Maj`, .data$`Start/End SegSupport`, Method = .data$method,
@@ -303,7 +303,7 @@ purple_version_read <- function(x) {
 #' @export
 purple_qc_read <- function(x) {
   purple_qc <-
-    readr::read_tsv(x, col_names = c("key", "value"), col_types = "cc") %>%
+    readr::read_tsv(x, col_names = c("key", "value"), col_types = "cc") |>
     dplyr::mutate(value = toupper(.data$value))
 
   nm <- c("QCStatus", "Method", "CopyNumberSegments",
@@ -388,13 +388,13 @@ purple_purity_read <- function(x) {
   assertthat::assert_that(ncol(purple_purity) == nrow(tab))
   assertthat::assert_that(all(colnames(purple_purity) == tab$column))
 
-  purple_purity <- purple_purity %>%
+  purple_purity <- purple_purity |>
     dplyr::mutate(
       dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 2),
-      dplyr::across(dplyr::everything(), as.character)) %>%
-    tidyr::pivot_longer(dplyr::everything(), names_to = "column", values_to = "value") %>%
-    dplyr::left_join(tab, by = "column") %>%
-    dplyr::mutate(value = toupper(.data$value)) %>%
+      dplyr::across(dplyr::everything(), as.character)) |>
+    tidyr::pivot_longer(dplyr::everything(), names_to = "column", values_to = "value") |>
+    dplyr::left_join(tab, by = "column") |>
+    dplyr::mutate(value = toupper(.data$value)) |>
     dplyr::select(.data$column, .data$value)
 
   p <- structure(purple_purity$value, names = purple_purity$column)
@@ -448,7 +448,7 @@ purple_snv_vcf_read <- function(x) {
   assertthat::assert_that(file.exists(x), is_vcf(x))
   d <- bedr::read.vcf(x, split.info = TRUE, verbose = FALSE)
   info <-
-    tibble::as_tibble(d$header[["INFO"]]) %>%
+    tibble::as_tibble(d$header[["INFO"]]) |>
     dplyr::select(.data$ID, .data$Description)
 
   info_cols <- c("AF", "PURPLE_AF", "PURPLE_CN",
@@ -483,12 +483,12 @@ purple_kataegis <- function(x) {
                  "PURPLE_MACN", "PURPLE_VCN", "SUBCL",
                  "MH", "TNC")
 
-  data <- d$data %>%
-    dplyr::filter(!is.na(.data$KT)) %>%
+  data <- d$data |>
+    dplyr::filter(!is.na(.data$KT)) |>
     dplyr::select(c("CHROM", "POS", info_cols))
 
-  description <- d$description %>%
-    dplyr::filter(.data$ID %in% info_cols) %>%
+  description <- d$description |>
+    dplyr::filter(.data$ID %in% info_cols) |>
     dplyr::arrange(.data$ID)
 
   list(data = data,

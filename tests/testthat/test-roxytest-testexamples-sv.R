@@ -19,7 +19,7 @@ test_that("Function split_double_col() @ L26", {
 })
 
 
-test_that("Function count_pieces() @ L71", {
+test_that("Function count_pieces() @ L73", {
   
   (a <- gpgr:::count_pieces("foo,bar,baz", sep = ","))
   (b <- gpgr:::count_pieces("foo", sep = ","))
@@ -35,7 +35,7 @@ test_that("Function count_pieces() @ L71", {
 })
 
 
-test_that("Function abbreviate_effect() @ L106", {
+test_that("Function abbreviate_effect() @ L108", {
   
   (e1 <- gpgr:::abbreviate_effect("3_prime_UTR_truncation&start_lost&splice_region_variant"))
   (e2 <- gpgr:::abbreviate_effect("duplication&foo&gene_fusion&BOOM&intron_variant"))
@@ -49,7 +49,7 @@ test_that("Function abbreviate_effect() @ L106", {
 })
 
 
-test_that("Function umccrise_read_sv_tsv() @ L139", {
+test_that("Function umccrise_read_sv_tsv() @ L141", {
   
   x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
   (sv <- umccrise_read_sv_tsv(x)$data)
@@ -58,7 +58,7 @@ test_that("Function umccrise_read_sv_tsv() @ L139", {
 })
 
 
-test_that("Function process_sv() @ L195", {
+test_that("Function process_sv() @ L197", {
   
   x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
   (sv <- process_sv(x))
