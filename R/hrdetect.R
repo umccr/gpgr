@@ -21,15 +21,15 @@
 hrdetect_read_snvindel_vcf <- function(x) {
   assertthat::assert_that(file.exists(x))
   ALLOWED_BASES <- c("A", "C", "G", "T")
-  d <- bedr::read.vcf(x, split.info = FALSE, split.samples = FALSE, verbose = FALSE)
-  d <- d[["vcf"]] %>%
-    dplyr::select(.data$CHROM, .data$POS, .data$REF, .data$ALT) |>
+  readr::local_edition(1)
+  d <- x %>%
+    readr::read_tsv(
+      comment = "##",
+      col_types = readr::cols_only("#CHROM" = "c", "POS" = "i", "REF" = "c", "ALT" = "c")) %>%
     dplyr::mutate(vartype = dplyr::case_when(
       .data$REF %in% ALLOWED_BASES & .data$ALT %in% ALLOWED_BASES ~ "SNV",
       TRUE ~ "INDEL")) %>%
-    dplyr::rename(chr = "CHROM", position = "POS") %>%
-    dplyr::as_tibble(.name_repair = "check_unique")
-
+    dplyr::rename(chr = "#CHROM", position = "POS")
 
   snv <- d %>% dplyr::filter(.data$vartype == "SNV") %>% dplyr::select(-.data$vartype)
   indel <- d %>% dplyr::filter(.data$vartype == "INDEL") %>% dplyr::select(-.data$vartype)
