@@ -29,7 +29,9 @@
 #' @return List with extracted signatures and HRD prediction.
 #'
 #' @export
-chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL, sample.name = NULL, ref.genome = "hg38", sv.caller = "manta", ...) {
+chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL,
+                      sample.name = NULL, ref.genome = "hg38",
+                      sv.caller = "manta", ...) {
 
   g <- chord_get_genome_obj(ref.genome)
 
