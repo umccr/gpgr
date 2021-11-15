@@ -19,8 +19,9 @@
 #' snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' chord_res <- chord_run(vcf.snv = snv, df.sv = chord_mantavcf2df(sv),
-#'                        sample.name = "foo", outpath = "nogit/chord_results.json.gz")
-#' # chord_res2 <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo") # a bit slower
+#'                        sample.name = "foo")
+#' # chord_res2 <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo",
+#' #                         outpath = "nogit/chord_results.json.gz")
 #'
 #' @testexamples
 #'
@@ -69,7 +70,7 @@ chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL,
 
   # write json.gz to file
   if (!is.null(outpath)) {
-    write_jsongz(x = res$prediction, path = outpath)
+    write_jsongz(x = prediction, path = outpath)
   }
 
   list(
