@@ -9,7 +9,7 @@ write_jsongz(x, path, ...)
 \arguments{
 \item{x}{An object to be serialized to JSON.}
 
-\item{path}{File on disk.}
+\item{path}{File on disk (should end in '.gz').}
 
 \item{...}{Additional arguments passed to \code{\link[jsonlite:read_json]{jsonlite::write_json()}}}
 }

@@ -69,7 +69,7 @@ test_that("Function hrdetect_prep_cnv() @ L255", {
 })
 
 
-test_that("Function hrdetect_run() @ L297", {
+test_that("Function hrdetect_run() @ L301", {
   
   snvindel_vcf <- system.file(
                     "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
@@ -80,6 +80,8 @@ test_that("Function hrdetect_run() @ L297", {
   genome <- "hg38"
   snvoutdir <- tempdir()
   (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir))
+  # hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
+  #              outpath = "nogit/hrdetect_results.json.gz")
   
   expect_equal(colnames(res), c("sample", "Probability", "intercept", "del.mh.prop", "SNV3",
                                 "SV3", "SV5", "hrdloh_index", "SNV8"))

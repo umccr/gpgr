@@ -275,6 +275,8 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' @param genome Human genome version (default: hg38. hg19 means GRCh37).
 #' @param snvoutdir Directory to output SNV signature analysis results.
 #' @param sigsToUse COSMIC SNV signatures to use.
+#' @param outpath File to write HRDetect predictions to on disk
+#' (should end in '.gz'). If not specified, results won't be written to disk.
 #' @return Tibble with sample name and HRD probability in first two columns.
 #'
 #' @examples
@@ -287,6 +289,8 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' genome <- "hg38"
 #' snvoutdir <- tempdir()
 #' (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir))
+#' # hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
+#' #              outpath = "nogit/hrdetect_results.json.gz")
 #'
 #' @testexamples
 #' expect_equal(colnames(res), c("sample", "Probability", "intercept", "del.mh.prop", "SNV3",
@@ -294,8 +298,9 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' expect_true(inherits(res, "data.frame"))
 #'
 #' @export
-hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
-                         sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)) {
+hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome="hg38", snvoutdir = tempdir(),
+                         sigsToUse=c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30),
+                         outpath=NULL) {
 
   assertthat::assert_that(all(file.exists(snvindel_vcf, sv_vcf, cnv_tsv)))
   if (genome == "GRCh37") {
@@ -334,10 +339,17 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
     res <- cbind(intercept, mat, Probability)
   }
 
-  res |>
+  res <- res |>
     tibble::as_tibble(rownames = "sample", .name_repair = "check_unique") |>
     dplyr::relocate(.data$Probability, .after = .data$sample) |>
     dplyr::rename(hrdloh_index = .data$hrd) |>
     dplyr::mutate(
       dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 3))
+
+  # write json.gz to file
+  if (!is.null(outpath)) {
+    write_jsongz(x = res, path = outpath)
+  }
+
+  res
 }

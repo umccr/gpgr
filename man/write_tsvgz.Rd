@@ -9,7 +9,7 @@ write_tsvgz(x, file, ...)
 \arguments{
 \item{x}{A data frame or tibble to write to disk.}
 
-\item{file}{File or connection to write to.}
+\item{file}{File or connection to write to (should end in '.gz').}
 
 \item{...}{Additional arguments passed to \code{\link[readr:write_delim]{readr::write_tsv()}}.}
 }
