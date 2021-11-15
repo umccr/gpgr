@@ -297,7 +297,7 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' expect_true(inherits(res, "data.frame"))
 #'
 #' @export
-hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
+hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome="hg38", snvoutdir = tempdir(),
                          sigsToUse=c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30),
                          outpath=NULL) {
 
