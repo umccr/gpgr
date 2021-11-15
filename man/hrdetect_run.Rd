@@ -9,9 +9,10 @@ hrdetect_run(
   snvindel_vcf,
   sv_vcf,
   cnv_tsv,
-  genome,
-  snvoutdir,
-  sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)
+  genome = "hg38",
+  snvoutdir = tempdir(),
+  sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30),
+  outpath = NULL
 )
 }
 \arguments{
@@ -28,6 +29,9 @@ hrdetect_run(
 \item{snvoutdir}{Directory to output SNV signature analysis results.}
 
 \item{sigsToUse}{COSMIC SNV signatures to use.}
+
+\item{outpath}{File to write HRDetect predictions to on disk
+(should end in '.gz'). If not specified, results won't be written to disk.}
 }
 \value{
 Tibble with sample name and HRD probability in first two columns.
@@ -46,5 +50,7 @@ nm <- "SampleA"
 genome <- "hg38"
 snvoutdir <- tempdir()
 (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir))
+# hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
+#              outpath = "nogit/hrdetect_results.json.gz")
 
 }

@@ -11,6 +11,7 @@ chord_run(
   sample.name = NULL,
   ref.genome = "hg38",
   sv.caller = "manta",
+  outpath = NULL,
   ...
 )
 }
@@ -28,6 +29,9 @@ chord_run(
 
 \item{sv.caller}{manta (default) or gridss.}
 
+\item{outpath}{File to write CHORD predictions to on disk
+(should end in '.gz'). If not specified, results won't be written to disk.}
+
 \item{...}{Other arguments to be passed to \code{\link[CHORD:extractSigsChord]{CHORD::extractSigsChord()}}.}
 }
 \value{
@@ -41,7 +45,9 @@ the BSgenome.Hsapiens.UCSC.hgXX installed.
 
 snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
-chord_res <- chord_run(vcf.snv = snv, df.sv = chord_mantavcf2df(sv), sample.name = "foo")
-# chord_res2 <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo") # a bit slower
+chord_res <- chord_run(vcf.snv = snv, df.sv = chord_mantavcf2df(sv),
+                       sample.name = "foo")
+# chord_res2 <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo",
+#                         outpath = "nogit/chord_results.json.gz")
 
 }

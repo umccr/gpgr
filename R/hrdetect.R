@@ -289,7 +289,8 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' genome <- "hg38"
 #' snvoutdir <- tempdir()
 #' (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir))
-#' # hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir, outpath = "nogit/hrdetect_results.json.gz")
+#' # hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
+#' #              outpath = "nogit/hrdetect_results.json.gz")
 #'
 #' @testexamples
 #' expect_equal(colnames(res), c("sample", "Probability", "intercept", "del.mh.prop", "SNV3",
