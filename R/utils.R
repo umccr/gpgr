@@ -160,7 +160,7 @@ mkdir <- function(d) {
 #' Writes a data frame to a tab delimited gzipped file.
 #'
 #' @param x A data frame or tibble to write to disk.
-#' @param file File or connection to write to.
+#' @param file File or connection to write to (should end in '.gz').
 #' @param ... Additional arguments passed to [readr::write_tsv()].
 #'
 #' @return Returns the input `x` invisibly.
@@ -177,7 +177,7 @@ write_tsvgz <- function(x, file, ...) {
 #' Serializes an object to JSON and writes to a gzipped file.
 #'
 #' @param x An object to be serialized to JSON.
-#' @param path File on disk.
+#' @param path File on disk (should end in '.gz').
 #' @param ... Additional arguments passed to [jsonlite::write_json()]
 #'
 #' @export

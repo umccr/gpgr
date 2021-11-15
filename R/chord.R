@@ -10,13 +10,16 @@
 #' @param sample.name Name of sample to use.
 #' @param ref.genome Human genome assembly. One of 'hg38' (default), 'hg19' or 'GRCh37'.
 #' @param sv.caller manta (default) or gridss.
+#' @param outpath File to write CHORD predictions to on disk
+#' (should end in '.gz'). If not specified, results won't be written to disk.
 #' @param ... Other arguments to be passed to [CHORD::extractSigsChord()].
 #'
 #' @examples
 #'
 #' snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
-#' chord_res <- chord_run(vcf.snv = snv, df.sv = chord_mantavcf2df(sv), sample.name = "foo")
+#' chord_res <- chord_run(vcf.snv = snv, df.sv = chord_mantavcf2df(sv),
+#'                        sample.name = "foo", outpath = "nogit/chord_results.json.gz")
 #' # chord_res2 <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo") # a bit slower
 #'
 #' @testexamples
@@ -31,7 +34,7 @@
 #' @export
 chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL,
                       sample.name = NULL, ref.genome = "hg38",
-                      sv.caller = "manta", ...) {
+                      sv.caller = "manta", outpath = NULL, ...) {
 
   g <- chord_get_genome_obj(ref.genome)
 
@@ -63,6 +66,11 @@ chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL,
 
   assertthat::assert_that(all(colnames(prediction) %in% col_order))
   prediction <- prediction[col_order]
+
+  # write json.gz to file
+  if (!is.null(outpath)) {
+    write_jsongz(x = res$prediction, path = outpath)
+  }
 
   list(
     contexts = contexts,
