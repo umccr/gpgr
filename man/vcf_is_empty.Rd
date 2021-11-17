@@ -25,8 +25,10 @@ writeLines(c("col1\tcol2\tcol3", "1\t2\t3"), con = tmp1)
 vcf_is_empty(tmp1)
 }
 
-vcf_cols <- c("#CHROM", "POS", "ID", "REF", "ALT", "QUAL",
-              "FILTER", "INFO", "FORMAT")
+vcf_cols <- c(
+  "#CHROM", "POS", "ID", "REF", "ALT", "QUAL",
+  "FILTER", "INFO", "FORMAT"
+)
 tmp2 <- tempfile(pattern = "fakeFile", fileext = "vcf")
 writeLines(paste(vcf_cols, collapse = "\t"), con = tmp2)
 (z <- vcf_is_empty(tmp2))

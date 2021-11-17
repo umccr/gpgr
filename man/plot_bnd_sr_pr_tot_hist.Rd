@@ -28,5 +28,4 @@ sum (\code{tot}) across all BNDs. Observations where the SR or PR value is 0 (NA
 x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
 d <- process_sv(x)$unmelted
 plot_bnd_sr_pr_tot_hist(d, "a title")
-
 }

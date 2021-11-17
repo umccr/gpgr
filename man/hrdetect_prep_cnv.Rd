@@ -20,5 +20,4 @@ Prepares PURPLE somatic CNVs for use with HRDetect.
 \examples{
 x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 (l <- hrdetect_prep_cnv(x, nm = "SampleA"))
-
 }

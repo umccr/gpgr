@@ -18,5 +18,4 @@ Processes the Manta TSV file output by umccrise.
 \examples{
 x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
 (sv <- process_sv(x))
-
 }

@@ -45,9 +45,10 @@ the BSgenome.Hsapiens.UCSC.hgXX installed.
 
 snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
-chord_res <- chord_run(vcf.snv = snv, df.sv = chord_mantavcf2df(sv),
-                       sample.name = "foo")
+chord_res <- chord_run(
+  vcf.snv = snv, df.sv = chord_mantavcf2df(sv),
+  sample.name = "foo"
+)
 # chord_res2 <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo",
 #                         outpath = "nogit/chord_results.json.gz")
-
 }

@@ -23,5 +23,4 @@ and selects columns of interest.
 \examples{
 x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
 (pp <- purple_cnv_germ_process(x))
-
 }

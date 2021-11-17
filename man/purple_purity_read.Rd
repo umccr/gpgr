@@ -19,5 +19,4 @@ Reads the \code{purple.purity.tsv} file containing a summary of the purity fit.
 \examples{
 x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
 (p <- purple_purity_read(x))
-
 }

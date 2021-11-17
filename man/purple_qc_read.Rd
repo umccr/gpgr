@@ -19,5 +19,4 @@ Reads the \code{purple.qc} file.
 \examples{
 x <- system.file("extdata/purple/purple.qc", package = "gpgr")
 (q <- purple_qc_read(x))
-
 }

@@ -20,5 +20,4 @@ profile of all (contiguous) segments of the tumor sample
 \examples{
 x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 (p <- purple_cnv_som_read(x))
-
 }

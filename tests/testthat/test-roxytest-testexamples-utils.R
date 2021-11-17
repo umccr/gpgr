@@ -2,20 +2,19 @@
 
 # File R/utils.R: @testexamples
 
-test_that("Function is_vcf() @ L22", {
+test_that("Function is_vcf() @ L21", {
   
   x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   (y <- is_vcf(x))
   tmp_file <- tempfile(pattern = "fakeFile", fileext = "vcf")
   writeLines(c("col1\tcol2\tcol3", "1\t2\t3"), con = tmp_file)
   (z <- is_vcf(tmp_file))
-  
   expect_true(y)
   expect_false(z)
 })
 
 
-test_that("Function vcf_is_empty() @ L89", {
+test_that("Function vcf_is_empty() @ L95", {
   
   x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   (y <- vcf_is_empty(x))
@@ -24,8 +23,10 @@ test_that("Function vcf_is_empty() @ L89", {
   writeLines(c("col1\tcol2\tcol3", "1\t2\t3"), con = tmp1)
   
   
-  vcf_cols <- c("#CHROM", "POS", "ID", "REF", "ALT", "QUAL",
-                "FILTER", "INFO", "FORMAT")
+  vcf_cols <- c(
+    "#CHROM", "POS", "ID", "REF", "ALT", "QUAL",
+    "FILTER", "INFO", "FORMAT"
+  )
   tmp2 <- tempfile(pattern = "fakeFile", fileext = "vcf")
   writeLines(paste(vcf_cols, collapse = "\t"), con = tmp2)
   (z <- vcf_is_empty(tmp2))
@@ -40,7 +41,7 @@ test_that("Function vcf_is_empty() @ L89", {
 })
 
 
-test_that("Function tsv_is_empty() @ L126", {
+test_that("Function tsv_is_empty() @ L131", {
   
   
   tmp1 <- tempfile()
@@ -54,7 +55,6 @@ test_that("Function tsv_is_empty() @ L126", {
   tmp3 <- tempfile()
   writeLines(c("##meta1", "##meta2", "col1\tcol2\tcol3"), con = tmp3)
   (c <- tsv_is_empty(tmp3))
-  
   expect_false(a)
   expect_true(b)
   expect_true(c)

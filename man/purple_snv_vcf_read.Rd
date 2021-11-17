@@ -19,5 +19,4 @@ Reads the \code{purple.somatic.vcf.gz} file.
 \examples{
 x <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr")
 (snv <- purple_snv_vcf_read(x))
-
 }

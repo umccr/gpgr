@@ -23,5 +23,4 @@ Prepares VCF with SVs for use with HRDetect.
 x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 nm <- "SampleA"
 (d <- hrdetect_prep_sv(x, nm))
-
 }

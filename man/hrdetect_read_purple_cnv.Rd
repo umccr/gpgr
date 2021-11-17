@@ -23,5 +23,4 @@ Reads PURPLE somatic CNVs for use with HRDetect.
 \examples{
 x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 (cnv <- hrdetect_read_purple_cnv(x))
-
 }

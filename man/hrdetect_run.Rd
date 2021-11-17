@@ -42,8 +42,9 @@ Runs HRDetect as described in the
 }
 \examples{
 snvindel_vcf <- system.file(
-                  "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
-                  package = "gpgr")
+  "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
+  package = "gpgr"
+)
 sv_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 cnv_tsv <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 nm <- "SampleA"
@@ -52,5 +53,4 @@ snvoutdir <- tempdir()
 (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir))
 # hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
 #              outpath = "nogit/hrdetect_results.json.gz")
-
 }

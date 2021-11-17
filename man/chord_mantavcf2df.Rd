@@ -18,5 +18,4 @@ Converts a Manta VCF to a data.frame for processing with CHORD.
 \examples{
 in_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 d <- chord_mantavcf2df(in_vcf)
-
 }

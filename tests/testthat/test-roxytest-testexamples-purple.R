@@ -2,86 +2,77 @@
 
 # File R/purple.R: @testexamples
 
-test_that("Function purple_cnv_som_gene_read() @ L19", {
+test_that("Function purple_cnv_som_gene_read() @ L18", {
   
   x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
   (p <- purple_cnv_som_gene_read(x))
-  
   expect_equal(colnames(p)[ncol(p)], "minMinorAlleleCopyNumber")
 })
 
 
-test_that("Function purple_cnv_som_gene_process() @ L63", {
+test_that("Function purple_cnv_som_gene_process() @ L62", {
   
   x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
   g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
   (pp <- purple_cnv_som_gene_process(x, g))
-  
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "minRegSupportStartEndMethod")
 })
 
 
-test_that("Function purple_cnv_som_read() @ L135", {
+test_that("Function purple_cnv_som_read() @ L147", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (p <- purple_cnv_som_read(x))
-  
   expect_equal(colnames(p)[ncol(p)], "majorAlleleCopyNumber")
 })
 
 
-test_that("Function purple_cnv_som_process() @ L168", {
+test_that("Function purple_cnv_som_process() @ L181", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (pp <- purple_cnv_som_process(x))
-  
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 })
 
 
-test_that("Function purple_cnv_germ_read() @ L228", {
+test_that("Function purple_cnv_germ_read() @ L248", {
   
   x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
   (p <- purple_cnv_germ_read(x))
-  
   expect_equal(colnames(p)[ncol(p)], "majorAlleleCopyNumber")
 })
 
 
-test_that("Function purple_cnv_germ_process() @ L253", {
+test_that("Function purple_cnv_germ_process() @ L272", {
   
   x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
   (pp <- purple_cnv_germ_process(x))
-  
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 })
 
 
-test_that("Function purple_version_read() @ L279", {
+test_that("Function purple_version_read() @ L297", {
   
   x <- system.file("extdata/purple/purple.version", package = "gpgr")
   (v <- purple_version_read(x))
-  
   expect_equal(length(v), 2)
   expect_equal(names(v), c("version", "build_date"))
   expect_equal(v$version, "2.51")
 })
 
 
-test_that("Function purple_qc_read() @ L304", {
+test_that("Function purple_qc_read() @ L323", {
   
   x <- system.file("extdata/purple/purple.qc", package = "gpgr")
   (q <- purple_qc_read(x))
-  
   expect_true(q$raw[1, "value", drop = TRUE] == "WARN_DELETED_GENES")
 })
 
 
-test_that("Function purple_purity_read() @ L358", {
+test_that("Function purple_purity_read() @ L378", {
   
   x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
   (p <- purple_purity_read(x))
-  
   expect_equal(p$raw[1, "column", drop = TRUE], "purity")
   expect_equal(p$raw[nrow(p$raw), "column", drop = TRUE], "svTumorMutationalBurden")
 })

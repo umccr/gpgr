@@ -22,5 +22,4 @@ x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = 
 tmp_file <- tempfile(pattern = "fakeFile", fileext = "vcf")
 writeLines(c("col1\tcol2\tcol3", "1\t2\t3"), con = tmp_file)
 (z <- is_vcf(tmp_file))
-
 }

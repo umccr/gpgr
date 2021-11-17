@@ -32,5 +32,4 @@ and selects columns of interest.
 x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
 (pp <- purple_cnv_som_gene_process(x, g))
-
 }
