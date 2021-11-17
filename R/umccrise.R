@@ -22,18 +22,21 @@
 #'
 #' @export
 hrd_results_tabs <- function(hrdetect_res, chord_res) {
-
   sn <- chord_res$prediction[, "sample", drop = T]
   assertthat::are_equal(hrdetect_res[, "sample", drop = T], sn)
 
   hrdetect_res_tab <-
-    tibble::tibble(col = colnames(hrdetect_res),
-                   val = unlist(hrdetect_res[1, ])) |>
+    tibble::tibble(
+      col = colnames(hrdetect_res),
+      val = unlist(hrdetect_res[1, ])
+    ) |>
     dplyr::filter(.data$col != "sample")
 
   chord_res_tab <-
-    tibble::tibble(col = colnames(chord_res$prediction),
-                   val = unlist(chord_res$prediction[1, ])) |>
+    tibble::tibble(
+      col = colnames(chord_res$prediction),
+      val = unlist(chord_res$prediction[1, ])
+    ) |>
     dplyr::filter(col != "sample")
 
 
@@ -45,14 +48,18 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
       hrdetect_res_tab,
       tibble::tribble(
         ~HRDetect, ~results_hrdetect,
-        " ", " "))
+        " ", " "
+      )
+    )
   tab2 <-
     dplyr::bind_rows(
       chord_res_tab[1:7, ],
       tibble::tribble(
         ~CHORD, ~results_chord,
         " ", " ",
-        " ", " "))
+        " ", " "
+      )
+    )
   tab3 <- chord_res_tab[8:16, ] |>
     purrr::set_names(c("CHORD2", "results_chord2"))
 
@@ -66,7 +73,7 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
     ) |>
     gt::tab_spanner(
       label = "HRDetect",
-      columns =  c("HRDetect", "results_hrdetect")
+      columns = c("HRDetect", "results_hrdetect")
     ) |>
     gt::tab_spanner(
       label = "CHORD",
@@ -106,11 +113,11 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
     ) |>
     gt::tab_options(table.align = "left")
 
-  list(sample = sn,
-       hrd_results_tab = hrd_results_tab,
-       hrd_results_gt = hrd_results_gt
+  list(
+    sample = sn,
+    hrd_results_tab = hrd_results_tab,
+    hrd_results_gt = hrd_results_gt
   )
-
 }
 
 
@@ -132,7 +139,7 @@ af_summary <- function(af_global_file, af_keygenes_file) {
   af_keygenes <-
     readr::read_tsv(af_keygenes_file, col_types = "cicccd") |>
     dplyr::select(.data$af) |>
-    dplyr::mutate(set = 'Key genes CDS')
+    dplyr::mutate(set = "Key genes CDS")
 
   af_both <-
     dplyr::bind_rows(af_global, af_keygenes) |>
@@ -145,11 +152,13 @@ af_summary <- function(af_global_file, af_keygenes_file) {
 
   af_stats <- af_both |>
     dplyr::group_by(.data$set) |>
-    dplyr::summarise(n = dplyr::n(),
-                     mean = round(base::mean(.data$af), 2),
-                     median = round(stats::median(.data$af), 2),
-                     mode = round(mode2(.data$af), 2),
-                     .groups = "drop_last") |>
+    dplyr::summarise(
+      n = dplyr::n(),
+      mean = round(base::mean(.data$af), 2),
+      median = round(stats::median(.data$af), 2),
+      mode = round(mode2(.data$af), 2),
+      .groups = "drop_last"
+    ) |>
     tidyr::complete(.data$set, fill = list(n = 0))
 
   af_stats_gt <- af_stats |>
@@ -168,17 +177,22 @@ af_summary <- function(af_global_file, af_keygenes_file) {
 
   af_plot <-
     ggplot2::ggplot(data = af_both, ggplot2::aes(.data$af)) +
-    ggplot2::geom_histogram(stat = 'bin', binwidth = 0.01, fill = "#008080") +
-    ggplot2::facet_wrap(~.data$set, scales = 'free_y', drop = FALSE) +
-    ggplot2::scale_x_continuous(name = "Allele Frequency",
-                                breaks = seq(0, 1, by = 0.1),
-                                limits = c(0, 1), expand = c(0, 0)) +
+    ggplot2::geom_histogram(stat = "bin", binwidth = 0.01, fill = "#008080") +
+    ggplot2::facet_wrap(~ .data$set, scales = "free_y", drop = FALSE) +
+    ggplot2::scale_x_continuous(
+      name = "Allele Frequency",
+      breaks = seq(0, 1, by = 0.1),
+      limits = c(0, 1), expand = c(0, 0)
+    ) +
     ggplot2::theme_bw() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1),
-                   panel.grid.minor = ggplot2::element_blank()) +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1),
+      panel.grid.minor = ggplot2::element_blank()
+    ) +
     ggplot2::labs(title = "AF count distribution")
 
-  list(af_stats_gt = af_stats_gt,
-       af_plot = af_plot)
-
+  list(
+    af_stats_gt = af_stats_gt,
+    af_plot = af_plot
+  )
 }

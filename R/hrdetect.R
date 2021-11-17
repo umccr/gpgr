@@ -10,7 +10,6 @@
 #' @examples
 #' x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' (l <- hrdetect_read_snvindel_vcf(x))
-#'
 #' @testexamples
 #' expect_equal(length(l), 2)
 #' expect_equal(names(l), c("snv", "indel"))
@@ -25,14 +24,20 @@ hrdetect_read_snvindel_vcf <- function(x) {
   d <- x |>
     readr::read_tsv(
       comment = "##",
-      col_types = readr::cols_only("#CHROM" = "c", "POS" = "i", "REF" = "c", "ALT" = "c")) |>
+      col_types = readr::cols_only("#CHROM" = "c", "POS" = "i", "REF" = "c", "ALT" = "c")
+    ) |>
     dplyr::mutate(vartype = dplyr::case_when(
       .data$REF %in% ALLOWED_BASES & .data$ALT %in% ALLOWED_BASES ~ "SNV",
-      TRUE ~ "INDEL")) |>
+      TRUE ~ "INDEL"
+    )) |>
     dplyr::rename(chr = "#CHROM", position = "POS")
 
-  snv <- d |> dplyr::filter(.data$vartype == "SNV") |> dplyr::select(-.data$vartype)
-  indel <- d |> dplyr::filter(.data$vartype == "INDEL") |> dplyr::select(-.data$vartype)
+  snv <- d |>
+    dplyr::filter(.data$vartype == "SNV") |>
+    dplyr::select(-.data$vartype)
+  indel <- d |>
+    dplyr::filter(.data$vartype == "INDEL") |>
+    dplyr::select(-.data$vartype)
 
   list(
     snv = snv,
@@ -59,14 +64,12 @@ hrdetect_read_snvindel_vcf <- function(x) {
 #' x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' sv_bedpe <- hrdetect_read_sv_vcf(x, nm = "SAMPLE")
 #' head(sv_bedpe)
-#'
 #' @testexamples
 #' expect_equal(nrow(sv_bedpe), 190)
 #' expect_equal(colnames(sv_bedpe), c("chrom1", "start1", "end1", "chrom2",
 #'              "start2", "end2", "sample", "strand1", "strand2"))
 #' @export
 hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
-
   assertthat::assert_that(file.exists(x))
   assertthat::assert_that(!is.null(nm))
   assertthat::assert_that(genome %in% c("hg19", "hg38", "GRCh37"))
@@ -79,9 +82,11 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
   bedpe <- StructuralVariantAnnotation::breakpointgr2bedpe(gr) |>
     dplyr::mutate_if(is.factor, as.character) |>
     dplyr::mutate(sample = nm) |>
-    dplyr::select(.data$chrom1, .data$start1, .data$end1,
-                  .data$chrom2, .data$start2, .data$end2,
-                  .data$sample, .data$strand1, .data$strand2)
+    dplyr::select(
+      .data$chrom1, .data$start1, .data$end1,
+      .data$chrom2, .data$start2, .data$end2,
+      .data$sample, .data$strand1, .data$strand2
+    )
 
   bedpe
 }
@@ -100,7 +105,6 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' (cnv <- hrdetect_read_purple_cnv(x))
-#'
 #' @testexamples
 #' expect_equal(colnames(cnv), c("Chromosome", "chromStart", "chromEnd",
 #'                               "total.copy.number.inTumour",
@@ -108,12 +112,11 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
 #'
 #' @export
 hrdetect_read_purple_cnv <- function(x) {
-
   assertthat::assert_that(file.exists(x))
-  cnv <- readr::read_tsv(x,
-                         col_types = readr::cols_only(
-                           "chromosome" = "c", "start" = "i", "end" = "i",
-                           "copyNumber" = "d", "minorAlleleCopyNumber" = "d"))
+  cnv <- readr::read_tsv(x, col_types = readr::cols_only(
+    "chromosome" = "c", "start" = "i", "end" = "i",
+    "copyNumber" = "d", "minorAlleleCopyNumber" = "d"
+  ))
 
   cnv |>
     dplyr::rename(
@@ -143,7 +146,6 @@ hrdetect_read_purple_cnv <- function(x) {
 #' @examples
 #' x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' (l <- hrdetect_prep_snvindel(x, nm = "sampleA", outdir = tempdir()))
-#'
 #' @testexamples
 #' expect_equal(c("snv_results", "indel_results"), names(l))
 #' expect_equal(c("sig", "exposure", "pvalue"), colnames(l[["snv_results"]]))
@@ -152,9 +154,10 @@ hrdetect_read_purple_cnv <- function(x) {
 #' @export
 hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
                                    sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)) {
-
-  assertthat::assert_that(file.exists(x), !is.null(nm), !is.null(outdir),
-                          all(sigsToUse %in% 1:30), all(c(3, 8) %in% sigsToUse))
+  assertthat::assert_that(
+    file.exists(x), !is.null(nm), !is.null(outdir),
+    all(sigsToUse %in% 1:30), all(c(3, 8) %in% sigsToUse)
+  )
   assertthat::assert_that(genome %in% c("hg19", "hg38", "GRCh37"))
   if (genome == "GRCh37") {
     genome <- "hg19"
@@ -165,10 +168,11 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
 
   snvindel_tabs <- hrdetect_read_snvindel_vcf(x)
 
-  ##--- SNVs ---##
+  ## --- SNVs ---##
   snv_catalogue <- signature.tools.lib::tabToSNVcatalogue(
     subs = snvindel_tabs[["snv"]],
-    genome.v = genome)[["catalogue"]]
+    genome.v = genome
+  )[["catalogue"]]
 
   subs_fit_res <- signature.tools.lib::SignatureFit_withBootstrap_Analysis(
     outdir = outdir,
@@ -176,7 +180,8 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
     signature_data_matrix = signature.tools.lib::COSMIC30_subs_signatures[, sigsToUse],
     type_of_mutations = "subs",
     nboot = 100,
-    nparallel = 2)
+    nparallel = 2
+  )
 
   snv_exp <- subs_fit_res$E_median_filtered |>
     tibble::as_tibble(rownames = "sig") |>
@@ -189,11 +194,12 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
   snv_results <- snv_exp |>
     dplyr::left_join(snv_pval, by = "sig")
 
-  ##--- INDELs ---##
+  ## --- INDELs ---##
   indel_count_proportion <- signature.tools.lib::tabToIndelsClassification(
     indel.data = snvindel_tabs[["indel"]],
     sampleID = nm,
-    genome.v = genome)[["count_proportion"]] |>
+    genome.v = genome
+  )[["count_proportion"]] |>
     tibble::as_tibble()
 
   list(
@@ -216,14 +222,12 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38", outdir = NULL,
 #' x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' nm <- "SampleA"
 #' (d <- hrdetect_prep_sv(x, nm))
-#'
 #' @testexamples
 #' expect_equal(colnames(d), nm)
 #' expect_true(inherits(d, "data.frame"))
 #'
 #' @export
 hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
-
   assertthat::assert_that(file.exists(x))
   if (genome == "GRCh37") {
     genome <- "hg19"
@@ -246,21 +250,21 @@ hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' (l <- hrdetect_prep_cnv(x, nm = "SampleA"))
-#'
 #' @testexamples
 #' expect_equal(colnames(l), c("name", "hrdloh_index"))
 #' expect_equal(nrow(l), 1)
 #'
 #' @export
 hrdetect_prep_cnv <- function(x, nm = NULL) {
-
   assertthat::assert_that(file.exists(x))
   assertthat::assert_that(!is.null(nm))
   cnv <- hrdetect_read_purple_cnv(x)
   cnv_hrd <- signature.tools.lib::ascatToHRDLOH(ascat.data = cnv, SAMPLE.ID = nm)
 
-  tibble::tibble(name = names(cnv_hrd),
-                 hrdloh_index = unname(cnv_hrd))
+  tibble::tibble(
+    name = names(cnv_hrd),
+    hrdloh_index = unname(cnv_hrd)
+  )
 }
 
 #' Run HRDetect via signature.tools.lib
@@ -281,8 +285,9 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #'
 #' @examples
 #' snvindel_vcf <- system.file(
-#'                   "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
-#'                   package = "gpgr")
+#'   "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
+#'   package = "gpgr"
+#' )
 #' sv_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' cnv_tsv <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' nm <- "SampleA"
@@ -291,17 +296,15 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir))
 #' # hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
 #' #              outpath = "nogit/hrdetect_results.json.gz")
-#'
 #' @testexamples
 #' expect_equal(colnames(res), c("sample", "Probability", "intercept", "del.mh.prop", "SNV3",
 #'                               "SV3", "SV5", "hrdloh_index", "SNV8"))
 #' expect_true(inherits(res, "data.frame"))
 #'
 #' @export
-hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome="hg38", snvoutdir = tempdir(),
-                         sigsToUse=c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30),
-                         outpath=NULL) {
-
+hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome = "hg38", snvoutdir = tempdir(),
+                         sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30),
+                         outpath = NULL) {
   assertthat::assert_that(all(file.exists(snvindel_vcf, sv_vcf, cnv_tsv)))
   if (genome == "GRCh37") {
     genome <- "hg19"
@@ -310,8 +313,10 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome="hg38", snvou
   snvindel <- hrdetect_prep_snvindel(snvindel_vcf, nm, genome, snvoutdir, sigsToUse = sigsToUse)
   snv <- snvindel$snv_results |>
     dplyr::filter(.data$sig %in% c("Signature.3", "Signature.8")) |>
-    tidyr::pivot_wider(id_cols = c("sig", "exposure"),
-                       names_from = "sig", values_from = "exposure")
+    tidyr::pivot_wider(
+      id_cols = c("sig", "exposure"),
+      names_from = "sig", values_from = "exposure"
+    )
 
   indel <- snvindel$indel_results$del.mh.prop
   sv <- hrdetect_prep_sv(sv_vcf, nm, genome)
@@ -323,13 +328,15 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome="hg38", snvou
     "SV3" = NA,
     "SV5" = NA,
     "hrd" = cnv$hrdloh_index,
-    "SNV8" = snv$Signature.8)
+    "SNV8" = snv$Signature.8
+  )
   mat <- as.matrix(tib)
   rownames(mat) <- nm
   res <- signature.tools.lib::HRDetect_pipeline(mat,
-                                                genome.v = genome,
-                                                SV_catalogues = sv,
-                                                nparallel = 2)
+    genome.v = genome,
+    SV_catalogues = sv,
+    nparallel = 2
+  )
 
   if ("hrdetect_output" %in% names(res)) {
     res <- res[["hrdetect_output"]]
@@ -344,7 +351,8 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome="hg38", snvou
     dplyr::relocate(.data$Probability, .after = .data$sample) |>
     dplyr::rename(hrdloh_index = .data$hrd) |>
     dplyr::mutate(
-      dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 3))
+      dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 3)
+    )
 
   # write json.gz to file
   if (!is.null(outpath)) {

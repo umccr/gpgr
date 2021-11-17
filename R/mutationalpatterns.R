@@ -33,16 +33,20 @@ sig_contribution <- function(mut_mat, signatures) {
   if (nrow(fit_res) == 0) {
     fit_res <- tibble::tribble(
       ~sig, ~contr,
-      "No Signatures found!", 0)
+      "No Signatures found!", 0
+    )
   }
 
   fit_res_contr <- fit_res |>
     dplyr::mutate(
       contr = round(.data$contr, 0),
       RelFreq = round(.data$contr / sum(.data$contr), 2),
-      Rank = as.integer(base::rank(-.data$contr))) |>
-    dplyr::select(.data$Rank, Signature = .data$sig,
-                  Contribution = .data$contr, .data$RelFreq) |>
+      Rank = as.integer(base::rank(-.data$contr))
+    ) |>
+    dplyr::select(.data$Rank,
+      Signature = .data$sig,
+      Contribution = .data$contr, .data$RelFreq
+    ) |>
     dplyr::arrange(.data$Rank)
 
   fit_res_contr
@@ -62,10 +66,12 @@ sig_contribution <- function(mut_mat, signatures) {
 #'
 #' @export
 sig_contribution_table <- function(contr, type, outdir) {
-  available_types <- c("Sig" = "v2_2015/Sig",
-                       "SBS" = "v3.2_2021-march/SBS",
-                       "DBS" = "v3.2_2021-march/DBS",
-                       "ID" = "v3.2_2021-march/ID")
+  available_types <- c(
+    "Sig" = "v2_2015/Sig",
+    "SBS" = "v3.2_2021-march/SBS",
+    "DBS" = "v3.2_2021-march/DBS",
+    "ID" = "v3.2_2021-march/ID"
+  )
   assertthat::assert_that(length(type) == 1, type %in% names(available_types))
   assertthat::assert_that(all(colnames(contr) == c("Rank", "Signature", "Contribution", "RelFreq")))
 
@@ -74,18 +80,21 @@ sig_contribution_table <- function(contr, type, outdir) {
   mkdir(img_cp_dir)
   sig_table <-
     readr::read_tsv(file = file.path(sig_dir, "description.tsv"), col_types = "cc") |>
-    dplyr::mutate(Plot_original = file.path(sig_dir, paste0(.data$signature, ".png")),
-                  Plot_copy = file.path(img_cp_dir, paste0(.data$signature, ".png")),
-                  signature = paste0(type, .data$signature)) |>
+    dplyr::mutate(
+      Plot_original = file.path(sig_dir, paste0(.data$signature, ".png")),
+      Plot_copy = file.path(img_cp_dir, paste0(.data$signature, ".png")),
+      signature = paste0(type, .data$signature)
+    ) |>
     dplyr::rename(Signature = .data$signature)
 
   contr |>
     dplyr::left_join(sig_table, by = "Signature") |>
     dplyr::rowwise() |>
     dplyr::mutate(cp = file.copy(from = .data$Plot_original, to = .data$Plot_copy)) |>
-    dplyr::mutate(plot_in_md = paste0("![](", .data$Plot_copy,  ")")) |>
+    dplyr::mutate(plot_in_md = paste0("![](", .data$Plot_copy, ")")) |>
     dplyr::select(.data$Rank, .data$Signature, .data$Contribution, .data$RelFreq,
-                  Description = .data$description, Plot = .data$plot_in_md)
+      Description = .data$description, Plot = .data$plot_in_md
+    )
 }
 
 #' Count SNV Contexts
@@ -128,13 +137,17 @@ sig_count_snv <- function(vcf_gr, ref_genome) {
 #' @export
 sig_plot_snv <- function(gr_snv, snv_counts, ref_genome) {
   mut_to <- MutationalPatterns::mut_type_occurrences(
-    vcf_list = gr_snv, ref_genome = ref_genome)
+    vcf_list = gr_snv, ref_genome = ref_genome
+  )
 
   mut_mat_ext_context <- MutationalPatterns::mut_matrix(
-    vcf_list = gr_snv, ref_genome = ref_genome, extension = 2)
+    vcf_list = gr_snv, ref_genome = ref_genome, extension = 2
+  )
 
-  p_spectrum <- MutationalPatterns::plot_spectrum(type_occurrences = mut_to, CT = TRUE,
-                                                  condensed = TRUE, error_bars = "none") +
+  p_spectrum <- MutationalPatterns::plot_spectrum(
+    type_occurrences = mut_to, CT = TRUE,
+    condensed = TRUE, error_bars = "none"
+  ) +
     ggplot2::theme(legend.position = "top")
   p_96_profile <- MutationalPatterns::plot_96_profile(mut_matrix = snv_counts, condensed = TRUE)
   p_heatmap <- MutationalPatterns::plot_profile_heatmap(mut_matrix = mut_mat_ext_context) +
@@ -180,13 +193,14 @@ sig_count_indel <- function(vcf_gr, ref_genome) {
 #'
 #' @export
 sig_plot_indel <- function(indel_counts) {
-
   p_indel_main <- MutationalPatterns::plot_main_indel_contexts(counts = indel_counts) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 30, vjust = 0.9, hjust = 1)) +
     ggplot2::theme(axis.text.x = ggplot2::element_blank())
   p_indel_cont <- MutationalPatterns::plot_indel_contexts(counts = indel_counts, condensed = TRUE) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 30, vjust = 0.9, hjust = 1),
-                   legend.position="top")
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 30, vjust = 0.9, hjust = 1),
+      legend.position = "top"
+    )
 
   list(
     p_indel_main = p_indel_main,
@@ -222,7 +236,6 @@ sig_count_dbs <- function(vcf_gr) {
 #'
 #' @export
 sig_plot_dbs <- function(dbs_counts) {
-
   p_dbs_main <- MutationalPatterns::plot_main_dbs_contexts(counts = dbs_counts)
   p_dbs_cont <- MutationalPatterns::plot_dbs_contexts(counts = dbs_counts, condensed = TRUE)
 
@@ -231,5 +244,3 @@ sig_plot_dbs <- function(dbs_counts) {
     p_dbs_cont = p_dbs_cont
   )
 }
-
-

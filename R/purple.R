@@ -11,21 +11,21 @@
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 #' (p <- purple_cnv_som_gene_read(x))
-#'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "minMinorAlleleCopyNumber")
 #'
 #' @export
 purple_cnv_som_gene_read <- function(x) {
-
-  nm <- c("chromosome" = "c", "start" = "i", "end" = "i", "gene" = "c",
-          "minCopyNumber" = "d", "maxCopyNumber" = "d",
-          "unused" = "c", "somaticRegions" = "d", "germlineHomDeletionRegions" = "d",
-          "germlineHetToHomDeletionRegions" = "d",
-          "transcriptId" = "c", "transcriptVersion" = "c", "chromosomeBand" = "c",
-          "minRegions" = "d", "minRegionStart" = "i", "minRegionEnd" = "i",
-          "minRegionStartSupport" = "c", "minRegionEndSupport" = "c",
-          "minRegionMethod" = "c", "minMinorAlleleCopyNumber" = "d")
+  nm <- c(
+    "chromosome" = "c", "start" = "i", "end" = "i", "gene" = "c",
+    "minCopyNumber" = "d", "maxCopyNumber" = "d",
+    "unused" = "c", "somaticRegions" = "d", "germlineHomDeletionRegions" = "d",
+    "germlineHetToHomDeletionRegions" = "d",
+    "transcriptId" = "c", "transcriptVersion" = "c", "chromosomeBand" = "c",
+    "minRegions" = "d", "minRegionStart" = "i", "minRegionEnd" = "i",
+    "minRegionStartSupport" = "c", "minRegionEndSupport" = "c",
+    "minRegionMethod" = "c", "minMinorAlleleCopyNumber" = "d"
+  )
 
   ctypes <- paste(nm, collapse = "")
   purple_cnv_gene <- readr::read_tsv(x, col_types = ctypes)
@@ -55,7 +55,6 @@ purple_cnv_som_gene_read <- function(x) {
 #' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 #' g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
 #' (pp <- purple_cnv_som_gene_process(x, g))
-#'
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "minRegSupportStartEndMethod")
 #'
@@ -67,10 +66,15 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
   }
   genes <-
     readr::read_tsv(g, col_types = readr::cols(
-      symbol = "c", oncogene = "l", tumorsuppressor = "l")) |>
+      symbol = "c", oncogene = "l", tumorsuppressor = "l"
+    )) |>
     dplyr::select(.data$symbol, .data$oncogene, .data$tumorsuppressor)
-  oncogenes <- genes |> dplyr::filter(.data$oncogene) |> dplyr::pull(.data$symbol)
-  tsgenes <- genes |> dplyr::filter(.data$tumorsuppressor) |> dplyr::pull(.data$symbol)
+  oncogenes <- genes |>
+    dplyr::filter(.data$oncogene) |>
+    dplyr::pull(.data$symbol)
+  tsgenes <- genes |>
+    dplyr::filter(.data$tumorsuppressor) |>
+    dplyr::pull(.data$symbol)
 
   purple_cnv_gene <- purple_cnv_gene |>
     dplyr::filter(.data$gene %in% genes$symbol) |>
@@ -78,8 +82,10 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
       chromosome = as.factor(.data$chromosome),
       transcriptID = paste0(.data$transcriptId, ".", .data$transcriptVersion),
       minRegStartEnd = paste0(.data$minRegionStart, "-", .data$minRegionEnd),
-      minRegSupportStartEndMethod = paste0(.data$minRegionStartSupport, "-", .data$minRegionEndSupport,
-                                           " (", .data$minRegionMethod, ")"),
+      minRegSupportStartEndMethod = paste0(
+        .data$minRegionStartSupport, "-", .data$minRegionEndSupport,
+        " (", .data$minRegionMethod, ")"
+      ),
       germDelReg = paste0(.data$germlineHomDeletionRegions, "/", .data$germlineHetToHomDeletionRegions),
       oncogene = .data$gene %in% oncogenes,
       tsgene = .data$gene %in% tsgenes,
@@ -87,13 +93,17 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
         .data$oncogene & .data$tsgene ~ "onco+ts",
         .data$oncogene ~ "oncogene",
         .data$tsgene ~ "tsgene",
-        TRUE ~ "")) |>
-    dplyr::select(.data$gene, minCN = .data$minCopyNumber, maxCN = .data$maxCopyNumber,
-                  chrom = .data$chromosome, .data$start, .data$end,
-                  chrBand = .data$chromosomeBand, .data$onco_or_ts,
-                  .data$transcriptID, minMinorAlleleCN = .data$minMinorAlleleCopyNumber,
-                  somReg = .data$somaticRegions, .data$germDelReg, minReg = .data$minRegions,
-                  .data$minRegStartEnd, .data$minRegSupportStartEndMethod)
+        TRUE ~ ""
+      )
+    ) |>
+    dplyr::select(.data$gene,
+      minCN = .data$minCopyNumber, maxCN = .data$maxCopyNumber,
+      chrom = .data$chromosome, .data$start, .data$end,
+      chrBand = .data$chromosomeBand, .data$onco_or_ts,
+      .data$transcriptID, minMinorAlleleCN = .data$minMinorAlleleCopyNumber,
+      somReg = .data$somaticRegions, .data$germDelReg, minReg = .data$minRegions,
+      .data$minRegStartEnd, .data$minRegSupportStartEndMethod
+    )
 
   descr <- dplyr::tribble(
     ~Column, ~Description,
@@ -108,10 +118,13 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
     "germDelReg (germlineHomDeletionRegions / germlineHetToHomDeletionRegions)", "Number of regions spanned by this gene that are (homozygously deleted in the germline / both heterozygously deleted in the germline and homozygously deleted in the tumor)",
     "minReg (minRegions)", "Number of somatic regions inside the gene that share the min copy number",
     "minRegStartEnd", "Start/End base of the copy number region overlapping the gene with the minimum copy number",
-    "minRegSupportStartEndMethod", "Start/end support of the CN region overlapping the gene with the min CN (plus determination method)")
+    "minRegSupportStartEndMethod", "Start/end support of the CN region overlapping the gene with the min CN (plus determination method)"
+  )
 
-  list(tab = purple_cnv_gene,
-       descr = descr)
+  list(
+    tab = purple_cnv_gene,
+    descr = descr
+  )
 }
 
 #' Read PURPLE CNV Somatic File
@@ -127,18 +140,19 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' (p <- purple_cnv_som_read(x))
-#'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "majorAlleleCopyNumber")
 #'
 #' @export
 purple_cnv_som_read <- function(x) {
-  nm <- c("chromosome" = "c", "start" = "i", "end" = "i",
-          "copyNumber" = "d", "bafCount" = "d", "observedBAF" = "d",
-          "baf" = "d", "segmentStartSupport" = "c", "segmentEndSupport" = "c",
-          "method" = "c", "depthWindowCount" = "i", "gcContent" = "d",
-          "minStart" = "i", "maxStart" = "i", "minorAlleleCopyNumber" = "d",
-          "majorAlleleCopyNumber" = "d")
+  nm <- c(
+    "chromosome" = "c", "start" = "i", "end" = "i",
+    "copyNumber" = "d", "bafCount" = "d", "observedBAF" = "d",
+    "baf" = "d", "segmentStartSupport" = "c", "segmentEndSupport" = "c",
+    "method" = "c", "depthWindowCount" = "i", "gcContent" = "d",
+    "minStart" = "i", "maxStart" = "i", "minorAlleleCopyNumber" = "d",
+    "majorAlleleCopyNumber" = "d"
+  )
   ctypes <- paste(nm, collapse = "")
   purple_cnv_somatic <- readr::read_tsv(x, col_types = ctypes)
   assertthat::assert_that(ncol(purple_cnv_somatic) == length(nm))
@@ -160,13 +174,11 @@ purple_cnv_som_read <- function(x) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' (pp <- purple_cnv_som_process(x))
-#'
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 #'
 #' @export
 purple_cnv_som_process <- function(x) {
-
   purple_cnv_somatic <- purple_cnv_som_read(x)
   purple_cnv_somatic <- purple_cnv_somatic |>
     dplyr::mutate(
@@ -179,11 +191,14 @@ purple_cnv_som_process <- function(x) {
       gcContent = round(.data$gcContent, 2),
       `Start/End SegSupport` = paste0(.data$segmentStartSupport, "-", .data$segmentEndSupport),
       `BAF (count)` = paste0(.data$bafAdj, " (", .data$bafCount, ")"),
-      `GC (windowCount)` = paste0(.data$gcContent, " (", .data$depthWindowCount, ")")) |>
+      `GC (windowCount)` = paste0(.data$gcContent, " (", .data$depthWindowCount, ")")
+    ) |>
     dplyr::select(
-      .data$Chr, Start = .data$start, End = .data$end, CN = .data$copyNumber,
-      `CN Min+Maj` = .data$`CopyNumber Min+Maj`, .data$`Start/End SegSupport`, Method = .data$method,
-      .data$`BAF (count)`, .data$`GC (windowCount)`)
+      .data$Chr,
+      Start = .data$start, End = .data$end, CN = .data$copyNumber,
+      `CN Min+Maj` = .data$`CopyNumber Min+Maj`, .data$`Start/End SegSupport`,
+      Method = .data$method, .data$`BAF (count)`, .data$`GC (windowCount)`
+    )
 
 
   descr <- dplyr::tribble(
@@ -191,22 +206,28 @@ purple_cnv_som_process <- function(x) {
     "Chr/Start/End", "Coordinates of copy number segment",
     "CN", "Fitted absolute copy number of segment adjusted for purity and ploidy",
     "CN Min+Maj", "CopyNumber of minor + major allele adjusted for purity",
-    "Start/End SegSupport", paste0("Type of SV support for the CN breakpoint at ",
-                                   "start/end of region. Allowed values: ",
-                                   "CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), ",
-                                   "SGL (single breakend SV support), NONE (no SV support for CN breakpoint), ",
-                                   "MULT (multiple SV support at exact breakpoint)"),
-    "Method", paste0("Method used to determine the CN of the region. Allowed values: ",
-                     "BAF_WEIGHTED (avg of all depth windows for the region), ",
-                     "STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), ",
-                     "LONG_ARM (inferred from the long arm), GERMLINE_AMPLIFICATION ",
-                     "(inferred using special logic to handle regions of germline amplification)"),
+    "Start/End SegSupport", paste0(
+      "Type of SV support for the CN breakpoint at ",
+      "start/end of region. Allowed values: ",
+      "CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), ",
+      "SGL (single breakend SV support), NONE (no SV support for CN breakpoint), ",
+      "MULT (multiple SV support at exact breakpoint)"
+    ),
+    "Method", paste0(
+      "Method used to determine the CN of the region. Allowed values: ",
+      "BAF_WEIGHTED (avg of all depth windows for the region), ",
+      "STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), ",
+      "LONG_ARM (inferred from the long arm), GERMLINE_AMPLIFICATION ",
+      "(inferred using special logic to handle regions of germline amplification)"
+    ),
     "BAF (count)", "Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf points covered by this segment)",
     "GC (windowCount)", "Proportion of segment that is G or C (Count of COBALT windows covered by this segment)"
   )
 
-  list(tab = purple_cnv_somatic,
-       descr = descr)
+  list(
+    tab = purple_cnv_somatic,
+    descr = descr
+  )
 }
 
 #' Read PURPLE CNV Germline File
@@ -220,7 +241,6 @@ purple_cnv_som_process <- function(x) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
 #' (p <- purple_cnv_germ_read(x))
-#'
 #' @testexamples
 #' expect_equal(colnames(p)[ncol(p)], "majorAlleleCopyNumber")
 #'
@@ -245,7 +265,6 @@ purple_cnv_germ_read <- function(x) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
 #' (pp <- purple_cnv_germ_process(x))
-#'
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 #'
@@ -269,7 +288,6 @@ purple_cnv_germ_process <- function(x) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.version", package = "gpgr")
 #' (v <- purple_version_read(x))
-#'
 #' @testexamples
 #' expect_equal(length(v), 2)
 #' expect_equal(names(v), c("version", "build_date"))
@@ -280,8 +298,10 @@ purple_version_read <- function(x) {
   tab <- readr::read_delim(x, delim = "=", col_names = c("key", "value"), col_types = "cc")
   assertthat::assert_that(nrow(tab) == 2, all(tab$key == c("version", "build.date")))
 
-  list(version = tab$value[tab$key == "version"],
-       build_date = tab$value[tab$key == "build.date"])
+  list(
+    version = tab$value[tab$key == "version"],
+    build_date = tab$value[tab$key == "build.date"]
+  )
 }
 
 #' Read PURPLE QC file
@@ -296,7 +316,6 @@ purple_version_read <- function(x) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.qc", package = "gpgr")
 #' (q <- purple_qc_read(x))
-#'
 #' @testexamples
 #' expect_true(q$raw[1, "value", drop = TRUE] == "WARN_DELETED_GENES")
 #'
@@ -306,28 +325,30 @@ purple_qc_read <- function(x) {
     readr::read_tsv(x, col_names = c("key", "value"), col_types = "cc") |>
     dplyr::mutate(value = toupper(.data$value))
 
-  nm <- c("QCStatus", "Method", "CopyNumberSegments",
-          "UnsupportedCopyNumberSegments", "Purity", "AmberGender",
-          "CobaltGender", "DeletedGenes", "Contamination", "GermlineAberrations")
+  nm <- c(
+    "QCStatus", "Method", "CopyNumberSegments",
+    "UnsupportedCopyNumberSegments", "Purity", "AmberGender",
+    "CobaltGender", "DeletedGenes", "Contamination", "GermlineAberrations"
+  )
 
   assertthat::assert_that(all(purple_qc$key == nm))
   q <- structure(purple_qc$value, names = purple_qc$key)
   # the n column is used for arranging the final summary table rows in the report
   summary <- dplyr::tribble(
     ~n, ~variable, ~value, ~details,
-    1, 'QC_Status', glue::glue('{q["QCStatus"]}'),
+    1, "QC_Status", glue::glue('{q["QCStatus"]}'),
     paste("See 'Description'."),
-    13, 'Method', glue::glue('{q["Method"]}'),
-    glue::glue('Fit method (NORMAL, HIGHLY_DIPLOID, SOMATIC or NO_TUMOR).'),
-    14, 'CopyNumberSegments',
+    13, "Method", glue::glue('{q["Method"]}'),
+    glue::glue("Fit method (NORMAL, HIGHLY_DIPLOID, SOMATIC or NO_TUMOR)."),
+    14, "CopyNumberSegments",
     glue::glue('{q["CopyNumberSegments"]} (Unsupported: {q["UnsupportedCopyNumberSegments"]})'),
     "# of CN segments.",
-    2, 'Purity', glue::glue('{q["Purity"]}'), "",
-    17, 'Gender', glue::glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'), "",
-    14, 'DeletedGenes', glue::glue('{q["DeletedGenes"]}'), "# of homozygously deleted genes.",
-    15, 'Contamination', glue::glue('{q["Contamination"]}'),
+    2, "Purity", glue::glue('{q["Purity"]}'), "",
+    17, "Gender", glue::glue('Amber: {q["AmberGender"]}; Cobalt: {q["CobaltGender"]}'), "",
+    14, "DeletedGenes", glue::glue('{q["DeletedGenes"]}'), "# of homozygously deleted genes.",
+    15, "Contamination", glue::glue('{q["Contamination"]}'),
     "Rate of contamination in tumor sample as determined by AMBER.",
-    16, 'GermlineAberrations', glue::glue('{q["GermlineAberrations"]}'),
+    16, "GermlineAberrations", glue::glue('{q["GermlineAberrations"]}'),
     "Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.",
   )
 
@@ -349,7 +370,6 @@ purple_qc_read <- function(x) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
 #' (p <- purple_purity_read(x))
-#'
 #' @testexamples
 #' expect_equal(p$raw[1, "column", drop = TRUE], "purity")
 #' expect_equal(p$raw[nrow(p$raw), "column", drop = TRUE], "svTumorMutationalBurden")
@@ -375,13 +395,14 @@ purple_purity_read <- function(x) {
     "version", "c",
     "somaticPenalty", "d",
     "wholeGenomeDuplication", "c",
-    "msIndelsPerMb",  "d",
+    "msIndelsPerMb", "d",
     "msStatus", "c",
     "tml", "d",
     "tmlStatus", "c",
     "tmbPerMb", "d",
     "tmbStatus", "c",
-    "svTumorMutationalBurden", "d")
+    "svTumorMutationalBurden", "d"
+  )
 
   ctypes <- paste(tab$type, collapse = "")
   purple_purity <- readr::read_tsv(x, col_types = ctypes)
@@ -391,7 +412,8 @@ purple_purity_read <- function(x) {
   purple_purity <- purple_purity |>
     dplyr::mutate(
       dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 2),
-      dplyr::across(dplyr::everything(), as.character)) |>
+      dplyr::across(dplyr::everything(), as.character)
+    ) |>
     tidyr::pivot_longer(dplyr::everything(), names_to = "column", values_to = "value") |>
     dplyr::left_join(tab, by = "column") |>
     dplyr::mutate(value = toupper(.data$value)) |>
@@ -401,26 +423,28 @@ purple_purity_read <- function(x) {
 
   summary <- dplyr::tribble(
     ~n, ~variable, ~value, ~details,
-    2, 'Purity', glue::glue('{p["purity"]} ({p["minPurity"]}-{p["maxPurity"]})'),
+    2, "Purity", glue::glue('{p["purity"]} ({p["minPurity"]}-{p["maxPurity"]})'),
     "Purity of tumor in the sample (and min-max with score within 10% of best).",
-    3, 'Ploidy', glue::glue('{p["ploidy"]} ({p["minPloidy"]}-{p["maxPloidy"]})'),
+    3, "Ploidy", glue::glue('{p["ploidy"]} ({p["minPloidy"]}-{p["maxPloidy"]})'),
     "Average ploidy of tumor sample after adjusting for purity (and min-max with score within 10% of best).",
-    4, 'Gender', glue::glue('{p["gender"]}'),
+    4, "Gender", glue::glue('{p["gender"]}'),
     "Gender as inferred by AMBER/COBALT.",
-    7, 'WGD', glue::glue('{p["wholeGenomeDuplication"]}'),
+    7, "WGD", glue::glue('{p["wholeGenomeDuplication"]}'),
     "Whole genome duplication (more than 10 autosomes have average major allele ploidy > 1.5).",
-    8, 'MSI (indels/Mb)', glue::glue('{p["msStatus"]} ({p["msIndelsPerMb"]})'),
+    8, "MSI (indels/Mb)", glue::glue('{p["msStatus"]} ({p["msIndelsPerMb"]})'),
     "MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) & MS Indels per Mb.",
-    9, 'PolyclonalProp', glue::glue('{p["polyclonalProportion"]}'),
+    9, "PolyclonalProp", glue::glue('{p["polyclonalProportion"]}'),
     "Proportion of CN regions that are more than 0.25 from a whole CN",
-    10, 'DiploidyProp', glue::glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'),
-    'Proportion of CN regions that have 1 (+- 0.2) minor and major allele.',
-    11, 'TMB', glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
-    paste("Tumor mutational burden (# PASS variants per Megabase)",
-          "(Status: 'HIGH' (>10 PASS per Mb), 'LOW' or 'UNKNOWN')."),
-    12, 'TML', glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
+    10, "DiploidyProp", glue::glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'),
+    "Proportion of CN regions that have 1 (+- 0.2) minor and major allele.",
+    11, "TMB", glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
+    paste(
+      "Tumor mutational burden (# PASS variants per Megabase)",
+      "(Status: 'HIGH' (>10 PASS per Mb), 'LOW' or 'UNKNOWN')."
+    ),
+    12, "TML", glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
     "Tumor mutational load (# of missense variants) (Status: 'HIGH', 'LOW' or 'UNKNOWN').",
-    13, 'TMB-SV', glue::glue('{p["svTumorMutationalBurden"]}'),
+    13, "TMB-SV", glue::glue('{p["svTumorMutationalBurden"]}'),
     "# of non inferred, non single passing SVs."
   )
 
@@ -442,7 +466,6 @@ purple_purity_read <- function(x) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr")
 #' (snv <- purple_snv_vcf_read(x))
-#'
 #' @export
 purple_snv_vcf_read <- function(x) {
   assertthat::assert_that(file.exists(x), is_vcf(x))
@@ -451,14 +474,18 @@ purple_snv_vcf_read <- function(x) {
     tibble::as_tibble(d$header[["INFO"]]) |>
     dplyr::select(.data$ID, .data$Description)
 
-  info_cols <- c("AF", "PURPLE_AF", "PURPLE_CN",
-                 "PURPLE_GERMLINE", "PURPLE_MACN", "PURPLE_VCN",
-                 "HMF_HOTSPOT", "KT", "MH", "SUBCL", "TNC")
+  info_cols <- c(
+    "AF", "PURPLE_AF", "PURPLE_CN",
+    "PURPLE_GERMLINE", "PURPLE_MACN", "PURPLE_VCN",
+    "HMF_HOTSPOT", "KT", "MH", "SUBCL", "TNC"
+  )
   description <- dplyr::filter(info, .data$ID %in% info_cols)
 
   d <- tibble::as_tibble(d$vcf[c("CHROM", "POS", info_cols)])
-  list(data = d,
-       description = description)
+  list(
+    data = d,
+    description = description
+  )
 }
 
 #' Get PURPLE Kataegis Regions
@@ -475,13 +502,14 @@ purple_snv_vcf_read <- function(x) {
 #' @examples
 #' x <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr")
 #' (k <- purple_kataegis(x))
-#'
 #' @export
 purple_kataegis <- function(x) {
   d <- purple_snv_vcf_read(x)
-  info_cols <- c("KT", "AF", "PURPLE_AF", "PURPLE_CN",
-                 "PURPLE_MACN", "PURPLE_VCN", "SUBCL",
-                 "MH", "TNC")
+  info_cols <- c(
+    "KT", "AF", "PURPLE_AF", "PURPLE_CN",
+    "PURPLE_MACN", "PURPLE_VCN", "SUBCL",
+    "MH", "TNC"
+  )
 
   data <- d$data |>
     dplyr::filter(!is.na(.data$KT)) |>
@@ -491,6 +519,8 @@ purple_kataegis <- function(x) {
     dplyr::filter(.data$ID %in% info_cols) |>
     dplyr::arrange(.data$ID)
 
-  list(data = data,
-       description = description)
+  list(
+    data = data,
+    description = description
+  )
 }
