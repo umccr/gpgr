@@ -149,15 +149,19 @@ qc$summary |>
 
 ```{r session_info, echo=FALSE}
 si <- devtools::session_info(include_base = TRUE)
-si_pl <- unclass(si$platform) |> dplyr::as_tibble() |> t()
+si_pl <- unclass(si$platform) |>
+  dplyr::as_tibble() |>
+  t()
 pkgs_of_interest <- c("base", "gpgr")
 si_pkg <- unclass(si$packages) |>
   dplyr::as_tibble() |>
   dplyr::select(package, version = ondiskversion, datestamp = date) |>
   dplyr::filter(package %in% pkgs_of_interest)
 
-dplyr::tibble(var = row.names(si_pl),
-              value = si_pl[, , drop = TRUE]) |>
+dplyr::tibble(
+  var = row.names(si_pl),
+  value = si_pl[, , drop = TRUE]
+) |>
   knitr::kable(format = "html", caption = "Platform information.")
 
 si_pkg |>
