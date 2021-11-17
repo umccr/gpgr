@@ -21,5 +21,4 @@ within kataegis regions.
 \examples{
 x <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr")
 (k <- purple_kataegis(x))
-
 }

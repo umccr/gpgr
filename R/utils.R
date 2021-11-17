@@ -13,7 +13,6 @@
 #' tmp_file <- tempfile(pattern = "fakeFile", fileext = "vcf")
 #' writeLines(c("col1\tcol2\tcol3", "1\t2\t3"), con = tmp_file)
 #' (z <- is_vcf(tmp_file))
-#'
 #' @testexamples
 #' expect_true(y)
 #' expect_false(z)
@@ -32,18 +31,23 @@ is_vcf <- function(x) {
     file = x,
     comment = "##",
     col_types = readr::cols(.default = "c"),
-    n_max = 1)
+    n_max = 1
+  )
 
-  vcf_cols <- c("#CHROM", "POS", "ID", "REF", "ALT", "QUAL",
-                "FILTER", "INFO", "FORMAT")
+  vcf_cols <- c(
+    "#CHROM", "POS", "ID", "REF", "ALT", "QUAL",
+    "FILTER", "INFO", "FORMAT"
+  )
   d_cols <- colnames(d)
 
   if (!((length(d_cols) >= length(vcf_cols)) &
-        (all(d_cols[1:length(vcf_cols)] == vcf_cols)))) {
-    message(glue::glue("VCF main column names are incorrect. ",
-                       "They are:\n{paste(d_cols, collapse = ', ' )}.\n",
-                       "They should include at the beginning:\n",
-                       "{paste(vcf_cols, collapse = ', ')}."))
+    (all(d_cols[1:length(vcf_cols)] == vcf_cols)))) {
+    message(glue::glue(
+      "VCF main column names are incorrect. ",
+      "They are:\n{paste(d_cols, collapse = ', ' )}.\n",
+      "They should include at the beginning:\n",
+      "{paste(vcf_cols, collapse = ', ')}."
+    ))
     return(FALSE)
   }
   return(TRUE)
@@ -68,8 +72,10 @@ is_vcf <- function(x) {
 #' vcf_is_empty(tmp1)
 #' }
 #'
-#' vcf_cols <- c("#CHROM", "POS", "ID", "REF", "ALT", "QUAL",
-#'               "FILTER", "INFO", "FORMAT")
+#' vcf_cols <- c(
+#'   "#CHROM", "POS", "ID", "REF", "ALT", "QUAL",
+#'   "FILTER", "INFO", "FORMAT"
+#' )
 #' tmp2 <- tempfile(pattern = "fakeFile", fileext = "vcf")
 #' writeLines(paste(vcf_cols, collapse = "\t"), con = tmp2)
 #' (z <- vcf_is_empty(tmp2))
@@ -116,7 +122,6 @@ vcf_is_empty <- function(x) {
 #' tmp3 <- tempfile()
 #' writeLines(c("##meta1", "##meta2", "col1\tcol2\tcol3"), con = tmp3)
 #' (c <- tsv_is_empty(tmp3))
-#'
 #' @testexamples
 #' expect_false(a)
 #' expect_true(b)
@@ -130,7 +135,8 @@ tsv_is_empty <- function(x, comment = "##", col_types = readr::cols(.default = "
     comment = comment,
     col_types = col_types,
     n_max = n_max,
-    ...)
+    ...
+  )
 
   if (nrow(d) != n_max) {
     message(glue::glue("{x} does not contain any non-header rows."))

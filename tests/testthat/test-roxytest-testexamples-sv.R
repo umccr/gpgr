@@ -2,16 +2,17 @@
 
 # File R/sv.R: @testexamples
 
-test_that("Function split_double_col() @ L26", {
+test_that("Function split_double_col() @ L27", {
   
-  x <- tibble::tibble(a = letters[1:11],
-                      b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))),
-                      nacol = rep(NA, 11),
-                      namix = sample(c(NA, "0.4,0.6"), 11, replace = TRUE))
+  x <- tibble::tibble(
+    a = letters[1:11],
+    b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))),
+    nacol = rep(NA, 11),
+    namix = sample(c(NA, "0.4,0.6"), 11, replace = TRUE)
+  )
   (b <- gpgr:::split_double_col(x, "b"))
   (nacol <- gpgr:::split_double_col(x, "nacol"))
   (namix <- gpgr:::split_double_col(x, "namix"))
-  
   expect_equal(colnames(b), "b")
   expect_equal(nrow(x), 11)
   expect_error(gpgr:::split_double_col(x, "c"))
@@ -19,14 +20,12 @@ test_that("Function split_double_col() @ L26", {
 })
 
 
-test_that("Function count_pieces() @ L73", {
+test_that("Function count_pieces() @ L76", {
   
   (a <- gpgr:::count_pieces("foo,bar,baz", sep = ","))
   (b <- gpgr:::count_pieces("foo", sep = ","))
   (k <- gpgr:::count_pieces("", sep = ","))
   (m <- gpgr:::count_pieces(",", sep = ","))
-  
-  
   expect_equal(a, 3)
   expect_equal(b, 1)
   expect_equal(k, 0)
@@ -35,13 +34,12 @@ test_that("Function count_pieces() @ L73", {
 })
 
 
-test_that("Function abbreviate_effect() @ L108", {
+test_that("Function abbreviate_effect() @ L110", {
   
   (e1 <- gpgr:::abbreviate_effect("3_prime_UTR_truncation&start_lost&splice_region_variant"))
   (e2 <- gpgr:::abbreviate_effect("duplication&foo&gene_fusion&BOOM&intron_variant"))
   (e3 <- gpgr:::abbreviate_effect("TF_binding_site_variant&TFBS_ablation"))
   (e4 <- gpgr:::abbreviate_effect("foo&bar&stop_gained&badaboom"))
-  
   expect_equal(e1, "3UTRtrunc, SpliceRegV, StartLoss")
   expect_equal(e2, "BOOM, Dup, foo, FusG, IntronV")
   expect_equal(e3, "TFBSDel, TFBSVar")
@@ -53,7 +51,6 @@ test_that("Function umccrise_read_sv_tsv() @ L141", {
   
   x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
   (sv <- umccrise_read_sv_tsv(x)$data)
-  
   expect_equal(colnames(sv)[ncol(sv)], "ALT")
 })
 
@@ -62,7 +59,6 @@ test_that("Function process_sv() @ L197", {
   
   x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
   (sv <- process_sv(x))
-  
   expect_true(inherits(sv, "list"))
   expect_equal(length(sv), 4)
   expect_equal(names(sv), c("unmelted", "melted", "tsv_descr", "col_descr"))

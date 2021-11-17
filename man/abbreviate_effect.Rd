@@ -20,5 +20,4 @@ Abbreviates SV effects column.
 (e2 <- gpgr:::abbreviate_effect("duplication&foo&gene_fusion&BOOM&intron_variant"))
 (e3 <- gpgr:::abbreviate_effect("TF_binding_site_variant&TFBS_ablation"))
 (e4 <- gpgr:::abbreviate_effect("foo&bar&stop_gained&badaboom"))
-
 }

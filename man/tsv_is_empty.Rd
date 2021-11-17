@@ -42,5 +42,4 @@ writeLines(c("col1\tcol2\tcol3"), con = tmp2)
 tmp3 <- tempfile()
 writeLines(c("##meta1", "##meta2", "col1\tcol2\tcol3"), con = tmp3)
 (c <- tsv_is_empty(tmp3))
-
 }

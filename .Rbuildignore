@@ -13,3 +13,4 @@
 ^inst/rmd$
 ^outputs$
 ^\.bumpversion\.cfg$
+^\.pre-commit-config\.yaml$

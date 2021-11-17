@@ -24,6 +24,4 @@ If the pattern is found once, returns 2 (two pieces), etc.
 (b <- gpgr:::count_pieces("foo", sep = ","))
 (k <- gpgr:::count_pieces("", sep = ","))
 (m <- gpgr:::count_pieces(",", sep = ","))
-
-
 }

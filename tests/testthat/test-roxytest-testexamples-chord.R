@@ -2,33 +2,33 @@
 
 # File R/chord.R: @testexamples
 
-test_that("Function chord_run() @ L36", {
+test_that("Function chord_run() @ L37", {
   
   
   snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
-  chord_res <- chord_run(vcf.snv = snv, df.sv = chord_mantavcf2df(sv),
-                         sample.name = "foo")
+  chord_res <- chord_run(
+    vcf.snv = snv, df.sv = chord_mantavcf2df(sv),
+    sample.name = "foo"
+  )
   # chord_res2 <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo",
   #                         outpath = "nogit/chord_results.json.gz")
-  
   expect_equal(length(chord_res), 2)
   expect_equal(names(chord_res), c("contexts", "prediction"))
   expect_equal(chord_res[["prediction"]][, 1, drop = TRUE], "foo")
 })
 
 
-test_that("Function chord_mantavcf2df() @ L99", {
+test_that("Function chord_mantavcf2df() @ L102", {
   
   in_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
   d <- chord_mantavcf2df(in_vcf)
-  
   expect_equal(d$sv_len[1], "-108")
   expect_equal(d$sv_type[1], "DEL")
 })
 
 
-test_that("Function chord_get_genome_obj() @ L123", {
+test_that("Function chord_get_genome_obj() @ L128", {
   
   
   expect_error(chord_get_genome_obj("FOO"))

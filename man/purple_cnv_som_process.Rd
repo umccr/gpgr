@@ -23,5 +23,4 @@ and selects columns of interest.
 \examples{
 x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 (pp <- purple_cnv_som_process(x))
-
 }

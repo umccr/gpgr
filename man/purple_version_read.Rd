@@ -22,5 +22,4 @@ Reads the \code{purple.version} file containing the PURPLE version and build dat
 \examples{
 x <- system.file("extdata/purple/purple.version", package = "gpgr")
 (v <- purple_version_read(x))
-
 }

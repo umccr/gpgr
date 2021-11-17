@@ -19,12 +19,13 @@ Splits a column with 2 comma-separated fields into
 two columns.
 }
 \examples{
-x <- tibble::tibble(a = letters[1:11],
-                    b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))),
-                    nacol = rep(NA, 11),
-                    namix = sample(c(NA, "0.4,0.6"), 11, replace = TRUE))
+x <- tibble::tibble(
+  a = letters[1:11],
+  b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))),
+  nacol = rep(NA, 11),
+  namix = sample(c(NA, "0.4,0.6"), 11, replace = TRUE)
+)
 (b <- gpgr:::split_double_col(x, "b"))
 (nacol <- gpgr:::split_double_col(x, "nacol"))
 (namix <- gpgr:::split_double_col(x, "namix"))
-
 }
