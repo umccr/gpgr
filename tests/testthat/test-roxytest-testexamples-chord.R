@@ -3,8 +3,6 @@
 # File R/chord.R: @testexamples
 
 test_that("Function chord_run() @ L37", {
-  
-  
   snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
   chord_res <- chord_run(
@@ -20,7 +18,6 @@ test_that("Function chord_run() @ L37", {
 
 
 test_that("Function chord_mantavcf2df() @ L102", {
-  
   in_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
   d <- chord_mantavcf2df(in_vcf)
   expect_equal(d$sv_len[1], "-108")
@@ -28,9 +25,6 @@ test_that("Function chord_mantavcf2df() @ L102", {
 })
 
 
-test_that("Function chord_get_genome_obj() @ L128", {
-  
-  
-  expect_error(chord_get_genome_obj("FOO"))
+test_that("Function get_genome_obj() @ L128", {
+  expect_error(get_genome_obj("FOO"))
 })
-

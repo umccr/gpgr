@@ -271,11 +271,11 @@ sig_plot_dbs <- function(dbs_counts) {
 #'
 #' @param vcf VCF file with SNVs.
 #' @param sample_nm Sample name.
-#' @param ref_genome The BSGenome reference genome to use.
+#' @param ref_genome Human genome assembly string: hg38 (default), hg19 or GRCh37.
 #' @param outdir Directory path to output all the results to.
 #'
 #' @export
-sig_workflow_run <- function(vcf, sample_nm, ref_genome, outdir) {
+sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
   mkdir(outdir)
   outdir <- normalizePath(outdir)
   ref_genome <- get_genome_obj(ref_genome)
