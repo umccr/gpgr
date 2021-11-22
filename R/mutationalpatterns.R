@@ -63,9 +63,11 @@ sig_contribution <- function(mut_mat, signatures) {
 #'
 #' @return The `contr` tibble with an additional `Plot` column pointing to
 #' the local path to the corresponding signature plot (in markdown syntax).
+#' If outdir = NULL (default), simply return the `contr` tibble with the
+#' description of the signature.
 #'
 #' @export
-sig_contribution_table <- function(contr, type, outdir) {
+sig_contribution_table <- function(contr, type, outdir = NULL) {
   available_types <- c(
     "Sig" = "v2_2015/Sig",
     "SBS" = "v3.2_2021-march/SBS",
@@ -76,25 +78,41 @@ sig_contribution_table <- function(contr, type, outdir) {
   assertthat::assert_that(all(colnames(contr) == c("Rank", "Signature", "Contribution", "RelFreq")))
 
   sig_dir <- system.file(file.path("extdata/sigs", available_types[type]), package = "gpgr")
-  img_cp_dir <- file.path(outdir, "sig_plots", type)
-  mkdir(img_cp_dir)
-  sig_table <-
-    readr::read_tsv(file = file.path(sig_dir, "description.tsv"), col_types = "cc") |>
-    dplyr::mutate(
-      Plot_original = file.path(sig_dir, paste0(.data$signature, ".png")),
-      Plot_copy = file.path(img_cp_dir, paste0(.data$signature, ".png")),
-      signature = paste0(type, .data$signature)
-    ) |>
-    dplyr::rename(Signature = .data$signature)
 
-  contr |>
-    dplyr::left_join(sig_table, by = "Signature") |>
-    dplyr::rowwise() |>
-    dplyr::mutate(cp = file.copy(from = .data$Plot_original, to = .data$Plot_copy)) |>
-    dplyr::mutate(plot_in_md = paste0("![](", .data$Plot_copy, ")")) |>
-    dplyr::select(.data$Rank, .data$Signature, .data$Contribution, .data$RelFreq,
-      Description = .data$description, Plot = .data$plot_in_md
-    )
+  # if an outdir is specified, copy out the COSMIC plots to be linked to
+  if (!is.null(outdir)) {
+    img_cp_dir <- file.path(outdir, "sig_plots", type)
+    mkdir(img_cp_dir)
+    sig_table <-
+      readr::read_tsv(file = file.path(sig_dir, "description.tsv"), col_types = "cc") |>
+      dplyr::mutate(
+        Plot_original = file.path(sig_dir, paste0(.data$signature, ".png")),
+        Plot_copy = file.path(img_cp_dir, paste0(.data$signature, ".png")),
+        signature = paste0(type, .data$signature)
+      ) |>
+      dplyr::rename(Signature = .data$signature)
+
+    d <- contr |>
+      dplyr::left_join(sig_table, by = "Signature") |>
+      dplyr::rowwise() |>
+      dplyr::mutate(cp = file.copy(from = .data$Plot_original, to = .data$Plot_copy)) |>
+      dplyr::mutate(plot_in_md = paste0("![](", .data$Plot_copy, ")")) |>
+      dplyr::select(
+        .data$Rank, .data$Signature, .data$Contribution, .data$RelFreq,
+        Description = .data$description, Plot = .data$plot_in_md
+      )
+  } else { # don't copy out any COSMIC plots
+    sig_table <-
+      readr::read_tsv(file = file.path(sig_dir, "description.tsv"), col_types = "cc") |>
+      dplyr::mutate(
+        signature = paste0(type, .data$signature)
+      ) |>
+      dplyr::rename(Signature = .data$signature)
+    d <- contr |>
+      dplyr::left_join(sig_table, by = "Signature") |>
+      dplyr::rename(Description = .data$description)
+  }
+  return(d)
 }
 
 #' Count SNV Contexts
@@ -243,4 +261,107 @@ sig_plot_dbs <- function(dbs_counts) {
     p_dbs_main = p_dbs_main,
     p_dbs_cont = p_dbs_cont
   )
+}
+
+#' Run MutationalPatterns Workflow
+#'
+#' Runs a MutationalPatterns Workflow.
+#'
+#' Writes plots and signature contribution tables to `outdir`.
+#'
+#' @param vcf VCF file with SNVs.
+#' @param sample_nm Sample name.
+#' @param ref_genome The BSGenome reference genome to use.
+#' @param outdir Directory path to output all the results to.
+#'
+#' @export
+sig_workflow_run <- function(vcf, sample_nm, ref_genome, outdir) {
+  mkdir(outdir)
+  outdir <- normalizePath(outdir)
+
+  save_plot_list <- function(pl, outdir) {
+    assertthat::assert_that(is.list(pl), length(pl) > 0)
+    assertthat::assert_that(all(sapply(pl, inherits, "ggplot")))
+    mkdir(outdir)
+    for (i in seq_len(length(pl))) {
+      nm <- names(pl)[i]
+      fn <- file.path(outdir, paste0(nm, ".png"))
+      plot_obj <- pl[[i]]
+      ggplot2::ggsave(filename = fn, plot = plot_obj)
+    }
+  }
+
+  cli::cli_h2(glue::glue("{date_log()} Start of MutationalPatterns workflow"))
+  # import VCF
+  gr <- MutationalPatterns::read_vcfs_as_granges(
+    vcf_files = vcf,
+    sample_names = sample_nm,
+    genome = ref_genome,
+    group = "auto+sex",
+    type = "all"
+  )
+
+  #---- SBS ----#
+  # plots
+  snv_counts <- gpgr::sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
+  p_snv <- gpgr::sig_plot_snv(
+    gr_snv = snv_counts$gr_snv, snv_counts = snv_counts$snv_counts,
+    ref_genome = ref_genome
+  )
+
+  # signature contributions (2015)
+  sigs_snv_2015 <-
+    gpgr::cosmic_signatures_2015 |>
+    {
+      \(sigs) gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
+    }() |>
+    gpgr::sig_contribution_table(type = "Sig")
+
+  # signature contributions (2020)
+  sigs_snv_2020 <-
+    MutationalPatterns::get_known_signatures(
+      muttype = "snv",
+      incl_poss_artifacts = TRUE
+    ) |>
+    {
+      \(sigs) gpgr::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
+    }() |>
+    gpgr::sig_contribution_table(type = "SBS")
+
+  #---- DBS ----#
+  # plots
+  dbs_counts <- gpgr::sig_count_dbs(vcf_gr = gr)
+  p_dbs <- gpgr::sig_plot_dbs(dbs_counts = dbs_counts)
+
+  # signature contributions
+  sigs_dbs <-
+    MutationalPatterns::get_known_signatures(muttype = "dbs") |>
+    {
+      \(sigs) gpgr::sig_contribution(mut_mat = dbs_counts, signatures = sigs)
+    }() |>
+    gpgr::sig_contribution_table(type = "DBS")
+
+  #---- Indels ----#
+  # plots
+  indel_counts <- gpgr::sig_count_indel(vcf_gr = gr, ref_genome = ref_genome)
+  p_indel <- gpgr::sig_plot_indel(indel_counts = indel_counts)
+
+  # signature contributions
+  sigs_indel <-
+    MutationalPatterns::get_known_signatures(muttype = "indel") |>
+    {
+      \(sigs) gpgr::sig_contribution(mut_mat = indel_counts, signatures = sigs)
+    }() |>
+    gpgr::sig_contribution_table(type = "ID")
+
+  cli::cli_h2(glue::glue("{date_log()} Saving MutationalPatterns results to\n'{outdir}'"))
+  save_plot_list(p_snv, file.path(outdir, "plot/snv"))
+  save_plot_list(p_dbs, file.path(outdir, "plot/dbs"))
+  save_plot_list(p_indel, file.path(outdir, "plot/indel"))
+  write_jsongz(x = sigs_snv_2015, path = file.path(outdir, "sigs/snv2015.json.gz"))
+  write_jsongz(x = sigs_snv_2020, path = file.path(outdir, "sigs/snv2020.json.gz"))
+  write_jsongz(x = sigs_dbs, path = file.path(outdir, "sigs/dbs.json.gz"))
+  write_jsongz(x = sigs_indel, path = file.path(outdir, "sigs/indel.json.gz"))
+
+  cli::cli_h2(glue::glue("{date_log()} End of MutationalPatterns workflow"))
 }
