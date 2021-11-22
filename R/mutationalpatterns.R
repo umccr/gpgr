@@ -278,6 +278,7 @@ sig_plot_dbs <- function(dbs_counts) {
 sig_workflow_run <- function(vcf, sample_nm, ref_genome, outdir) {
   mkdir(outdir)
   outdir <- normalizePath(outdir)
+  ref_genome <- get_genome_obj(ref_genome)
 
   save_plot_list <- function(pl, outdir) {
     assertthat::assert_that(is.list(pl), length(pl) > 0)

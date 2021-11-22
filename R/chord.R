@@ -109,23 +109,23 @@ chord_mantavcf2df <- function(in_vcf) {
   )
 }
 
-#' Get BSgenome Object for CHORD
+#' Get BSgenome Object
 #'
-#' Gets BSgenome object for use in CHORD.
+#' Gets BSgenome object given a human genome assembly string.
 #'
-#' @param genome Human genome assembly: hg38 (default), hg19 or GRCh37.
+#' @param genome Human genome assembly string: hg38 (default), hg19 or GRCh37.
 #'
 #' @return BSgenome object.
 #'
 #' @examples
 #' \dontrun{
-#' chord_get_genome_obj("hg38")
+#' get_genome_obj("hg38")
 #' }
 #' @testexamples
-#' expect_error(chord_get_genome_obj("FOO"))
+#' expect_error(get_genome_obj("FOO"))
 #'
 #' @export
-chord_get_genome_obj <- function(genome = "hg38") {
+get_genome_obj <- function(genome = "hg38") {
   bsgenome <- c(
     hg19 = "BSgenome.Hsapiens.UCSC.hg19",
     hg38 = "BSgenome.Hsapiens.UCSC.hg38",
