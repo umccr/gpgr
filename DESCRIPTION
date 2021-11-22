@@ -25,6 +25,7 @@ Remotes:
 Imports:
     assertthat,
     bedr,
+    cli,
     CHORD,
     dplyr,
     ggplot2,

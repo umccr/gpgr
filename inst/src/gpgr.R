@@ -24,6 +24,13 @@ chord$add_argument("--snv", help = "Input SNV (VCF format).", required = TRUE)
 chord$add_argument("--sv", help = "Input SV (VCF format).", required = TRUE)
 chord$add_argument("--out", help = "Output file ['chord.json.gz']", default = "chord.json.gz")
 
+#--- MutationalPatterns ---#
+mutpat <- subp$add_parser("mutpat", help = "mutationalpatterns help")
+mutpat$add_argument("--sample", help = "Sample name.", required = TRUE)
+mutpat$add_argument("--snv", help = "Input SNV file (VCF format).", required = TRUE)
+mutpat$add_argument("--outdir", help = "Output directory to write results to", required = TRUE)
+
+
 args <- p$parse_args()
 if (length(args$subparser_name) == 0) {
   p$print_help()
@@ -39,6 +46,9 @@ if (length(args$subparser_name) == 0) {
     vcf.snv = args$snv, vcf.sv = args$sv,
     sample.name = args$sample, outpath = args$out
   )
+} else if (args$subparser_name == "mutpat") {
+  # print(c("You've called MutationalPatterns. Here are the arguments: ", args))
+  gpgr::sig_workflow_run(vcf = args$snv, sample_nm = args$sample, outdir = args$outdir)
 } else {
   stop("NO IDEA HOW IT GOT TO THIS...")
 }

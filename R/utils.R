@@ -224,3 +224,7 @@ pkg_exists <- function(p) {
   assertthat::assert_that(is.character(p))
   nzchar(system.file(package = p))
 }
+
+date_log <- function() {
+  as.character(paste0("[", as.POSIXct(Sys.time()), "]"))
+}

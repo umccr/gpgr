@@ -4,7 +4,7 @@
 \alias{sig_contribution_table}
 \title{Create COSMIC Signature Table}
 \usage{
-sig_contribution_table(contr, type, outdir)
+sig_contribution_table(contr, type, outdir = NULL)
 }
 \arguments{
 \item{contr}{A tibble with Rank, Signature, Contribution and RelFreq columns.}
@@ -17,6 +17,8 @@ in an RMarkdown report.}
 \value{
 The \code{contr} tibble with an additional \code{Plot} column pointing to
 the local path to the corresponding signature plot (in markdown syntax).
+If outdir = NULL (default), simply return the \code{contr} tibble with the
+description of the signature.
 }
 \description{
 Creates a COSMIC signature table for display in an RMarkdown report.
