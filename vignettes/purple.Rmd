@@ -28,7 +28,7 @@ require(knitr)
 ## Introduction
 
 PURPLE: Purity Ploidy Estimator
-(https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator)
+(https://github.com/hartwigmedical/hmftools/tree/master/purple)
 
 PURPLE combines B-allele frequency, read depth ratios, small variants and structural variants to
 estimate the purity and copy number profile of a tumor sample.
