@@ -31,6 +31,7 @@ requirements:
     - r-assertthat
     - r-bedr
     - r-chord
+    - r-cli
     - r-ggplot2
     - r-gt
     - r-gtools
@@ -48,6 +49,7 @@ requirements:
     - r-assertthat
     - r-bedr
     - r-chord
+    - r-cli
     - r-ggplot2
     - r-gt
     - r-gtools
@@ -77,4 +79,3 @@ about:
   license: MIT + file LICENSE
   summary: Genomics Platform Group Reporting
   license_family: MIT
-
