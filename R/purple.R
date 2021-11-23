@@ -2,7 +2,7 @@
 #'
 #' Reads the `purple.cnv.gene.tsv` file, which summarises copy number
 #' alterations of each gene in the HMF panel
-#' (see [this table](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator#gene-copy-number-file)).
+#' (see [this table](https://github.com/hartwigmedical/hmftools/tree/master/purple#gene-copy-number-file)).
 #'
 #' @param x Path to `purple.cnv.gene.tsv` file.
 #'
@@ -131,7 +131,7 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
 #'
 #' Reads the `purple.cnv.somatic.tsv` file, which contains the copy number
 #' profile of all (contiguous) segments of the tumor sample
-#' (see [this table](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator#copy-number-file)).
+#' (see [this table](https://github.com/hartwigmedical/hmftools/tree/master/purple#copy-number-file)).
 #'
 #' @param x Path to `purple.cnv.somatic.tsv` file.
 #'

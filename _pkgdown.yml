@@ -11,7 +11,7 @@ reference:
   - starts_with("hrdetect")
 - title: "PURPLE"
   desc: >
-    Functions related to PURPLE (https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator)
+    Functions related to PURPLE (https://github.com/hartwigmedical/hmftools/tree/master/purple)
 - contents:
   - starts_with("purple")
 - title: "MutationalPatterns"
@@ -43,4 +43,3 @@ reference:
   - split_double_col
   - tsv_is_empty
   - vcf_is_empty
-
