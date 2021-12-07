@@ -15,7 +15,7 @@ The input file as a tibble.
 \description{
 Reads the \code{purple.cnv.somatic.tsv} file, which contains the copy number
 profile of all (contiguous) segments of the tumor sample
-(see \href{https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator#copy-number-file}{this table}).
+(see \href{https://github.com/hartwigmedical/hmftools/tree/master/purple#copy-number-file}{this table}).
 }
 \examples{
 x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")

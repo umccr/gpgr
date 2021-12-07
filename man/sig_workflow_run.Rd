@@ -4,14 +4,14 @@
 \alias{sig_workflow_run}
 \title{Run MutationalPatterns Workflow}
 \usage{
-sig_workflow_run(vcf, sample_nm, ref_genome, outdir)
+sig_workflow_run(vcf, sample_nm, ref_genome = "hg38", outdir)
 }
 \arguments{
 \item{vcf}{VCF file with SNVs.}
 
 \item{sample_nm}{Sample name.}
 
-\item{ref_genome}{The BSGenome reference genome to use.}
+\item{ref_genome}{Human genome assembly string: hg38 (default), hg19 or GRCh37.}
 
 \item{outdir}{Directory path to output all the results to.}
 }

@@ -15,7 +15,7 @@ The input file as a tibble.
 \description{
 Reads the \code{purple.cnv.gene.tsv} file, which summarises copy number
 alterations of each gene in the HMF panel
-(see \href{https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator#gene-copy-number-file}{this table}).
+(see \href{https://github.com/hartwigmedical/hmftools/tree/master/purple#gene-copy-number-file}{this table}).
 }
 \examples{
 x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")

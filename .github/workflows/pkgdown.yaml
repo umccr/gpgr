@@ -32,7 +32,7 @@ jobs:
           mamba install conda-build conda-verify anaconda-client boa
           conda mambabuild --R 4.1 deploy/conda-recipe/
           PKG_PATH="/usr/share/miniconda/conda-bld/noarch/r-gpgr-*.tar.bz2"
-          anaconda -t ${{ secrets.ANACONDA_UPLOAD_TOKEN }} upload --force $PKG_PATH
+          anaconda -t ${{ secrets.ANACONDA_UPLOAD_TOKEN }} upload --force $PKG_PATH --no-progress
 
       - name: Install conda packages
         shell: bash -l {0}

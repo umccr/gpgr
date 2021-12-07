@@ -37,7 +37,7 @@
 chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL,
                       sample.name = NULL, ref.genome = "hg38",
                       sv.caller = "manta", outpath = NULL, ...) {
-  g <- chord_get_genome_obj(ref.genome)
+  g <- get_genome_obj(ref.genome)
 
   contexts <- CHORD::extractSigsChord(
     vcf.snv = vcf.snv,

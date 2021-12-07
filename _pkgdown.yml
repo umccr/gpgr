@@ -1,25 +1,37 @@
+template:
+  bootstrap: 5
+  #bootswatch: sketchy
+url: https://umccr.github.io/gpgr/
+authors:
+  Peter Diakumis:
+    href: https://github.com/pdiakumis
+
 reference:
 - title: "CHORD"
   desc: >
     Functions related to CHORD (https://github.com/UMCUGenetics/CHORD)
 - contents:
   - starts_with("chord")
+
 - title: "HRDetect"
   desc: >
     Functions related to HRDetect (https://github.com/Nik-Zainal-Group/signature.tools.lib)
 - contents:
   - starts_with("hrdetect")
+
 - title: "PURPLE"
   desc: >
     Functions related to PURPLE (https://github.com/hartwigmedical/hmftools/tree/master/purple)
 - contents:
   - starts_with("purple")
+
 - title: "MutationalPatterns"
   desc: >
     Functions related to MutationalPatterns (https://github.com/UMCUGenetics/MutationalPatterns)
 - contents:
   - cosmic_signatures_2015
   - starts_with("sig")
+
 - title: "umccrise"
   desc: >
     Functions related to umccrise (https://github.com/umccr/umccrise)
@@ -35,6 +47,7 @@ reference:
   - write_jsongz
   - write_tsvgz
   - write_tsvjsongz
+
 - title: "Others"
 - contents:
   - count_pieces
@@ -43,3 +56,8 @@ reference:
   - split_double_col
   - tsv_is_empty
   - vcf_is_empty
+  - get_genome_obj
+  - pkg_exists
+
+news:
+  one_page: true

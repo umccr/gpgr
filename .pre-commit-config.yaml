@@ -8,7 +8,7 @@ repos:
         args: [--style_pkg=styler, --style_fun=tidyverse_style]
         exclude:  > 
           (?x)^(
-          tests/testthat/in/.*\.R|
+          tests/testthat/.*\.R|
           renv/.*
           )$
     -   id: use-tidy-description

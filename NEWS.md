@@ -1,6 +1,6 @@
-# NEWS
+# gpgr dev
 
-## 0.2.0 (2021-11-23)
+# gpgr 0.2.0 (2021-11-23)
 
 - new release after a year in the freezer
 - :star: add CLI for CHORD, HRDetect and MutationalPatterns.
@@ -30,7 +30,7 @@
   ([issue25](https://github.com/umccr/gpgr/issues/25),
   [pr27](https://github.com/umccr/gpgr/pull/27))
 
-## v0.1.0 (2020-11-19)
+# gpgr 0.1.0 (2020-11-19)
 
 - Handle umccrise cancer report functionality:
   - PURPLE CNVs
@@ -41,7 +41,7 @@
   - Support for MutationalPatterns v3.0 (https://github.com/UMCUGenetics/MutationalPatterns)
   - Support for PURPLE v2.51+
 
-## v0.0.6 (2020-10-09)
+# gpgr 0.0.6 (2020-10-09)
 
 - Initial release of gpgr. Features include:
   - Support for CHORD (https://github.com/UMCUGenetics/CHORD)
