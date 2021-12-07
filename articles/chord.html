@@ -4,127 +4,108 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="gpgr">
 <title>CHORD • gpgr</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="CHORD">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="CHORD">
 <meta property="og:description" content="gpgr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
-      </span>
-    </div>
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+    
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    
+    <a class="navbar-brand me-2" href="../index.html">gpgr</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-2">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/chord.html">CHORD</a>
+    <a class="dropdown-item" href="../articles/hrdetect.html">HRDetect</a>
+    <a class="dropdown-item" href="../articles/mutationalpatterns.html">MutationalPatterns</a>
+    <a class="dropdown-item" href="../articles/purple.html">PURPLE</a>
+  </div>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/chord.html">CHORD</a>
-    </li>
-    <li>
-      <a href="../articles/hrdetect.html">HRDetect</a>
-    </li>
-    <li>
-      <a href="../articles/mutationalpatterns.html">MutationalPatterns</a>
-    </li>
-    <li>
-      <a href="../articles/purple.html">PURPLE</a>
-    </li>
-  </ul>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/umccr/gpgr/">
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/umccr/gpgr/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+    
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
-      
-
-      </header><script src="chord_files/header-attrs-2.5/header-attrs.js"></script><link href="chord_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="chord_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>CHORD</h1>
-                        <h4 class="author">Peter Diakumis</h4>
+<div class="row">
+  <main id="main"><div class="page-header">
+      <img src="" class="logo" alt=""><h1>CHORD</h1>
+                        <h4 data-toc-skip class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-12-11</h4>
+            <h4 data-toc-skip class="date">2021-12-07</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/chord.Rmd"><code>vignettes/chord.Rmd</code></a></small>
-      <div class="hidden name"><code>chord.Rmd</code></div>
-
+      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/vignettes/chord.Rmd" class="external-link"><code>vignettes/chord.Rmd</code></a></small>
+      <div class="d-none name"><code>chord.Rmd</code></div>
     </div>
 
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/umccr/gpgr">gpgr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span></code></pre></div>
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>CHORD: Classifier of HOmologous Recombination Deficiency (<a href="https://github.com/UMCUGenetics/CHORD" class="uri">https://github.com/UMCUGenetics/CHORD</a>)</p>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://umccr.github.io/gpgr/">gpgr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></code></pre></div>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>CHORD: Classifier of HOmologous Recombination Deficiency (<a href="https://github.com/UMCUGenetics/CHORD" class="external-link uri">https://github.com/UMCUGenetics/CHORD</a>)</p>
 <blockquote>
 <p>CHORD is a random forest model that uses the relative counts of somatic mutation contexts to predict homologous recombination deficiency (HRD). The primary contexts used by CHORD are deletions with flanking microhomology and 1-100kb structural duplications. Additionally, 1-100kb structural duplications are used to distinguish BRCA1-type HRD from BRCA2-type HRD.</p>
 </blockquote>
 </div>
-<div id="data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data" class="anchor"></a>Data</h2>
+<div class="section level2">
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+</h2>
 <p>CHORD takes as input somatic VCFs containing SNVs, INDELs and SVs. The former two can be in the same VCF. It is also able to take data.frames with those variants as input. Due to the annotation size in some of our processed Manta VCFs, we prefer to feed it a pre-processed SV data.frame instead of a VCF, thus we use the <code><a href="../reference/chord_mantavcf2df.html">gpgr::chord_mantavcf2df</a></code> function.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">snvindel_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
-<span class="va">sv_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/sv/manta.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">snvindel_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
+<span class="va">sv_vcf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/sv/manta.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="analysis" class="section level2">
-<h2 class="hasAnchor">
-<a href="#analysis" class="anchor"></a>Analysis</h2>
+<div class="section level2">
+<h2 id="analysis">Analysis<a class="anchor" aria-label="anchor" href="#analysis"></a>
+</h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sv_df</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/chord_mantavcf2df.html">chord_mantavcf2df</a></span><span class="op">(</span><span class="va">sv_vcf</span><span class="op">)</span> <span class="co"># prepare SV VCF as data.frame</span>
 <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/chord_run.html">chord_run</a></span><span class="op">(</span>
@@ -153,14 +134,8 @@
 <span class="co">#&gt; Reading in vcf file...</span>
 <span class="co">#&gt; Converting chrom name style to style in ref.genome...</span>
 <span class="co">#&gt; Loading required package: BiocGenerics</span>
-<span class="co">#&gt; Loading required package: parallel</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'BiocGenerics'</span>
-<span class="co">#&gt; The following objects are masked from 'package:parallel':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
-<span class="co">#&gt;     clusterExport, clusterMap, parApply, parCapply, parLapply,</span>
-<span class="co">#&gt;     parLapplyLB, parRapply, parSapply, parSapplyLB</span>
 <span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     combine, intersect, setdiff, union</span>
@@ -182,9 +157,9 @@
 <span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     first, rename</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
+<span class="co">#&gt; The following objects are masked from 'package:base':</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;     expand.grid</span>
+<span class="co">#&gt;     expand.grid, I, unname</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'IRanges'</span>
 <span class="co">#&gt; The following objects are masked from 'package:dplyr':</span>
@@ -200,11 +175,10 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ## Single base substitutions</span>
 <span class="co">#&gt; Loading variants...</span>
-<span class="co">#&gt; Removing rows with multiple ALT sequences...</span>
-<span class="co">#&gt; Converting chrom name style to style in ref.genome...</span>
-<span class="co">#&gt; Subsetting for SNVs...</span>
-<span class="co">#&gt; Returning SNV trinucleotide contexts...</span>
 <span class="co">#&gt; Initializing SNV signature output vector...</span>
+<span class="co">#&gt; Removing rows with multiple ALT sequences...</span>
+<span class="co">#&gt; Subsetting for SNVs...</span>
+<span class="co">#&gt; Getting SNV trinucleotide contexts...</span>
 <span class="co">#&gt; Converting trinucleotide contexts to substitution contexts...</span>
 <span class="co">#&gt; Counting substitution context occurrences...</span>
 <span class="co">#&gt; Returning context counts...</span>
@@ -212,11 +186,9 @@
 <span class="co">#&gt; ## Indel contexts (types x lengths)</span>
 <span class="co">#&gt; Loading variants...</span>
 <span class="co">#&gt; Removing rows with multiple ALT sequences...</span>
-<span class="co">#&gt; Converting chrom name style to style in ref.genome...</span>
 <span class="co">#&gt; Determining indel type...</span>
-<span class="co">#&gt; Determining indel length and sequence...</span>
-<span class="co">#&gt; Returning indel characteristics...</span>
 <span class="co">#&gt; Initializing indel signature output vector...</span>
+<span class="co">#&gt; Determining indel length and sequence...</span>
 <span class="co">#&gt; Determining the start/end positions for the left/right flanks of each indel...</span>
 <span class="co">#&gt; Retrieving flanking sequences...</span>
 <span class="co">#&gt; Calculating the number of copies of the indel sequence are present in the 3' flanking sequence...</span>
@@ -235,11 +207,11 @@
 <span class="co">#&gt; output.path not specified. Directly returning output</span>
 <span class="co">#&gt; </span></code></pre></div>
 </div>
-<div id="results" class="section level2">
-<h2 class="hasAnchor">
-<a href="#results" class="anchor"></a>Results</h2>
+<div class="section level2">
+<h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
+</h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">res</span>, list.len <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">res</span>, list.len <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
 <span class="co">#&gt; List of 2</span>
 <span class="co">#&gt;  $ contexts  : num [1, 1:145] 123 82 18 91 92 98 21 94 51 55 ...</span>
 <span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span>
@@ -252,9 +224,9 @@
 <span class="co">#&gt;   ..$ hrd_type         : chr "BRCA2_type"</span>
 <span class="co">#&gt;   .. [list output truncated]</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">prediction</span><span class="op">)</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">prediction</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span>.name_repair <span class="op">=</span> <span class="st">"check_unique"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"CHORD results."</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">prediction</span><span class="op">)</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">prediction</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span> |&gt;
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span>.name_repair <span class="op">=</span> <span class="st">"check_unique"</span><span class="op">)</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"CHORD results."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 CHORD results.
@@ -335,7 +307,7 @@ remarks_hrd_type
 p_hrd.5%
 </td>
 <td style="text-align:left;">
-0.773
+0.768
 </td>
 </tr>
 <tr>
@@ -343,7 +315,7 @@ p_hrd.5%
 p_hrd.50%
 </td>
 <td style="text-align:left;">
-0.8
+0.803
 </td>
 </tr>
 <tr>
@@ -351,7 +323,7 @@ p_hrd.50%
 p_hrd.95%
 </td>
 <td style="text-align:left;">
-0.822
+0.821
 </td>
 </tr>
 <tr>
@@ -359,7 +331,7 @@ p_hrd.95%
 p_BRCA1.5%
 </td>
 <td style="text-align:left;">
-0.072
+0.102
 </td>
 </tr>
 <tr>
@@ -367,7 +339,7 @@ p_BRCA1.5%
 p_BRCA1.50%
 </td>
 <td style="text-align:left;">
-0.155
+0.143
 </td>
 </tr>
 <tr>
@@ -375,7 +347,7 @@ p_BRCA1.50%
 p_BRCA1.95%
 </td>
 <td style="text-align:left;">
-0.224
+0.313
 </td>
 </tr>
 <tr>
@@ -383,7 +355,7 @@ p_BRCA1.95%
 p_BRCA2.5%
 </td>
 <td style="text-align:left;">
-0.563
+0.465
 </td>
 </tr>
 <tr>
@@ -399,7 +371,7 @@ p_BRCA2.50%
 p_BRCA2.95%
 </td>
 <td style="text-align:left;">
-0.718
+0.707
 </td>
 </tr>
 </tbody>
@@ -407,15 +379,15 @@ p_BRCA2.95%
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># grab first and last few of the contexts</span>
-<span class="va">col_ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">contexts</span><span class="op">)</span> <span class="op">-</span> <span class="fl">10</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">contexts</span><span class="op">)</span><span class="op">)</span>
-<span class="va">res</span><span class="op">$</span><span class="va">contexts</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span><span class="op">(</span>rownames <span class="op">=</span> <span class="st">"context"</span>, .name_repair <span class="op">=</span> <span class="st">"check_unique"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="va">col_ind</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Sample of rows from contexts counts."</span><span class="op">)</span></code></pre></div>
+<span class="va">col_ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">contexts</span><span class="op">)</span> <span class="op">-</span> <span class="fl">10</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">contexts</span><span class="op">)</span><span class="op">)</span>
+<span class="va">res</span><span class="op">$</span><span class="va">contexts</span> |&gt;
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> |&gt;
+  <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> |&gt;
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span>rownames <span class="op">=</span> <span class="st">"context"</span>, .name_repair <span class="op">=</span> <span class="st">"check_unique"</span><span class="op">)</span> |&gt;
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> |&gt;
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> |&gt;
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="va">col_ind</span><span class="op">)</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Sample of rows from contexts counts."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 Sample of rows from contexts counts.
@@ -622,9 +594,9 @@ TRA
 </tbody>
 </table>
 </div>
-<div id="session-info" class="section level2">
-<h2 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session Info</h2>
+<div class="section level2">
+<h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
 <table class="table">
 <caption>
 Platform information.
@@ -643,7 +615,7 @@ value
 version
 </td>
 <td style="text-align:left;">
-R version 4.0.3 (2020-10-10)
+R version 4.1.1 (2021-08-10)
 </td>
 </tr>
 <tr>
@@ -651,7 +623,7 @@ R version 4.0.3 (2020-10-10)
 os
 </td>
 <td style="text-align:left;">
-Ubuntu 18.04.5 LTS
+Ubuntu 20.04.3 LTS
 </td>
 </tr>
 <tr>
@@ -675,7 +647,7 @@ X11
 language
 </td>
 <td style="text-align:left;">
-(EN)
+en
 </td>
 </tr>
 <tr>
@@ -707,7 +679,15 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-12-11
+2021-12-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pandoc
+</td>
+<td style="text-align:left;">
+2.16.2 @ /usr/share/miniconda/envs/pkgdown_gpgr/bin/ (via rmarkdown)
 </td>
 </tr>
 </tbody>
@@ -733,10 +713,10 @@ datestamp
 base
 </td>
 <td style="text-align:left;">
-4.0.3
+4.1.1
 </td>
 <td style="text-align:left;">
-2020-12-06
+2021-08-28
 </td>
 </tr>
 <tr>
@@ -747,7 +727,7 @@ CHORD
 2.0
 </td>
 <td style="text-align:left;">
-2020-10-22
+2021-12-06
 </td>
 </tr>
 <tr>
@@ -755,10 +735,10 @@ CHORD
 gpgr
 </td>
 <td style="text-align:left;">
-0.1.5
+0.2.0
 </td>
 <td style="text-align:left;">
-2020-12-11
+2021-12-07
 </td>
 </tr>
 <tr>
@@ -766,40 +746,37 @@ gpgr
 mutSigExtractor
 </td>
 <td style="text-align:left;">
-1.13
+1.25
 </td>
 <td style="text-align:left;">
-2020-10-22
+2021-12-06
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
-
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p>Developed by Peter Diakumis.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p></p>
+<p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="pkgdown-footer-right">
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
 
+  
 
   </body>
 </html>

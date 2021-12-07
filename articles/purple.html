@@ -4,129 +4,110 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="gpgr">
 <title>PURPLE • gpgr</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="PURPLE">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="PURPLE">
 <meta property="og:description" content="gpgr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
-      </span>
-    </div>
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+    
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    
+    <a class="navbar-brand me-2" href="../index.html">gpgr</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-2">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/chord.html">CHORD</a>
+    <a class="dropdown-item" href="../articles/hrdetect.html">HRDetect</a>
+    <a class="dropdown-item" href="../articles/mutationalpatterns.html">MutationalPatterns</a>
+    <a class="dropdown-item" href="../articles/purple.html">PURPLE</a>
+  </div>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/chord.html">CHORD</a>
-    </li>
-    <li>
-      <a href="../articles/hrdetect.html">HRDetect</a>
-    </li>
-    <li>
-      <a href="../articles/mutationalpatterns.html">MutationalPatterns</a>
-    </li>
-    <li>
-      <a href="../articles/purple.html">PURPLE</a>
-    </li>
-  </ul>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/umccr/gpgr/">
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/umccr/gpgr/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+    
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
-      
-
-      </header><script src="purple_files/header-attrs-2.5/header-attrs.js"></script><link href="purple_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="purple_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>PURPLE</h1>
-                        <h4 class="author">Peter Diakumis</h4>
+<div class="row">
+  <main id="main"><div class="page-header">
+      <img src="" class="logo" alt=""><h1>PURPLE</h1>
+                        <h4 data-toc-skip class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-12-11</h4>
+            <h4 data-toc-skip class="date">2021-12-07</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/purple.Rmd"><code>vignettes/purple.Rmd</code></a></small>
-      <div class="hidden name"><code>purple.Rmd</code></div>
-
+      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/vignettes/purple.Rmd" class="external-link"><code>vignettes/purple.Rmd</code></a></small>
+      <div class="d-none name"><code>purple.Rmd</code></div>
     </div>
 
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/umccr/gpgr">gpgr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span></code></pre></div>
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>PURPLE: Purity Ploidy Estimator (<a href="https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator" class="uri">https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator</a>)</p>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://umccr.github.io/gpgr/">gpgr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></code></pre></div>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>PURPLE: Purity Ploidy Estimator (<a href="https://github.com/hartwigmedical/hmftools/tree/master/purple" class="external-link uri">https://github.com/hartwigmedical/hmftools/tree/master/purple</a>)</p>
 <p>PURPLE combines B-allele frequency, read depth ratios, small variants and structural variants to estimate the purity and copy number profile of a tumor sample.</p>
 <p>It outputs several files, some of which are displayed below.</p>
 </div>
-<div id="data-munging" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-munging" class="anchor"></a>Data Munging</h2>
-<div id="somatic-cnvs-per-chromosome" class="section level3">
-<h3 class="hasAnchor">
-<a href="#somatic-cnvs-per-chromosome" class="anchor"></a>Somatic CNVs (per chromosome)</h3>
+<div class="section level2">
+<h2 id="data-munging">Data Munging<a class="anchor" aria-label="anchor" href="#data-munging"></a>
+</h2>
+<div class="section level3">
+<h3 id="somatic-cnvs-per-chromosome">Somatic CNVs (per chromosome)<a class="anchor" aria-label="anchor" href="#somatic-cnvs-per-chromosome"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cnv_som</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.somatic.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">cnv_som</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.somatic.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> |&gt;
   <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_som_process.html">purple_cnv_som_process</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <details><summary>
 Description
 </summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cnv_som</span><span class="op">$</span><span class="va">descr</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Columns."</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">cnv_som</span><span class="op">$</span><span class="va">descr</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Columns."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Somatic CNVs (per chromosome) Columns.
@@ -198,9 +179,9 @@ Proportion of segment that is G or C (Count of COBALT windows covered by this se
 </tr>
 </tbody>
 </table></details><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cnv_som</span><span class="op">$</span><span class="va">tab</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Summary Table."</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">cnv_som</span><span class="op">$</span><span class="va">tab</span> |&gt;
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Summary Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Somatic CNVs (per chromosome) Summary Table.
@@ -528,18 +509,18 @@ BAF_WEIGHTED
 </tbody>
 </table>
 </div>
-<div id="somatic-cnvs-per-gene" class="section level3">
-<h3 class="hasAnchor">
-<a href="#somatic-cnvs-per-gene" class="anchor"></a>Somatic CNVs (per gene)</h3>
+<div class="section level3">
+<h3 id="somatic-cnvs-per-gene">Somatic CNVs (per gene)<a class="anchor" aria-label="anchor" href="#somatic-cnvs-per-gene"></a>
+</h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">umccr_key_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/ref/umccr_cancer_genes_2019-03-20.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
-<span class="va">cnv_som_gene</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.gene.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">umccr_key_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/ref/umccr_cancer_genes_2019-03-20.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>
+<span class="va">cnv_som_gene</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.gene.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> |&gt;
   <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_som_gene_process.html">purple_cnv_som_gene_process</a></span><span class="op">(</span>g <span class="op">=</span> <span class="va">umccr_key_genes</span><span class="op">)</span></code></pre></div>
 <details><summary>
 Description
 </summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cnv_som_gene</span><span class="op">$</span><span class="va">descr</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Columns."</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">cnv_som_gene</span><span class="op">$</span><span class="va">descr</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Columns."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Somatic CNVs (per gene) Columns.
@@ -590,7 +571,7 @@ Chromosome band of the gene
 onco_or_ts
 </td>
 <td style="text-align:left;">
-oncogene (‘oncogene’), tumor suppressor (‘tsgene’), or both (‘onco+ts’), as reported by <a href="https://github.com/jakelever/cancermine">Cancermine</a>
+oncogene (‘oncogene’), tumor suppressor (‘tsgene’), or both (‘onco+ts’), as reported by <a href="https://github.com/jakelever/cancermine" class="external-link">Cancermine</a>
 </td>
 </tr>
 <tr>
@@ -651,9 +632,9 @@ Start/end support of the CN region overlapping the gene with the min CN (plus de
 </tr>
 </tbody>
 </table></details><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cnv_som_gene</span><span class="op">$</span><span class="va">tab</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Summary Table."</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">cnv_som_gene</span><span class="op">$</span><span class="va">tab</span> |&gt;
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Summary Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Somatic CNVs (per gene) Summary Table.
@@ -1174,17 +1155,17 @@ CENTROMERE-NONE (BAF_WEIGHTED)
 </tbody>
 </table>
 </div>
-<div id="germline-cnvs-per-chromosome" class="section level3">
-<h3 class="hasAnchor">
-<a href="#germline-cnvs-per-chromosome" class="anchor"></a>Germline CNVs (per chromosome)</h3>
+<div class="section level3">
+<h3 id="germline-cnvs-per-chromosome">Germline CNVs (per chromosome)<a class="anchor" aria-label="anchor" href="#germline-cnvs-per-chromosome"></a>
+</h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cnv_germ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.germline.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">cnv_germ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.germline.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> |&gt;
   <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_germ_process.html">purple_cnv_germ_process</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <details><summary>
 Description
 </summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cnv_germ</span><span class="op">$</span><span class="va">descr</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Germline CNVs (per chromosome) Columns."</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">cnv_germ</span><span class="op">$</span><span class="va">descr</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Germline CNVs (per chromosome) Columns."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Germline CNVs (per chromosome) Columns.
@@ -1256,9 +1237,9 @@ Proportion of segment that is G or C (Count of COBALT windows covered by this se
 </tr>
 </tbody>
 </table></details><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cnv_germ</span><span class="op">$</span><span class="va">tab</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Germline CNVs (per chromosome) Summary Table."</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">cnv_germ</span><span class="op">$</span><span class="va">tab</span> |&gt;
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Germline CNVs (per chromosome) Summary Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Germline CNVs (per chromosome) Summary Table.
@@ -1586,15 +1567,15 @@ GERMLINE_HET2HOM_DELETION
 </tbody>
 </table>
 </div>
-<div id="purity" class="section level3">
-<h3 class="hasAnchor">
-<a href="#purity" class="anchor"></a>Purity</h3>
+<div class="section level3">
+<h3 id="purity">Purity<a class="anchor" aria-label="anchor" href="#purity"></a>
+</h3>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">purity</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.purity.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">purity</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.purity.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> |&gt;
   <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_purity_read.html">purple_purity_read</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="va">purity</span><span class="op">$</span><span class="va">summary</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Purity Summary Table."</span><span class="op">)</span></code></pre></div>
+<span class="va">purity</span><span class="op">$</span><span class="va">summary</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Purity Summary Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Purity Summary Table.
@@ -1757,14 +1738,14 @@ TMB-SV
 </tbody>
 </table>
 </div>
-<div id="kataegis" class="section level3">
-<h3 class="hasAnchor">
-<a href="#kataegis" class="anchor"></a>Kataegis</h3>
+<div class="section level3">
+<h3 id="kataegis">Kataegis<a class="anchor" aria-label="anchor" href="#kataegis"></a>
+</h3>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">kat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.somatic.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">kat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.somatic.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> |&gt;
   <span class="fu"><a href="../reference/purple_kataegis.html">purple_kataegis</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">kat</span><span class="op">$</span><span class="va">data</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Kataegis Table."</span><span class="op">)</span></code></pre></div>
+<span class="va">kat</span><span class="op">$</span><span class="va">data</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Kataegis Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE Kataegis Table.
@@ -2720,7 +2701,7 @@ AGA
 <details><summary>
 Description
 </summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">kat</span><span class="op">$</span><span class="va">description</span>, format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Kataegis column description."</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">kat</span><span class="op">$</span><span class="va">description</span>, format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Kataegis column description."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 Kataegis column description.
@@ -2809,15 +2790,15 @@ Tri-nucleotide context
 </tbody>
 </table></details>
 </div>
-<div id="qc" class="section level3">
-<h3 class="hasAnchor">
-<a href="#qc" class="anchor"></a>QC</h3>
+<div class="section level3">
+<h3 id="qc">QC<a class="anchor" aria-label="anchor" href="#qc"></a>
+</h3>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">qc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.qc"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">qc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.qc"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> |&gt;
   <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_qc_read.html">purple_qc_read</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="va">qc</span><span class="op">$</span><span class="va">summary</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE QC Summary Table."</span><span class="op">)</span></code></pre></div>
+<span class="va">qc</span><span class="op">$</span><span class="va">summary</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE QC Summary Table."</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <caption>
 PURPLE QC Summary Table.
@@ -2951,9 +2932,9 @@ Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.
 </table>
 </div>
 </div>
-<div id="session-info" class="section level2">
-<h2 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session Info</h2>
+<div class="section level2">
+<h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
 <table class="table">
 <caption>
 Platform information.
@@ -2972,7 +2953,7 @@ value
 version
 </td>
 <td style="text-align:left;">
-R version 4.0.3 (2020-10-10)
+R version 4.1.1 (2021-08-10)
 </td>
 </tr>
 <tr>
@@ -2980,7 +2961,7 @@ R version 4.0.3 (2020-10-10)
 os
 </td>
 <td style="text-align:left;">
-Ubuntu 18.04.5 LTS
+Ubuntu 20.04.3 LTS
 </td>
 </tr>
 <tr>
@@ -3004,7 +2985,7 @@ X11
 language
 </td>
 <td style="text-align:left;">
-(EN)
+en
 </td>
 </tr>
 <tr>
@@ -3036,7 +3017,15 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-12-11
+2021-12-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pandoc
+</td>
+<td style="text-align:left;">
+2.16.2 @ /usr/share/miniconda/envs/pkgdown_gpgr/bin/ (via rmarkdown)
 </td>
 </tr>
 </tbody>
@@ -3062,10 +3051,10 @@ datestamp
 base
 </td>
 <td style="text-align:left;">
-4.0.3
+4.1.1
 </td>
 <td style="text-align:left;">
-2020-12-06
+2021-08-28
 </td>
 </tr>
 <tr>
@@ -3073,40 +3062,37 @@ base
 gpgr
 </td>
 <td style="text-align:left;">
-0.1.5
+0.2.0
 </td>
 <td style="text-align:left;">
-2020-12-11
+2021-12-07
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
-
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p>Developed by Peter Diakumis.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p></p>
+<p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="pkgdown-footer-right">
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
 
+  
 
   </body>
 </html>

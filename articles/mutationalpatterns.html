@@ -4,163 +4,156 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="gpgr">
 <title>MutationalPatterns • gpgr</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="MutationalPatterns">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="MutationalPatterns">
 <meta property="og:description" content="gpgr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
-      </span>
-    </div>
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+    
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    
+    <a class="navbar-brand me-2" href="../index.html">gpgr</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-2">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/chord.html">CHORD</a>
+    <a class="dropdown-item" href="../articles/hrdetect.html">HRDetect</a>
+    <a class="dropdown-item" href="../articles/mutationalpatterns.html">MutationalPatterns</a>
+    <a class="dropdown-item" href="../articles/purple.html">PURPLE</a>
+  </div>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/chord.html">CHORD</a>
-    </li>
-    <li>
-      <a href="../articles/hrdetect.html">HRDetect</a>
-    </li>
-    <li>
-      <a href="../articles/mutationalpatterns.html">MutationalPatterns</a>
-    </li>
-    <li>
-      <a href="../articles/purple.html">PURPLE</a>
-    </li>
-  </ul>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/umccr/gpgr/">
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/umccr/gpgr/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+    
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
-
-      
-
-      </header><script src="mutationalpatterns_files/header-attrs-2.5/header-attrs.js"></script><link href="mutationalpatterns_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="mutationalpatterns_files/anchor-sections-1.0/anchor-sections.js"></script><script src="mutationalpatterns_files/kePrint-0.0.1/kePrint.js"></script><link href="mutationalpatterns_files/lightable-0.0.1/lightable.css" rel="stylesheet">
+</nav><div class="container template-article">
+<script src="mutationalpatterns_files/kePrint-0.0.1/kePrint.js"></script><link href="mutationalpatterns_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>MutationalPatterns</h1>
-                        <h4 class="author">Peter Diakumis</h4>
+  <main id="main"><div class="page-header">
+      <img src="" class="logo" alt=""><h1>MutationalPatterns</h1>
+                        <h4 data-toc-skip class="author">Peter Diakumis</h4>
             
-            <h4 class="date">2020-12-11 14:45:52</h4>
+            <h4 data-toc-skip class="date">2021-12-07 13:55:45</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/master/vignettes/mutationalpatterns.Rmd"><code>vignettes/mutationalpatterns.Rmd</code></a></small>
-      <div class="hidden name"><code>mutationalpatterns.Rmd</code></div>
-
+      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/vignettes/mutationalpatterns.Rmd" class="external-link"><code>vignettes/mutationalpatterns.Rmd</code></a></small>
+      <div class="d-none name"><code>mutationalpatterns.Rmd</code></div>
     </div>
 
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/umccr/gpgr">gpgr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://doi.org/10.1186/s13073-018-0539-0">MutationalPatterns</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://umccr.github.io/gpgr/">gpgr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://doi.org/10.1186/s13073-018-0539-0" class="external-link">MutationalPatterns</a></span><span class="op">)</span>
 <span class="va">ref_genome</span> <span class="op">&lt;-</span> <span class="st">"BSgenome.Hsapiens.UCSC.hg38"</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va">ref_genome</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com">patchwork</a></span><span class="op">)</span></code></pre></div>
-<div id="data-preparation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-preparation" class="anchor"></a>Data Preparation</h2>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va">ref_genome</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></code></pre></div>
+<div class="section level2">
+<h2 id="data-preparation">Data Preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
+</h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-  vcf <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  vcf <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span>,
   nm <span class="op">=</span> <span class="st">"sampleA"</span>,
   outdir <span class="op">=</span> <span class="st">"outputs"</span>
 <span class="op">)</span>
 
-<span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu">MutationalPatterns</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MutationalPatterns/man/read_vcfs_as_granges.html">read_vcfs_as_granges</a></span><span class="op">(</span>
+<span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu">MutationalPatterns</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MutationalPatterns/man/read_vcfs_as_granges.html" class="external-link">read_vcfs_as_granges</a></span><span class="op">(</span>
   vcf_files <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">vcf</span>,
   sample_names <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">nm</span>,
   genome <span class="op">=</span> <span class="va">ref_genome</span>,
   group <span class="op">=</span> <span class="st">"auto+sex"</span>,
-  type <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></code></pre></div>
+  type <span class="op">=</span> <span class="st">"all"</span>
+<span class="op">)</span></code></pre></div>
 </div>
-<div id="snvs-sbs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#snvs-sbs" class="anchor"></a>SNVs (SBS)</h2>
-<div id="plots" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plots" class="anchor"></a>Plots</h3>
+<div class="section level2">
+<h2 id="snvs-sbs">SNVs (SBS)<a class="anchor" aria-label="anchor" href="#snvs-sbs"></a>
+</h2>
+<div class="section level3">
+<h3 id="plots">Plots<a class="anchor" aria-label="anchor" href="#plots"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">snv_counts</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_count_snv.html">sig_count_snv</a></span><span class="op">(</span>vcf_gr <span class="op">=</span> <span class="va">gr</span>, ref_genome <span class="op">=</span> <span class="va">ref_genome</span><span class="op">)</span>
-<span class="va">p_snvs</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_plot_snv.html">sig_plot_snv</a></span><span class="op">(</span>gr_snv <span class="op">=</span> <span class="va">snv_counts</span><span class="op">$</span><span class="va">gr_snv</span>, snv_counts <span class="op">=</span> <span class="va">snv_counts</span><span class="op">$</span><span class="va">snv_counts</span>,
-                             ref_genome <span class="op">=</span> <span class="va">ref_genome</span><span class="op">)</span>
-<span class="va">p_snvs</span><span class="op">$</span><span class="va">p_river</span> <span class="op">+</span> <span class="va">p_snvs</span><span class="op">$</span><span class="va">p_heatmap</span> <span class="op">+</span> <span class="va">p_snvs</span><span class="op">$</span><span class="va">p_spectrum</span> <span class="op">+</span> <span class="va">p_snvs</span><span class="op">$</span><span class="va">p_96_profile</span> <span class="op">+</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<span class="co">#&gt; Any neighbouring SNVs will be merged into DBS/MBS variants.</span>
+<span class="co">#&gt; Set the 'predefined_dbs_mbs' to 'TRUE' if you don't want this.</span>
+<span class="va">p_snvs</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_plot_snv.html">sig_plot_snv</a></span><span class="op">(</span>
+  gr_snv <span class="op">=</span> <span class="va">snv_counts</span><span class="op">$</span><span class="va">gr_snv</span>, snv_counts <span class="op">=</span> <span class="va">snv_counts</span><span class="op">$</span><span class="va">snv_counts</span>,
+  ref_genome <span class="op">=</span> <span class="va">ref_genome</span>
+<span class="op">)</span>
+<span class="va">p_snvs</span><span class="op">$</span><span class="va">p_river</span> <span class="op">+</span> <span class="va">p_snvs</span><span class="op">$</span><span class="va">p_heatmap</span> <span class="op">+</span> <span class="va">p_snvs</span><span class="op">$</span><span class="va">p_spectrum</span> <span class="op">+</span> <span class="va">p_snvs</span><span class="op">$</span><span class="va">p_96_profile</span> <span class="op">+</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="co">#&gt; Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
+<span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
+<span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span></code></pre></div>
 <p><img src="mutationalpatterns_files/figure-html/snv_plots-1.png" width="90%"></p>
 </div>
-<div id="signature-contributions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#signature-contributions" class="anchor"></a>Signature Contributions</h3>
+<div class="section level3">
+<h3 id="signature-contributions">Signature Contributions<a class="anchor" aria-label="anchor" href="#signature-contributions"></a>
+</h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sigs_snv_2015</span> <span class="op">&lt;-</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="va"><a href="../reference/cosmic_signatures_2015.html">cosmic_signatures_2015</a></span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution.html">sig_contribution</a></span><span class="op">(</span>mut_mat <span class="op">=</span> <span class="va">snv_counts</span><span class="op">$</span><span class="va">snv_counts</span>, signatures <span class="op">=</span> <span class="va">.</span><span class="op">)</span>
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="va"><a href="../reference/cosmic_signatures_2015.html">cosmic_signatures_2015</a></span> |&gt;
+  <span class="op">{</span>
+    \<span class="op">(</span><span class="va">sigs</span><span class="op">)</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution.html">sig_contribution</a></span><span class="op">(</span>mut_mat <span class="op">=</span> <span class="va">snv_counts</span><span class="op">$</span><span class="va">snv_counts</span>, signatures <span class="op">=</span> <span class="va">sigs</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">(</span><span class="op">)</span>
 
 <span class="va">sigs_snv_2020</span> <span class="op">&lt;-</span>
-  <span class="fu">MutationalPatterns</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MutationalPatterns/man/get_known_signatures.html">get_known_signatures</a></span><span class="op">(</span>muttype <span class="op">=</span> <span class="st">"snv"</span>,
-                                           incl_poss_artifacts <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution.html">sig_contribution</a></span><span class="op">(</span>mut_mat <span class="op">=</span> <span class="va">snv_counts</span><span class="op">$</span><span class="va">snv_counts</span>, signatures <span class="op">=</span> <span class="va">.</span><span class="op">)</span>
+  <span class="fu">MutationalPatterns</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MutationalPatterns/man/get_known_signatures.html" class="external-link">get_known_signatures</a></span><span class="op">(</span>
+    muttype <span class="op">=</span> <span class="st">"snv"</span>,
+    incl_poss_artifacts <span class="op">=</span> <span class="cn">TRUE</span>
+  <span class="op">)</span> |&gt;
+  <span class="op">{</span>
+    \<span class="op">(</span><span class="va">sigs</span><span class="op">)</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution.html">sig_contribution</a></span><span class="op">(</span>mut_mat <span class="op">=</span> <span class="va">snv_counts</span><span class="op">$</span><span class="va">snv_counts</span>, signatures <span class="op">=</span> <span class="va">sigs</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">(</span><span class="op">)</span>
 
-
-<span class="va">sigs_snv_2015</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"Sig"</span>, outdir <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">outdir</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
+<span class="va">sigs_snv_2015</span> |&gt;
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"Sig"</span>, outdir <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">outdir</span><span class="op">)</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> |&gt;
+  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> |&gt;
+  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html" class="external-link">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; ">
-<table class="table table table-hover table-striped">
+<table class="table table table-hover table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 Rank
@@ -487,13 +480,13 @@ Subset of kidney clear cell carcinomas; strong TSB for T&gt;A; many small indels
 </div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="va">sigs_snv_2020</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"SBS"</span>, outdir <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">outdir</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
+<span class="va">sigs_snv_2020</span> |&gt;
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"SBS"</span>, outdir <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">outdir</span><span class="op">)</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> |&gt;
+  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> |&gt;
+  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html" class="external-link">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; ">
-<table class="table table table-hover table-striped">
+<table class="table table table-hover table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 Rank
@@ -523,13 +516,13 @@ Plot
 SBS8
 </td>
 <td style="text-align:right;">
-1224
+1238
 </td>
 <td style="text-align:right;">
 0.21
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS8.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS8.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs8/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs8/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/SBS/8.png">
@@ -540,19 +533,19 @@ SBS8
 2
 </td>
 <td style="text-align:left;">
-SBS39
+SBS40
 </td>
 <td style="text-align:right;">
-868
+686
 </td>
 <td style="text-align:right;">
-0.15
+0.12
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS39.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS39.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs40/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs40/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/39.png">
+<img src="outputs/sig_plots/SBS/40.png">
 </td>
 </tr>
 <tr>
@@ -560,19 +553,19 @@ SBS39
 3
 </td>
 <td style="text-align:left;">
-SBS40
+SBS39
 </td>
 <td style="text-align:right;">
-761
+480
 </td>
 <td style="text-align:right;">
-0.13
+0.08
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS40.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS40.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs39/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs39/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/40.png">
+<img src="outputs/sig_plots/SBS/39.png">
 </td>
 </tr>
 <tr>
@@ -583,13 +576,13 @@ SBS40
 SBS1
 </td>
 <td style="text-align:right;">
-448
+438
 </td>
 <td style="text-align:right;">
-0.08
+0.07
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS1.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS1.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs1/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs1/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/SBS/1.png">
@@ -603,13 +596,13 @@ SBS1
 SBS13
 </td>
 <td style="text-align:right;">
-389
+369
 </td>
 <td style="text-align:right;">
-0.07
+0.06
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS13.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS13.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs13/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs13/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/SBS/13.png">
@@ -620,76 +613,16 @@ SBS13
 6
 </td>
 <td style="text-align:left;">
-SBS44
+SBS3
 </td>
 <td style="text-align:right;">
-267
+268
 </td>
 <td style="text-align:right;">
 0.05
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS44.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS44.tt</a>
-</td>
-<td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/44.png">
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:left;">
-SBS7a
-</td>
-<td style="text-align:right;">
-229
-</td>
-<td style="text-align:right;">
-0.04
-</td>
-<td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS7a.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS7a.tt</a>
-</td>
-<td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/7a.png">
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:left;">
-SBS25
-</td>
-<td style="text-align:right;">
-208
-</td>
-<td style="text-align:right;">
-0.04
-</td>
-<td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS25.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS25.tt</a>
-</td>
-<td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/25.png">
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:left;">
-SBS3
-</td>
-<td style="text-align:right;">
-177
-</td>
-<td style="text-align:right;">
-0.03
-</td>
-<td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS3.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS3.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs3/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs3/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/SBS/3.png">
@@ -697,19 +630,19 @@ SBS3
 </tr>
 <tr>
 <td style="text-align:right;">
-10
+7
 </td>
 <td style="text-align:left;">
 SBS5
 </td>
 <td style="text-align:right;">
-172
+256
 </td>
 <td style="text-align:right;">
-0.03
+0.04
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS5.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS5.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs5/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs5/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/SBS/5.png">
@@ -717,22 +650,82 @@ SBS5
 </tr>
 <tr>
 <td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+SBS44
+</td>
+<td style="text-align:right;">
+251
+</td>
+<td style="text-align:right;">
+0.04
+</td>
+<td style="text-align:left;">
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs44/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs44/</a>
+</td>
+<td style="text-align:left;">
+<img src="outputs/sig_plots/SBS/44.png">
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+SBS7a
+</td>
+<td style="text-align:right;">
+233
+</td>
+<td style="text-align:right;">
+0.04
+</td>
+<td style="text-align:left;">
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs7a/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs7a/</a>
+</td>
+<td style="text-align:left;">
+<img src="outputs/sig_plots/SBS/7a.png">
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+SBS86
+</td>
+<td style="text-align:right;">
+232
+</td>
+<td style="text-align:right;">
+0.04
+</td>
+<td style="text-align:left;">
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs86/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs86/</a>
+</td>
+<td style="text-align:left;">
+<img src="outputs/sig_plots/SBS/86.png">
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
 11
 </td>
 <td style="text-align:left;">
-SBS2
+SBS89
 </td>
 <td style="text-align:right;">
-163
+191
 </td>
 <td style="text-align:right;">
 0.03
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS2.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS2.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs89/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs89/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/2.png">
+<img src="outputs/sig_plots/SBS/89.png">
 </td>
 </tr>
 <tr>
@@ -740,19 +733,19 @@ SBS2
 12
 </td>
 <td style="text-align:left;">
-SBS12
+SBS25
 </td>
 <td style="text-align:right;">
-136
+164
 </td>
 <td style="text-align:right;">
-0.02
+0.03
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS12.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS12.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs25/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs25/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/12.png">
+<img src="outputs/sig_plots/SBS/25.png">
 </td>
 </tr>
 <tr>
@@ -760,19 +753,19 @@ SBS12
 13
 </td>
 <td style="text-align:left;">
-SBS58
+SBS2
 </td>
 <td style="text-align:right;">
-121
+161
 </td>
 <td style="text-align:right;">
-0.02
+0.03
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS58.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS58.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs2/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs2/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/58.png">
+<img src="outputs/sig_plots/SBS/2.png">
 </td>
 </tr>
 <tr>
@@ -783,13 +776,13 @@ SBS58
 SBS46
 </td>
 <td style="text-align:right;">
-94
+139
 </td>
 <td style="text-align:right;">
 0.02
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS46.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS46.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs46/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs46/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/SBS/46.png">
@@ -800,19 +793,19 @@ SBS46
 15
 </td>
 <td style="text-align:left;">
-SBS15
+SBS58
 </td>
 <td style="text-align:right;">
-68
+110
 </td>
 <td style="text-align:right;">
-0.01
+0.02
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS15.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS15.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs58/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs58/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/15.png">
+<img src="outputs/sig_plots/SBS/58.png">
 </td>
 </tr>
 <tr>
@@ -820,19 +813,19 @@ SBS15
 16
 </td>
 <td style="text-align:left;">
-SBS17b
+SBS12
 </td>
 <td style="text-align:right;">
-63
+92
 </td>
 <td style="text-align:right;">
-0.01
+0.02
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS17b.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS17b.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs12/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs12/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/17b.png">
+<img src="outputs/sig_plots/SBS/12.png">
 </td>
 </tr>
 <tr>
@@ -840,19 +833,19 @@ SBS17b
 17
 </td>
 <td style="text-align:left;">
-SBS30
+SBS15
 </td>
 <td style="text-align:right;">
-62
+77
 </td>
 <td style="text-align:right;">
 0.01
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS30.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS30.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs15/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs15/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/30.png">
+<img src="outputs/sig_plots/SBS/15.png">
 </td>
 </tr>
 <tr>
@@ -860,19 +853,19 @@ SBS30
 18
 </td>
 <td style="text-align:left;">
-SBS51
+SBS17b
 </td>
 <td style="text-align:right;">
-61
+67
 </td>
 <td style="text-align:right;">
 0.01
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS51.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS51.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs17b/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs17b/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/51.png">
+<img src="outputs/sig_plots/SBS/17b.png">
 </td>
 </tr>
 <tr>
@@ -880,19 +873,19 @@ SBS51
 19
 </td>
 <td style="text-align:left;">
-SBS35
+SBS93
 </td>
 <td style="text-align:right;">
-57
+65
 </td>
 <td style="text-align:right;">
 0.01
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS35.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS35.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs93/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs93/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/35.png">
+<img src="outputs/sig_plots/SBS/93.png">
 </td>
 </tr>
 <tr>
@@ -900,36 +893,16 @@ SBS35
 20
 </td>
 <td style="text-align:left;">
-SBS7d
-</td>
-<td style="text-align:right;">
-52
-</td>
-<td style="text-align:right;">
-0.01
-</td>
-<td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS7d.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS7d.tt</a>
-</td>
-<td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/7d.png">
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:left;">
 SBS34
 </td>
 <td style="text-align:right;">
-45
+49
 </td>
 <td style="text-align:right;">
 0.01
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS34.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS34.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs34/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs34/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/SBS/34.png">
@@ -937,22 +910,42 @@ SBS34
 </tr>
 <tr>
 <td style="text-align:right;">
-22
+21
 </td>
 <td style="text-align:left;">
-SBS16
+SBS51
 </td>
 <td style="text-align:right;">
-40
+48
 </td>
 <td style="text-align:right;">
 0.01
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS16.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS16.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs51/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs51/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/16.png">
+<img src="outputs/sig_plots/SBS/51.png">
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:left;">
+SBS7d
+</td>
+<td style="text-align:right;">
+47
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:left;">
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs7d/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs7d/</a>
+</td>
+<td style="text-align:left;">
+<img src="outputs/sig_plots/SBS/7d.png">
 </td>
 </tr>
 <tr>
@@ -960,19 +953,19 @@ SBS16
 23
 </td>
 <td style="text-align:left;">
-SBS84
+SBS30
 </td>
 <td style="text-align:right;">
-32
+38
 </td>
 <td style="text-align:right;">
 0.01
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS84.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS84.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs30/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs30/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/84.png">
+<img src="outputs/sig_plots/SBS/30.png">
 </td>
 </tr>
 <tr>
@@ -980,24 +973,44 @@ SBS84
 24
 </td>
 <td style="text-align:left;">
-SBS10b
+SBS84
 </td>
 <td style="text-align:right;">
-26
+36
 </td>
 <td style="text-align:right;">
-0.00
+0.01
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS10b.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS10b.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs84/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs84/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/10b.png">
+<img src="outputs/sig_plots/SBS/84.png">
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
 25
+</td>
+<td style="text-align:left;">
+SBS16
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:left;">
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs16/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs16/</a>
+</td>
+<td style="text-align:left;">
+<img src="outputs/sig_plots/SBS/16.png">
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+26
 </td>
 <td style="text-align:left;">
 SBS10a
@@ -1009,7 +1022,7 @@ SBS10a
 0.00
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS10a.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS10a.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs10a/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs10a/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/SBS/10a.png">
@@ -1017,42 +1030,22 @@ SBS10a
 </tr>
 <tr>
 <td style="text-align:right;">
-26
-</td>
-<td style="text-align:left;">
-SBS88
-</td>
-<td style="text-align:right;">
-18
-</td>
-<td style="text-align:right;">
-0.00
-</td>
-<td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS88.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS88.tt</a>
-</td>
-<td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/88.png">
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
 27
 </td>
 <td style="text-align:left;">
-SBS43
+SBS10b
 </td>
 <td style="text-align:right;">
-14
+23
 </td>
 <td style="text-align:right;">
 0.00
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS43.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS43.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs10b/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs10b/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/43.png">
+<img src="outputs/sig_plots/SBS/10b.png">
 </td>
 </tr>
 <tr>
@@ -1060,36 +1053,16 @@ SBS43
 28
 </td>
 <td style="text-align:left;">
-SBS32
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
-0.00
-</td>
-<td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS32.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS32.tt</a>
-</td>
-<td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/32.png">
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-29
-</td>
-<td style="text-align:left;">
 SBS6
 </td>
 <td style="text-align:right;">
-12
+9
 </td>
 <td style="text-align:right;">
 0.00
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS6.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS6.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs6/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs6/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/SBS/6.png">
@@ -1097,59 +1070,39 @@ SBS6
 </tr>
 <tr>
 <td style="text-align:right;">
+28
+</td>
+<td style="text-align:left;">
+SBS19
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:left;">
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs19/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs19/</a>
+</td>
+<td style="text-align:left;">
+<img src="outputs/sig_plots/SBS/19.png">
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
 30
-</td>
-<td style="text-align:left;">
-SBS90
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-0.00
-</td>
-<td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS90.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS90.tt</a>
-</td>
-<td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/90.png">
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-31
-</td>
-<td style="text-align:left;">
-SBS41
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0.00
-</td>
-<td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS41.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS41.tt</a>
-</td>
-<td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/41.png">
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-31
 </td>
 <td style="text-align:left;">
 SBS49
 </td>
 <td style="text-align:right;">
-4
+5
 </td>
 <td style="text-align:right;">
 0.00
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS49.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS49.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs49/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs49/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/SBS/49.png">
@@ -1157,22 +1110,42 @@ SBS49
 </tr>
 <tr>
 <td style="text-align:right;">
-33
+31
 </td>
 <td style="text-align:left;">
-SBS60
+SBS43
 </td>
 <td style="text-align:right;">
-1
+4
 </td>
 <td style="text-align:right;">
 0.00
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS60.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/SBS/SBS60.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs43/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs43/</a>
 </td>
 <td style="text-align:left;">
-<img src="outputs/sig_plots/SBS/60.png">
+<img src="outputs/sig_plots/SBS/43.png">
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:left;">
+SBS26
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:left;">
+<a href="https://cancer.sanger.ac.uk/signatures/sbs/sbs26/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/sbs/sbs26/</a>
+</td>
+<td style="text-align:left;">
+<img src="outputs/sig_plots/SBS/26.png">
 </td>
 </tr>
 </tbody>
@@ -1180,32 +1153,36 @@ SBS60
 </div>
 </div>
 </div>
-<div id="dbs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#dbs" class="anchor"></a>DBS</h2>
-<div id="plots-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plots-1" class="anchor"></a>Plots</h3>
+<div class="section level2">
+<h2 id="dbs">DBS<a class="anchor" aria-label="anchor" href="#dbs"></a>
+</h2>
+<div class="section level3">
+<h3 id="plots-1">Plots<a class="anchor" aria-label="anchor" href="#plots-1"></a>
+</h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dbs_counts</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_count_dbs.html">sig_count_dbs</a></span><span class="op">(</span>vcf_gr <span class="op">=</span> <span class="va">gr</span><span class="op">)</span>
+<span class="co">#&gt; Any neighbouring SNVs will be merged into DBS/MBS variants.</span>
+<span class="co">#&gt; Set the 'predefined_dbs_mbs' to 'TRUE' if you don't want this.</span>
 <span class="va">p_dbs</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_plot_dbs.html">sig_plot_dbs</a></span><span class="op">(</span>dbs_counts <span class="op">=</span> <span class="va">dbs_counts</span><span class="op">)</span>
 <span class="va">p_dbs</span><span class="op">$</span><span class="va">p_dbs_main</span> <span class="op">/</span> <span class="va">p_dbs</span><span class="op">$</span><span class="va">p_dbs_cont</span></code></pre></div>
 <p><img src="mutationalpatterns_files/figure-html/dbs_plots-1.png" width="90%"></p>
 </div>
-<div id="signature-contributions-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#signature-contributions-1" class="anchor"></a>Signature Contributions</h3>
+<div class="section level3">
+<h3 id="signature-contributions-1">Signature Contributions<a class="anchor" aria-label="anchor" href="#signature-contributions-1"></a>
+</h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sigs_dbs</span> <span class="op">&lt;-</span>
-  <span class="fu">MutationalPatterns</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MutationalPatterns/man/get_known_signatures.html">get_known_signatures</a></span><span class="op">(</span>muttype <span class="op">=</span> <span class="st">"dbs"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution.html">sig_contribution</a></span><span class="op">(</span>mut_mat <span class="op">=</span> <span class="va">dbs_counts</span>, signatures <span class="op">=</span> <span class="va">.</span><span class="op">)</span>
-<span class="va">sigs_dbs</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"DBS"</span>, outdir <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">outdir</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
+  <span class="fu">MutationalPatterns</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MutationalPatterns/man/get_known_signatures.html" class="external-link">get_known_signatures</a></span><span class="op">(</span>muttype <span class="op">=</span> <span class="st">"dbs"</span><span class="op">)</span> |&gt;
+  <span class="op">{</span>
+    \<span class="op">(</span><span class="va">sigs</span><span class="op">)</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution.html">sig_contribution</a></span><span class="op">(</span>mut_mat <span class="op">=</span> <span class="va">dbs_counts</span>, signatures <span class="op">=</span> <span class="va">sigs</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">(</span><span class="op">)</span>
+<span class="va">sigs_dbs</span> |&gt;
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"DBS"</span>, outdir <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">outdir</span><span class="op">)</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> |&gt;
+  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> |&gt;
+  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html" class="external-link">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; ">
-<table class="table table table-hover table-striped">
+<table class="table table table-hover table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 Rank
@@ -1241,7 +1218,7 @@ DBS4
 0.50
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS4.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS4.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/dbs/dbs4/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/dbs/dbs4/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/DBS/4.png">
@@ -1261,7 +1238,7 @@ DBS2
 0.24
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS2.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS2.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/dbs/dbs2/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/dbs/dbs2/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/DBS/2.png">
@@ -1281,7 +1258,7 @@ DBS6
 0.12
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS6.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS6.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/dbs/dbs6/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/dbs/dbs6/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/DBS/6.png">
@@ -1301,7 +1278,7 @@ DBS1
 0.07
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS1.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS1.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/dbs/dbs1/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/dbs/dbs1/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/DBS/1.png">
@@ -1321,7 +1298,7 @@ DBS7
 0.05
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS7.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS7.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/dbs/dbs7/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/dbs/dbs7/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/DBS/7.png">
@@ -1341,7 +1318,7 @@ DBS9
 0.02
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS9.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS9.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/dbs/dbs9/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/dbs/dbs9/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/DBS/9.png">
@@ -1361,7 +1338,7 @@ DBS10
 0.00
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS10.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS10.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/dbs/dbs10/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/dbs/dbs10/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/DBS/10.png">
@@ -1381,7 +1358,7 @@ DBS11
 0.00
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS11.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/DBS/DBS11.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/dbs/dbs11/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/dbs/dbs11/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/DBS/11.png">
@@ -1392,32 +1369,34 @@ DBS11
 </div>
 </div>
 </div>
-<div id="indels" class="section level2">
-<h2 class="hasAnchor">
-<a href="#indels" class="anchor"></a>INDELs</h2>
-<div id="plots-2" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plots-2" class="anchor"></a>Plots</h3>
+<div class="section level2">
+<h2 id="indels">INDELs<a class="anchor" aria-label="anchor" href="#indels"></a>
+</h2>
+<div class="section level3">
+<h3 id="plots-2">Plots<a class="anchor" aria-label="anchor" href="#plots-2"></a>
+</h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">indel_counts</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_count_indel.html">sig_count_indel</a></span><span class="op">(</span>vcf_gr <span class="op">=</span> <span class="va">gr</span>, ref_genome <span class="op">=</span> <span class="va">ref_genome</span><span class="op">)</span>
 <span class="va">p_indels</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_plot_indel.html">sig_plot_indel</a></span><span class="op">(</span>indel_counts <span class="op">=</span> <span class="va">indel_counts</span><span class="op">)</span>
 <span class="va">p_indels</span><span class="op">$</span><span class="va">p_indel_main</span> <span class="op">/</span> <span class="va">p_indels</span><span class="op">$</span><span class="va">p_indel_cont</span></code></pre></div>
 <p><img src="mutationalpatterns_files/figure-html/indel_plots-1.png" width="90%"></p>
 </div>
-<div id="signature-contributions-2" class="section level3">
-<h3 class="hasAnchor">
-<a href="#signature-contributions-2" class="anchor"></a>Signature Contributions</h3>
+<div class="section level3">
+<h3 id="signature-contributions-2">Signature Contributions<a class="anchor" aria-label="anchor" href="#signature-contributions-2"></a>
+</h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sigs_indel</span> <span class="op">&lt;-</span>
-  <span class="fu">MutationalPatterns</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MutationalPatterns/man/get_known_signatures.html">get_known_signatures</a></span><span class="op">(</span>muttype <span class="op">=</span> <span class="st">"indel"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution.html">sig_contribution</a></span><span class="op">(</span>mut_mat <span class="op">=</span> <span class="va">indel_counts</span>, signatures <span class="op">=</span> <span class="va">.</span><span class="op">)</span>
-<span class="va">sigs_indel</span> <span class="op">%&gt;%</span>
-  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"ID"</span>, outdir <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">outdir</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
+  <span class="fu">MutationalPatterns</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MutationalPatterns/man/get_known_signatures.html" class="external-link">get_known_signatures</a></span><span class="op">(</span>muttype <span class="op">=</span> <span class="st">"indel"</span><span class="op">)</span> |&gt;
+  <span class="op">{</span>
+    \<span class="op">(</span><span class="va">sigs</span><span class="op">)</span> <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution.html">sig_contribution</a></span><span class="op">(</span>mut_mat <span class="op">=</span> <span class="va">indel_counts</span>, signatures <span class="op">=</span> <span class="va">sigs</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">(</span><span class="op">)</span>
+<span class="va">sigs_indel</span> |&gt;
+  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/sig_contribution_table.html">sig_contribution_table</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"ID"</span>, outdir <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">outdir</span><span class="op">)</span> |&gt;
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span><span class="op">)</span> |&gt;
+  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hover"</span>, <span class="st">"striped"</span><span class="op">)</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> |&gt;
+  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/scroll_box.html" class="external-link">scroll_box</a></span><span class="op">(</span>height <span class="op">=</span> <span class="st">"400px"</span><span class="op">)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; ">
-<table class="table table table-hover table-striped">
+<table class="table table table-hover table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 Rank
@@ -1453,7 +1432,7 @@ ID6
 0.46
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID6.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID6.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id6/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id6/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/6.png">
@@ -1473,7 +1452,7 @@ ID8
 0.16
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID8.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID8.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id8/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id8/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/8.png">
@@ -1493,7 +1472,7 @@ ID1
 0.13
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID1.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID1.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id1/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id1/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/1.png">
@@ -1513,7 +1492,7 @@ ID4
 0.06
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID4.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID4.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id4/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id4/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/4.png">
@@ -1533,7 +1512,7 @@ ID9
 0.05
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID9.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID9.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id9/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id9/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/9.png">
@@ -1553,7 +1532,7 @@ ID2
 0.05
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID2.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID2.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id2/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id2/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/2.png">
@@ -1573,7 +1552,7 @@ ID5
 0.04
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID5.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID5.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id5/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id5/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/5.png">
@@ -1593,7 +1572,7 @@ ID3
 0.02
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID3.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID3.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id3/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id3/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/3.png">
@@ -1613,7 +1592,7 @@ ID7
 0.01
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID7.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID7.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id7/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id7/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/7.png">
@@ -1633,7 +1612,7 @@ ID16
 0.01
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID16.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID16.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id16/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id16/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/16.png">
@@ -1653,7 +1632,7 @@ ID17
 0.01
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID17.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID17.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id17/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id17/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/17.png">
@@ -1673,7 +1652,7 @@ ID14
 0.00
 </td>
 <td style="text-align:left;">
-<a href="https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID14.tt" class="uri">https://cancer.sanger.ac.uk/cosmic/signatures/ID/ID14.tt</a>
+<a href="https://cancer.sanger.ac.uk/signatures/id/id14/" class="external-link uri">https://cancer.sanger.ac.uk/signatures/id/id14/</a>
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/ID/14.png">
@@ -1684,9 +1663,9 @@ ID14
 </div>
 </div>
 </div>
-<div id="session-info" class="section level2">
-<h2 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session Info</h2>
+<div class="section level2">
+<h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
 <table class="table">
 <caption>
 Platform information.
@@ -1705,7 +1684,7 @@ value
 version
 </td>
 <td style="text-align:left;">
-R version 4.0.3 (2020-10-10)
+R version 4.1.1 (2021-08-10)
 </td>
 </tr>
 <tr>
@@ -1713,7 +1692,7 @@ R version 4.0.3 (2020-10-10)
 os
 </td>
 <td style="text-align:left;">
-Ubuntu 18.04.5 LTS
+Ubuntu 20.04.3 LTS
 </td>
 </tr>
 <tr>
@@ -1737,7 +1716,7 @@ X11
 language
 </td>
 <td style="text-align:left;">
-(EN)
+en
 </td>
 </tr>
 <tr>
@@ -1769,7 +1748,15 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2020-12-11
+2021-12-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pandoc
+</td>
+<td style="text-align:left;">
+2.16.2 @ /usr/share/miniconda/envs/pkgdown_gpgr/bin/ (via rmarkdown)
 </td>
 </tr>
 </tbody>
@@ -1795,10 +1782,10 @@ datestamp
 base
 </td>
 <td style="text-align:left;">
-4.0.3
+4.1.1
 </td>
 <td style="text-align:left;">
-2020-12-06
+2021-08-28
 </td>
 </tr>
 <tr>
@@ -1806,10 +1793,10 @@ base
 gpgr
 </td>
 <td style="text-align:left;">
-0.1.5
+0.2.0
 </td>
 <td style="text-align:left;">
-2020-12-11
+2021-12-07
 </td>
 </tr>
 <tr>
@@ -1817,40 +1804,37 @@ gpgr
 MutationalPatterns
 </td>
 <td style="text-align:left;">
-3.0.0
+3.4.0
 </td>
 <td style="text-align:left;">
-2020-10-27
+2021-10-26
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
-
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p>Developed by Peter Diakumis.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p></p>
+<p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="pkgdown-footer-right">
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
 
+  
 
   </body>
 </html>
