@@ -148,22 +148,8 @@ qc$summary |>
 ## Session Info
 
 ```{r session_info, echo=FALSE}
-si <- devtools::session_info(include_base = TRUE)
-si_pl <- unclass(si$platform) |>
-  dplyr::as_tibble() |>
-  t()
 pkgs_of_interest <- c("base", "gpgr")
-si_pkg <- unclass(si$packages) |>
-  dplyr::as_tibble() |>
-  dplyr::select(package, version = ondiskversion, datestamp = date) |>
-  dplyr::filter(package %in% pkgs_of_interest)
-
-dplyr::tibble(
-  var = row.names(si_pl),
-  value = si_pl[, , drop = TRUE]
-) |>
-  knitr::kable(format = "html", caption = "Platform information.")
-
-si_pkg |>
-  knitr::kable(format = "html", caption = "Main packages used in this vignette.")
+si <- gpgr::session_info_kable(pkgs_of_interest)
+si$si_pkg
+si$si_pl
 ```
