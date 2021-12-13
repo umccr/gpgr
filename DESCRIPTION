@@ -19,7 +19,7 @@ Depends:
     R (>= 4.1)
 biocViews:
 Remotes:
-    pdiakumis/signature.tools.lib,
+    umccr/signature.tools.lib,
     UMCUGenetics/mutSigExtractor,
     UMCUGenetics/CHORD
 Imports:

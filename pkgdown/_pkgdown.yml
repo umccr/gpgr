@@ -25,6 +25,12 @@ reference:
 - contents:
   - starts_with("purple")
 
+- title: "LINX"
+  desc: >
+    Functions related to LINX (https://github.com/hartwigmedical/hmftools/tree/master/linx)
+- contents:
+  - starts_with("linx")
+
 - title: "MutationalPatterns"
   desc: >
     Functions related to MutationalPatterns (https://github.com/UMCUGenetics/MutationalPatterns)

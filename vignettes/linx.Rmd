@@ -1,0 +1,64 @@
+---
+title: "LINX"
+author: "Peter Diakumis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+
+vignette: >
+  %\VignetteIndexEntry{PURPLE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+LINX
+====
+- <https://github.com/hartwigmedical/hmftools/tree/master/linx>.
+- Annotates, interprets and visualises SVs.
+  - groups SV calls together into events
+- Inputs: GRIDSS SVs, PURPLE CNVs, gene panel, known fusions/fragile sites/LINEs
+
+Outputs
+-------
+
+- **Annotations**:
+  - additional annotations of each non PON filtered break junction
+  - `sample.svs.tsv`
+- **Breakends**:
+  - impact of each non PON filtered break junction on each overlapping gene
+  - `sample.breakend.tsv`
+- **Clusters**:
+  - clustering of all non PON filtered SV events and their resolved
+    classification.
+  - `sample.clusters.tsv`
+- **Links**:
+  - segments joining break junction pairs predicted to be linked and phased in
+    _cis_ on the derivative chromosome.
+  - `sample.links.tsv`
+- **Fusions**:
+  - All inframe and outframe fusions predicted in the sample including HMF
+    fusion knowledgebase annotations.
+  - `sample.fusion.tsv`
+- **Driver Catalog**:
+  - Reproduction of the driver catalog produced by PURPLE with homozygous
+    disruption events appended.
+  - `sample.driver.catalog.tsv`
+- **Drivers**:
+  - Linkage of drivers from driver catalog to SV cluster which contributed to
+    those drivers including LOH, deletion, disruption and amplification events.
+  - `sample.driver.tsv`
+- **Viral Inserts**: (Not Documented)
+
+### 'vis' outputs
+
+- **Copy Number**
+  - `linx.vis_copy_number.tsv`
+- **Fusion**
+  - `linx.vis_fusion.tsv`
+- **Gene Exon**
+  - `linx.vis_gene_exon.tsv`
+- **Protein Domain**
+  - `linx.vis_protein_domain.tsv`
+- **Segments**
+  - `linx.vis_segments.tsv`
+- **SV Data**
+  - `linx.vis_sv_data.tsv`
