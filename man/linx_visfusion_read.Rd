@@ -16,6 +16,6 @@ The input file as a tibble.
 Reads the \code{linx.vis_fusion.tsv} file.
 }
 \examples{
-x <- system.file("extdata/linx/tables/linx.vis_fusion.tsv", package = "gpgr")
+x <- system.file("extdata/linx/tables/linx.vis_fusion.tsv.gz", package = "gpgr")
 (l <- linx_visfusion_read(x))
 }

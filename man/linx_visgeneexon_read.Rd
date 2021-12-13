@@ -16,6 +16,6 @@ The input file as a tibble.
 Reads the \code{linx.vis_gene_exon.tsv} file.
 }
 \examples{
-x <- system.file("extdata/linx/tables/linx.vis_gene_exon.tsv", package = "gpgr")
+x <- system.file("extdata/linx/tables/linx.vis_gene_exon.tsv.gz", package = "gpgr")
 (l <- linx_visgeneexon_read(x))
 }

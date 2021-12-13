@@ -16,6 +16,6 @@ The input file as a tibble.
 Reads the \code{linx.drivers.tsv} file.
 }
 \examples{
-x <- system.file("extdata/linx/tables/linx.drivers.tsv", package = "gpgr")
+x <- system.file("extdata/linx/tables/linx.drivers.tsv.gz", package = "gpgr")
 (l <- linx_drivers_read(x))
 }

@@ -16,6 +16,6 @@ The input file as a tibble.
 Reads the \code{linx.vis_protein_domain.tsv} file.
 }
 \examples{
-x <- system.file("extdata/linx/tables/linx.vis_protein_domain.tsv", package = "gpgr")
+x <- system.file("extdata/linx/tables/linx.vis_protein_domain.tsv.gz", package = "gpgr")
 (l <- linx_visproteindomain_read(x))
 }

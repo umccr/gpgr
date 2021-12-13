@@ -16,6 +16,6 @@ The input file as a tibble.
 Reads the \code{linx.vis_segments.tsv} file.
 }
 \examples{
-x <- system.file("extdata/linx/tables/linx.vis_segments.tsv", package = "gpgr")
+x <- system.file("extdata/linx/tables/linx.vis_segments.tsv.gz", package = "gpgr")
 (l <- linx_vissegments_read(x))
 }

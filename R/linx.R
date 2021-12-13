@@ -6,7 +6,7 @@
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.svs.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.svs.tsv.gz", package = "gpgr")
 #' (l <- linx_svs_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "localTICountEnd")
@@ -38,7 +38,7 @@ linx_svs_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.breakend.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.breakend.tsv.gz", package = "gpgr")
 #' (l <- linx_breakend_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "junctionCopyNumber")
@@ -71,7 +71,7 @@ linx_breakend_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.clusters.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.clusters.tsv.gz", package = "gpgr")
 #' (l <- linx_clusters_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "clusterDesc")
@@ -97,7 +97,7 @@ linx_clusters_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.links.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr")
 #' (l <- linx_links_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "ecDna")
@@ -126,7 +126,7 @@ linx_links_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.fusion.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.fusion.tsv.gz", package = "gpgr")
 #' (l <- linx_fusion_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "junctionCopyNumber")
@@ -158,7 +158,7 @@ linx_fusion_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.driver.catalog.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.driver.catalog.tsv.gz", package = "gpgr")
 #' (l <- linx_drivercatalog_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "maxCopyNumber")
@@ -186,7 +186,7 @@ linx_drivercatalog_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.drivers.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.drivers.tsv.gz", package = "gpgr")
 #' (l <- linx_drivers_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "eventType")
@@ -211,7 +211,7 @@ linx_drivers_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.vis_copy_number.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.vis_copy_number.tsv.gz", package = "gpgr")
 #' (l <- linx_viscopynumber_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "BAF")
@@ -237,7 +237,7 @@ linx_viscopynumber_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.vis_fusion.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.vis_fusion.tsv.gz", package = "gpgr")
 #' (l <- linx_visfusion_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "FusedExonDown")
@@ -267,7 +267,7 @@ linx_visfusion_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.vis_gene_exon.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.vis_gene_exon.tsv.gz", package = "gpgr")
 #' (l <- linx_visgeneexon_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "ExonEnd")
@@ -294,7 +294,7 @@ linx_visgeneexon_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.vis_protein_domain.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.vis_protein_domain.tsv.gz", package = "gpgr")
 #' (l <- linx_visproteindomain_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "Info")
@@ -320,7 +320,7 @@ linx_visproteindomain_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.vis_segments.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.vis_segments.tsv.gz", package = "gpgr")
 #' (l <- linx_vissegments_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "InDoubleMinute")
@@ -346,7 +346,7 @@ linx_vissegments_read <- function(x) {
 #'
 #' @return The input file as a tibble.
 #' @examples
-#' x <- system.file("extdata/linx/tables/linx.vis_sv_data.tsv", package = "gpgr")
+#' x <- system.file("extdata/linx/tables/linx.vis_sv_data.tsv.gz", package = "gpgr")
 #' (l <- linx_vissvdata_read(x))
 #' @testexamples
 #' expect_equal(colnames(l)[ncol(l)], "InDoubleMinute")

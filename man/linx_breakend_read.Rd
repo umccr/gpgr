@@ -16,6 +16,6 @@ The input file as a tibble.
 Reads the \code{linx.breakend.tsv} file.
 }
 \examples{
-x <- system.file("extdata/linx/tables/linx.breakend.tsv", package = "gpgr")
+x <- system.file("extdata/linx/tables/linx.breakend.tsv.gz", package = "gpgr")
 (l <- linx_breakend_read(x))
 }

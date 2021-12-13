@@ -50,7 +50,7 @@ Table Outputs
 - `svs.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.svs.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.svs.tsv.gz", package = "gpgr") |>
   gpgr::linx_svs_read() |>
   dt_table()
 ```
@@ -62,7 +62,7 @@ system.file("extdata/linx/tables/linx.svs.tsv", package = "gpgr") |>
 - `breakend.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.breakend.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.breakend.tsv.gz", package = "gpgr") |>
   gpgr::linx_breakend_read() |>
   dt_table()
 ```
@@ -74,7 +74,7 @@ system.file("extdata/linx/tables/linx.breakend.tsv", package = "gpgr") |>
 - `clusters.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.clusters.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.clusters.tsv.gz", package = "gpgr") |>
   gpgr::linx_clusters_read() |>
   dt_table()
 ```
@@ -86,7 +86,7 @@ system.file("extdata/linx/tables/linx.clusters.tsv", package = "gpgr") |>
 - `links.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.links.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr") |>
   gpgr::linx_links_read() |>
   dt_table()
 ```
@@ -98,7 +98,7 @@ system.file("extdata/linx/tables/linx.links.tsv", package = "gpgr") |>
 - `fusion.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.fusion.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.fusion.tsv.gz", package = "gpgr") |>
   gpgr::linx_fusion_read() |>
   dt_table()
 ```
@@ -110,7 +110,7 @@ system.file("extdata/linx/tables/linx.fusion.tsv", package = "gpgr") |>
 - `driver.catalog.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.driver.catalog.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.driver.catalog.tsv.gz", package = "gpgr") |>
   gpgr::linx_drivercatalog_read() |>
   dt_table()
 ```
@@ -122,7 +122,7 @@ system.file("extdata/linx/tables/linx.driver.catalog.tsv", package = "gpgr") |>
 - `drivers.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.drivers.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.drivers.tsv.gz", package = "gpgr") |>
   gpgr::linx_drivers_read() |>
   dt_table()
 ```
@@ -136,7 +136,7 @@ system.file("extdata/linx/tables/linx.drivers.tsv", package = "gpgr") |>
 - `linx.vis_copy_number.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_copy_number.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.vis_copy_number.tsv.gz", package = "gpgr") |>
   gpgr::linx_viscopynumber_read() |>
   dt_table()
 ```
@@ -146,7 +146,7 @@ system.file("extdata/linx/tables/linx.vis_copy_number.tsv", package = "gpgr") |>
 - `linx.vis_fusion.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_fusion.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.vis_fusion.tsv.gz", package = "gpgr") |>
   gpgr::linx_visfusion_read() |>
   dt_table()
 ```
@@ -156,7 +156,7 @@ system.file("extdata/linx/tables/linx.vis_fusion.tsv", package = "gpgr") |>
 - `linx.vis_gene_exon.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_gene_exon.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.vis_gene_exon.tsv.gz", package = "gpgr") |>
   gpgr::linx_visgeneexon_read() |>
   dt_table()
 ```
@@ -166,7 +166,7 @@ system.file("extdata/linx/tables/linx.vis_gene_exon.tsv", package = "gpgr") |>
 - `linx.vis_protein_domain.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_protein_domain.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.vis_protein_domain.tsv.gz", package = "gpgr") |>
   gpgr::linx_visproteindomain_read() |>
   dt_table()
 ```
@@ -176,7 +176,7 @@ system.file("extdata/linx/tables/linx.vis_protein_domain.tsv", package = "gpgr")
 - `linx.vis_segments.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_segments.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.vis_segments.tsv.gz", package = "gpgr") |>
   gpgr::linx_vissegments_read() |>
   dt_table()
 ```
@@ -186,7 +186,7 @@ system.file("extdata/linx/tables/linx.vis_segments.tsv", package = "gpgr") |>
 - `linx.vis_sv_data.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_sv_data.tsv", package = "gpgr") |>
+system.file("extdata/linx/tables/linx.vis_sv_data.tsv.gz", package = "gpgr") |>
   gpgr::linx_vissvdata_read() |>
   dt_table()
 ```
