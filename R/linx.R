@@ -201,8 +201,7 @@ linx_drivers_read <- function(x) {
   d
 }
 
-
-#### 'vis' outputs ####
+#---- 'vis' outputs ----#
 
 #' Read LINX VisCopyNumber File
 #'
