@@ -2,10 +2,12 @@
 title: "LINX"
 author: "Peter Diakumis"
 date: "`r Sys.Date()`"
-output:
-  html_document:
-    toc: true
-    css: style.css
+output: rmarkdown::html_vignette
+
+vignette: >
+  %\VignetteIndexEntry{LINX}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, message=FALSE}
