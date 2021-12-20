@@ -64,6 +64,7 @@ reference:
   - vcf_is_empty
   - get_genome_obj
   - pkg_exists
+  - session_info_kable
 
 news:
   one_page: true

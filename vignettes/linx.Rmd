@@ -20,28 +20,32 @@ require(DT)
 
 ```{r funcs}
 dt_table <- function(x) {
-  DT::datatable(
-    x,
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
-    class = "cell-border display compact",
-    rownames = FALSE,
-    extensions = c("Scroller", "Buttons", "KeyTable"),
-    options = list(
-      scroller = TRUE, scrollY = 400, scrollX = TRUE,
-      autoWidth = FALSE, keys = TRUE,
-      buttons = c("csv", "excel"), dom = "Blfrtip"
+  # select 10 random rows
+  x |>
+    dplyr::slice_sample(n = 10) |>
+    DT::datatable(
+      filter = list(position = "top", clear = FALSE, plain = TRUE),
+      class = "cell-border display compact",
+      rownames = FALSE,
+      extensions = c("Scroller", "Buttons", "KeyTable"),
+      options = list(
+        scroller = TRUE, scrollY = 400, scrollX = TRUE,
+        autoWidth = FALSE, keys = TRUE,
+        buttons = c("csv", "excel"), dom = "Blfrtip"
+      )
     )
-  )
 }
 ```
 
 
-LINX
-====
+Introduction
+============
+
+LINX: annotation, interpretation and visualisation tool for structural variants
+
 - <https://github.com/hartwigmedical/hmftools/tree/master/linx>.
-- Annotates, interprets and visualises SVs.
-  - groups SV calls together into events
-- Inputs: GRIDSS SVs, PURPLE CNVs, gene panel, known fusions/fragile sites/LINEs
+- groups SV calls together into events
+- inputs: GRIDSS SVs, PURPLE CNVs, gene panel, known fusions/fragile sites/LINEs
 
 Table Outputs
 -------------
