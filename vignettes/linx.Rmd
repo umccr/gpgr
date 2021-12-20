@@ -1,0 +1,207 @@
+---
+title: "LINX"
+author: "Peter Diakumis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+
+vignette: >
+  %\VignetteIndexEntry{LINX}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, message=FALSE}
+require(gpgr)
+require(devtools)
+require(dplyr)
+require(knitr)
+require(DT)
+```
+
+```{r funcs}
+dt_table <- function(x) {
+  # select 10 random rows
+  x |>
+    dplyr::slice_sample(n = 10) |>
+    DT::datatable(
+      filter = list(position = "top", clear = FALSE, plain = TRUE),
+      class = "cell-border display compact",
+      rownames = FALSE,
+      extensions = c("Scroller", "Buttons", "KeyTable"),
+      options = list(
+        scroller = TRUE, scrollY = 400, scrollX = TRUE,
+        autoWidth = FALSE, keys = TRUE,
+        buttons = c("csv", "excel"), dom = "Blfrtip"
+      )
+    )
+}
+```
+
+
+Introduction
+============
+
+LINX: annotation, interpretation and visualisation tool for structural variants
+
+- <https://github.com/hartwigmedical/hmftools/tree/master/linx>.
+- groups SV calls together into events
+- inputs: GRIDSS SVs, PURPLE CNVs, gene panel, known fusions/fragile sites/LINEs
+
+Table Outputs
+-------------
+
+### Annotations
+
+- additional annotations of each non PON filtered break junction
+- `svs.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.svs.tsv.gz", package = "gpgr") |>
+  gpgr::linx_svs_read() |>
+  dt_table()
+```
+
+
+### Breakends
+
+- impact of each non PON filtered break junction on each overlapping gene
+- `breakend.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.breakend.tsv.gz", package = "gpgr") |>
+  gpgr::linx_breakend_read() |>
+  dt_table()
+```
+
+### Clusters
+
+- clustering of all non PON filtered SV events and their resolved
+  classification.
+- `clusters.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.clusters.tsv.gz", package = "gpgr") |>
+  gpgr::linx_clusters_read() |>
+  dt_table()
+```
+
+### Links
+
+- segments joining break junction pairs predicted to be linked and phased in
+  _cis_ on the derivative chromosome.
+- `links.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr") |>
+  gpgr::linx_links_read() |>
+  dt_table()
+```
+
+### Fusions
+
+- All inframe and outframe fusions predicted in the sample including HMF
+  fusion knowledgebase annotations.
+- `fusion.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.fusion.tsv.gz", package = "gpgr") |>
+  gpgr::linx_fusion_read() |>
+  dt_table()
+```
+
+### Driver Catalog
+
+- Reproduction of the driver catalog produced by PURPLE with homozygous
+  disruption events appended.
+- `driver.catalog.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.driver.catalog.tsv.gz", package = "gpgr") |>
+  gpgr::linx_drivercatalog_read() |>
+  dt_table()
+```
+
+### Drivers
+
+- Linkage of drivers from driver catalog to SV cluster which contributed to
+  those drivers including LOH, deletion, disruption and amplification events.
+- `drivers.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.drivers.tsv.gz", package = "gpgr") |>
+  gpgr::linx_drivers_read() |>
+  dt_table()
+```
+
+### Viral Inserts (Not Documented)
+
+## Table 'vis' outputs
+
+### Copy Number
+
+- `linx.vis_copy_number.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.vis_copy_number.tsv.gz", package = "gpgr") |>
+  gpgr::linx_viscopynumber_read() |>
+  dt_table()
+```
+
+### Fusion
+
+- `linx.vis_fusion.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.vis_fusion.tsv.gz", package = "gpgr") |>
+  gpgr::linx_visfusion_read() |>
+  dt_table()
+```
+
+### Gene Exon
+
+- `linx.vis_gene_exon.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.vis_gene_exon.tsv.gz", package = "gpgr") |>
+  gpgr::linx_visgeneexon_read() |>
+  dt_table()
+```
+
+### Protein Domain
+
+- `linx.vis_protein_domain.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.vis_protein_domain.tsv.gz", package = "gpgr") |>
+  gpgr::linx_visproteindomain_read() |>
+  dt_table()
+```
+
+### Segments
+
+- `linx.vis_segments.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.vis_segments.tsv.gz", package = "gpgr") |>
+  gpgr::linx_vissegments_read() |>
+  dt_table()
+```
+
+### SV Data
+
+- `linx.vis_sv_data.tsv`
+
+```{r}
+system.file("extdata/linx/tables/linx.vis_sv_data.tsv.gz", package = "gpgr") |>
+  gpgr::linx_vissvdata_read() |>
+  dt_table()
+```
+
+## Session Info
+
+```{r session_info, echo=FALSE}
+pkgs_of_interest <- c("base", "gpgr")
+si <- gpgr::session_info_kable(pkgs_of_interest)
+si$si_pkg
+si$si_pl
+```

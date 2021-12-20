@@ -19,7 +19,7 @@ Depends:
     R (>= 4.1)
 biocViews:
 Remotes:
-    pdiakumis/signature.tools.lib,
+    umccr/signature.tools.lib,
     UMCUGenetics/mutSigExtractor,
     UMCUGenetics/CHORD
 Imports:
@@ -49,6 +49,7 @@ Suggests:
     BSgenome.Hsapiens.UCSC.hg38,
     BSgenome.Hsapiens.1000genomes.hs37d5,
     devtools,
+    DT,
     glue,
     kableExtra,
     knitr,

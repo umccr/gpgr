@@ -22,6 +22,8 @@ requirements:
     - r-bedr
     - r-chord
     - r-cli
+    - r-dplyr
+    - r-dt
     - r-ggplot2
     - r-gt
     - r-gtools
@@ -39,6 +41,8 @@ requirements:
     - r-bedr
     - r-chord
     - r-cli
+    - r-dplyr
+    - r-dt
     - r-ggplot2
     - r-gt
     - r-gtools
