@@ -19,6 +19,9 @@
     <loc>https://umccr.github.io/gpgr/articles/index.html</loc>
   </url>
   <url>
+    <loc>https://umccr.github.io/gpgr/articles/linx.html</loc>
+  </url>
+  <url>
     <loc>https://umccr.github.io/gpgr/articles/mutationalpatterns.html</loc>
   </url>
   <url>
@@ -88,6 +91,45 @@
     <loc>https://umccr.github.io/gpgr/reference/is_vcf.html</loc>
   </url>
   <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_breakend_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_clusters_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_drivercatalog_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_drivers_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_fusion_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_links_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_svs_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_viscopynumber_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_visfusion_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_visgeneexon_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_visproteindomain_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_vissegments_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_vissvdata_read.html</loc>
+  </url>
+  <url>
     <loc>https://umccr.github.io/gpgr/reference/mkdir.html</loc>
   </url>
   <url>
@@ -134,6 +176,9 @@
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/purple_version_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/session_info_kable.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/sig_contribution.html</loc>

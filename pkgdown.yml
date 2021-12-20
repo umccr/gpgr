@@ -4,9 +4,10 @@ pkgdown_sha: ~
 articles:
   chord: chord.html
   hrdetect: hrdetect.html
+  linx: linx.html
   mutationalpatterns: mutationalpatterns.html
   purple: purple.html
-last_built: 2021-12-07T13:53Z
+last_built: 2021-12-20T04:18Z
 urls:
   reference: https://umccr.github.io/gpgr/reference
   article: https://umccr.github.io/gpgr/articles

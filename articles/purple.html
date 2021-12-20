@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/chord.html">CHORD</a>
     <a class="dropdown-item" href="../articles/hrdetect.html">HRDetect</a>
+    <a class="dropdown-item" href="../articles/linx.html">LINX</a>
     <a class="dropdown-item" href="../articles/mutationalpatterns.html">MutationalPatterns</a>
     <a class="dropdown-item" href="../articles/purple.html">PURPLE</a>
   </div>
@@ -74,7 +75,7 @@
       <img src="" class="logo" alt=""><h1>PURPLE</h1>
                         <h4 data-toc-skip class="author">Peter Diakumis</h4>
             
-            <h4 data-toc-skip class="date">2021-12-07</h4>
+            <h4 data-toc-skip class="date">2021-12-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/vignettes/purple.Rmd" class="external-link"><code>vignettes/purple.Rmd</code></a></small>
       <div class="d-none name"><code>purple.Rmd</code></div>
@@ -84,9 +85,11 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://umccr.github.io/gpgr/">gpgr</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'gpgr' was built under R version 4.1.2</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'knitr' was built under R version 4.1.2</span></code></pre></div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -2936,137 +2939,78 @@ Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
 <table class="table">
-<caption>
-Platform information.
-</caption>
-<thead><tr>
-<th style="text-align:left;">
-var
-</th>
-<th style="text-align:left;">
-value
-</th>
+<caption>Main packages used in this vignette.</caption>
+<thead><tr class="header">
+<th align="left">package</th>
+<th align="left">version</th>
+<th align="left">datestamp</th>
+<th align="left">source</th>
 </tr></thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-version
-</td>
-<td style="text-align:left;">
-R version 4.1.1 (2021-08-10)
-</td>
+<tr class="odd">
+<td align="left">base</td>
+<td align="left">4.1.1</td>
+<td align="left">2021-08-28</td>
+<td align="left">local</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-os
-</td>
-<td style="text-align:left;">
-Ubuntu 20.04.3 LTS
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-system
-</td>
-<td style="text-align:left;">
-x86_64, linux-gnu
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ui
-</td>
-<td style="text-align:left;">
-X11
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-language
-</td>
-<td style="text-align:left;">
-en
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-collate
-</td>
-<td style="text-align:left;">
-C.UTF-8
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ctype
-</td>
-<td style="text-align:left;">
-C.UTF-8
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-tz
-</td>
-<td style="text-align:left;">
-Etc/UTC
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-date
-</td>
-<td style="text-align:left;">
-2021-12-07
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pandoc
-</td>
-<td style="text-align:left;">
-2.16.2 @ /usr/share/miniconda/envs/pkgdown_gpgr/bin/ (via rmarkdown)
-</td>
+<tr class="even">
+<td align="left">gpgr</td>
+<td align="left">0.2.1</td>
+<td align="left">2021-12-20</td>
+<td align="left">local</td>
 </tr>
 </tbody>
 </table>
 <table class="table">
-<caption>
-Main packages used in this vignette.
-</caption>
-<thead><tr>
-<th style="text-align:left;">
-package
-</th>
-<th style="text-align:left;">
-version
-</th>
-<th style="text-align:left;">
-datestamp
-</th>
+<caption>Platform information.</caption>
+<colgroup>
+<col width="11%">
+<col width="88%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">name</th>
+<th align="left">value</th>
 </tr></thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-base
-</td>
-<td style="text-align:left;">
-4.1.1
-</td>
-<td style="text-align:left;">
-2021-08-28
-</td>
+<tr class="odd">
+<td align="left">version</td>
+<td align="left">R version 4.1.1 (2021-08-10)</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-gpgr
-</td>
-<td style="text-align:left;">
-0.2.0
-</td>
-<td style="text-align:left;">
-2021-12-07
-</td>
+<tr class="even">
+<td align="left">os</td>
+<td align="left">Ubuntu 20.04.3 LTS</td>
+</tr>
+<tr class="odd">
+<td align="left">system</td>
+<td align="left">x86_64, linux-gnu</td>
+</tr>
+<tr class="even">
+<td align="left">ui</td>
+<td align="left">X11</td>
+</tr>
+<tr class="odd">
+<td align="left">language</td>
+<td align="left">en</td>
+</tr>
+<tr class="even">
+<td align="left">collate</td>
+<td align="left">C.UTF-8</td>
+</tr>
+<tr class="odd">
+<td align="left">ctype</td>
+<td align="left">C.UTF-8</td>
+</tr>
+<tr class="even">
+<td align="left">tz</td>
+<td align="left">Etc/UTC</td>
+</tr>
+<tr class="odd">
+<td align="left">date</td>
+<td align="left">2021-12-20</td>
+</tr>
+<tr class="even">
+<td align="left">pandoc</td>
+<td align="left">2.16.2 @ /usr/share/miniconda/envs/pkgdown_gpgr/bin/ (via rmarkdown)</td>
 </tr>
 </tbody>
 </table>
