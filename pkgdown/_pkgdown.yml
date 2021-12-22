@@ -7,18 +7,6 @@ authors:
     href: https://github.com/pdiakumis
 
 reference:
-- title: "CHORD"
-  desc: >
-    Functions related to CHORD (https://github.com/UMCUGenetics/CHORD)
-- contents:
-  - starts_with("chord")
-
-- title: "HRDetect"
-  desc: >
-    Functions related to HRDetect (https://github.com/Nik-Zainal-Group/signature.tools.lib)
-- contents:
-  - starts_with("hrdetect")
-
 - title: "PURPLE"
   desc: >
     Functions related to PURPLE (https://github.com/hartwigmedical/hmftools/tree/master/purple)
@@ -30,13 +18,6 @@ reference:
     Functions related to LINX (https://github.com/hartwigmedical/hmftools/tree/master/linx)
 - contents:
   - starts_with("linx")
-
-- title: "MutationalPatterns"
-  desc: >
-    Functions related to MutationalPatterns (https://github.com/UMCUGenetics/MutationalPatterns)
-- contents:
-  - cosmic_signatures_2015
-  - starts_with("sig")
 
 - title: "umccrise"
   desc: >
