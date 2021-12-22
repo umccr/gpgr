@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,10 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/chord.html">CHORD</a>
-    <a class="dropdown-item" href="../articles/hrdetect.html">HRDetect</a>
     <a class="dropdown-item" href="../articles/linx.html">LINX</a>
-    <a class="dropdown-item" href="../articles/mutationalpatterns.html">MutationalPatterns</a>
     <a class="dropdown-item" href="../articles/purple.html">PURPLE</a>
   </div>
 </li>
@@ -67,9 +64,9 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>hrdetect_res</dt>
-<dd><p>Result from running <code><a href="hrdetect_run.html">hrdetect_run()</a></code>.</p></dd>
+<dd><p>Result from running <code>sigrap::hrdetect_run()</code>.</p></dd>
 <dt>chord_res</dt>
-<dd><p>Result from running <code><a href="chord_run.html">chord_run()</a></code>.</p></dd>
+<dd><p>Result from running <code>sigrap::chord_run()</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -85,8 +82,11 @@
 <span class="r-in"><span class="va">nm</span> <span class="op">&lt;-</span> <span class="st">"SampleA"</span></span>
 <span class="r-in"><span class="va">genome</span> <span class="op">&lt;-</span> <span class="st">"hg38"</span></span>
 <span class="r-in"><span class="va">snvoutdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">hrdetect_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="hrdetect_run.html">hrdetect_run</a></span><span class="op">(</span><span class="va">nm</span>, <span class="va">snv</span>, <span class="va">sv</span>, <span class="va">cnv</span>, <span class="va">genome</span>, <span class="va">snvoutdir</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">chord_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="chord_run.html">chord_run</a></span><span class="op">(</span>vcf.snv <span class="op">=</span> <span class="va">snv</span>, df.sv <span class="op">=</span> <span class="fu">gpgr</span><span class="fu">:::</span><span class="fu"><a href="chord_mantavcf2df.html">chord_mantavcf2df</a></span><span class="op">(</span><span class="va">sv</span><span class="op">)</span>, sample.name <span class="op">=</span> <span class="va">nm</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">hrdetect_res</span> <span class="op">&lt;-</span> <span class="fu">sigrap</span><span class="fu">::</span><span class="fu">hrdetect_run</span><span class="op">(</span><span class="va">nm</span>, <span class="va">snv</span>, <span class="va">sv</span>, <span class="va">cnv</span>, <span class="va">genome</span>, <span class="va">snvoutdir</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">chord_res</span> <span class="op">&lt;-</span> <span class="fu">sigrap</span><span class="fu">::</span><span class="fu">chord_run</span><span class="op">(</span></span>
+<span class="r-in">  vcf.snv <span class="op">=</span> <span class="va">snv</span>, sample.name <span class="op">=</span> <span class="va">nm</span>,</span>
+<span class="r-in">  df.sv <span class="op">=</span> <span class="fu">gpgr</span><span class="fu">:::</span><span class="fu">chord_mantavcf2df</span><span class="op">(</span><span class="va">sv</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="fu">hrd_results_tabs</span><span class="op">(</span>hrdetect_res <span class="op">=</span> <span class="va">hrdetect_res</span>, chord_res <span class="op">=</span> <span class="va">chord_res</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
