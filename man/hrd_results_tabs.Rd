@@ -7,9 +7,9 @@
 hrd_results_tabs(hrdetect_res, chord_res)
 }
 \arguments{
-\item{hrdetect_res}{Result from running \code{\link[=hrdetect_run]{hrdetect_run()}}.}
+\item{hrdetect_res}{Result from running \code{\link[sigrap:hrdetect_run]{sigrap::hrdetect_run()}}.}
 
-\item{chord_res}{Result from running \code{\link[=chord_run]{chord_run()}}.}
+\item{chord_res}{Result from running \code{\link[sigrap:chord_run]{sigrap::chord_run()}}.}
 }
 \value{
 A list with a tibble and a gt_tbl object (see \code{\link[gt:gt]{gt::gt()}}).
@@ -25,8 +25,11 @@ cnv <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 nm <- "SampleA"
 genome <- "hg38"
 snvoutdir <- tempdir()
-hrdetect_res <- hrdetect_run(nm, snv, sv, cnv, genome, snvoutdir)
-chord_res <- chord_run(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = nm)
+hrdetect_res <- sigrap::hrdetect_run(nm, snv, sv, cnv, genome, snvoutdir)
+chord_res <- sigrap::chord_run(
+  vcf.snv = snv, sample.name = nm,
+  df.sv = gpgr:::chord_mantavcf2df(sv)
+)
 hrd_results_tabs(hrdetect_res = hrdetect_res, chord_res = chord_res)
 }
 

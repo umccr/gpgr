@@ -2,8 +2,8 @@
 #'
 #' Return a summary table with HRDetect and CHORD results.
 #'
-#' @param chord_res Result from running [gpgr::chord_run()].
-#' @param hrdetect_res Result from running [gpgr::hrdetect_run()].
+#' @param chord_res Result from running [sigrap::chord_run()].
+#' @param hrdetect_res Result from running [sigrap::hrdetect_run()].
 #'
 #' @return A list with a tibble and a gt_tbl object (see [gt::gt()]).
 #'
@@ -15,8 +15,11 @@
 #' nm <- "SampleA"
 #' genome <- "hg38"
 #' snvoutdir <- tempdir()
-#' hrdetect_res <- hrdetect_run(nm, snv, sv, cnv, genome, snvoutdir)
-#' chord_res <- chord_run(vcf.snv = snv, df.sv = gpgr:::chord_mantavcf2df(sv), sample.name = nm)
+#' hrdetect_res <- sigrap::hrdetect_run(nm, snv, sv, cnv, genome, snvoutdir)
+#' chord_res <- sigrap::chord_run(
+#'   vcf.snv = snv, sample.name = nm,
+#'   df.sv = gpgr:::chord_mantavcf2df(sv)
+#' )
 #' hrd_results_tabs(hrdetect_res = hrdetect_res, chord_res = chord_res)
 #' }
 #'

@@ -19,35 +19,24 @@ Depends:
     R (>= 4.1)
 biocViews:
 Remotes:
-    umccr/signature.tools.lib,
-    UMCUGenetics/mutSigExtractor,
-    UMCUGenetics/CHORD
+    umccr/sigrap
 Imports:
     assertthat,
     bedr,
     cli,
-    CHORD,
     dplyr,
     ggplot2,
     gt,
     gtools,
     jsonlite,
-    MutationalPatterns,
-    mutSigExtractor,
     readr,
     rlang,
-    signature.tools.lib,
-    StructuralVariantAnnotation,
     stringr,
-    tidyr,
-    VariantAnnotation
+    tidyr
 Roxygen: list(markdown = TRUE,
               roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
 RoxygenNote: 7.1.2
 Suggests:
-    BSgenome.Hsapiens.UCSC.hg19,
-    BSgenome.Hsapiens.UCSC.hg38,
-    BSgenome.Hsapiens.1000genomes.hs37d5,
     devtools,
     DT,
     glue,
@@ -57,6 +46,7 @@ Suggests:
     purrr,
     rmarkdown,
     scales,
+    sigrap,
     testthat,
     tibble,
     tidyselect,
