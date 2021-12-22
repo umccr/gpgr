@@ -18,6 +18,8 @@ ByteCompile: true
 Depends:
     R (>= 4.1)
 biocViews:
+Remotes:
+    umccr/sigrap
 Imports:
     assertthat,
     bedr,
@@ -44,6 +46,7 @@ Suggests:
     purrr,
     rmarkdown,
     scales,
+    sigrap,
     testthat,
     tibble,
     tidyselect,

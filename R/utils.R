@@ -220,6 +220,7 @@ write_tsvjsongz <- function(x, path, maindir) {
 #' @param p The R package to check for.
 #' @return TRUE if package exists, FALSE otherwise.
 #'
+#' @export
 pkg_exists <- function(p) {
   assertthat::assert_that(is.character(p))
   nzchar(system.file(package = p))
