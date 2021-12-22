@@ -26,8 +26,10 @@ nm <- "SampleA"
 genome <- "hg38"
 snvoutdir <- tempdir()
 hrdetect_res <- sigrap::hrdetect_run(nm, snv, sv, cnv, genome, snvoutdir)
-chord_res <- sigrap::chord_run(vcf.snv = snv, sample.name = nm,
-                               df.sv = gpgr:::chord_mantavcf2df(sv))
+chord_res <- sigrap::chord_run(
+  vcf.snv = snv, sample.name = nm,
+  df.sv = gpgr:::chord_mantavcf2df(sv)
+)
 hrd_results_tabs(hrdetect_res = hrdetect_res, chord_res = chord_res)
 }
 
