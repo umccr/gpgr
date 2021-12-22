@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,28 +73,21 @@
 <div class="page-header"><h1 id="gpgr---genomics-platform-group-reporting">gpgr - Genomics Platform Group Reporting<a class="anchor" aria-label="anchor" href="#gpgr---genomics-platform-group-reporting"></a>
 </h1></div>
 <p>Contains reports and functions used in the Genomics Platform Group at the University of Melbourne Centre for Cancer Research.</p>
-<ul>
-<li>
-<a href="#gpgr---genomics-platform-group-reporting">gpgr - Genomics Platform Group Reporting</a>
-<ul>
-<li>
-<a href="#main-modules">Main modules</a>
-<ul>
-<li><a href="#purple">PURPLE</a></li>
-<li><a href="#hrdetect">HRDetect</a></li>
-<li><a href="#chord">CHORD</a></li>
-<li><a href="#mutationalpatterns">MutationalPatterns</a></li>
-</ul>
-</li>
-<li><a href="#cli-v020">CLI (v0.2.0)</a></li>
-</ul>
-</li>
-</ul>
 <p><a href="https://anaconda.org/umccr/r-gpgr" class="external-link"><img src="https://anaconda.org/umccr/r-gpgr/badges/installer/conda.svg" alt="Conda install"></a></p>
 <ul>
 <li>See <a href="https://umccr.github.io/gpgr/" class="uri">https://umccr.github.io/gpgr/</a>
 </li>
 </ul>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"umccr/gpgr"</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>Or if used inside a conda environment:</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install r-gpgr <span class="at">-c</span> umccr <span class="at">-c</span> conda-forge <span class="at">-c</span> bioconda</span></code></pre></div>
+</div>
 <div class="section level2">
 <h2 id="main-modules">Main modules<a class="anchor" aria-label="anchor" href="#main-modules"></a>
 </h2>
@@ -104,67 +97,10 @@
 <p>Read and process output files from <a href="https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator" class="external-link">PURPLE</a> - see vignette at <a href="https://umccr.github.io/gpgr/articles/purple.html" class="uri">https://umccr.github.io/gpgr/articles/purple.html</a>.</p>
 </div>
 <div class="section level3">
-<h3 id="hrdetect">HRDetect<a class="anchor" aria-label="anchor" href="#hrdetect"></a>
+<h3 id="linx">LINX<a class="anchor" aria-label="anchor" href="#linx"></a>
 </h3>
-<p>Wraps functionality from the <a href="https://github.com/Nik-Zainal-Group/signature.tools.lib" class="external-link">HRDetect</a> framework - see vignette at <a href="https://umccr.github.io/gpgr/articles/hrdetect.html" class="uri">https://umccr.github.io/gpgr/articles/hrdetect.html</a>.</p>
+<p>Read and process output files from <a href="https://github.com/hartwigmedical/hmftools/tree/master/linx" class="external-link">LINX</a> - see vignette at <a href="https://umccr.github.io/gpgr/articles/linx.html" class="uri">https://umccr.github.io/gpgr/articles/linx.html</a>.</p>
 </div>
-<div class="section level3">
-<h3 id="chord">CHORD<a class="anchor" aria-label="anchor" href="#chord"></a>
-</h3>
-<p>Wraps functionality from <a href="https://github.com/UMCUGenetics/CHORD" class="external-link">CHORD</a> - see vignette at <a href="https://umccr.github.io/gpgr/articles/chord.html" class="uri">https://umccr.github.io/gpgr/articles/chord.html</a>.</p>
-</div>
-<div class="section level3">
-<h3 id="mutationalpatterns">MutationalPatterns<a class="anchor" aria-label="anchor" href="#mutationalpatterns"></a>
-</h3>
-<p>Wraps functionality from <a href="https://github.com/UMCUGenetics/MutationalPatterns" class="external-link">MutationalPatterns</a> - see vignette at <a href="https://umccr.github.io/gpgr/articles/mutationalpatterns.html" class="uri">https://umccr.github.io/gpgr/articles/mutationalpatterns.html</a>.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="cli-v020">CLI (v0.2.0)<a class="anchor" aria-label="anchor" href="#cli-v020"></a>
-</h2>
-<pre class="text"><code>#------- gpgr -------#
-$ inst/src/gpgr.R --help
-usage: gpgr [-h] {hrdetect,chord,mutpat} ...
-
-GPG Reporting
-
-positional arguments:
-  {hrdetect,chord,mutpat}
-                        sub-command help
-    hrdetect            hrdetect help
-    chord               chord help
-    mutpat              mutationalpatterns help
-
-#------- hrdetect -------#
-$ inst/src/gpgr.R hrdetect --help
-usage: gpgr hrdetect [-h] --sample SAMPLE --snv SNV --sv SV --cnv CNV
-                     [--out OUT]
-
-optional arguments:
-  --sample SAMPLE  Sample name.
-  --snv SNV        Input SNV (VCF format).
-  --sv SV          Input SV (VCF format).
-  --cnv CNV        Input CNV (TSV format).
-  --out OUT        Output file ['hrdetect.json.gz'].
-
-#------- chord -------#
-$ inst/src/gpgr.R chord --help
-usage: gpgr chord [-h] --sample SAMPLE --snv SNV --sv SV [--out OUT]
-
-optional arguments:
-  --sample SAMPLE  Sample name.
-  --snv SNV        Input SNV (VCF format).
-  --sv SV          Input SV (VCF format).
-  --out OUT        Output file ['chord.json.gz']
-
-#------- mutpat -------#
-$ inst/src/gpgr.R mutpat --help
-usage: gpgr mutpat [-h] --sample SAMPLE --snv SNV --outdir OUTDIR
-
-optional arguments:
-  --sample SAMPLE  Sample name.
-  --snv SNV        Input SNV file (VCF format).
-  --outdir OUTDIR  Output directory to write results to</code></pre>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
