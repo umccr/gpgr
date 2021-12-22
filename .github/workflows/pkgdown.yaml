@@ -5,17 +5,24 @@ on:
     branches:
       - main
 
+env:
+  atoken: ${{ secrets.ANACONDA_UPLOAD_TOKEN }}
+  recipe_path: conda/recipe
+  env_path: conda/env
+
 jobs:
   build-conda-deploy-pkgdown:
     # When merging to main and the commit message starts with 'Bump version:'
     if: "startsWith(github.event.head_commit.message, 'Bump version:')"
     name: Build conda package & deploy pkgdown website
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Set up miniconda
         uses: conda-incubator/setup-miniconda@v2
         with:
@@ -25,25 +32,17 @@ jobs:
           activate-environment: ""
           mamba-version: "*"
           channels: "umccr,conda-forge,bioconda"
-
       - name: Conda package build and upload
-        shell: bash -l {0}
         run: |
           mamba install conda-build conda-verify anaconda-client boa
-          conda mambabuild --R 4.1 deploy/conda-recipe/
-          PKG_PATH="/usr/share/miniconda/conda-bld/noarch/r-gpgr-*.tar.bz2"
-          anaconda -t ${{ secrets.ANACONDA_UPLOAD_TOKEN }} upload --force $PKG_PATH --no-progress
-
+          conda mambabuild --R 4.1 ${recipe_path} --token ${atoken}
       - name: Install conda packages
-        shell: bash -l {0}
-        run: mamba env create -n pkgdown_gpgr -f deploy/pkgdown_conda_env.yaml
-
+        run: mamba env create -n pkgdown -f ${env_path}/pkgdown.yaml
       - name: Publish pkgdown website
-        shell: bash -l {0}
         run: |
             git config --local user.email "actions@github.com"
             git config --local user.name "GitHub Actions"
-            conda activate pkgdown_gpgr
+            conda activate pkgdown
             printf "gpgr version:\n"
             Rscript -e "packageVersion('gpgr')"
             Rscript -e "pkgdown::deploy_to_branch(pkg = '.', commit_message = paste(pkgdown:::construct_commit_message('.'), '- see https://umccr.github.io/gpgr/'), branch = 'gh-pages', new_process = FALSE)"

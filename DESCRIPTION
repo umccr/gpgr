@@ -12,12 +12,8 @@ Authors@R:
 URL: https://umccr.github.io/gpgr/, https://github.com/umccr/gpgr
 BugReports: https://github.com/umccr/gpgr/issues
 License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
-ByteCompile: true
 Depends:
     R (>= 4.1)
-biocViews:
 Remotes:
     umccr/sigrap
 Imports:
@@ -33,9 +29,6 @@ Imports:
     rlang,
     stringr,
     tidyr
-Roxygen: list(markdown = TRUE,
-              roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
-RoxygenNote: 7.1.2
 Suggests:
     devtools,
     DT,
@@ -47,7 +40,15 @@ Suggests:
     rmarkdown,
     scales,
     sigrap,
-    testthat,
+    testthat (>= 3.0.0),
     tibble,
     tidyselect,
+Roxygen: list(markdown = TRUE,
+              roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
+biocViews:
+ByteCompile: true
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
