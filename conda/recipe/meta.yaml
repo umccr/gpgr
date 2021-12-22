@@ -1,6 +1,6 @@
 package:
   name: r-gpgr
-  version: 1.0.0 # bump2version
+  version: 1.0.1 # bump2version
 
 source:
   git_url: https://github.com/umccr/gpgr
