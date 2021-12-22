@@ -1,5 +1,12 @@
 # gpgr dev
 
+# gpgr 1.0.0 (2021-12-22)
+
+- **Major change**: Moving signature tool wrappers (CHORD, HRDetect, and
+  MutationalPatterns) to sigrap (https://github.com/umccr/sigrap)
+  ([pr35](https://github.com/umccr/gpgr/pull/35)).
+- Support for LINX tables ([pr34](https://github.com/umccr/gpgr/pull/34)).
+
 # gpgr 0.2.0 (2021-11-23)
 
 - new release after a year in the freezer

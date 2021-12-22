@@ -43,7 +43,6 @@ reference:
   - split_double_col
   - tsv_is_empty
   - vcf_is_empty
-  - get_genome_obj
   - pkg_exists
   - session_info_kable
 
