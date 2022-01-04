@@ -2,7 +2,7 @@
 
 # File R/linx.R: @testexamples
 
-test_that("Function linx_svs_read() @ L15", {
+test_that("Function linx_svs_read() @ L237", {
   
   x <- system.file("extdata/linx/tables/linx.svs.tsv.gz", package = "gpgr")
   (l <- linx_svs_read(x))
@@ -10,7 +10,7 @@ test_that("Function linx_svs_read() @ L15", {
 })
 
 
-test_that("Function linx_breakend_read() @ L47", {
+test_that("Function linx_breakend_read() @ L255", {
   
   x <- system.file("extdata/linx/tables/linx.breakend.tsv.gz", package = "gpgr")
   (l <- linx_breakend_read(x))
@@ -18,7 +18,7 @@ test_that("Function linx_breakend_read() @ L47", {
 })
 
 
-test_that("Function linx_clusters_read() @ L80", {
+test_that("Function linx_clusters_read() @ L273", {
   
   x <- system.file("extdata/linx/tables/linx.clusters.tsv.gz", package = "gpgr")
   (l <- linx_clusters_read(x))
@@ -26,7 +26,7 @@ test_that("Function linx_clusters_read() @ L80", {
 })
 
 
-test_that("Function linx_links_read() @ L106", {
+test_that("Function linx_links_read() @ L291", {
   
   x <- system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr")
   (l <- linx_links_read(x))
@@ -34,7 +34,7 @@ test_that("Function linx_links_read() @ L106", {
 })
 
 
-test_that("Function linx_fusion_read() @ L135", {
+test_that("Function linx_fusion_read() @ L309", {
   
   x <- system.file("extdata/linx/tables/linx.fusion.tsv.gz", package = "gpgr")
   (l <- linx_fusion_read(x))
@@ -42,7 +42,7 @@ test_that("Function linx_fusion_read() @ L135", {
 })
 
 
-test_that("Function linx_drivercatalog_read() @ L167", {
+test_that("Function linx_drivercatalog_read() @ L327", {
   
   x <- system.file("extdata/linx/tables/linx.driver.catalog.tsv.gz", package = "gpgr")
   (l <- linx_drivercatalog_read(x))
@@ -50,58 +50,10 @@ test_that("Function linx_drivercatalog_read() @ L167", {
 })
 
 
-test_that("Function linx_drivers_read() @ L195", {
+test_that("Function linx_drivers_read() @ L345", {
   
   x <- system.file("extdata/linx/tables/linx.drivers.tsv.gz", package = "gpgr")
   (l <- linx_drivers_read(x))
   expect_equal(colnames(l)[ncol(l)], "eventType")
-})
-
-
-test_that("Function linx_viscopynumber_read() @ L220", {
-  
-  x <- system.file("extdata/linx/tables/linx.vis_copy_number.tsv.gz", package = "gpgr")
-  (l <- linx_viscopynumber_read(x))
-  expect_equal(colnames(l)[ncol(l)], "BAF")
-})
-
-
-test_that("Function linx_visfusion_read() @ L246", {
-  
-  x <- system.file("extdata/linx/tables/linx.vis_fusion.tsv.gz", package = "gpgr")
-  (l <- linx_visfusion_read(x))
-  expect_equal(colnames(l)[ncol(l)], "FusedExonDown")
-})
-
-
-test_that("Function linx_visgeneexon_read() @ L276", {
-  
-  x <- system.file("extdata/linx/tables/linx.vis_gene_exon.tsv.gz", package = "gpgr")
-  (l <- linx_visgeneexon_read(x))
-  expect_equal(colnames(l)[ncol(l)], "ExonEnd")
-})
-
-
-test_that("Function linx_visproteindomain_read() @ L303", {
-  
-  x <- system.file("extdata/linx/tables/linx.vis_protein_domain.tsv.gz", package = "gpgr")
-  (l <- linx_visproteindomain_read(x))
-  expect_equal(colnames(l)[ncol(l)], "Info")
-})
-
-
-test_that("Function linx_vissegments_read() @ L329", {
-  
-  x <- system.file("extdata/linx/tables/linx.vis_segments.tsv.gz", package = "gpgr")
-  (l <- linx_vissegments_read(x))
-  expect_equal(colnames(l)[ncol(l)], "InDoubleMinute")
-})
-
-
-test_that("Function linx_vissvdata_read() @ L355", {
-  
-  x <- system.file("extdata/linx/tables/linx.vis_sv_data.tsv.gz", package = "gpgr")
-  (l <- linx_vissvdata_read(x))
-  expect_equal(colnames(l)[ncol(l)], "InDoubleMinute")
 })
 
