@@ -137,9 +137,9 @@ LINX_DESCRIPTIONS <- tibble::tribble(
   "fusion", "chainLength", "d", "0 for simple fusions.  If fusion is chained equal to the total length of segments chained between 5' and 3' partners",
   "fusion", "chainLinks", "d", "0 for simple fusions.  If fusion is chained equal to the number of segments chained between 5' and 3' partners",
   "fusion", "chainTerminated", "c", paste0(
-    "True if the fusion is interrupted either on the 5’ partner ",
-    "side by a chained breakend prior to the start of the 5’ gene ",
-    "or by a chained breakend prior to the last coding base of the 3’ gene"
+    "True if the fusion is interrupted either on the 5' partner ",
+    "side by a chained breakend prior to the start of the 5' gene ",
+    "or by a chained breakend prior to the last coding base of the 3' gene"
   ),
   "fusion", "domainsKept", "c", "List of 3' partner domains retained in fusion product (as annotated by PROSITE profiles)",
   "fusion", "domainsLost", "c", "List of 3' partner domains lost in fusion product (as annotated by PROSITE profiles)",
@@ -395,12 +395,6 @@ linx_clusters_process <- function(x) {
 #' @param x Path to `linx.links.tsv` file.
 #'
 #' @return The input file as a tibble.
-#' @examples
-#' x <- system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr")
-#' (l <- linx_links_process(x))
-#' @testexamples
-#' expect_equal(colnames(l)[ncol(l)], "ecDna")
-#'
 #' @export
 linx_links_process <- function(x) {
   d <- linx_links_read(x)
@@ -429,12 +423,6 @@ linx_fusion_process <- function(x) {
 #' @param x Path to `linx.driver.catalog.tsv` file.
 #'
 #' @return The input file as a tibble.
-#' @examples
-#' x <- system.file("extdata/linx/tables/linx.driver.catalog.tsv.gz", package = "gpgr")
-#' (l <- linx_drivercatalog_process(x))
-#' @testexamples
-#' expect_equal(colnames(l)[ncol(l)], "maxCopyNumber")
-#'
 #' @export
 linx_drivercatalog_process <- function(x) {
   d <- linx_drivercatalog_read(x)
@@ -449,12 +437,6 @@ linx_drivercatalog_process <- function(x) {
 #' @param x Path to `linx.drivers.tsv` file.
 #'
 #' @return The input file as a tibble.
-#' @examples
-#' x <- system.file("extdata/linx/tables/linx.drivers.tsv.gz", package = "gpgr")
-#' (l <- linx_drivers_process(x))
-#' @testexamples
-#' expect_equal(colnames(l)[ncol(l)], "eventType")
-#'
 #' @export
 linx_drivers_process <- function(x) {
   d <- linx_drivers_read(x)

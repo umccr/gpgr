@@ -15,7 +15,3 @@ The input file as a tibble.
 \description{
 Processes the \code{linx.links.tsv} file.
 }
-\examples{
-x <- system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr")
-(l <- linx_links_process(x))
-}

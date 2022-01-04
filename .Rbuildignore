@@ -1,6 +1,6 @@
 ^\.bumpversion\.cfg$
 ^data-raw$
-^deploy$
+^conda$
 ^docs$
 ^\.github$
 ^gpgr\.Rproj$

@@ -57,27 +57,3 @@ test_that("Function linx_drivers_read() @ L345", {
   expect_equal(colnames(l)[ncol(l)], "eventType")
 })
 
-
-test_that("Function linx_links_process() @ L405", {
-  
-  x <- system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr")
-  (l <- linx_links_process(x))
-  expect_equal(colnames(l)[ncol(l)], "ecDna")
-})
-
-
-test_that("Function linx_drivercatalog_process() @ L439", {
-  
-  x <- system.file("extdata/linx/tables/linx.driver.catalog.tsv.gz", package = "gpgr")
-  (l <- linx_drivercatalog_process(x))
-  expect_equal(colnames(l)[ncol(l)], "maxCopyNumber")
-})
-
-
-test_that("Function linx_drivers_process() @ L459", {
-  
-  x <- system.file("extdata/linx/tables/linx.drivers.tsv.gz", package = "gpgr")
-  (l <- linx_drivers_process(x))
-  expect_equal(colnames(l)[ncol(l)], "eventType")
-})
-

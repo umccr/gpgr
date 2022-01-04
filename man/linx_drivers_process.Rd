@@ -15,7 +15,3 @@ The input file as a tibble.
 \description{
 Processes the \code{linx.drivers.tsv} file.
 }
-\examples{
-x <- system.file("extdata/linx/tables/linx.drivers.tsv.gz", package = "gpgr")
-(l <- linx_drivers_process(x))
-}
