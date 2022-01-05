@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 params <- list(
   sample = "SEQC-II_Tumor_50pc",
   table_dir = here::here("nogit/linx/SEQCII/GPL_shortcut/tables"),
-  plot_dir = here::here("inst/linx/SEQCII/GPL_shortcut/plots")
+  plot_dir = here::here("nogit/linx/SEQCII/GPL_shortcut/plots")
 )
 render_me <- function() {
   rmarkdown::render(
@@ -52,6 +52,10 @@ library(glue)
 ```
 
 ```{r funcs}
+blank_lines <- function(n = 10) {
+  cat(rep("&nbsp;  ", n), sep = "\n")
+}
+
 dt_table <- function(x) {
   x |>
     DT::datatable(
@@ -67,8 +71,35 @@ dt_table <- function(x) {
     )
 }
 
-linx_tab_path <- function(type) {
+linx_path_tab <- function(type) {
   file.path(params$table_dir, glue("{params$sample}.linx.{type}.tsv"))
+}
+
+linx_path_plot_chr <- function(chr) {
+  pat <- glue("{params$sample}\\.chr{chr}\\.(\\d+)\\.png") |> as.character()
+  x <- list.files(file.path(params$plot_dir), pattern = pat, full.names = TRUE)
+  assertthat::assert_that(length(x) == 1, file.exists(x))
+  seg_num <- sub(pat, "\\1", basename(x))
+  list(
+    path = x,
+    segs = seg_num
+  )
+}
+
+linx_path_plot_cluster <- function() {
+  pat <- glue("{params$sample}\\.cluster(\\d+)\\.(.*)\\.sv(\\d+)\\.(\\d+)\\.png") |> as.character()
+  x <- list.files(file.path(params$plot_dir), pattern = pat, full.names = TRUE)
+  d <- stringr::str_match(x, pat) |>
+    tibble::as_tibble(.name_repair = "minimal") |>
+    purrr::set_names(c("path", "clusterId", "type", "svId", "nsegs")) |>
+    dplyr::mutate(
+      path = file.path(params$plot_dir, path),
+      nsegs = as.integer(nsegs),
+      clusterId = as.integer(clusterId)
+    ) |>
+    dplyr::arrange(clusterId) |>
+    dplyr::mutate(clusterId = sprintf(glue("%0{nchar(max(clusterId))}d"), clusterId))
+  d
 }
 ```
 
@@ -80,11 +111,14 @@ linx_tab_path <- function(type) {
 - `svs.tsv`
 
 ```{r}
-linx_tab_path("svs") |>
+linx_path_tab("svs") |>
   gpgr::linx_svs_read() |>
   dt_table()
 ```
 
+```{r, results='asis'}
+blank_lines(2)
+```
 
 ### Breakends
 
@@ -92,7 +126,7 @@ linx_tab_path("svs") |>
 - `breakend.tsv`
 
 ```{r}
-linx_tab_path("breakend") |>
+linx_path_tab("breakend") |>
   gpgr::linx_breakend_read() |>
   dt_table()
 ```
@@ -104,7 +138,7 @@ linx_tab_path("breakend") |>
 - `clusters.tsv`
 
 ```{r}
-linx_tab_path("clusters") |>
+linx_path_tab("clusters") |>
   gpgr::linx_clusters_read() |>
   dt_table()
 ```
@@ -116,7 +150,7 @@ linx_tab_path("clusters") |>
 - `links.tsv`
 
 ```{r}
-linx_tab_path("links") |>
+linx_path_tab("links") |>
   gpgr::linx_links_read() |>
   dt_table()
 ```
@@ -128,7 +162,7 @@ linx_tab_path("links") |>
 - `fusion.tsv`
 
 ```{r}
-linx_tab_path("fusion") |>
+linx_path_tab("fusion") |>
   gpgr::linx_fusion_read() |>
   dt_table()
 ```
@@ -140,7 +174,7 @@ linx_tab_path("fusion") |>
 - `driver.catalog.tsv`
 
 ```{r}
-linx_tab_path("driver.catalog") |>
+linx_path_tab("driver.catalog") |>
   gpgr::linx_drivercatalog_read() |>
   dt_table()
 ```
@@ -152,7 +186,7 @@ linx_tab_path("driver.catalog") |>
 - `drivers.tsv`
 
 ```{r}
-linx_tab_path("drivers") |>
+linx_path_tab("drivers") |>
   gpgr::linx_drivers_read() |>
   dt_table()
 ```
@@ -164,9 +198,13 @@ linx_tab_path("drivers") |>
 - `vis_copy_number.tsv`
 
 ```{r}
-linx_tab_path("vis_copy_number") |>
+linx_path_tab("vis_copy_number") |>
   gpgr::linx_viscopynumber_read() |>
   dt_table()
+```
+
+```{r, results='asis'}
+blank_lines(2)
 ```
 
 ### Fusion
@@ -174,7 +212,7 @@ linx_tab_path("vis_copy_number") |>
 - `vis_fusion.tsv`
 
 ```{r}
-linx_tab_path("vis_fusion") |>
+linx_path_tab("vis_fusion") |>
   gpgr::linx_visfusion_read() |>
   dt_table()
 ```
@@ -184,7 +222,7 @@ linx_tab_path("vis_fusion") |>
 - `vis_gene_exon.tsv`
 
 ```{r}
-linx_tab_path("vis_gene_exon") |>
+linx_path_tab("vis_gene_exon") |>
   gpgr::linx_visgeneexon_read() |>
   dt_table()
 ```
@@ -194,7 +232,7 @@ linx_tab_path("vis_gene_exon") |>
 - `vis_protein_domain.tsv`
 
 ```{r}
-linx_tab_path("vis_protein_domain") |>
+linx_path_tab("vis_protein_domain") |>
   gpgr::linx_visproteindomain_read() |>
   dt_table()
 ```
@@ -204,7 +242,7 @@ linx_tab_path("vis_protein_domain") |>
 - `vis_segments.tsv`
 
 ```{r}
-linx_tab_path("vis_segments") |>
+linx_path_tab("vis_segments") |>
   gpgr::linx_vissegments_read() |>
   dt_table()
 ```
@@ -214,14 +252,40 @@ linx_tab_path("vis_segments") |>
 - `vis_sv_data.tsv`
 
 ```{r}
-linx_tab_path("vis_sv_data") |>
+linx_path_tab("vis_sv_data") |>
   gpgr::linx_vissvdata_read() |>
   dt_table()
 ```
 
 ## Plots (Chromosome) {.tabset #plots-chrom}
 
+```{r plot_chrom, results='asis'}
+for (i in c(1:22, "X")) {
+  res <- linx_path_plot_chr(i)
+  cat(glue("\n### chr{i}"), "\n")
+  cat(glue("\nsegs: {as.integer(res$segs)}"), "\n\n\n")
+  cat(glue("<img src=\"{res$path}\" height=\"1000\"/>"), "\n\n\n")
+  blank_lines(1)
+  cat("\n\n\n")
+}
+```
+
 ## Plots (Cluster) {.tabset #plots-cluster}
+
+```{r plot_cluster, results='asis'}
+cluster_plots <- linx_path_plot_cluster()
+for (i in seq_len(nrow(cluster_plots))) {
+  r <- cluster_plots[i, ]
+  cat(glue("\n### {r$clusterId}"), "\n\n\n")
+  cat(glue(
+    "clusterId: {r$clusterId} | type: {r$type} | ",
+    "svId: {r$svId} | nsegs: {r$nsegs}"
+  ), "\n\n\n")
+  cat(glue("<img src=\"{r$path}\" height=\"1000\"/>"), "\n\n\n")
+  blank_lines(2)
+  cat("\n\n\n")
+}
+```
 
 ## Addendum {.tabset #addendum}
 
@@ -242,7 +306,7 @@ si$si_pl
 
 ```{r report_inputs}
 report_inputs <- dplyr::tibble(key = names(params), value = unlist(params))
-report_inputs |> knitr::kable()
+report_inputs |> dt_table()
 ```
 
 </details>
