@@ -5,7 +5,6 @@ output:
   html_document:
     theme: cosmo
     css: style.css
-    toc: true
     code_download: true
   rmdformats::material:
     highlight: kate
@@ -46,9 +45,11 @@ render_me()
 library(gpgr)
 library(tidyverse)
 # other
+library(details)
 library(DT)
 library(here)
 library(glue)
+library(knitr, include.only = "kable")
 ```
 
 ```{r funcs}
@@ -103,97 +104,11 @@ linx_path_plot_cluster <- function() {
 }
 ```
 
-## Tables Main {.tabset #tables-main}
+## Tables {.tabset #tables}
 
-### Annotations
+### Vis {.tabset}
 
-- additional annotations of each non PON filtered break junction
-- `svs.tsv`
-
-```{r}
-linx_path_tab("svs") |>
-  gpgr::linx_svs_read() |>
-  dt_table()
-```
-
-```{r, results='asis'}
-blank_lines(2)
-```
-
-### Breakends
-
-- impact of each non PON filtered break junction on each overlapping gene
-- `breakend.tsv`
-
-```{r}
-linx_path_tab("breakend") |>
-  gpgr::linx_breakend_read() |>
-  dt_table()
-```
-
-### Clusters
-
-- clustering of all non PON filtered SV events and their resolved
-  classification.
-- `clusters.tsv`
-
-```{r}
-linx_path_tab("clusters") |>
-  gpgr::linx_clusters_read() |>
-  dt_table()
-```
-
-### Links
-
-- segments joining break junction pairs predicted to be linked and phased in
-  _cis_ on the derivative chromosome.
-- `links.tsv`
-
-```{r}
-linx_path_tab("links") |>
-  gpgr::linx_links_read() |>
-  dt_table()
-```
-
-### Fusions
-
-- All inframe and outframe fusions predicted in the sample including HMF
-  fusion knowledgebase annotations.
-- `fusion.tsv`
-
-```{r}
-linx_path_tab("fusion") |>
-  gpgr::linx_fusion_read() |>
-  dt_table()
-```
-
-### Driver Catalog
-
-- Reproduction of the driver catalog produced by PURPLE with homozygous
-  disruption events appended.
-- `driver.catalog.tsv`
-
-```{r}
-linx_path_tab("driver.catalog") |>
-  gpgr::linx_drivercatalog_read() |>
-  dt_table()
-```
-
-### Drivers
-
-- Linkage of drivers from driver catalog to SV cluster which contributed to
-  those drivers including LOH, deletion, disruption and amplification events.
-- `drivers.tsv`
-
-```{r}
-linx_path_tab("drivers") |>
-  gpgr::linx_drivers_read() |>
-  dt_table()
-```
-
-## Tables Vis {.tabset #tables-vis}
-
-### Copy Number
+#### Copy Number
 
 - `vis_copy_number.tsv`
 
@@ -207,7 +122,7 @@ linx_path_tab("vis_copy_number") |>
 blank_lines(2)
 ```
 
-### Fusion
+#### Fusion
 
 - `vis_fusion.tsv`
 
@@ -217,7 +132,7 @@ linx_path_tab("vis_fusion") |>
   dt_table()
 ```
 
-### Gene Exon
+#### Gene Exon
 
 - `vis_gene_exon.tsv`
 
@@ -227,7 +142,7 @@ linx_path_tab("vis_gene_exon") |>
   dt_table()
 ```
 
-### Protein Domain
+#### Protein Domain
 
 - `vis_protein_domain.tsv`
 
@@ -237,7 +152,7 @@ linx_path_tab("vis_protein_domain") |>
   dt_table()
 ```
 
-### Segments
+#### Segments
 
 - `vis_segments.tsv`
 
@@ -247,7 +162,7 @@ linx_path_tab("vis_segments") |>
   dt_table()
 ```
 
-### SV Data
+#### SV Data
 
 - `vis_sv_data.tsv`
 
@@ -255,6 +170,102 @@ linx_path_tab("vis_segments") |>
 linx_path_tab("vis_sv_data") |>
   gpgr::linx_vissvdata_read() |>
   dt_table()
+```
+
+### Main {.tabset}
+
+#### Annotations
+
+- additional annotations of each non PON filtered break junction
+- `svs.tsv`
+
+```{r}
+l <- linx_path_tab("svs") |>
+  gpgr::linx_svs_process()
+
+details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+dt_table(l$tab)
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+#### Breakends
+
+- impact of each non PON filtered break junction on each overlapping gene
+- `breakend.tsv`
+
+```{r}
+l <- linx_path_tab("breakend") |>
+  gpgr::linx_breakend_process()
+details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+dt_table(l$tab)
+```
+
+#### Clusters
+
+- clustering of all non PON filtered SV events and their resolved
+  classification.
+- `clusters.tsv`
+
+```{r}
+l <- linx_path_tab("clusters") |>
+  gpgr::linx_clusters_process()
+details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+dt_table(l$tab)
+```
+
+#### Links
+
+- segments joining break junction pairs predicted to be linked and phased in
+  _cis_ on the derivative chromosome.
+- `links.tsv`
+
+```{r}
+l <- linx_path_tab("links") |>
+  gpgr::linx_links_process()
+details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+dt_table(l$tab)
+```
+
+#### Fusions
+
+- All inframe and outframe fusions predicted in the sample including HMF
+  fusion knowledgebase annotations.
+- `fusion.tsv`
+
+```{r}
+l <- linx_path_tab("fusion") |>
+  gpgr::linx_fusion_process()
+details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+dt_table(l$tab)
+```
+
+#### Driver Catalog
+
+- Reproduction of the driver catalog produced by PURPLE with homozygous
+  disruption events appended.
+- `driver.catalog.tsv`
+
+```{r}
+l <- linx_path_tab("driver.catalog") |>
+  gpgr::linx_drivercatalog_process()
+details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+dt_table(l$tab)
+```
+
+#### Drivers
+
+- Linkage of drivers from driver catalog to SV cluster which contributed to
+  those drivers including LOH, deletion, disruption and amplification events.
+- `drivers.tsv`
+
+```{r}
+l <- linx_path_tab("drivers") |>
+  gpgr::linx_drivers_process()
+details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+dt_table(l$tab)
 ```
 
 ## Plots (Chromosome) {.tabset #plots-chrom}
