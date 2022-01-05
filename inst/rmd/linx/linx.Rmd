@@ -1,28 +1,59 @@
 ---
-title: "LINX"
-author: "Peter Diakumis"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-
-vignette: >
-  %\VignetteIndexEntry{LINX}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+author: "University of Melbourne Centre for Cancer Research"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    theme: cosmo
+    css: style.css
+    toc: true
+    code_download: true
+  rmdformats::material:
+    highlight: kate
+params:
+  title: "UMCCR LINX Report"
+  sample: "x"
+  plot_dir: "x"
+  table_dir: "x"
+description: "UMCCR LINX Report"
+title: "`r paste(params$sample, params$title)`"
 ---
 
-```{r setup, message=FALSE, warning=FALSE}
-require(gpgr)
-require(devtools)
-require(dplyr)
-require(knitr)
-require(DT)
+```{r knitr_opts, include=F}
+knitr::opts_chunk$set(
+  collapse = TRUE, echo = FALSE,
+  warning = FALSE, message = FALSE,
+  error = TRUE
+) # continue running report even after chunk errors
+```
+
+```{r render_report_interactively, echo=F, eval=FALSE}
+params <- list(
+  sample = "SEQC-II_Tumor_50pc",
+  table_dir = here::here("nogit/linx/SEQCII/GPL_shortcut/tables"),
+  plot_dir = here::here("inst/linx/SEQCII/GPL_shortcut/plots")
+)
+render_me <- function() {
+  rmarkdown::render(
+    here::here("inst/rmd/linx/linx.Rmd"),
+    params = params
+  )
+}
+render_me()
+```
+
+```{r load_pkgs}
+# main
+library(gpgr)
+library(tidyverse)
+# other
+library(DT)
+library(here)
+library(glue)
 ```
 
 ```{r funcs}
 dt_table <- function(x) {
-  # select 10 random rows
   x |>
-    dplyr::slice_sample(n = 10) |>
     DT::datatable(
       filter = list(position = "top", clear = FALSE, plain = TRUE),
       class = "cell-border display compact",
@@ -35,20 +66,13 @@ dt_table <- function(x) {
       )
     )
 }
+
+linx_tab_path <- function(type) {
+  file.path(params$table_dir, glue("{params$sample}.linx.{type}.tsv"))
+}
 ```
 
-
-Introduction
-============
-
-LINX: annotation, interpretation and visualisation tool for structural variants
-
-- <https://github.com/hartwigmedical/hmftools/tree/master/linx>.
-- groups SV calls together into events
-- inputs: GRIDSS SVs, PURPLE CNVs, gene panel, known fusions/fragile sites/LINEs
-
-Table Outputs
--------------
+## Tables Main {.tabset #tables-main}
 
 ### Annotations
 
@@ -56,7 +80,7 @@ Table Outputs
 - `svs.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.svs.tsv.gz", package = "gpgr") |>
+linx_tab_path("svs") |>
   gpgr::linx_svs_read() |>
   dt_table()
 ```
@@ -68,7 +92,7 @@ system.file("extdata/linx/tables/linx.svs.tsv.gz", package = "gpgr") |>
 - `breakend.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.breakend.tsv.gz", package = "gpgr") |>
+linx_tab_path("breakend") |>
   gpgr::linx_breakend_read() |>
   dt_table()
 ```
@@ -80,7 +104,7 @@ system.file("extdata/linx/tables/linx.breakend.tsv.gz", package = "gpgr") |>
 - `clusters.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.clusters.tsv.gz", package = "gpgr") |>
+linx_tab_path("clusters") |>
   gpgr::linx_clusters_read() |>
   dt_table()
 ```
@@ -92,7 +116,7 @@ system.file("extdata/linx/tables/linx.clusters.tsv.gz", package = "gpgr") |>
 - `links.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr") |>
+linx_tab_path("links") |>
   gpgr::linx_links_read() |>
   dt_table()
 ```
@@ -104,7 +128,7 @@ system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr") |>
 - `fusion.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.fusion.tsv.gz", package = "gpgr") |>
+linx_tab_path("fusion") |>
   gpgr::linx_fusion_read() |>
   dt_table()
 ```
@@ -116,7 +140,7 @@ system.file("extdata/linx/tables/linx.fusion.tsv.gz", package = "gpgr") |>
 - `driver.catalog.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.driver.catalog.tsv.gz", package = "gpgr") |>
+linx_tab_path("driver.catalog") |>
   gpgr::linx_drivercatalog_read() |>
   dt_table()
 ```
@@ -128,80 +152,97 @@ system.file("extdata/linx/tables/linx.driver.catalog.tsv.gz", package = "gpgr") 
 - `drivers.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.drivers.tsv.gz", package = "gpgr") |>
+linx_tab_path("drivers") |>
   gpgr::linx_drivers_read() |>
   dt_table()
 ```
 
-### Viral Inserts (Not Documented)
-
-## Table 'vis' outputs
+## Tables Vis {.tabset #tables-vis}
 
 ### Copy Number
 
-- `linx.vis_copy_number.tsv`
+- `vis_copy_number.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_copy_number.tsv.gz", package = "gpgr") |>
+linx_tab_path("vis_copy_number") |>
   gpgr::linx_viscopynumber_read() |>
   dt_table()
 ```
 
 ### Fusion
 
-- `linx.vis_fusion.tsv`
+- `vis_fusion.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_fusion.tsv.gz", package = "gpgr") |>
+linx_tab_path("vis_fusion") |>
   gpgr::linx_visfusion_read() |>
   dt_table()
 ```
 
 ### Gene Exon
 
-- `linx.vis_gene_exon.tsv`
+- `vis_gene_exon.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_gene_exon.tsv.gz", package = "gpgr") |>
+linx_tab_path("vis_gene_exon") |>
   gpgr::linx_visgeneexon_read() |>
   dt_table()
 ```
 
 ### Protein Domain
 
-- `linx.vis_protein_domain.tsv`
+- `vis_protein_domain.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_protein_domain.tsv.gz", package = "gpgr") |>
+linx_tab_path("vis_protein_domain") |>
   gpgr::linx_visproteindomain_read() |>
   dt_table()
 ```
 
 ### Segments
 
-- `linx.vis_segments.tsv`
+- `vis_segments.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_segments.tsv.gz", package = "gpgr") |>
+linx_tab_path("vis_segments") |>
   gpgr::linx_vissegments_read() |>
   dt_table()
 ```
 
 ### SV Data
 
-- `linx.vis_sv_data.tsv`
+- `vis_sv_data.tsv`
 
 ```{r}
-system.file("extdata/linx/tables/linx.vis_sv_data.tsv.gz", package = "gpgr") |>
+linx_tab_path("vis_sv_data") |>
   gpgr::linx_vissvdata_read() |>
   dt_table()
 ```
 
-## Session Info
+## Plots (Chromosome) {.tabset #plots-chrom}
+
+## Plots (Cluster) {.tabset #plots-cluster}
+
+## Addendum {.tabset #addendum}
+
+<details>
+<summary>Show</summary>
+
+
+### Session Info
 
 ```{r session_info, echo=FALSE}
-pkgs_of_interest <- c("base", "gpgr")
+pkgs_of_interest <- c("base", "gpgr", "tidyverse")
 si <- gpgr::session_info_kable(pkgs_of_interest)
 si$si_pkg
 si$si_pl
 ```
+
+### Report Inputs
+
+```{r report_inputs}
+report_inputs <- dplyr::tibble(key = names(params), value = unlist(params))
+report_inputs |> knitr::kable()
+```
+
+</details>
