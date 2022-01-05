@@ -14,13 +14,13 @@ s <- tibble::tribble(
   "SBJ00481", "SBJ00481__SBJ00481_PTC_TsqN200327_L2000243", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00574_1", "SBJ00574_1__SBJ00574_PRJ200428_L2000802", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00574_2", "SBJ00574_2__SBJ00574_PRJ200429_L2000803", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
-  "SBJ00590",   "SBJ00590__SBJ00590_MDX200156_L2000853", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
-  "SBJ00597",   "SBJ00597__SBJ00597_MDX200162_L2000855", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
-  "SBJ00600",   "SBJ00600__SBJ00600_PRJ200484_L2000839", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
-  "SBJ00602",   "SBJ00602__SBJ00602_PRJ200487_L2000841", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
-  "SBJ00603",   "SBJ00603__SBJ00603_PRJ200489_L2000843", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
-  "SBJ00605",   "SBJ00605__SBJ00605_PRJ200504_L2000847", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
-  "SBJ00607",   "SBJ00607__SBJ00607_MDX200165_L2000857", "-somatic-PASS.vcf.gz",   "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00590", "SBJ00590__SBJ00590_MDX200156_L2000853", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00597", "SBJ00597__SBJ00597_MDX200162_L2000855", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00600", "SBJ00600__SBJ00600_PRJ200484_L2000839", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00602", "SBJ00602__SBJ00602_PRJ200487_L2000841", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00603", "SBJ00603__SBJ00603_PRJ200489_L2000843", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00605", "SBJ00605__SBJ00605_PRJ200504_L2000847", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
+  "SBJ00607", "SBJ00607__SBJ00607_MDX200165_L2000857", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00608", "SBJ00608__SBJ00608_MDX200170_L2000872", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00609", "SBJ00609__SBJ00609_PRJ200508_L2000874", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00610", "SBJ00610__SBJ00610_PRJ200511_L2000876", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
@@ -50,7 +50,7 @@ s <- tibble::tribble(
   "SBJ00638", "SBJ00638__SBJ00638_PRJ200576_L2001006", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
   "SBJ00639", "SBJ00639__SBJ00639_PRJ200579_L2001008", "-somatic-PASS.vcf.gz", "-manta.vcf.gz", ".purple.cnv.somatic.tsv", "hg38",
 ) %>%
-  #dplyr::filter(sample %in% c("", "")) %>%
+  # dplyr::filter(sample %in% c("", "")) %>%
   dplyr::mutate(
     dd = file.path(here::here("nogit")),
     snv = file.path(dd, "snv", paste0(prefix, snv)),
@@ -61,7 +61,7 @@ s <- tibble::tribble(
 future::plan(multicore)
 res <- seq_len(nrow(s)) %>%
   furrr::future_map(function(i) {
-  #purrr::map(function(i) {
+    # purrr::map(function(i) {
     cat(s$sample[i], "CHORD\n")
     chord_sv_df <- gpgr::chord_mantavcf2df(s$sv[i])
     chord <- gpgr::chord_run(
@@ -69,7 +69,8 @@ res <- seq_len(nrow(s)) %>%
       df.sv = chord_sv_df,
       sv.caller = "manta",
       sample.name = s$sample[i],
-      ref.genome = s$genome[i])
+      ref.genome = s$genome[i]
+    )
 
     cat(s$sample[i], "HRDetect\n")
     hrdetect <- gpgr::hrdetect_run(
@@ -80,8 +81,10 @@ res <- seq_len(nrow(s)) %>%
       genome = s$genome[i],
       snvoutdir = file.path(here::here("nogit"), "results", "hrdetect", s$sample[i])
     )
-    list(chord = chord$prediction,
-         hrdetect = hrdetect)
+    list(
+      chord = chord$prediction,
+      hrdetect = hrdetect
+    )
   })
 
 saveRDS(res, here::here("nogit/results/chord_hrdetect_2020-12-08.rds"))
