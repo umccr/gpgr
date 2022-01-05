@@ -274,7 +274,7 @@ dt_table(l$tab)
 for (i in c(1:22, "X")) {
   res <- linx_path_plot_chr(i)
   cat(glue("\n### chr{i}"), "\n")
-  cat(glue("\nsegs: {as.integer(res$segs)}"), "\n\n\n")
+  cat(glue("\nnsegs: {as.integer(res$segs)}"), "\n\n\n")
   cat(glue("<img src=\"{res$path}\" height=\"1000\"/>"), "\n\n\n")
   blank_lines(1)
   cat("\n\n\n")
@@ -317,7 +317,7 @@ si$si_pl
 
 ```{r report_inputs}
 report_inputs <- dplyr::tibble(key = names(params), value = unlist(params))
-report_inputs |> dt_table()
+report_inputs |> kable()
 ```
 
 </details>
