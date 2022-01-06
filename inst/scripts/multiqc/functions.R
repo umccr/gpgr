@@ -1,4 +1,24 @@
+library(dplyr, include.only = c("bind_rows", "left_join"))
 library(purrr, include.only = c("map", "map_chr", "reduce", "list_merge", "imap", "set_names"))
+library(RJSONIO, include.only = "fromJSON")
+
+mj2df <- function(json) {
+  stopifnot(file.exists(json))
+  p <- fromJSON(json)
+  nm <- "umccr_subj_id"
+  gen <- parse_gen(p) |>
+    remove_control_samples() |>
+    bind_rows(.id = nm)
+  raw <- parse_raw(p) |>
+    remove_control_samples() |>
+    bind_rows(.id = nm)
+
+  # data is in tidy format:
+  # - each variable has its own column
+  # - each observation (sample) has its own row
+  # - each value has its own cell
+  left_join(gen, raw, by = nm)
+}
 
 remove_control_samples <- function(l) {
   controls <- c("Alice", "Bob", "Chen", "Elon", "Dakota")
@@ -7,6 +27,13 @@ remove_control_samples <- function(l) {
   controls_regex <- paste(c(controls2, "idxstats"), collapse = "|")
   l <- l[!grepl(controls_regex, names(l))]
   l
+}
+
+mkdir <- function(d) {
+  if (!dir.exists(d)) {
+    dir.create(d, recursive = TRUE)
+  }
+  d
 }
 
 # Following are modified/simplified from TidyMultiqc
