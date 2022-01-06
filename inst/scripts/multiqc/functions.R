@@ -17,7 +17,7 @@ mj2df <- function(json) {
   # - each variable has its own column
   # - each observation (sample) has its own row
   # - each value has its own cell
-  left_join(gen, raw, by = nm)
+  left_join(gen, raw, by = nm, suffix = c(".gen", ".raw"))
 }
 
 remove_control_samples <- function(l) {

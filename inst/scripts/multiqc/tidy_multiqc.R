@@ -23,6 +23,11 @@ p <- add_argument(p,
 )
 args <- parse_args(p)
 
+
+stopifnot(
+  file.exists(args$json), is.character(args$name), nchar(args$name) > 0,
+  is.character(args$outdir), nchar(args$outdir) > 0
+)
 name <- args$name
 outdir <- normalizePath(mkdir(args$outdir))
 json <- args$json
@@ -30,7 +35,7 @@ json <- args$json
 # main function
 d <- mj2df(json)
 
-## write to TSV and parquet format
+## write to TSV and Parquet format
 tsv_out <- file.path(outdir, paste(name, "tsv", sep = "."))
 parquet_out <- file.path(outdir, paste(name, "parquet", sep = "."))
 write_tsv(d, tsv_out)
