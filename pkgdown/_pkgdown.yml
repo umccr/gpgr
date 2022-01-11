@@ -39,7 +39,6 @@ reference:
 - contents:
   - count_pieces
   - is_vcf
-  - mkdir
   - split_double_col
   - tsv_is_empty
   - vcf_is_empty
