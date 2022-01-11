@@ -7,6 +7,17 @@ at the University of Melbourne Centre for Cancer Research.
 
 - See <https://umccr.github.io/gpgr/>
 
+
+<!-- vim-markdown-toc GFM -->
+
+* [Installation](#installation)
+* [Main modules](#main-modules)
+    * [PURPLE](#purple)
+    * [LINX](#linx)
+* [CLI](#cli)
+
+<!-- vim-markdown-toc -->
+
 ## Installation
 
 ```r
