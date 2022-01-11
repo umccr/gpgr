@@ -30,6 +30,8 @@ Imports:
     stringr,
     tidyr
 Suggests:
+    argparse,
+    details,
     devtools,
     DT,
     glue,

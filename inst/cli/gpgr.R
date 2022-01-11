@@ -1,32 +1,40 @@
 #!/usr/bin/env Rscript --vanilla
 
 suppressPackageStartupMessages(require(argparse))
+suppressPackageStartupMessages(require(cli))
 suppressPackageStartupMessages(require(gpgr))
-
+suppressPackageStartupMessages(require(glue))
 
 p <- argparse::ArgumentParser(description = "GPG Reporting", prog = "gpgr")
 subparser_name <- "subparser_name"
 subp <- p$add_subparsers(help = "sub-command help", dest = subparser_name)
 
-#--- Example ---#
-example <- subp$add_parser("example", help = "example help")
-example$add_argument("--sample", help = "Sample name.", required = TRUE)
-example$add_argument("--snv", help = "Input SNV (VCF format).", required = TRUE)
-example$add_argument("--sv", help = "Input SV (VCF format).", required = TRUE)
-example$add_argument("--cnv", help = "Input CNV (TSV format).", required = TRUE)
-example$add_argument("--out", help = "Output file ['example.txt'].", default = "example.txt")
+#--- LINX report ---#
+linx <- subp$add_parser("linx", help = "LINX HTML report.")
+linx$add_argument("--sample", help = "Sample name.", required = TRUE)
+linx$add_argument("--plot", help = "Path to LINX plot directory.", required = TRUE)
+linx$add_argument("--table", help = "Path to LINX table directory.", required = TRUE)
+linx$add_argument("--out", help = "HTML output file name [def: linx_{sample}.html].")
+linx$add_argument("--quiet", help = "Suppress log printing during rendering.", action = "store_true")
+
 
 args <- p$parse_args()
 if (length(args$subparser_name) == 0) {
   p$print_help()
-} else if (args$subparser_name == "example") {
-  # print(c("You've called Example Here are the arguments: ", args))
-  gpgr::example_run(
-    nm = args$sample, snvindel_vcf = args$snv, sv_vcf = args$sv,
-    cnv_tsv = args$cnv, outpath = args$out
+} else if (args$subparser_name == "linx") {
+  # print(c("You've called linx. Here are the arguments: ", args))
+  cli::cli_alert_info("Start rendering LINX R Markdown report!")
+  res <- gpgr::linx_rmd(
+    sample = args$sample,
+    table_dir = args$table,
+    plot_dir = args$plot,
+    out_file = args$out,
+    quiet = args$quiet
   )
+  cli::cli_alert_success("Finished rendering LINX R Markdown report!")
+  cli::cli_alert_info("Path to HTML output:\n{res}")
 } else {
-  stop("NO IDEA HOW IT GOT TO THIS...")
+  stop("Need to specify linx in the cli...")
 }
 
-# example$print_help()
+# linx$print_help()
