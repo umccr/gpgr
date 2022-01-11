@@ -145,22 +145,6 @@ tsv_is_empty <- function(x, comment = "##", col_types = readr::cols(.default = "
   return(FALSE)
 }
 
-#' Make Directory
-#'
-#' Creates a directory.
-#'
-#' @param d Directory to create.
-#'
-#' @return If directory exists, do nothing. If it doesn't, create it and return
-#' invisibly a logical indicating if the operation succeeded.
-#'
-#' @export
-mkdir <- function(d) {
-  if (!dir.exists(d)) {
-    dir.create(d, recursive = TRUE)
-  }
-}
-
 #' Write a data frame to a tab delimited gzipped file
 #'
 #' Writes a data frame to a tab delimited gzipped file.
@@ -228,4 +212,17 @@ pkg_exists <- function(p) {
 
 date_log <- function() {
   as.character(paste0("[", as.POSIXct(Sys.time()), "]"))
+}
+
+# create directory
+mkdir <- function(d) {
+  if (!dir.exists(d)) {
+    dir.create(d, recursive = TRUE)
+  }
+}
+
+# copy recursively
+cpdir <- function(from, to) {
+  mkdir(to)
+  file.copy(from = from, to = to, recursive = TRUE)
 }

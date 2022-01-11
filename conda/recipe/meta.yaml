@@ -18,32 +18,61 @@ requirements:
     - git
   host:
     - r-base
-    - r-assertthat
     - r-bedr
     - r-cli
     - r-dplyr
-    - r-dt
     - r-ggplot2
     - r-gt
     - r-gtools
     - r-jsonlite
     - r-readr
+    - r-rlang
     - r-stringr
     - r-tidyr
+    # suggests
+    - r-argparse
+    - r-details
+    - r-devtools
+    - r-dt
+    - r-glue
+    - r-kableExtra
+    - r-knitr
+    - r-patchwork
+    - r-purrr
+    - r-rmarkdown
+    - r-scales
+    - r-testthat
+    - r-tibble
+    - r-tidyselect
+
   run:
     - r-base
-    - r-assertthat
     - r-bedr
     - r-cli
     - r-dplyr
-    - r-dt
     - r-ggplot2
     - r-gt
     - r-gtools
     - r-jsonlite
     - r-readr
+    - r-rlang
     - r-stringr
     - r-tidyr
+    # suggests
+    - r-argparse
+    - r-details
+    - r-devtools
+    - r-dt
+    - r-glue
+    - r-kableExtra
+    - r-knitr
+    - r-patchwork
+    - r-purrr
+    - r-rmarkdown
+    - r-scales
+    - r-testthat
+    - r-tibble
+    - r-tidyselect
 
 test:
   commands:

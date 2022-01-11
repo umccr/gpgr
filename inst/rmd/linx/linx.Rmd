@@ -21,35 +21,36 @@ title: "`r paste(params$sample, params$title)`"
 knitr::opts_chunk$set(
   collapse = TRUE, echo = FALSE,
   warning = FALSE, message = FALSE,
-  error = TRUE
-) # continue running report even after chunk errors
+  error = FALSE
+)
 ```
 
-```{r render_report_interactively, echo=F, eval=FALSE}
+```{r render_report_interactively, echo=FALSE, eval=FALSE}
 params <- list(
-  sample = "SEQC-II_Tumor_50pc",
-  table_dir = here::here("nogit/linx/SEQCII/GPL_shortcut/tables"),
-  plot_dir = here::here("nogit/linx/SEQCII/GPL_shortcut/plots")
+  sample = "SBJ01196_PRJ211133_L2101598",
+  table_dir = here::here("nogit/linx/SBJ01196/tables"),
+  plot_dir = here::here("nogit/linx/SBJ01196/plots")
 )
 render_me <- function() {
   rmarkdown::render(
     here::here("inst/rmd/linx/linx.Rmd"),
-    params = params
+    params = params,
+    output_file = "SBJ001196.html",
+    output_dir = here::here("nogit/linx/test")
   )
 }
 render_me()
 ```
 
-```{r load_pkgs}
-# main
-library(gpgr)
-library(tidyverse)
-# other
+```{r load_pkgs, message=FALSE, warning=FALSE}
 library(details)
+library(dplyr, warn.conflicts = FALSE)
 library(DT)
-library(here)
 library(glue)
+library(gpgr)
 library(knitr, include.only = "kable")
+library(purrr, include.only = "set_names")
+library(stringr, include.only = "str_match")
 ```
 
 ```{r funcs}
@@ -73,13 +74,15 @@ dt_table <- function(x) {
 }
 
 linx_path_tab <- function(type) {
-  file.path(params$table_dir, glue("{params$sample}.linx.{type}.tsv"))
+  x <- file.path(params$table_dir, glue("{params$sample}.linx.{type}.tsv"))
+  stopifnot(file.exists(x))
+  x
 }
 
 linx_path_plot_chr <- function(chr) {
   pat <- glue("{params$sample}\\.chr{chr}\\.(\\d+)\\.png") |> as.character()
   x <- list.files(file.path(params$plot_dir), pattern = pat, full.names = TRUE)
-  assertthat::assert_that(length(x) == 1, file.exists(x))
+  stopifnot(length(x) == 1, file.exists(x))
   seg_num <- sub(pat, "\\1", basename(x))
   list(
     path = x,
@@ -90,9 +93,10 @@ linx_path_plot_chr <- function(chr) {
 linx_path_plot_cluster <- function() {
   pat <- glue("{params$sample}\\.cluster(\\d+)\\.(.*)\\.sv(\\d+)\\.(\\d+)\\.png") |> as.character()
   x <- list.files(file.path(params$plot_dir), pattern = pat, full.names = TRUE)
-  d <- stringr::str_match(x, pat) |>
-    tibble::as_tibble(.name_repair = "minimal") |>
-    purrr::set_names(c("path", "clusterId", "type", "svId", "nsegs")) |>
+  stopifnot(length(x) > 0)
+  d <- str_match(x, pat) |>
+    dplyr::as_tibble(.name_repair = "minimal") |>
+    set_names(c("path", "clusterId", "type", "svId", "nsegs")) |>
     dplyr::mutate(
       path = file.path(params$plot_dir, path),
       nsegs = as.integer(nsegs),
@@ -112,13 +116,13 @@ linx_path_plot_cluster <- function() {
 
 - `vis_copy_number.tsv`
 
-```{r}
+```{r vis_copy_number}
 linx_path_tab("vis_copy_number") |>
   gpgr::linx_viscopynumber_read() |>
   dt_table()
 ```
 
-```{r, results='asis'}
+```{r blank1, results='asis'}
 blank_lines(2)
 ```
 
@@ -126,7 +130,7 @@ blank_lines(2)
 
 - `vis_fusion.tsv`
 
-```{r}
+```{r vis_fusion}
 linx_path_tab("vis_fusion") |>
   gpgr::linx_visfusion_read() |>
   dt_table()
@@ -136,7 +140,7 @@ linx_path_tab("vis_fusion") |>
 
 - `vis_gene_exon.tsv`
 
-```{r}
+```{r vis_gene_exon}
 linx_path_tab("vis_gene_exon") |>
   gpgr::linx_visgeneexon_read() |>
   dt_table()
@@ -146,7 +150,7 @@ linx_path_tab("vis_gene_exon") |>
 
 - `vis_protein_domain.tsv`
 
-```{r}
+```{r vis_protein_domain}
 linx_path_tab("vis_protein_domain") |>
   gpgr::linx_visproteindomain_read() |>
   dt_table()
@@ -156,7 +160,7 @@ linx_path_tab("vis_protein_domain") |>
 
 - `vis_segments.tsv`
 
-```{r}
+```{r vis_segments}
 linx_path_tab("vis_segments") |>
   gpgr::linx_vissegments_read() |>
   dt_table()
@@ -166,7 +170,7 @@ linx_path_tab("vis_segments") |>
 
 - `vis_sv_data.tsv`
 
-```{r}
+```{r vis_sv_data}
 linx_path_tab("vis_sv_data") |>
   gpgr::linx_vissvdata_read() |>
   dt_table()
@@ -179,7 +183,7 @@ linx_path_tab("vis_sv_data") |>
 - additional annotations of each non PON filtered break junction
 - `svs.tsv`
 
-```{r}
+```{r svs}
 l <- linx_path_tab("svs") |>
   gpgr::linx_svs_process()
 
@@ -187,7 +191,7 @@ details::details(kable(l$descr), lang = NULL, summary = "Column Description")
 dt_table(l$tab)
 ```
 
-```{r, results='asis'}
+```{r blank2, results='asis'}
 blank_lines(2)
 ```
 
@@ -196,7 +200,7 @@ blank_lines(2)
 - impact of each non PON filtered break junction on each overlapping gene
 - `breakend.tsv`
 
-```{r}
+```{r breakend}
 l <- linx_path_tab("breakend") |>
   gpgr::linx_breakend_process()
 details::details(kable(l$descr), lang = NULL, summary = "Column Description")
@@ -209,7 +213,7 @@ dt_table(l$tab)
   classification.
 - `clusters.tsv`
 
-```{r}
+```{r clusters}
 l <- linx_path_tab("clusters") |>
   gpgr::linx_clusters_process()
 details::details(kable(l$descr), lang = NULL, summary = "Column Description")
@@ -222,7 +226,7 @@ dt_table(l$tab)
   _cis_ on the derivative chromosome.
 - `links.tsv`
 
-```{r}
+```{r links}
 l <- linx_path_tab("links") |>
   gpgr::linx_links_process()
 details::details(kable(l$descr), lang = NULL, summary = "Column Description")
@@ -235,7 +239,7 @@ dt_table(l$tab)
   fusion knowledgebase annotations.
 - `fusion.tsv`
 
-```{r}
+```{r fusion}
 l <- linx_path_tab("fusion") |>
   gpgr::linx_fusion_process()
 details::details(kable(l$descr), lang = NULL, summary = "Column Description")
@@ -248,7 +252,7 @@ dt_table(l$tab)
   disruption events appended.
 - `driver.catalog.tsv`
 
-```{r}
+```{r drivercatalog}
 l <- linx_path_tab("driver.catalog") |>
   gpgr::linx_drivercatalog_process()
 details::details(kable(l$descr), lang = NULL, summary = "Column Description")
@@ -261,7 +265,7 @@ dt_table(l$tab)
   those drivers including LOH, deletion, disruption and amplification events.
 - `drivers.tsv`
 
-```{r}
+```{r drivers}
 l <- linx_path_tab("drivers") |>
   gpgr::linx_drivers_process()
 details::details(kable(l$descr), lang = NULL, summary = "Column Description")
@@ -307,7 +311,7 @@ for (i in seq_len(nrow(cluster_plots))) {
 ### Session Info
 
 ```{r session_info, echo=FALSE}
-pkgs_of_interest <- c("base", "gpgr", "tidyverse")
+pkgs_of_interest <- c("base", "gpgr")
 si <- gpgr::session_info_kable(pkgs_of_interest)
 si$si_pkg
 si$si_pl
