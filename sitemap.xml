@@ -40,6 +40,9 @@
     <loc>https://umccr.github.io/gpgr/reference/count_pieces.html</loc>
   </url>
   <url>
+    <loc>https://umccr.github.io/gpgr/reference/gpgr-package.html</loc>
+  </url>
+  <url>
     <loc>https://umccr.github.io/gpgr/reference/hrd_results_tabs.html</loc>
   </url>
   <url>
@@ -49,22 +52,46 @@
     <loc>https://umccr.github.io/gpgr/reference/is_vcf.html</loc>
   </url>
   <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_breakend_process.html</loc>
+  </url>
+  <url>
     <loc>https://umccr.github.io/gpgr/reference/linx_breakend_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_clusters_process.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/linx_clusters_read.html</loc>
   </url>
   <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_drivercatalog_process.html</loc>
+  </url>
+  <url>
     <loc>https://umccr.github.io/gpgr/reference/linx_drivercatalog_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_drivers_process.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/linx_drivers_read.html</loc>
   </url>
   <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_fusion_process.html</loc>
+  </url>
+  <url>
     <loc>https://umccr.github.io/gpgr/reference/linx_fusion_read.html</loc>
   </url>
   <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_links_process.html</loc>
+  </url>
+  <url>
     <loc>https://umccr.github.io/gpgr/reference/linx_links_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_rmd.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/linx_svs_process.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/linx_svs_read.html</loc>
@@ -86,9 +113,6 @@
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/linx_vissvdata_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/mkdir.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/pkg_exists.html</loc>

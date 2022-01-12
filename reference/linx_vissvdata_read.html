@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Read LINX VisSvData File</h1>
-      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/R/linx.R" class="external-link"><code>R/linx.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/R/linx_vis.R" class="external-link"><code>R/linx_vis.R</code></a></small>
       <div class="d-none name"><code>linx_vissvdata_read.Rd</code></div>
     </div>
 
@@ -77,17 +77,17 @@
 <span class="r-in"><span class="op">(</span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">linx_vissvdata_read</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 760 × 17</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    SampleId      ClusterId ChainId  SvId Type  ResolvedType IsSynthetic ChrStart</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>             </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span>   </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>        </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>       </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>   </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span><span> SEQC-II_Tumo…       430       1     0 DUP   DUP          false       chr1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span><span> SEQC-II_Tumo…       431       1     1 DEL   DEL          false       chr1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span><span> SEQC-II_Tumo…       433       1     2 DEL   DEL          false       chr1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span><span> SEQC-II_Tumo…       434       1     3 DUP   DUP          false       chr1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span><span> SEQC-II_Tumo…       435       0     4 INF   PAIR_OTHER   false       chr1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span><span> SEQC-II_Tumo…       432       1     5 DUP   DUP          false       chr1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span><span> SEQC-II_Tumo…       436       1     6 DEL   DEL          false       chr1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span><span> SEQC-II_Tumo…       437       1     7 INF   INF          false       chr1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span><span> SEQC-II_Tumo…       438       1     8 DUP   DUP          false       chr1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span><span> SEQC-II_Tumo…       440       1     9 DUP   DUP          false       chr1    </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SEQC-II_Tumo…       430       1     0 DUP   DUP          false       chr1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> SEQC-II_Tumo…       431       1     1 DEL   DEL          false       chr1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> SEQC-II_Tumo…       433       1     2 DEL   DEL          false       chr1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> SEQC-II_Tumo…       434       1     3 DUP   DUP          false       chr1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> SEQC-II_Tumo…       435       0     4 INF   PAIR_OTHER   false       chr1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> SEQC-II_Tumo…       432       1     5 DUP   DUP          false       chr1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> SEQC-II_Tumo…       436       1     6 DEL   DEL          false       chr1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SEQC-II_Tumo…       437       1     7 INF   INF          false       chr1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SEQC-II_Tumo…       438       1     8 DUP   DUP          false       chr1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SEQC-II_Tumo…       440       1     9 DUP   DUP          false       chr1    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 750 more rows, and 9 more variables: ChrEnd &lt;chr&gt;, PosStart &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   PosEnd &lt;dbl&gt;, OrientStart &lt;dbl&gt;, OrientEnd &lt;dbl&gt;, InfoStart &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   InfoEnd &lt;chr&gt;, JunctionCopyNumber &lt;dbl&gt;, InDoubleMinute &lt;chr&gt;</span></span>

@@ -12,7 +12,7 @@ and selects columns of interest."><!-- mathjax --><script src="https://cdnjs.clo
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,30 +82,30 @@ and selects columns of interest.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $tab</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 59 × 9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Chr     Start    End    CN `CN Min+Maj` `Start/End SegS… Method `BAF (count)`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494;font-style: italic;">&lt;fct&gt;</span><span>   </span><span style="color: #949494;font-style: italic;">&lt;int&gt;</span><span>  </span><span style="color: #949494;font-style: italic;">&lt;int&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>        </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>            </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>  </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>        </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span><span> chr1   1   </span><span style="color: #949494;">e</span><span>0 1.24</span><span style="color: #949494;">e</span><span>8   1   0+1          TELOMERE-CENTRO… BAF_W… 0.98 (20830) </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span><span> chr1   1.24</span><span style="color: #949494;">e</span><span>8 2.00</span><span style="color: #949494;">e</span><span>8   2   1+1          CENTROMERE-DUP   BAF_W… 0.5 (10239)  </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span><span> chr1   2.00</span><span style="color: #949494;">e</span><span>8 2.00</span><span style="color: #949494;">e</span><span>8   2.8 1+1.8        DUP-DUP          STRUC… 0.65 (0)     </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span><span> chr1   2.00</span><span style="color: #949494;">e</span><span>8 2.49</span><span style="color: #949494;">e</span><span>8   2   1+1          DUP-TELOMERE     BAF_W… 0.5 (10341)  </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span><span> chr2   1   </span><span style="color: #949494;">e</span><span>0 9.31</span><span style="color: #949494;">e</span><span>7   2   1+1          TELOMERE-CENTRO… BAF_W… 0.51 (19339) </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span><span> chr2   9.31</span><span style="color: #949494;">e</span><span>7 2.20</span><span style="color: #949494;">e</span><span>8   2   1+1          CENTROMERE-BND   BAF_W… 0.5 (19047)  </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span><span> chr2   2.20</span><span style="color: #949494;">e</span><span>8 2.25</span><span style="color: #949494;">e</span><span>8   1   0+1          BND-BND          BAF_W… 0.98 (1284)  </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span><span> chr2   2.25</span><span style="color: #949494;">e</span><span>8 2.42</span><span style="color: #949494;">e</span><span>8   2   1+1          BND-TELOMERE     BAF_W… 0.51 (4236)  </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span><span> chr3   1   </span><span style="color: #949494;">e</span><span>0 9.22</span><span style="color: #949494;">e</span><span>7   1   0+1          TELOMERE-CENTRO… BAF_W… 0.98 (18629) </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span><span> chr3   9.22</span><span style="color: #949494;">e</span><span>7 1.98</span><span style="color: #949494;">e</span><span>8   2   1+1          CENTROMERE-TELO… BAF_W… 0.5 (21114)  </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr1   1   <span style="color: #949494;">e</span>0 1.24<span style="color: #949494;">e</span>8   1   0+1          TELOMERE-CENTRO… BAF_W… 0.98 (20830) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr1   1.24<span style="color: #949494;">e</span>8 2.00<span style="color: #949494;">e</span>8   2   1+1          CENTROMERE-DUP   BAF_W… 0.5 (10239)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr1   2.00<span style="color: #949494;">e</span>8 2.00<span style="color: #949494;">e</span>8   2.8 1+1.8        DUP-DUP          STRUC… 0.65 (0)     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr1   2.00<span style="color: #949494;">e</span>8 2.49<span style="color: #949494;">e</span>8   2   1+1          DUP-TELOMERE     BAF_W… 0.5 (10341)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr2   1   <span style="color: #949494;">e</span>0 9.31<span style="color: #949494;">e</span>7   2   1+1          TELOMERE-CENTRO… BAF_W… 0.51 (19339) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr2   9.31<span style="color: #949494;">e</span>7 2.20<span style="color: #949494;">e</span>8   2   1+1          CENTROMERE-BND   BAF_W… 0.5 (19047)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr2   2.20<span style="color: #949494;">e</span>8 2.25<span style="color: #949494;">e</span>8   1   0+1          BND-BND          BAF_W… 0.98 (1284)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr2   2.25<span style="color: #949494;">e</span>8 2.42<span style="color: #949494;">e</span>8   2   1+1          BND-TELOMERE     BAF_W… 0.51 (4236)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr3   1   <span style="color: #949494;">e</span>0 9.22<span style="color: #949494;">e</span>7   1   0+1          TELOMERE-CENTRO… BAF_W… 0.98 (18629) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr3   9.22<span style="color: #949494;">e</span>7 1.98<span style="color: #949494;">e</span>8   2   1+1          CENTROMERE-TELO… BAF_W… 0.5 (21114)  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 49 more rows, and 1 more variable: GC (windowCount) &lt;chr&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $descr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Column               Description                                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>                </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>                                                    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span><span> Chr/Start/End        Coordinates of copy number segment                       </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span><span> CN                   Fitted absolute copy number of segment adjusted for puri…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span><span> CN Min+Maj           CopyNumber of minor + major allele adjusted for purity   </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span><span> Start/End SegSupport Type of SV support for the CN breakpoint at start/end of…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span><span> Method               Method used to determine the CN of the region. Allowed v…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span><span> BAF (count)          Tumor BAF after adjusted for purity and ploidy (Count of…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span><span> GC (windowCount)     Proportion of segment that is G or C (Count of COBALT wi…</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Chr/Start/End        Coordinates of copy number segment                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> CN                   Fitted absolute copy number of segment adjusted for puri…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> CN Min+Maj           CopyNumber of minor + major allele adjusted for purity   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Start/End SegSupport Type of SV support for the CN breakpoint at start/end of…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Method               Method used to determine the CN of the region. Allowed v…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> BAF (count)          Tumor BAF after adjusted for purity and ploidy (Count of…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> GC (windowCount)     Proportion of segment that is G or C (Count of COBALT wi…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

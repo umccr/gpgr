@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Read LINX VisSegments File</h1>
-      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/R/linx.R" class="external-link"><code>R/linx.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/R/linx_vis.R" class="external-link"><code>R/linx_vis.R</code></a></small>
       <div class="d-none name"><code>linx_vissegments_read.Rd</code></div>
     </div>
 
@@ -77,17 +77,17 @@
 <span class="r-in"><span class="op">(</span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">linx_vissegments_read</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1,331 × 8</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    SampleId           ClusterId ChainId Chromosome PosStart PosEnd   LinkPloidy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>                  </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span>   </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>      </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>    </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>         </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span><span> SEQC-II_Tumor_50pc        16       1 chr9       T        1488781        2.13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span><span> SEQC-II_Tumor_50pc        16       1 chr9       1488979  C              2.13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span><span> SEQC-II_Tumor_50pc        17       1 chr9       T        9791045        1.77</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span><span> SEQC-II_Tumor_50pc        17       1 chr9       9791111  C              1.77</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span><span> SEQC-II_Tumor_50pc        18       1 chr9       11319307 C              2.36</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span><span> SEQC-II_Tumor_50pc        18       1 chr9       T        11322933       2.36</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span><span> SEQC-II_Tumor_50pc        19       1 chr9       T        14990057       1.88</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span><span> SEQC-II_Tumor_50pc        19       1 chr9       14990109 C              1.88</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span><span> SEQC-II_Tumor_50pc        20       1 chr9       T        15484000       1.79</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span><span> SEQC-II_Tumor_50pc        21       1 chr9       18303656 C              1.96</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SEQC-II_Tumor_50pc        16       1 chr9       T        1488781        2.13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> SEQC-II_Tumor_50pc        16       1 chr9       1488979  C              2.13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> SEQC-II_Tumor_50pc        17       1 chr9       T        9791045        1.77</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> SEQC-II_Tumor_50pc        17       1 chr9       9791111  C              1.77</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> SEQC-II_Tumor_50pc        18       1 chr9       11319307 C              2.36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> SEQC-II_Tumor_50pc        18       1 chr9       T        11322933       2.36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> SEQC-II_Tumor_50pc        19       1 chr9       T        14990057       1.88</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SEQC-II_Tumor_50pc        19       1 chr9       14990109 C              1.88</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SEQC-II_Tumor_50pc        20       1 chr9       T        15484000       1.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SEQC-II_Tumor_50pc        21       1 chr9       18303656 C              1.96</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1,321 more rows, and 1 more variable: InDoubleMinute &lt;chr&gt;</span></span>
 </code></pre></div>
     </div>

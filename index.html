@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,18 @@
 <li>See <a href="https://umccr.github.io/gpgr/" class="uri">https://umccr.github.io/gpgr/</a>
 </li>
 </ul>
-<div class="section level2">
+<!-- vim-markdown-toc GFM --><ul>
+<li><a href="#installation">Installation</a></li>
+<li>
+<a href="#main-modules">Main modules</a>
+<ul>
+<li><a href="#purple">PURPLE</a></li>
+<li><a href="#linx">LINX</a></li>
+</ul>
+</li>
+<li><a href="#cli">CLI</a></li>
+</ul>
+<!-- vim-markdown-toc --><div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -101,6 +112,32 @@
 </h3>
 <p>Read and process output files from <a href="https://github.com/hartwigmedical/hmftools/tree/master/linx" class="external-link">LINX</a> - see vignette at <a href="https://umccr.github.io/gpgr/articles/linx.html" class="uri">https://umccr.github.io/gpgr/articles/linx.html</a>.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="cli">CLI<a class="anchor" aria-label="anchor" href="#cli"></a>
+</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># alias to cli</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="va">gpgr_cli</span><span class="op">=</span><span class="va">$(</span><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'x = system.file("cli/gpgr.R", package = "gpgr"); cat(x, "\n")'</span><span class="va">)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">alias</span> gpgr=<span class="va">$(</span><span class="fu">which</span> <span class="va">$(</span><span class="bu">echo</span> <span class="va">$gpgr_cli))</span></span></code></pre></div>
+<pre class="text"><code>$ gpgr --help
+usage: gpgr [-h] {linx} ...
+
+GPG Reporting
+
+positional arguments:
+  {linx}      sub-command help
+    linx      LINX HTML report.</code></pre>
+<pre class="text"><code>$ gpgr linx --help
+usage: gpgr linx [-h] --sample SAMPLE --plot PLOT --table TABLE [--out OUT]
+                 [--quiet]
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --sample SAMPLE  Sample name.
+  --plot PLOT      Path to LINX plot directory.
+  --table TABLE    Path to LINX table directory.
+  --out OUT        HTML output file name [def: linx_{sample}.html].
+  --quiet          Suppress log printing during rendering.</code></pre>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Read LINX VisProteinDomain File</h1>
-      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/R/linx.R" class="external-link"><code>R/linx.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/R/linx_vis.R" class="external-link"><code>R/linx_vis.R</code></a></small>
       <div class="d-none name"><code>linx_visproteindomain_read.Rd</code></div>
     </div>
 
@@ -77,17 +77,17 @@
 <span class="r-in"><span class="op">(</span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">linx_visproteindomain_read</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 82 × 7</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    SampleId           ClusterId Transcript      Chromosome   Start    End Info  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>              </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>     </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>           </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>        </span><span style="color: #949494;font-style: italic;">&lt;int&gt;</span><span>  </span><span style="color: #949494;font-style: italic;">&lt;int&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span> </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span><span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14</span><span style="color: #949494;">e</span><span>8 1.14</span><span style="color: #949494;">e</span><span>8 BTB   </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span><span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14</span><span style="color: #949494;">e</span><span>8 1.14</span><span style="color: #949494;">e</span><span>8 ZINC_…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span><span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14</span><span style="color: #949494;">e</span><span>8 1.14</span><span style="color: #949494;">e</span><span>8 ZINC_…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span><span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14</span><span style="color: #949494;">e</span><span>8 1.14</span><span style="color: #949494;">e</span><span>8 ZINC_…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span><span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14</span><span style="color: #949494;">e</span><span>8 1.14</span><span style="color: #949494;">e</span><span>8 ZINC_…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span><span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14</span><span style="color: #949494;">e</span><span>8 1.14</span><span style="color: #949494;">e</span><span>8 ZINC_…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span><span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14</span><span style="color: #949494;">e</span><span>8 1.14</span><span style="color: #949494;">e</span><span>8 5-Pri…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span><span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14</span><span style="color: #949494;">e</span><span>8 1.14</span><span style="color: #949494;">e</span><span>8 3-Pri…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span><span> SEQC-II_Tumor_50pc 304       ENST00000474710 chr3        1.14</span><span style="color: #949494;">e</span><span>8 1.14</span><span style="color: #949494;">e</span><span>8 BTB   </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span><span> SEQC-II_Tumor_50pc 304       ENST00000474710 chr3        1.14</span><span style="color: #949494;">e</span><span>8 1.14</span><span style="color: #949494;">e</span><span>8 ZINC_…</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14<span style="color: #949494;">e</span>8 1.14<span style="color: #949494;">e</span>8 BTB   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14<span style="color: #949494;">e</span>8 1.14<span style="color: #949494;">e</span>8 ZINC_…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14<span style="color: #949494;">e</span>8 1.14<span style="color: #949494;">e</span>8 ZINC_…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14<span style="color: #949494;">e</span>8 1.14<span style="color: #949494;">e</span>8 ZINC_…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14<span style="color: #949494;">e</span>8 1.14<span style="color: #949494;">e</span>8 ZINC_…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14<span style="color: #949494;">e</span>8 1.14<span style="color: #949494;">e</span>8 ZINC_…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14<span style="color: #949494;">e</span>8 1.14<span style="color: #949494;">e</span>8 5-Pri…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SEQC-II_Tumor_50pc 306       ENST00000474710 chr3        1.14<span style="color: #949494;">e</span>8 1.14<span style="color: #949494;">e</span>8 3-Pri…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SEQC-II_Tumor_50pc 304       ENST00000474710 chr3        1.14<span style="color: #949494;">e</span>8 1.14<span style="color: #949494;">e</span>8 BTB   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SEQC-II_Tumor_50pc 304       ENST00000474710 chr3        1.14<span style="color: #949494;">e</span>8 1.14<span style="color: #949494;">e</span>8 ZINC_…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 72 more rows</span></span>
 </code></pre></div>
     </div>

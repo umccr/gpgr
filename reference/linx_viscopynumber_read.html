@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Read LINX VisCopyNumber File</h1>
-      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/R/linx.R" class="external-link"><code>R/linx.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/R/linx_vis.R" class="external-link"><code>R/linx_vis.R</code></a></small>
       <div class="d-none name"><code>linx_viscopynumber_read.Rd</code></div>
     </div>
 
@@ -77,17 +77,17 @@
 <span class="r-in"><span class="op">(</span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">linx_viscopynumber_read</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1,509 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    SampleId           Chromosome    Start      End CopyNumber   BAF</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>              </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>         </span><span style="color: #949494;font-style: italic;">&lt;int&gt;</span><span>    </span><span style="color: #949494;font-style: italic;">&lt;int&gt;</span><span>      </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span><span> SEQC-II_Tumor_50pc chr9              1  1</span><span style="text-decoration: underline;">488</span><span>781       3.90 0.517</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span><span> SEQC-II_Tumor_50pc chr9        1</span><span style="text-decoration: underline;">488</span><span>782  1</span><span style="text-decoration: underline;">488</span><span>978       1.84 1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span><span> SEQC-II_Tumor_50pc chr9        1</span><span style="text-decoration: underline;">488</span><span>979  9</span><span style="text-decoration: underline;">791</span><span>045       4.00 0.518</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span><span> SEQC-II_Tumor_50pc chr9        9</span><span style="text-decoration: underline;">791</span><span>046  9</span><span style="text-decoration: underline;">791</span><span>110       2.05 0.941</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span><span> SEQC-II_Tumor_50pc chr9        9</span><span style="text-decoration: underline;">791</span><span>111 11</span><span style="text-decoration: underline;">319</span><span>306       3.63 0.551</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span><span> SEQC-II_Tumor_50pc chr9       11</span><span style="text-decoration: underline;">319</span><span>307 11</span><span style="text-decoration: underline;">322</span><span>933       6.23 0.703</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span><span> SEQC-II_Tumor_50pc chr9       11</span><span style="text-decoration: underline;">322</span><span>934 14</span><span style="text-decoration: underline;">990</span><span>057       3.84 0.526</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span><span> SEQC-II_Tumor_50pc chr9       14</span><span style="text-decoration: underline;">990</span><span>058 14</span><span style="text-decoration: underline;">990</span><span>108       2.01 1    </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span><span> SEQC-II_Tumor_50pc chr9       14</span><span style="text-decoration: underline;">990</span><span>109 15</span><span style="text-decoration: underline;">484</span><span>000       3.91 0.51 </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span><span> SEQC-II_Tumor_50pc chr9       15</span><span style="text-decoration: underline;">484</span><span>001 18</span><span style="text-decoration: underline;">303</span><span>655       2.12 0.975</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SEQC-II_Tumor_50pc chr9              1  1<span style="text-decoration: underline;">488</span>781       3.90 0.517</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> SEQC-II_Tumor_50pc chr9        1<span style="text-decoration: underline;">488</span>782  1<span style="text-decoration: underline;">488</span>978       1.84 1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> SEQC-II_Tumor_50pc chr9        1<span style="text-decoration: underline;">488</span>979  9<span style="text-decoration: underline;">791</span>045       4.00 0.518</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> SEQC-II_Tumor_50pc chr9        9<span style="text-decoration: underline;">791</span>046  9<span style="text-decoration: underline;">791</span>110       2.05 0.941</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> SEQC-II_Tumor_50pc chr9        9<span style="text-decoration: underline;">791</span>111 11<span style="text-decoration: underline;">319</span>306       3.63 0.551</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> SEQC-II_Tumor_50pc chr9       11<span style="text-decoration: underline;">319</span>307 11<span style="text-decoration: underline;">322</span>933       6.23 0.703</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> SEQC-II_Tumor_50pc chr9       11<span style="text-decoration: underline;">322</span>934 14<span style="text-decoration: underline;">990</span>057       3.84 0.526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SEQC-II_Tumor_50pc chr9       14<span style="text-decoration: underline;">990</span>058 14<span style="text-decoration: underline;">990</span>108       2.01 1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SEQC-II_Tumor_50pc chr9       14<span style="text-decoration: underline;">990</span>109 15<span style="text-decoration: underline;">484</span>000       3.91 0.51 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SEQC-II_Tumor_50pc chr9       15<span style="text-decoration: underline;">484</span>001 18<span style="text-decoration: underline;">303</span>655       2.12 0.975</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1,499 more rows</span></span>
 </code></pre></div>
     </div>

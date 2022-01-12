@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Read LINX VisGeneExon File</h1>
-      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/R/linx.R" class="external-link"><code>R/linx.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/R/linx_vis.R" class="external-link"><code>R/linx_vis.R</code></a></small>
       <div class="d-none name"><code>linx_visgeneexon_read.Rd</code></div>
     </div>
 
@@ -77,17 +77,17 @@
 <span class="r-in"><span class="op">(</span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">linx_visgeneexon_read</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 298 × 9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    SampleId      ClusterId Gene  Transcript   Chromosome AnnotationType ExonRank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>             </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>        </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>      </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>             </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span><span> SEQC-II_Tumo…       306 ZBTB… ENST0000047… chr3       DRIVER                5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span><span> SEQC-II_Tumo…       306 ZBTB… ENST0000047… chr3       DRIVER                4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span><span> SEQC-II_Tumo…       306 ZBTB… ENST0000047… chr3       DRIVER                3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span><span> SEQC-II_Tumo…       306 ZBTB… ENST0000047… chr3       DRIVER                2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span><span> SEQC-II_Tumo…       306 ZBTB… ENST0000047… chr3       DRIVER                1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span><span> SEQC-II_Tumo…       304 ZBTB… ENST0000047… chr3       DRIVER                5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span><span> SEQC-II_Tumo…       304 ZBTB… ENST0000047… chr3       DRIVER                4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span><span> SEQC-II_Tumo…       304 ZBTB… ENST0000047… chr3       DRIVER                3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span><span> SEQC-II_Tumo…       304 ZBTB… ENST0000047… chr3       DRIVER                2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span><span> SEQC-II_Tumo…       304 ZBTB… ENST0000047… chr3       DRIVER                1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SEQC-II_Tumo…       306 ZBTB… ENST0000047… chr3       DRIVER                5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> SEQC-II_Tumo…       306 ZBTB… ENST0000047… chr3       DRIVER                4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> SEQC-II_Tumo…       306 ZBTB… ENST0000047… chr3       DRIVER                3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> SEQC-II_Tumo…       306 ZBTB… ENST0000047… chr3       DRIVER                2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> SEQC-II_Tumo…       306 ZBTB… ENST0000047… chr3       DRIVER                1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> SEQC-II_Tumo…       304 ZBTB… ENST0000047… chr3       DRIVER                5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> SEQC-II_Tumo…       304 ZBTB… ENST0000047… chr3       DRIVER                4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SEQC-II_Tumo…       304 ZBTB… ENST0000047… chr3       DRIVER                3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SEQC-II_Tumo…       304 ZBTB… ENST0000047… chr3       DRIVER                2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SEQC-II_Tumo…       304 ZBTB… ENST0000047… chr3       DRIVER                1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 288 more rows, and 2 more variables: ExonStart &lt;dbl&gt;, ExonEnd &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
