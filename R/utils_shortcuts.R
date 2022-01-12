@@ -6,3 +6,6 @@
 #' @keywords internal
 #' @importFrom rlang .data :=
 NULL
+
+#' @keywords internal
+"_PACKAGE"

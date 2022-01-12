@@ -48,7 +48,7 @@ vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
 
 ```bash
 # alias to cli
-gpgr_cli=$(Rscript -e 'x = system.file("cli", package = "gpgr"); cat(x, "\n")')
+gpgr_cli=$(Rscript -e 'x = system.file("cli/gpgr.R", package = "gpgr"); cat(x, "\n")')
 alias gpgr=$(which $(echo $gpgr_cli))
 ```
 
