@@ -51,6 +51,7 @@ library(gpgr)
 library(knitr, include.only = "kable")
 library(purrr, include.only = "set_names")
 library(stringr, include.only = "str_match")
+library(tibble)
 ```
 
 ```{r funcs}
@@ -79,26 +80,31 @@ linx_path_tab <- function(type) {
   x
 }
 
-linx_path_plot_chr <- function(chr) {
-  pat <- glue("{params$sample}\\.chr{chr}\\.(\\d+)\\.png") |> as.character()
+linx_path_plot_chr <- function() {
+  pat <- glue("{params$sample}\\.chr(.*)\\.(\\d+)\\.png") |> as.character()
   x <- list.files(file.path(params$plot_dir), pattern = pat, full.names = TRUE)
   if (length(x) == 0) {
-    warning(glue::glue("No LINX plots available for chromosome {chr}."))
+    warning(glue::glue("No LINX chromosome plots found in\n{params$plot_dir}."))
     return(NULL)
-  } else if (length(x) > 1) {
-    stop(glue::glue("Multiple LINX plots found for chromosome {chr}. Aborting."))
   }
-  seg_num <- sub(pat, "\\1", basename(x))
-  list(
-    path = x,
-    segs = seg_num
-  )
+  d <- str_match(x, pat) |>
+    dplyr::as_tibble(.name_repair = "minimal") |>
+    set_names(c("path", "chrom", "nsegs")) |>
+    dplyr::mutate(
+      path = file.path(params$plot_dir, path),
+      nsegs = as.integer(nsegs)
+    ) |>
+    dplyr::arrange(gpgr:::mixedrank(chrom))
+  d
 }
 
 linx_path_plot_cluster <- function() {
   pat <- glue("{params$sample}\\.cluster(\\d+)\\.(.*)\\.sv(\\d+)\\.(\\d+)\\.png") |> as.character()
   x <- list.files(file.path(params$plot_dir), pattern = pat, full.names = TRUE)
-  stopifnot(length(x) > 0)
+  if (length(x) == 0) {
+    warning(glue::glue("No LINX cluster plots found in\n{params$plot_dir}."))
+    return(NULL)
+  }
   d <- str_match(x, pat) |>
     dplyr::as_tibble(.name_repair = "minimal") |>
     set_names(c("path", "clusterId", "type", "svId", "nsegs")) |>
@@ -124,7 +130,8 @@ linx_path_plot_cluster <- function() {
 ```{r vis_copy_number}
 linx_path_tab("vis_copy_number") |>
   gpgr::linx_viscopynumber_read() |>
-  dt_table()
+  dt_table() |>
+  DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
 ```
 
 ```{r blank1, results='asis'}
@@ -148,7 +155,8 @@ linx_path_tab("vis_fusion") |>
 ```{r vis_gene_exon}
 linx_path_tab("vis_gene_exon") |>
   gpgr::linx_visgeneexon_read() |>
-  dt_table()
+  dt_table() |>
+  DT::formatCurrency(~ ExonStart + ExonEnd, currency = "", interval = 3, mark = ",", digits = 0)
 ```
 
 #### Protein Domain
@@ -158,7 +166,8 @@ linx_path_tab("vis_gene_exon") |>
 ```{r vis_protein_domain}
 linx_path_tab("vis_protein_domain") |>
   gpgr::linx_visproteindomain_read() |>
-  dt_table()
+  dt_table() |>
+  DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
 ```
 
 #### Segments
@@ -178,7 +187,8 @@ linx_path_tab("vis_segments") |>
 ```{r vis_sv_data}
 linx_path_tab("vis_sv_data") |>
   gpgr::linx_vissvdata_read() |>
-  dt_table()
+  dt_table() |>
+  DT::formatCurrency(~ PosStart + PosEnd, currency = "", interval = 3, mark = ",", digits = 0)
 ```
 
 ### Main {.tabset}
@@ -280,12 +290,14 @@ dt_table(l$tab)
 ## Plots (Chromosome) {.tabset #plots-chrom}
 
 ```{r plot_chrom, results='asis'}
-for (i in c(1:22, "X")) {
-  res <- linx_path_plot_chr(i)
-  if (!is.null(res)) {
-    cat(glue("\n### chr{i}"), "\n")
-    cat(glue("\nnsegs: {as.integer(res$segs)}"), "\n\n\n")
-    cat(glue("<img src=\"{res$path}\" height=\"1000\"/>"), "\n\n\n")
+chrom_plots <- linx_path_plot_chr()
+if (!is.null(chrom_plots)) {
+  cat(glue("\n**Total:** {nrow(chrom_plots)} chromosome plots"), "\n\n\n")
+  for (i in seq_len(nrow(chrom_plots))) {
+    r <- chrom_plots[i, ]
+    cat(glue("\n### chr{r$chrom}"), "\n")
+    cat(glue("\nnsegs: {as.integer(r$nsegs)}"), "\n\n\n")
+    cat(glue("<img src=\"{r$path}\" height=\"1000\"/>"), "\n\n\n")
     blank_lines(1)
     cat("\n\n\n")
   }
@@ -296,16 +308,19 @@ for (i in c(1:22, "X")) {
 
 ```{r plot_cluster, results='asis'}
 cluster_plots <- linx_path_plot_cluster()
-for (i in seq_len(nrow(cluster_plots))) {
-  r <- cluster_plots[i, ]
-  cat(glue("\n### {r$clusterId}"), "\n\n\n")
-  cat(glue(
-    "clusterId: {r$clusterId} | type: {r$type} | ",
-    "svId: {r$svId} | nsegs: {r$nsegs}"
-  ), "\n\n\n")
-  cat(glue("<img src=\"{r$path}\" height=\"1000\"/>"), "\n\n\n")
-  blank_lines(2)
-  cat("\n\n\n")
+if (!is.null(cluster_plots)) {
+  cat(glue("\n**Total:** {nrow(cluster_plots)} cluster plots"), "\n\n\n")
+  for (i in seq_len(nrow(cluster_plots))) {
+    r <- cluster_plots[i, ]
+    cat(glue("\n### {r$clusterId}"), "\n\n\n")
+    cat(glue(
+      "clusterId: {r$clusterId} | type: {r$type} | ",
+      "svId: {r$svId} | nsegs: {r$nsegs}"
+    ), "\n\n\n")
+    cat(glue("<img src=\"{r$path}\" height=\"1000\"/>"), "\n\n\n")
+    blank_lines(2)
+    cat("\n\n\n")
+  }
 }
 ```
 
