@@ -226,3 +226,8 @@ cpdir <- function(from, to) {
   mkdir(to)
   file.copy(from = from, to = to, recursive = TRUE)
 }
+
+# https://stackoverflow.com/a/61647053/2169986
+mixedrank <- function(x) {
+  order(gtools::mixedorder(x))
+}
