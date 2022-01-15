@@ -27,15 +27,15 @@ knitr::opts_chunk$set(
 
 ```{r render_report_interactively, echo=FALSE, eval=FALSE}
 params <- list(
-  sample = "SBJ01196_PRJ211133_L2101598",
-  table_dir = here::here("nogit/linx/SBJ01196/tables"),
-  plot_dir = here::here("nogit/linx/SBJ01196/plots")
+  sample = "SBJ01229_MDX210456_L2101648",
+  table_dir = here::here("nogit/linx/SBJ01229/tables"),
+  plot_dir = here::here("nogit/linx/SBJ01229/plots")
 )
 render_me <- function() {
   rmarkdown::render(
     here::here("inst/rmd/linx/linx.Rmd"),
     params = params,
-    output_file = "SBJ001196.html",
+    output_file = "SBJ001229.html",
     output_dir = here::here("nogit/linx/test")
   )
 }
@@ -82,7 +82,12 @@ linx_path_tab <- function(type) {
 linx_path_plot_chr <- function(chr) {
   pat <- glue("{params$sample}\\.chr{chr}\\.(\\d+)\\.png") |> as.character()
   x <- list.files(file.path(params$plot_dir), pattern = pat, full.names = TRUE)
-  stopifnot(length(x) == 1, file.exists(x))
+  if (length(x) == 0) {
+    warning(glue::glue("No LINX plots available for chromosome {chr}."))
+    return(NULL)
+  } else if (length(x) > 1) {
+    stop(glue::glue("Multiple LINX plots found for chromosome {chr}. Aborting."))
+  }
   seg_num <- sub(pat, "\\1", basename(x))
   list(
     path = x,
@@ -277,11 +282,13 @@ dt_table(l$tab)
 ```{r plot_chrom, results='asis'}
 for (i in c(1:22, "X")) {
   res <- linx_path_plot_chr(i)
-  cat(glue("\n### chr{i}"), "\n")
-  cat(glue("\nnsegs: {as.integer(res$segs)}"), "\n\n\n")
-  cat(glue("<img src=\"{res$path}\" height=\"1000\"/>"), "\n\n\n")
-  blank_lines(1)
-  cat("\n\n\n")
+  if (!is.null(res)) {
+    cat(glue("\n### chr{i}"), "\n")
+    cat(glue("\nnsegs: {as.integer(res$segs)}"), "\n\n\n")
+    cat(glue("<img src=\"{res$path}\" height=\"1000\"/>"), "\n\n\n")
+    blank_lines(1)
+    cat("\n\n\n")
+  }
 }
 ```
 
