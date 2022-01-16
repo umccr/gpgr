@@ -61,7 +61,7 @@ LINX_DESCRIPTIONS <- tibble::tribble(
   ),
   "breakend", "regionType", "c", paste0(
     "Location of the breakend relative to the transcript. ",
-    "[UPSTREAM (within 10kb upstream of the 1st base of the transcript), INTRONIC, EXONIC]"
+    "[UPSTREAM (within 100kb upstream of the 1st base of the transcript), INTRONIC, EXONIC]"
   ),
   "breakend", "codingContext", "c", paste0(
     "Location of the breakend relative to the coding context of the transcript. ",
@@ -357,7 +357,8 @@ linx_drivers_read <- function(x) {
 #' @return The input file as a processed tibble.
 #' @export
 linx_svs_process <- function(x) {
-  d <- linx_svs_read(x)
+  d <- linx_svs_read(x) |>
+    dplyr::relocate(geneStart, geneEnd, .after = clusterId)
   descr <- linx_descr_tab("svs")
   list(tab = d, descr = descr)
 }

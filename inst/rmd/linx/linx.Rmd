@@ -121,76 +121,6 @@ linx_path_plot_cluster <- function() {
 
 ## Tables {.tabset #tables}
 
-### Vis {.tabset}
-
-#### Copy Number
-
-- `vis_copy_number.tsv`
-
-```{r vis_copy_number}
-linx_path_tab("vis_copy_number") |>
-  gpgr::linx_viscopynumber_read() |>
-  dt_table() |>
-  DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
-```
-
-```{r blank1, results='asis'}
-blank_lines(2)
-```
-
-#### Fusion
-
-- `vis_fusion.tsv`
-
-```{r vis_fusion}
-linx_path_tab("vis_fusion") |>
-  gpgr::linx_visfusion_read() |>
-  dt_table()
-```
-
-#### Gene Exon
-
-- `vis_gene_exon.tsv`
-
-```{r vis_gene_exon}
-linx_path_tab("vis_gene_exon") |>
-  gpgr::linx_visgeneexon_read() |>
-  dt_table() |>
-  DT::formatCurrency(~ ExonStart + ExonEnd, currency = "", interval = 3, mark = ",", digits = 0)
-```
-
-#### Protein Domain
-
-- `vis_protein_domain.tsv`
-
-```{r vis_protein_domain}
-linx_path_tab("vis_protein_domain") |>
-  gpgr::linx_visproteindomain_read() |>
-  dt_table() |>
-  DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
-```
-
-#### Segments
-
-- `vis_segments.tsv`
-
-```{r vis_segments}
-linx_path_tab("vis_segments") |>
-  gpgr::linx_vissegments_read() |>
-  dt_table()
-```
-
-#### SV Data
-
-- `vis_sv_data.tsv`
-
-```{r vis_sv_data}
-linx_path_tab("vis_sv_data") |>
-  gpgr::linx_vissvdata_read() |>
-  dt_table() |>
-  DT::formatCurrency(~ PosStart + PosEnd, currency = "", interval = 3, mark = ",", digits = 0)
-```
-
 ### Main {.tabset}
 
 #### Annotations
@@ -286,6 +216,77 @@ l <- linx_path_tab("drivers") |>
 details::details(kable(l$descr), lang = NULL, summary = "Column Description")
 dt_table(l$tab)
 ```
+
+### Vis {.tabset}
+
+#### Copy Number
+
+- `vis_copy_number.tsv`
+
+```{r vis_copy_number}
+linx_path_tab("vis_copy_number") |>
+  gpgr::linx_viscopynumber_read() |>
+  dt_table() |>
+  DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
+```
+
+```{r blank1, results='asis'}
+blank_lines(2)
+```
+
+#### Fusion
+
+- `vis_fusion.tsv`
+
+```{r vis_fusion}
+linx_path_tab("vis_fusion") |>
+  gpgr::linx_visfusion_read() |>
+  dt_table()
+```
+
+#### Gene Exon
+
+- `vis_gene_exon.tsv`
+
+```{r vis_gene_exon}
+linx_path_tab("vis_gene_exon") |>
+  gpgr::linx_visgeneexon_read() |>
+  dt_table() |>
+  DT::formatCurrency(~ ExonStart + ExonEnd, currency = "", interval = 3, mark = ",", digits = 0)
+```
+
+#### Protein Domain
+
+- `vis_protein_domain.tsv`
+
+```{r vis_protein_domain}
+linx_path_tab("vis_protein_domain") |>
+  gpgr::linx_visproteindomain_read() |>
+  dt_table() |>
+  DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
+```
+
+#### Segments
+
+- `vis_segments.tsv`
+
+```{r vis_segments}
+linx_path_tab("vis_segments") |>
+  gpgr::linx_vissegments_read() |>
+  dt_table()
+```
+
+#### SV Data
+
+- `vis_sv_data.tsv`
+
+```{r vis_sv_data}
+linx_path_tab("vis_sv_data") |>
+  gpgr::linx_vissvdata_read() |>
+  dt_table() |>
+  DT::formatCurrency(~ PosStart + PosEnd, currency = "", interval = 3, mark = ",", digits = 0)
+```
+
 
 ## Plots (Chromosome) {.tabset #plots-chrom}
 
