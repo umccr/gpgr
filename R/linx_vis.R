@@ -21,7 +21,11 @@ linx_viscopynumber_read <- function(x) {
   d <- readr::read_tsv(x, col_types = ctypes)
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
-  d
+  d |>
+    dplyr::mutate(Chrom = sub("chr", "", Chromosome)) |>
+    dplyr::select(Chrom, Start, End, CN = CopyNumber, BAF) |>
+    dplyr::arrange(mixedrank(Chrom)) |>
+    dplyr::mutate(Chrom = as.factor(Chrom))
 }
 
 #' Read LINX VisFusion File
@@ -78,7 +82,11 @@ linx_visgeneexon_read <- function(x) {
   d <- readr::read_tsv(x, col_types = ctypes)
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
-  d
+  d |>
+    dplyr::select(-SampleId) |>
+    dplyr::mutate(Chromosome = sub("chr", "", Chromosome)) |>
+    dplyr::arrange(ClusterId, Gene, Chromosome) |>
+    dplyr::rename(Chrom = Chromosome)
 }
 
 #' Read LINX VisProteinDomain File
@@ -97,14 +105,18 @@ linx_visgeneexon_read <- function(x) {
 #' @export
 linx_visproteindomain_read <- function(x) {
   nm <- c(
-    SampleId = "c", ClusterId = "c", Transcript = "c", Chromosome = "c",
+    SampleId = "c", ClusterId = "d", Transcript = "c", Chromosome = "c",
     Start = "i", End = "i", Info = "c"
   )
   ctypes <- paste(nm, collapse = "")
   d <- readr::read_tsv(x, col_types = ctypes)
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
-  d
+  d |>
+    dplyr::select(-SampleId) |>
+    dplyr::mutate(Chromosome = sub("chr", "", Chromosome)) |>
+    dplyr::arrange(ClusterId, Chromosome, Start) |>
+    dplyr::rename(Chrom = Chromosome)
 }
 
 #' Read LINX VisSegments File
@@ -130,7 +142,10 @@ linx_vissegments_read <- function(x) {
   d <- readr::read_tsv(x, col_types = ctypes)
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
-  d
+  d |>
+    dplyr::select(-SampleId) |>
+    dplyr::mutate(Chromosome = sub("chr", "", Chromosome)) |>
+    dplyr::arrange(ClusterId, ChainId, Chromosome)
 }
 
 #' Read LINX VisSvData File
@@ -159,5 +174,7 @@ linx_vissvdata_read <- function(x) {
   d <- readr::read_tsv(x, col_types = ctypes)
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
-  d
+  d |>
+    dplyr::select(-SampleId) |>
+    dplyr::arrange(ClusterId, ChainId)
 }
