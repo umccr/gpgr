@@ -35,8 +35,8 @@ render_me <- function() {
   rmarkdown::render(
     here::here("inst/rmd/linx/linx.Rmd"),
     params = params,
-    output_file = "SBJ001229.html",
-    output_dir = here::here("nogit/linx/test")
+    output_file = glue("{params$sample}_linx.html"),
+    output_dir = here::here("nogit/linx/html_reports")
   )
 }
 render_me()
