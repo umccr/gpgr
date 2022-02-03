@@ -24,10 +24,12 @@ if (length(args$subparser_name) == 0) {
 } else if (args$subparser_name == "linx") {
   # print(c("You've called linx. Here are the arguments: ", args))
   cli::cli_alert_info("Start rendering LINX R Markdown report!")
+  tab <- normalizePath(args$table)
+  pl <- normalizePath(args$plot)
   res <- gpgr::linx_rmd(
     sample = args$sample,
-    table_dir = args$table,
-    plot_dir = args$plot,
+    table_dir = tab,
+    plot_dir = pl,
     out_file = args$out,
     quiet = args$quiet
   )
