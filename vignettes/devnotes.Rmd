@@ -17,6 +17,17 @@ The R package uses the data files when running the code examples and tests, and
 when rendering the vignettes. A simple `dvc pull` will pull the data from the
 remote storage and allow these processes to take place. Hopefully.
 
+| Command | Comments |
+|---------|----------|
+| `dvc init` | initialise dvc |
+| `dvc remote add -d storage gdrive://<...>` | add GDrive remote |
+| `dvc check-ignore *` | check what is dvc-ignored |
+| `dvc list https://github.com/umccr/gpgr inst/extdata` | list dvc'ed data |
+| `dvc add path/to/folder` | adds `folder` (and its contents) to dvc |
+| `dvc add path/to/file.txt` | adds `file.txt` to dvc |
+| `dvc push` | pushes dvc data to remote |
+
+
 ### GitHub Actions
 
 ### R Package
