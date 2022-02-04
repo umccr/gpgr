@@ -14,3 +14,5 @@
 ^README\.Rmd$
 ^\.Rproj\.user$
 ^vignettes$
+^\.dvcignore$
+^\.dvc$

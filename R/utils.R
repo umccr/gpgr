@@ -214,7 +214,11 @@ date_log <- function() {
   as.character(paste0("[", as.POSIXct(Sys.time()), "]"))
 }
 
-# create directory
+#' Create directory
+#'
+#' @param d Directory to create.
+#'
+#' @export
 mkdir <- function(d) {
   if (!dir.exists(d)) {
     dir.create(d, recursive = TRUE)
