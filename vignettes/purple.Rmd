@@ -3,12 +3,6 @@ title: "PURPLE"
 author: "Peter Diakumis"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-  
-
-vignette: >
-  %\VignetteIndexEntry{PURPLE}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r knitr_opts, include = FALSE}

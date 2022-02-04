@@ -1,0 +1,24 @@
+---
+title: "Developers"
+author: "Peter Diakumis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_document
+---
+
+## Developer Notes
+
+### Data Version Control
+
+Instead of committing big data files into `git`, we can store the files
+remotely (e.g. Google Drive, AWS S3) and just keep track of the data
+updates in `git` using [DVC](https://dvc.org/).
+
+The R package uses the data files when running the code examples and tests, and
+when rendering the vignettes. A simple `dvc pull` will pull the data from the
+remote storage and allow these processes to take place. Hopefully.
+
+### GitHub Actions
+
+### R Package
+
+### Conda Package

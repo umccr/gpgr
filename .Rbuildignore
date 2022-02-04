@@ -13,3 +13,4 @@
 ^\.pre-commit-config\.yaml$
 ^README\.Rmd$
 ^\.Rproj\.user$
+^vignettes$
