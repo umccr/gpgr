@@ -1,0 +1,18 @@
+# Add patterns of files dvc should ignore, which could improve
+# the performance. Learn more at
+# https://dvc.org/doc/user-guide/dvcignore
+.Rproj.user
+.bumpversion.cfg
+.Rinstignore
+.Rbuildignore
+.github
+.pre-commit-config.yaml
+R/
+conda/
+data/
+data-raw/
+man/
+nogit/
+pkgdown/
+tests/
+vignettes/
