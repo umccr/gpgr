@@ -2,7 +2,7 @@
 
 # File R/linx.R: @testexamples
 
-test_that("Function linx_svs_read() @ L237", {
+test_that("Function linx_svs_read() @ L239", {
   
   x <- system.file("extdata/linx/tables/linx.svs.tsv.gz", package = "gpgr")
   (l <- linx_svs_read(x))
@@ -10,7 +10,7 @@ test_that("Function linx_svs_read() @ L237", {
 })
 
 
-test_that("Function linx_breakend_read() @ L255", {
+test_that("Function linx_breakend_read() @ L257", {
   
   x <- system.file("extdata/linx/tables/linx.breakend.tsv.gz", package = "gpgr")
   (l <- linx_breakend_read(x))
@@ -18,7 +18,7 @@ test_that("Function linx_breakend_read() @ L255", {
 })
 
 
-test_that("Function linx_clusters_read() @ L273", {
+test_that("Function linx_clusters_read() @ L275", {
   
   x <- system.file("extdata/linx/tables/linx.clusters.tsv.gz", package = "gpgr")
   (l <- linx_clusters_read(x))
@@ -26,7 +26,7 @@ test_that("Function linx_clusters_read() @ L273", {
 })
 
 
-test_that("Function linx_links_read() @ L291", {
+test_that("Function linx_links_read() @ L293", {
   
   x <- system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr")
   (l <- linx_links_read(x))
@@ -34,7 +34,7 @@ test_that("Function linx_links_read() @ L291", {
 })
 
 
-test_that("Function linx_fusion_read() @ L309", {
+test_that("Function linx_fusion_read() @ L311", {
   
   x <- system.file("extdata/linx/tables/linx.fusion.tsv.gz", package = "gpgr")
   (l <- linx_fusion_read(x))
@@ -42,7 +42,7 @@ test_that("Function linx_fusion_read() @ L309", {
 })
 
 
-test_that("Function linx_drivercatalog_read() @ L327", {
+test_that("Function linx_drivercatalog_read() @ L329", {
   
   x <- system.file("extdata/linx/tables/linx.driver.catalog.tsv.gz", package = "gpgr")
   (l <- linx_drivercatalog_read(x))
@@ -50,7 +50,7 @@ test_that("Function linx_drivercatalog_read() @ L327", {
 })
 
 
-test_that("Function linx_drivers_read() @ L345", {
+test_that("Function linx_drivers_read() @ L347", {
   
   x <- system.file("extdata/linx/tables/linx.drivers.tsv.gz", package = "gpgr")
   (l <- linx_drivers_read(x))

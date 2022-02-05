@@ -22,10 +22,10 @@ linx_viscopynumber_read <- function(x) {
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
-    dplyr::mutate(Chrom = sub("chr", "", Chromosome)) |>
-    dplyr::select(Chrom, Start, End, CN = CopyNumber, BAF) |>
-    dplyr::arrange(mixedrank(Chrom)) |>
-    dplyr::mutate(Chrom = as.factor(Chrom))
+    dplyr::mutate(Chrom = sub("chr", "", .data$Chromosome)) |>
+    dplyr::select(.data$Chrom, .data$Start, .data$End, CN = .data$CopyNumber, .data$BAF) |>
+    dplyr::arrange(mixedrank(.data$Chrom)) |>
+    dplyr::mutate(Chrom = as.factor(.data$Chrom))
 }
 
 #' Read LINX VisFusion File
@@ -83,10 +83,10 @@ linx_visgeneexon_read <- function(x) {
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
-    dplyr::select(-SampleId) |>
-    dplyr::mutate(Chromosome = sub("chr", "", Chromosome)) |>
-    dplyr::arrange(ClusterId, Gene, Chromosome) |>
-    dplyr::rename(Chrom = Chromosome)
+    dplyr::select(-.data$SampleId) |>
+    dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome)) |>
+    dplyr::arrange(.data$ClusterId, .data$Gene, .data$Chromosome) |>
+    dplyr::rename(Chrom = .data$Chromosome)
 }
 
 #' Read LINX VisProteinDomain File
@@ -113,10 +113,10 @@ linx_visproteindomain_read <- function(x) {
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
-    dplyr::select(-SampleId) |>
-    dplyr::mutate(Chromosome = sub("chr", "", Chromosome)) |>
-    dplyr::arrange(ClusterId, Chromosome, Start) |>
-    dplyr::rename(Chrom = Chromosome)
+    dplyr::select(-.data$SampleId) |>
+    dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome)) |>
+    dplyr::arrange(.data$ClusterId, .data$Chromosome, .data$Start) |>
+    dplyr::rename(Chrom = .data$Chromosome)
 }
 
 #' Read LINX VisSegments File
@@ -143,9 +143,9 @@ linx_vissegments_read <- function(x) {
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
-    dplyr::select(-SampleId) |>
-    dplyr::mutate(Chromosome = sub("chr", "", Chromosome)) |>
-    dplyr::arrange(ClusterId, ChainId, Chromosome)
+    dplyr::select(-.data$SampleId) |>
+    dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome)) |>
+    dplyr::arrange(.data$ClusterId, .data$ChainId, .data$Chromosome)
 }
 
 #' Read LINX VisSvData File
@@ -175,6 +175,6 @@ linx_vissvdata_read <- function(x) {
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
-    dplyr::select(-SampleId) |>
-    dplyr::arrange(ClusterId, ChainId)
+    dplyr::select(-.data$SampleId) |>
+    dplyr::arrange(.data$ClusterId, .data$ChainId)
 }

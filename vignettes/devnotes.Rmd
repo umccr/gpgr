@@ -1,0 +1,62 @@
+---
+title: "Developers"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_document
+---
+
+## Developer Notes
+
+### R Package
+
+For developing the pkg locally, you can clone the repo, open `gpgr.Rproj` in RStudio,
+then work with `devtools`. You'll also need to install
+[roxytest](https://github.com/mikldk/roxytest) to get the tests and documentation working.
+
+| Command | Comment |
+|---------|---------|
+| `devtools::document()` | document the pkg (`Cmd+Shift+D` (needs shortcut change)) |
+| `devtools::load_all()` | load the pkg (`Cmd+Shift+L`) |
+| `devtools::check()` | check the pkg (`Cmd+Shift+E`) |
+| `devtools::install()` | install the pkg (`Cmd+Shift+B`) |
+| `R CMD INSTALL --no-multiarch --with-keep.source pcgr.git/pcgrr` | install the pkg into the first library of `.libPaths()` (useful when using in conda env) |
+
+### Data Version Control
+
+Instead of committing big data files into `git`, we can store the files
+remotely (e.g. Google Drive, AWS S3) and just keep track of the data
+updates in `git` using [DVC](https://dvc.org/).
+
+The R package uses the data files when running the code examples and tests, and
+when rendering the vignettes. A simple `dvc pull` will pull the data from the
+remote storage and allow these processes to take place.
+
+| Command | Comments |
+|---------|----------|
+| `dvc init` | initialise dvc |
+| `dvc remote add -d storage gdrive://<...>` | add GDrive remote |
+| `dvc check-ignore *` | check what is dvc-ignored |
+| `dvc list https://github.com/umccr/gpgr inst/extdata` | list dvc'ed data |
+| `dvc add path/to/folder` | adds `folder` (and its contents) to dvc |
+| `dvc add path/to/file.txt` | adds `file.txt` to dvc |
+| `dvc push` | pushes dvc data to remote |
+| `dvc pull` | pulls dvc data from remote |
+
+
+### GitHub Actions
+
+- For DVC, make sure you install `dvc` and the corresponding remote
+  package e.g. `dvc-gdrive`, `dvc-s3` etc., or else you'll get
+  something completely puzzling like:
+
+```
+WARNING: No file hash info found for 'FOO.txt'. It won't be created.
+ERROR: failed to pull data from the cloud - Checkout failed for following targets:
+Is your cache up to date?
+<https://error.dvc.org/missing-files>
+```
+
+### Conda Package
+
+Make sure your `source` points to the source `path` instead of a
+`git_url`/`git_tag`, else your dev branch will be pulling the `main` branch
+and you'll be pulling your (remaining) hair out.

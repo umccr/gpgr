@@ -358,7 +358,7 @@ linx_drivers_read <- function(x) {
 #' @export
 linx_svs_process <- function(x) {
   d <- linx_svs_read(x) |>
-    dplyr::relocate(geneStart, geneEnd, .after = clusterId)
+    dplyr::relocate(.data$geneStart, .data$geneEnd, .after = .data$clusterId)
   descr <- linx_descr_tab("svs")
   list(tab = d, descr = descr)
 }
