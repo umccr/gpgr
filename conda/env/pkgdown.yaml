@@ -1,7 +1,7 @@
 channels:
   - local
 dependencies:
-  - pdiakumis::r-gpgr
+  - r-gpgr
   - r-devtools
   - r-kableextra
   - r-patchwork
