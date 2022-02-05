@@ -1,8 +1,7 @@
 ---
 title: "PURPLE"
-author: "Peter Diakumis"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::html_document
 ---
 
 ```{r knitr_opts, include = FALSE}
@@ -22,7 +21,7 @@ require(knitr)
 ## Introduction
 
 PURPLE: Purity Ploidy Estimator
-(https://github.com/hartwigmedical/hmftools/tree/master/purple)
+(https://github.com/hartwigmedical/hmftools/tree/master/purple).
 
 PURPLE combines B-allele frequency, read depth ratios, small variants and structural variants to
 estimate the purity and copy number profile of a tumor sample.

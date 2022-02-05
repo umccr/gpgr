@@ -44,6 +44,7 @@ reference:
   - vcf_is_empty
   - pkg_exists
   - session_info_kable
+  - mkdir
 
 news:
   one_page: true
