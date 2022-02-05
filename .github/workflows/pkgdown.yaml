@@ -33,11 +33,11 @@ jobs:
           auto-activate-base: true
           activate-environment: ""
           mamba-version: "*"
-          channels: "umccr,conda-forge,bioconda"
-      - name: Conda package build and upload
-        run: |
-          mamba install conda-build conda-verify anaconda-client boa
-          conda mambabuild --R 4.1 ${recipe_path} --token ${atoken}
+          channels: "umccr,pdiakumis,conda-forge,bioconda"
+#     - name: Conda package build and upload
+#       run: |
+#         mamba install conda-build conda-verify anaconda-client boa
+#         conda mambabuild --R 4.1 ${recipe_path} --token ${atoken}
       - name: Install conda packages
         run: mamba env create -n pkgdown -f ${env_path}/pkgdown.yaml
       - name: Publish pkgdown website
