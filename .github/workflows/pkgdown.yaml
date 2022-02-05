@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - main
+      - dvc
 
 env:
   atoken: ${{ secrets.ANACONDA_UPLOAD_TOKEN }}
   recipe_path: conda/recipe
   env_path: conda/env
+  gdrive_credentials_data: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
 jobs:
   build-conda-deploy-pkgdown:
