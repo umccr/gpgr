@@ -9,6 +9,7 @@ env:
   atoken: ${{ secrets.ANACONDA_UPLOAD_TOKEN }}
   recipe_path: conda/recipe
   env_path: conda/env
+  VERSION: '1.1.0' # versioned by bump2version
   GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
 jobs:
@@ -50,3 +51,14 @@ jobs:
             Rscript -e "packageVersion('gpgr')"
             Rscript -e "pkgdown::deploy_to_branch(pkg = '.', commit_message = paste(pkgdown:::construct_commit_message('.'), '- see https://umccr.github.io/gpgr/'), branch = 'gh-pages', new_process = FALSE)"
 
+      - name: Create tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const the_tag_name = 'refs/tags/v' + process.env.VERSION
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: the_tag_name,
+              sha: context.sha
+            })
