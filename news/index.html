@@ -10,20 +10,21 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
+    <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/devnotes.html">Developers</a>
     <a class="dropdown-item" href="../articles/linx.html">LINX</a>
     <a class="dropdown-item" href="../articles/purple.html">PURPLE</a>
   </div>
@@ -52,30 +53,72 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.0" id="gpgr-120-2021-02-07">gpgr 1.2.0 (2021-02-07)<a class="anchor" aria-label="anchor" href="#gpgr-120-2021-02-07"></a></h2>
+<ul><li>
+<span class="emoji" data-emoji="star">⭐</span> Support for DVC (<a href="https://github.com/umccr/gpgr/pull/43" class="external-link">pr43</a>, <a href="https://github.com/umccr/gpgr/issues/41" class="external-link">issue41</a>).</li>
+<li>
+<span class="emoji" data-emoji="wrench">🔧</span> Fixes for LINX
+tables (<a href="https://github.com/umccr/gpgr/pull/40" class="external-link">pr40</a>)</li>
+<li>
+<span class="emoji" data-emoji="wrench">🔧</span> Bug fix for LINX
+CLI (<a href="https://github.com/umccr/gpgr/commit/8e89ac67ba45d64e814772b1c12d6fc3b8e7a45d" class="external-link">8e89ac6</a>
+</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.0" id="gpgr-110-2021-01-12">gpgr 1.1.0 (2021-01-12)<a class="anchor" aria-label="anchor" href="#gpgr-110-2021-01-12"></a></h2>
+<ul><li>
+<span class="emoji" data-emoji="star">⭐</span> Add LINX RMarkdown
+report.</li>
+<li>
+<span class="emoji" data-emoji="star">⭐</span> Added script for
+tidying umccrised MultiQC JSON output (<a href="https://github.com/umccr/gpgr/pull/38" class="external-link">pr38</a>).</li>
+<li>
+<span class="emoji" data-emoji="star">⭐</span> Add CLI for LINX
+reporter (<a href="https://github.com/umccr/gpgr/pull/39" class="external-link">pr39</a>).</li>
+<li>
+<span class="emoji" data-emoji="wrench">🔧</span> Add LINX
+description tibble and refactor LINX code (<a href="https://github.com/umccr/gpgr/pull/36" class="external-link">pr36</a>).</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="gpgr-100-2021-12-22">gpgr 1.0.0 (2021-12-22)<a class="anchor" aria-label="anchor" href="#gpgr-100-2021-12-22"></a></h2>
 <ul><li>
-<strong>Major change</strong>: Moving signature tool wrappers (CHORD, HRDetect, and MutationalPatterns) to sigrap (<a href="https://github.com/umccr/sigrap" class="external-link uri">https://github.com/umccr/sigrap</a>) (<a href="https://github.com/umccr/gpgr/pull/35" class="external-link">pr35</a>).</li>
+<strong>Major change</strong>: Moving signature tool wrappers
+(CHORD, HRDetect, and MutationalPatterns) to sigrap (<a href="https://github.com/umccr/sigrap" class="external-link uri">https://github.com/umccr/sigrap</a>) (<a href="https://github.com/umccr/gpgr/pull/35" class="external-link">pr35</a>).</li>
 <li>Support for LINX tables (<a href="https://github.com/umccr/gpgr/pull/34" class="external-link">pr34</a>).</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="gpgr-020-2021-11-23">gpgr 0.2.0 (2021-11-23)<a class="anchor" aria-label="anchor" href="#gpgr-020-2021-11-23"></a></h2>
 <ul><li>new release after a year in the freezer</li>
 <li>
-<span class="emoji" data-emoji="star">⭐</span> add CLI for CHORD, HRDetect and MutationalPatterns. (<a href="https://github.com/umccr/gpgr/pull/26" class="external-link">pr26</a>, <a href="https://github.com/umccr/gpgr/pull/28" class="external-link">pr28</a>, <a href="https://github.com/umccr/gpgr/issues/17" class="external-link">issue17</a>)</li>
+<span class="emoji" data-emoji="star">⭐</span> add CLI for CHORD,
+HRDetect and MutationalPatterns (<a href="https://github.com/umccr/gpgr/pull/26" class="external-link">pr26</a>, <a href="https://github.com/umccr/gpgr/pull/28" class="external-link">pr28</a>, <a href="https://github.com/umccr/gpgr/issues/17" class="external-link">issue17</a>)</li>
 <li>
-<span class="emoji" data-emoji="star">⭐</span> add 6 new SBS signatures from the March 2021 COSMIC release (v3.2). (<a href="https://github.com/umccr/gpgr/issues/22" class="external-link">issue22</a>, <a href="https://github.com/umccr/gpgr/pull/23" class="external-link">pr23</a>)</li>
+<span class="emoji" data-emoji="star">⭐</span> add 6 new SBS
+signatures from the March 2021 COSMIC release (v3.2) (<a href="https://github.com/umccr/gpgr/issues/22" class="external-link">issue22</a>, <a href="https://github.com/umccr/gpgr/pull/23" class="external-link">pr23</a>)</li>
 <li>
-<span class="emoji" data-emoji="star">⭐</span> update to use the base pipe operator (<code>|&gt;</code>) introduced in R 4.1. (<a href="https://github.com/umccr/gpgr/pull/24" class="external-link">pr24</a>)</li>
+<span class="emoji" data-emoji="star">⭐</span> update to use the
+base pipe operator (<code>|&gt;</code>) introduced in R 4.1 (<a href="https://github.com/umccr/gpgr/pull/24" class="external-link">pr24</a>)</li>
 <li>
-<span class="emoji" data-emoji="star">⭐</span> add handy <code>get_genome_obj</code> function that returns a BSgenome object, provided a ‘hgXX’ string (useful for MutationalPatterns &amp; CHORD). (<a href="https://github.com/umccr/gpgr/pull/20" class="external-link">pr20</a>)</li>
+<span class="emoji" data-emoji="star">⭐</span> add handy
+<code>get_genome_obj</code> function that returns a BSgenome object,
+provided a ‘hgXX’ string (useful for MutationalPatterns &amp; CHORD) (<a href="https://github.com/umccr/gpgr/pull/20" class="external-link">pr20</a>)</li>
 <li>
-<span class="emoji" data-emoji="star">⭐</span> add handy <code>pkg_exists</code> function that checks if the specified R package exists on the local system. (<a href="https://github.com/umccr/gpgr/pull/20" class="external-link">pr20</a>)</li>
+<span class="emoji" data-emoji="star">⭐</span> add handy
+<code>pkg_exists</code> function that checks if the specified R package
+exists on the local system (<a href="https://github.com/umccr/gpgr/pull/20" class="external-link">pr20</a>)</li>
 <li>
-<span class="emoji" data-emoji="question">❓</span> add <code>readr::local_edition(1)</code> before <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_tsv</a></code> due to <code>readr</code> using <code>vroom</code> under the hood (I’m not too comfortable with this, but anyway). See <a href="https://www.tidyverse.org/blog/2021/07/readr-2-0-0/#readr-2nd-edition" class="external-link uri">https://www.tidyverse.org/blog/2021/07/readr-2-0-0/#readr-2nd-edition</a>. I think it happens because I’m using the <code>comment</code> parameter to read in the gzipped VCF. Oh well. (<a href="https://github.com/umccr/gpgr/pull/21" class="external-link">pr21</a>)</li>
+<span class="emoji" data-emoji="question">❓</span> add
+<code>readr::local_edition(1)</code> before <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_tsv</a></code>
+due to <code>readr</code> using <code>vroom</code> under the hood (I’m
+not too comfortable with this, but anyway). See <a href="https://www.tidyverse.org/blog/2021/07/readr-2-0-0/#readr-2nd-edition" class="external-link uri">https://www.tidyverse.org/blog/2021/07/readr-2-0-0/#readr-2nd-edition</a>.
+I think it happens because I’m using the <code>comment</code> parameter
+to read in the gzipped VCF. Oh well (<a href="https://github.com/umccr/gpgr/pull/21" class="external-link">pr21</a>)</li>
 <li>
-<span class="emoji" data-emoji="wrench">🔧</span> use <a href="https://github.com/c4urself/bump2version" class="external-link">bumpversion</a> for updating pkg versions. (<a href="https://github.com/umccr/gpgr/issues/18" class="external-link">issue18</a>, <a href="https://github.com/umccr/gpgr/pull/19" class="external-link">pr19</a>)</li>
+<span class="emoji" data-emoji="wrench">🔧</span> use <a href="https://github.com/c4urself/bump2version" class="external-link">bumpversion</a> for
+updating pkg versions (<a href="https://github.com/umccr/gpgr/issues/18" class="external-link">issue18</a>, <a href="https://github.com/umccr/gpgr/pull/19" class="external-link">pr19</a>)</li>
 <li>
-<span class="emoji" data-emoji="wrench">🔧</span> add pre-commit hooks and styler. (<a href="https://github.com/umccr/gpgr/issues/25" class="external-link">issue25</a>, <a href="https://github.com/umccr/gpgr/pull/27" class="external-link">pr27</a>)</li>
+<span class="emoji" data-emoji="wrench">🔧</span> add pre-commit
+hooks and styler (<a href="https://github.com/umccr/gpgr/issues/25" class="external-link">issue25</a>, <a href="https://github.com/umccr/gpgr/pull/27" class="external-link">pr27</a>)</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="gpgr-010-2020-11-19">gpgr 0.1.0 (2020-11-19)<a class="anchor" aria-label="anchor" href="#gpgr-010-2020-11-19"></a></h2>
@@ -104,11 +147,13 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>.</p>
+  <p></p><p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter
+Diakumis</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
     </footer></div>

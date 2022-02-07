@@ -26,14 +26,14 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
+    <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
@@ -41,6 +41,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/devnotes.html">Developers</a>
     <a class="dropdown-item" href="../articles/linx.html">LINX</a>
     <a class="dropdown-item" href="../articles/purple.html">PURPLE</a>
   </div>
@@ -67,12 +68,14 @@
   </div>
 </nav><div class="container template-article">
 
+
+
+
 <div class="row">
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>PURPLE</h1>
-                        <h4 data-toc-skip class="author">Peter Diakumis</h4>
             
-            <h4 data-toc-skip class="date">2022-01-12</h4>
+            <h4 data-toc-skip class="date">2022-02-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/vignettes/purple.Rmd" class="external-link"><code>vignettes/purple.Rmd</code></a></small>
       <div class="d-none name"><code>purple.Rmd</code></div>
@@ -88,8 +91,10 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>PURPLE: Purity Ploidy Estimator (<a href="https://github.com/hartwigmedical/hmftools/tree/master/purple" class="external-link uri">https://github.com/hartwigmedical/hmftools/tree/master/purple</a>)</p>
-<p>PURPLE combines B-allele frequency, read depth ratios, small variants and structural variants to estimate the purity and copy number profile of a tumor sample.</p>
+<p>PURPLE: Purity Ploidy Estimator (<a href="https://github.com/hartwigmedical/hmftools/tree/master/purple" class="external-link uri">https://github.com/hartwigmedical/hmftools/tree/master/purple</a>).</p>
+<p>PURPLE combines B-allele frequency, read depth ratios, small variants
+and structural variants to estimate the purity and copy number profile
+of a tumor sample.</p>
 <p>It outputs several files, some of which are displayed below.</p>
 </div>
 <div class="section level2">
@@ -148,7 +153,10 @@ CopyNumber of minor + major allele adjusted for purity
 Start/End SegSupport
 </td>
 <td style="text-align:left;">
-Type of SV support for the CN breakpoint at start/end of region. Allowed values: CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), SGL (single breakend SV support), NONE (no SV support for CN breakpoint), MULT (multiple SV support at exact breakpoint)
+Type of SV support for the CN breakpoint at start/end of region. Allowed
+values: CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), SGL
+(single breakend SV support), NONE (no SV support for CN breakpoint),
+MULT (multiple SV support at exact breakpoint)
 </td>
 </tr>
 <tr>
@@ -156,7 +164,11 @@ Type of SV support for the CN breakpoint at start/end of region. Allowed values:
 Method
 </td>
 <td style="text-align:left;">
-Method used to determine the CN of the region. Allowed values: BAF_WEIGHTED (avg of all depth windows for the region), STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), LONG_ARM (inferred from the long arm), GERMLINE_AMPLIFICATION (inferred using special logic to handle regions of germline amplification)
+Method used to determine the CN of the region. Allowed values:
+BAF_WEIGHTED (avg of all depth windows for the region),
+STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), LONG_ARM
+(inferred from the long arm), GERMLINE_AMPLIFICATION (inferred using
+special logic to handle regions of germline amplification)
 </td>
 </tr>
 <tr>
@@ -164,7 +176,8 @@ Method used to determine the CN of the region. Allowed values: BAF_WEIGHTED (avg
 BAF (count)
 </td>
 <td style="text-align:left;">
-Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf points covered by this segment)
+Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf
+points covered by this segment)
 </td>
 </tr>
 <tr>
@@ -172,7 +185,8 @@ Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf points covere
 GC (windowCount)
 </td>
 <td style="text-align:left;">
-Proportion of segment that is G or C (Count of COBALT windows covered by this segment)
+Proportion of segment that is G or C (Count of COBALT windows covered by
+this segment)
 </td>
 </tr>
 </tbody>
@@ -569,7 +583,8 @@ Chromosome band of the gene
 onco_or_ts
 </td>
 <td style="text-align:left;">
-oncogene (‘oncogene’), tumor suppressor (‘tsgene’), or both (‘onco+ts’), as reported by <a href="https://github.com/jakelever/cancermine" class="external-link">Cancermine</a>
+oncogene (‘oncogene’), tumor suppressor (‘tsgene’), or both (‘onco+ts’),
+as reported by <a href="https://github.com/jakelever/cancermine" class="external-link">Cancermine</a>
 </td>
 </tr>
 <tr>
@@ -585,7 +600,8 @@ Ensembl transcript ID (dot version)
 minMinorAlleleCN
 </td>
 <td style="text-align:left;">
-Minimum allele ploidy found over the gene exons - useful for identifying LOH events
+Minimum allele ploidy found over the gene exons - useful for identifying
+LOH events
 </td>
 </tr>
 <tr>
@@ -598,10 +614,13 @@ Count of somatic copy number regions this gene spans
 </tr>
 <tr>
 <td style="text-align:left;">
-germDelReg (germlineHomDeletionRegions / germlineHetToHomDeletionRegions)
+germDelReg (germlineHomDeletionRegions /
+germlineHetToHomDeletionRegions)
 </td>
 <td style="text-align:left;">
-Number of regions spanned by this gene that are (homozygously deleted in the germline / both heterozygously deleted in the germline and homozygously deleted in the tumor)
+Number of regions spanned by this gene that are (homozygously deleted in
+the germline / both heterozygously deleted in the germline and
+homozygously deleted in the tumor)
 </td>
 </tr>
 <tr>
@@ -617,7 +636,8 @@ Number of somatic regions inside the gene that share the min copy number
 minRegStartEnd
 </td>
 <td style="text-align:left;">
-Start/End base of the copy number region overlapping the gene with the minimum copy number
+Start/End base of the copy number region overlapping the gene with the
+minimum copy number
 </td>
 </tr>
 <tr>
@@ -625,7 +645,8 @@ Start/End base of the copy number region overlapping the gene with the minimum c
 minRegSupportStartEndMethod
 </td>
 <td style="text-align:left;">
-Start/end support of the CN region overlapping the gene with the min CN (plus determination method)
+Start/end support of the CN region overlapping the gene with the min CN
+(plus determination method)
 </td>
 </tr>
 </tbody>
@@ -1206,7 +1227,10 @@ CopyNumber of minor + major allele adjusted for purity
 Start/End SegSupport
 </td>
 <td style="text-align:left;">
-Type of SV support for the CN breakpoint at start/end of region. Allowed values: CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), SGL (single breakend SV support), NONE (no SV support for CN breakpoint), MULT (multiple SV support at exact breakpoint)
+Type of SV support for the CN breakpoint at start/end of region. Allowed
+values: CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), SGL
+(single breakend SV support), NONE (no SV support for CN breakpoint),
+MULT (multiple SV support at exact breakpoint)
 </td>
 </tr>
 <tr>
@@ -1214,7 +1238,11 @@ Type of SV support for the CN breakpoint at start/end of region. Allowed values:
 Method
 </td>
 <td style="text-align:left;">
-Method used to determine the CN of the region. Allowed values: BAF_WEIGHTED (avg of all depth windows for the region), STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), LONG_ARM (inferred from the long arm), GERMLINE_AMPLIFICATION (inferred using special logic to handle regions of germline amplification)
+Method used to determine the CN of the region. Allowed values:
+BAF_WEIGHTED (avg of all depth windows for the region),
+STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), LONG_ARM
+(inferred from the long arm), GERMLINE_AMPLIFICATION (inferred using
+special logic to handle regions of germline amplification)
 </td>
 </tr>
 <tr>
@@ -1222,7 +1250,8 @@ Method used to determine the CN of the region. Allowed values: BAF_WEIGHTED (avg
 BAF (count)
 </td>
 <td style="text-align:left;">
-Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf points covered by this segment)
+Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf
+points covered by this segment)
 </td>
 </tr>
 <tr>
@@ -1230,7 +1259,8 @@ Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf points covere
 GC (windowCount)
 </td>
 <td style="text-align:left;">
-Proportion of segment that is G or C (Count of COBALT windows covered by this segment)
+Proportion of segment that is G or C (Count of COBALT windows covered by
+this segment)
 </td>
 </tr>
 </tbody>
@@ -1604,7 +1634,8 @@ Purity
 0.75 (0.71-0.78)
 </td>
 <td style="text-align:left;">
-Purity of tumor in the sample (and min-max with score within 10% of best).
+Purity of tumor in the sample (and min-max with score within 10% of
+best).
 </td>
 </tr>
 <tr>
@@ -1618,7 +1649,8 @@ Ploidy
 1.87 (1.86-1.88)
 </td>
 <td style="text-align:left;">
-Average ploidy of tumor sample after adjusting for purity (and min-max with score within 10% of best).
+Average ploidy of tumor sample after adjusting for purity (and min-max
+with score within 10% of best).
 </td>
 </tr>
 <tr>
@@ -1646,7 +1678,8 @@ WGD
 FALSE
 </td>
 <td style="text-align:left;">
-Whole genome duplication (more than 10 autosomes have average major allele ploidy &gt; 1.5).
+Whole genome duplication (more than 10 autosomes have average major
+allele ploidy &gt; 1.5).
 </td>
 </tr>
 <tr>
@@ -1660,7 +1693,8 @@ MSI (indels/Mb)
 MSS (0)
 </td>
 <td style="text-align:left;">
-MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) &amp; MS Indels per Mb.
+MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) &amp;
+MS Indels per Mb.
 </td>
 </tr>
 <tr>
@@ -1702,7 +1736,8 @@ TMB
 0 (LOW)
 </td>
 <td style="text-align:left;">
-Tumor mutational burden (# PASS variants per Megabase) (Status: ‘HIGH’ (&gt;10 PASS per Mb), ‘LOW’ or ‘UNKNOWN’).
+Tumor mutational burden (# PASS variants per Megabase) (Status: ‘HIGH’
+(&gt;10 PASS per Mb), ‘LOW’ or ‘UNKNOWN’).
 </td>
 </tr>
 <tr>
@@ -1716,7 +1751,8 @@ TML
 0 (LOW)
 </td>
 <td style="text-align:left;">
-Tumor mutational load (# of missense variants) (Status: ‘HIGH’, ‘LOW’ or ‘UNKNOWN’).
+Tumor mutational load (# of missense variants) (Status: ‘HIGH’, ‘LOW’ or
+‘UNKNOWN’).
 </td>
 </tr>
 <tr>
@@ -2923,7 +2959,8 @@ GermlineAberrations
 NONE
 </td>
 <td style="text-align:left;">
-Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.
+Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY,
+MOSAIC_X.
 </td>
 </tr>
 </tbody>
@@ -2945,19 +2982,23 @@ Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.
 <tr class="odd">
 <td align="left">base</td>
 <td align="left">4.1.2</td>
-<td align="left">2021-12-15</td>
+<td align="left">2022-01-16</td>
 <td align="left">local</td>
 </tr>
 <tr class="even">
 <td align="left">gpgr</td>
-<td align="left">1.1.0</td>
-<td align="left">2022-01-12</td>
+<td align="left">1.2.0</td>
+<td align="left">2022-02-07</td>
 <td align="left">local</td>
 </tr>
 </tbody>
 </table>
 <table class="table">
 <caption>Platform information.</caption>
+<colgroup>
+<col width="12%">
+<col width="88%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">name</th>
 <th align="left">value</th>
@@ -2997,11 +3038,12 @@ Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.
 </tr>
 <tr class="odd">
 <td align="left">date</td>
-<td align="left">2022-01-12</td>
+<td align="left">2022-02-07</td>
 </tr>
 <tr class="even">
 <td align="left">pandoc</td>
-<td align="left">2.16.2 @ /usr/share/miniconda/envs/pkgdown/bin/ (via rmarkdown)</td>
+<td align="left">2.17.1.1 @ /usr/share/miniconda/envs/pkgdown/bin/ (via
+rmarkdown)</td>
 </tr>
 </tbody>
 </table>
@@ -3014,12 +3056,14 @@ Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>.</p>
+<p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter
+Diakumis</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
     </footer>

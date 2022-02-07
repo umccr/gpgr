@@ -10,6 +10,9 @@
     <loc>https://umccr.github.io/gpgr/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://umccr.github.io/gpgr/articles/devnotes.html</loc>
+  </url>
+  <url>
     <loc>https://umccr.github.io/gpgr/articles/index.html</loc>
   </url>
   <url>
@@ -113,6 +116,9 @@
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/linx_vissvdata_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/mkdir.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/pkg_exists.html</loc>
