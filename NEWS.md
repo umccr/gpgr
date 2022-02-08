@@ -3,8 +3,8 @@
 # gpgr 1.2.0 (2021-02-07)
 
 - :star: Support for DVC ([pr43](https://github.com/umccr/gpgr/pull/43), [issue41](https://github.com/umccr/gpgr/issues/41)).
-- :wrench: Fixes for LINX tables ([pr40](https://github.com/umccr/gpgr/pull/40))
-- :wrench: Bug fix for LINX CLI ([8e89ac6](https://github.com/umccr/gpgr/commit/8e89ac67ba45d64e814772b1c12d6fc3b8e7a45d)
+- :wrench: Fixes for LINX tables ([pr40](https://github.com/umccr/gpgr/pull/40)).
+- :wrench: Bug fix for LINX CLI ([8e89ac6](https://github.com/umccr/gpgr/commit/8e89ac67ba45d64e814772b1c12d6fc3b8e7a45d)).
 
 # gpgr 1.1.0 (2021-01-12)
 
