@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - conda_cli
 
 env:
   atoken: ${{ secrets.ANACONDA_UPLOAD_TOKEN }}
