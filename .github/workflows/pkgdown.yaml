@@ -9,7 +9,7 @@ env:
   atoken: ${{ secrets.ANACONDA_UPLOAD_TOKEN }}
   recipe_path: conda/recipe
   env_path: conda/env
-  VERSION: '1.2.1' # versioned by bump2version
+  VERSION: '1.2.0' # versioned by bump2version
   GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
 jobs:
