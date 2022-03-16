@@ -86,6 +86,7 @@ linx_visgeneexon_read <- function(x) {
     dplyr::select(-.data$SampleId) |>
     dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome)) |>
     dplyr::arrange(.data$ClusterId, .data$Gene, .data$Chromosome) |>
+    dplyr::mutate(ClusterId = factor(.data$ClusterId)) |>
     dplyr::rename(Chrom = .data$Chromosome)
 }
 
@@ -116,6 +117,7 @@ linx_visproteindomain_read <- function(x) {
     dplyr::select(-.data$SampleId) |>
     dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome)) |>
     dplyr::arrange(.data$ClusterId, .data$Chromosome, .data$Start) |>
+    dplyr::mutate(ClusterId = factor(.data$ClusterId)) |>
     dplyr::rename(Chrom = .data$Chromosome)
 }
 
@@ -145,7 +147,8 @@ linx_vissegments_read <- function(x) {
   d |>
     dplyr::select(-.data$SampleId) |>
     dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome)) |>
-    dplyr::arrange(.data$ClusterId, .data$ChainId, .data$Chromosome)
+    dplyr::arrange(.data$ClusterId, .data$ChainId, .data$Chromosome) |>
+    dplyr::mutate(ClusterId = factor(.data$ClusterId))
 }
 
 #' Read LINX VisSvData File
@@ -176,5 +179,10 @@ linx_vissvdata_read <- function(x) {
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
     dplyr::select(-.data$SampleId) |>
-    dplyr::arrange(.data$ClusterId, .data$ChainId)
+    dplyr::arrange(.data$ClusterId, .data$ChainId) |>
+    dplyr::mutate(ClusterId = factor(.data$ClusterId)) |>
+    dplyr::select(
+      .data$ClusterId, .data$ChrStart, .data$ChrEnd,
+      .data$PosStart, .data$PosEnd, dplyr::everything()
+    )
 }
