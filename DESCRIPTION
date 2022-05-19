@@ -19,7 +19,6 @@ Remotes:
 Imports:
     assertthat,
     bedr,
-    cli,
     dplyr,
     ggplot2,
     gt,
@@ -31,6 +30,7 @@ Imports:
     tidyr
 Suggests:
     argparse,
+    cli,
     details,
     devtools,
     DT,

@@ -26,7 +26,7 @@ test_that("Function linx_visgeneexon_read() @ L75", {
 })
 
 
-test_that("Function linx_visproteindomain_read() @ L106", {
+test_that("Function linx_visproteindomain_read() @ L107", {
   
   x <- system.file("extdata/linx/tables/linx.vis_protein_domain.tsv.gz", package = "gpgr")
   (l <- linx_visproteindomain_read(x))
@@ -34,7 +34,7 @@ test_that("Function linx_visproteindomain_read() @ L106", {
 })
 
 
-test_that("Function linx_vissegments_read() @ L136", {
+test_that("Function linx_vissegments_read() @ L138", {
   
   x <- system.file("extdata/linx/tables/linx.vis_segments.tsv.gz", package = "gpgr")
   (l <- linx_vissegments_read(x))
@@ -42,7 +42,7 @@ test_that("Function linx_vissegments_read() @ L136", {
 })
 
 
-test_that("Function linx_vissvdata_read() @ L165", {
+test_that("Function linx_vissvdata_read() @ L168", {
   
   x <- system.file("extdata/linx/tables/linx.vis_sv_data.tsv.gz", package = "gpgr")
   (l <- linx_vissvdata_read(x))

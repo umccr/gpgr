@@ -27,9 +27,9 @@ knitr::opts_chunk$set(
 
 ```{r render_report_interactively, echo=FALSE, eval=FALSE}
 params <- list(
-  sample = "SBJ01229_MDX210456_L2101648",
-  table_dir = here::here("nogit/linx/SBJ01229/tables"),
-  plot_dir = here::here("nogit/linx/SBJ01229/plots")
+  sample = "SBJ01285_PRJ211230_L2101732",
+  table_dir = here::here("nogit/linx/SBJ01285/linx_data_tables"),
+  plot_dir = here::here("nogit/linx/SBJ01285/linx_plots")
 )
 render_me <- function() {
   rmarkdown::render(
