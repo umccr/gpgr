@@ -1,5 +1,7 @@
 # gpgr dev
 
+- factorise `ClusterId` in LINX VisSvData table
+
 # gpgr 1.2.0 (2021-02-07)
 
 - :star: Support for DVC ([pr43](https://github.com/umccr/gpgr/pull/43), [issue41](https://github.com/umccr/gpgr/issues/41)).
