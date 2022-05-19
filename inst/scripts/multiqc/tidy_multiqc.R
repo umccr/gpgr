@@ -3,7 +3,7 @@
 library(argparser, include.only = c("arg_parser", "add_argument", "parse_args"))
 library(arrow, include.only = "write_parquet")
 library(readr, include.only = "write_tsv")
-source("functions.R")
+source(system.file("scripts/multiqc/functions.R", package = "gpgr"))
 
 p <- arg_parser(
   description = "Export MultiQC json to tidy data.frame/tsv/parquet", hide.opts = TRUE

@@ -47,6 +47,7 @@ parse_raw <- function(p) {
   el <- "report_saved_raw_data"
   stopifnot(inherits(p, "list"), el %in% names(p))
   # For each tool
+  p[[el]][["dragen_frag_len"]] <- NULL
   p[[el]] |>
     imap(function(samples, tool) {
       # Remove the superflous "multiqc_" from the start of the tool name
