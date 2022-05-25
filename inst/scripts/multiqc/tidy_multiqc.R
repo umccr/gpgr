@@ -33,10 +33,11 @@ outdir <- normalizePath(mkdir(args$outdir))
 json <- args$json
 
 # main function
-d <- mj2df(json)
+d1 <- mj2df(json)
+d2 <- select_column_subset_alignmentqc(d1)
 
 ## write to TSV and Parquet format
 tsv_out <- file.path(outdir, paste(name, "tsv", sep = "."))
 parquet_out <- file.path(outdir, paste(name, "parquet", sep = "."))
-write_tsv(d, tsv_out)
-write_parquet(d, parquet_out)
+write_tsv(d2, tsv_out)
+write_parquet(d2, parquet_out)
