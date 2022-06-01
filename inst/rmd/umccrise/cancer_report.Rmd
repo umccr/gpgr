@@ -13,7 +13,6 @@ params:
   title: "UMCCR Cancer Report"
   tumor_name: 'x'
   batch_name: 'x'
-  genome_build: 'hg38'
   key_genes: 'x'
   af_global: 'x'
   af_keygenes: 'x'
@@ -43,18 +42,16 @@ knitr::opts_chunk$set(
 ```
 
 ```{r render_report_interactively, echo=F, eval=FALSE}
-genome_build <- "hg38"
-batch_name <- "SBJ01025__SBJ01025_MDX210323_L2101149"
-tumor_name <- "SBJ01025_MDX210323_L2101149"
-# umccrised_dir <- "/g/data/gx8/projects/diakumis/umccrise/umccrise_dev/umccrised_SBJ01025"
-# key_genes <- "/g/data/gx8/projects/diakumis/conda-dev/envs/umccrise/lib/python3.7/site-packages/ngs_utils/reference_data/key_genes/umccr_cancer_genes.latest.tsv"
-umccrised_dir <- "./nogit/umccrised_data"
-key_genes <- "./nogit/umccrised_data/umccr_cancer_genes.latest.tsv"
+batch_name <- "SBJ02269__PRJ221202"
+tumor_name <- "PRJ221202"
+umccrised_dir <- "/g/data/gx8/projects/diakumis/umccrise/data/SBJ02269"
+key_genes <- "/g/data/gx8/projects/diakumis/conda/envs/umccrise/lib/python3.7/site-packages/ngs_utils/reference_data/key_genes/umccr_cancer_genes.latest.tsv"
+# umccrised_dir <- "./nogit/umccrised_data"
+# key_genes <- "./nogit/umccrised_data/umccr_cancer_genes.latest.tsv"
 
 params <- list(
   tumor_name = tumor_name,
   batch_name = batch_name,
-  genome_build = genome_build,
   key_genes = key_genes,
   af_global = glue::glue("{umccrised_dir}/work/{batch_name}/cancer_report/afs/af_tumor.txt"),
   af_keygenes = glue::glue("{umccrised_dir}/work/{batch_name}/cancer_report/afs/af_tumor_keygenes.txt"),
@@ -86,9 +83,9 @@ render_me()
 # Bioconductor
 library(BSgenome)
 library(MutationalPatterns)
-ref_genome <- paste0("BSgenome.Hsapiens.UCSC.", params$genome_build)
+ref_genome <- "BSgenome.Hsapiens.UCSC.hg38"
 library(ref_genome, character.only = TRUE)
-tx_ref_genome <- paste0("TxDb.Hsapiens.UCSC.", params$genome_build, ".knownGene")
+tx_ref_genome <- "TxDb.Hsapiens.UCSC.hg38.knownGene"
 library(tx_ref_genome, character.only = TRUE)
 # CRAN
 library(devtools)
@@ -157,7 +154,7 @@ chord_res <- gpgr::chord_run(
   df.sv = chord_sv_df,
   sv.caller = "manta",
   sample.name = params$tumor_name,
-  ref.genome = params$genome_build,
+  ref.genome = "hg38",
   verbose = TRUE
 )
 
@@ -175,7 +172,7 @@ if (gpgr::vcf_is_empty(params$somatic_sv_vcf) |
     snvindel_vcf = params$somatic_snv,
     sv_vcf = params$somatic_sv_vcf,
     cnv_tsv = params$purple_som_cnv,
-    genome = params$genome_build,
+    genome = "hg38",
     snvoutdir = tempdir()
   )
 }
@@ -372,7 +369,7 @@ qc_summary_all <- dplyr::tribble(
   "Summary of SVs as presented in raw VCF.",
   19, "SVs (melted)", paste(rev(sv_summary$melted), collapse = ", "),
   "Summary of SVs after splitting annotations for each event into a separate variant row.",
-  22, "Genome", params$genome_build, "Human genome assembly used."
+  22, "Genome", "hg38", "Human genome assembly used."
 ) %>%
   dplyr::bind_rows(
     purple_qc_summary
