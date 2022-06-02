@@ -1,14 +1,18 @@
-# gpgr dev
+# gpgr 1.2.2 (2022-06-02)
 
-- factorise `ClusterId` in LINX VisSvData table
+- :star: Added CLI support for umccrise cancer report
+  - Modularised CLI subparsers into separate files
+- :wrench: Refactored cancer report to use `{sigrap}` pkg for signature tools
+- :wrench: factorise `ClusterId` in LINX VisSvData table ([pr46](https://github.com/umccr/gpgr/pull/46))
+- :wrench: subset multiqc columns ([commit-b7331db](https://github.com/umccr/gpgr/commit/b7331db86151bcbd82268dad264acf823df7471d))
 
-# gpgr 1.2.0 (2021-02-07)
+# gpgr 1.2.0 (2022-02-07)
 
 - :star: Support for DVC ([pr43](https://github.com/umccr/gpgr/pull/43), [issue41](https://github.com/umccr/gpgr/issues/41)).
 - :wrench: Fixes for LINX tables ([pr40](https://github.com/umccr/gpgr/pull/40)).
 - :wrench: Bug fix for LINX CLI ([8e89ac6](https://github.com/umccr/gpgr/commit/8e89ac67ba45d64e814772b1c12d6fc3b8e7a45d)).
 
-# gpgr 1.1.0 (2021-01-12)
+# gpgr 1.1.0 (2022-01-12)
 
 - :star: Add LINX RMarkdown report.
 - :star: Added script for tidying umccrised MultiQC JSON output ([pr38](https://github.com/umccr/gpgr/pull/38)).
