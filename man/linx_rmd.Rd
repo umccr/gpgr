@@ -2,7 +2,7 @@
 % Please edit documentation in R/rmd.R
 \name{linx_rmd}
 \alias{linx_rmd}
-\title{Generate LINX R Markdown HTML Report}
+\title{Generate UMCCR LINX Report}
 \usage{
 linx_rmd(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE)
 }
@@ -21,7 +21,7 @@ linx_rmd(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE)
 Path to rendered HTML report.
 }
 \description{
-Generates a LINX R Markdown HTML report. It does so by:
+Generates a UMCCR LINX HTML report. It does so with the following steps:
 \enumerate{
 \item recursively copy the table and plot directories into tmp/plot and tmp/table
 \item copy the rmd into tmp/linx.Rmd

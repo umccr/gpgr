@@ -11,6 +11,10 @@
   pointer-events: none;
 }
 
+table.dataTable tbody td {
+  vertical-align: top;
+}
+
 .main-container {
   max-width: 1400px !important;
   margin-left: auto;
