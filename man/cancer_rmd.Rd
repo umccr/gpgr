@@ -67,9 +67,9 @@ cancer_rmd(
 
 \item{tumor_name}{Name of tumor sample.}
 
-\item{out_file}{Path to output HTML file (needs '.html' suffix).}
+\item{out_file}{Path to output HTML file (needs '.html' suffix) (def: \verb{\{tumor_name\}_cancer_report.html}).}
 
-\item{quiet}{Suppress printing during rendering.}
+\item{quiet}{Suppress log printing during rendering.}
 }
 \value{
 Path to rendered HTML report.

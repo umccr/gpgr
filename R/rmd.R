@@ -61,8 +61,6 @@ linx_rmd <- function(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE
 #' 3. render the rmd inside tmp/
 #' 4. return the path to the output HTML
 #'
-#' @param out_file Path to output HTML file (needs '.html' suffix).
-#' @param quiet Suppress printing during rendering.
 #' @param af_global Path to `af_tumor.txt` file.
 #' @param af_keygenes Path to `af_tumor_keygenes.txt` file.
 #' @param batch_name Name of batch sample.
@@ -80,6 +78,8 @@ linx_rmd <- function(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE
 #' @param purple_som_snv_vcf Path to `purple.somatic.vcf.gz`.
 #' @param oncoviral_present_viruses Path to `oncoviruses/present_viruses.txt`.
 #' @param oncoviral_breakpoints_tsv Path to `oncoviruses/oncoviral_breakpoints.tsv`.
+#' @param out_file Path to output HTML file (needs '.html' suffix) (def: `{tumor_name}_cancer_report.html`).
+#' @param quiet Suppress log printing during rendering.
 #' @param result_outdir Path to directory to write tidy JSON/TSV results.
 #' @param tumor_name Name of tumor sample.
 #'
