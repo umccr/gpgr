@@ -10,25 +10,26 @@ output:
   rmdformats::material:
     highlight: kate
 params:
-  title: "UMCCR Cancer Report"
-  tumor_name: 'x'
-  batch_name: 'x'
-  key_genes: 'x'
   af_global: 'x'
   af_keygenes: 'x'
-  somatic_snv: 'x'
-  somatic_sv: 'x'
-  somatic_sv_vcf: 'x'
-  purple_som_gene_cnv: 'x'
-  purple_som_cnv: 'x'
+  batch_name: 'x'
+  conda_list: 'x'
+  img_dir: 'x'
+  key_genes: 'x'
+  oncoviral_present_viruses: 'x'
+  oncoviral_breakpoints_tsv: 'x'
   purple_germ_cnv: 'x'
   purple_purity: 'x'
   purple_qc: 'x'
+  purple_som_cnv: 'x'
+  purple_som_gene_cnv: 'x'
   purple_som_snv_vcf: 'x'
-  oncoviral_present_viruses: 'x'
-  oncoviral_breakpoints_tsv: 'x'
-  conda_list: 'x'
   result_outdir: 'x'
+  somatic_snv_vcf: 'x'
+  somatic_sv_tsv: 'x'
+  somatic_sv_vcf: 'x'
+  title: "UMCCR Cancer Report"
+  tumor_name: 'x'
 description: "Analysis of tumor/normal samples at UMCCR"
 title: "`r paste(params$batch_name, params$title)`"
 ---
@@ -39,44 +40,6 @@ knitr::opts_chunk$set(
   warning = FALSE, message = FALSE,
   error = TRUE
 ) # continue running report even after chunk errors
-```
-
-```{r render_report_interactively, echo=F, eval=FALSE}
-batch_name <- "SBJ02269__PRJ221202"
-tumor_name <- "PRJ221202"
-umccrised_dir <- "/g/data/gx8/projects/diakumis/umccrise/data/SBJ02269"
-key_genes <- "/g/data/gx8/projects/diakumis/conda/envs/umccrise/lib/python3.7/site-packages/ngs_utils/reference_data/key_genes/umccr_cancer_genes.latest.tsv"
-# umccrised_dir <- "./nogit/umccrised_data"
-# key_genes <- "./nogit/umccrised_data/umccr_cancer_genes.latest.tsv"
-
-params <- list(
-  tumor_name = tumor_name,
-  batch_name = batch_name,
-  key_genes = key_genes,
-  af_global = glue::glue("{umccrised_dir}/work/{batch_name}/cancer_report/afs/af_tumor.txt"),
-  af_keygenes = glue::glue("{umccrised_dir}/work/{batch_name}/cancer_report/afs/af_tumor_keygenes.txt"),
-  somatic_snv = glue::glue("{umccrised_dir}/{batch_name}/small_variants/{batch_name}-somatic-PASS.vcf.gz"),
-  somatic_sv = glue::glue("{umccrised_dir}/{batch_name}/structural/{batch_name}-manta.tsv"),
-  somatic_sv_vcf = glue::glue("{umccrised_dir}/{batch_name}/structural/{batch_name}-manta.vcf.gz"),
-  purple_som_gene_cnv = glue::glue("{umccrised_dir}/work/{batch_name}/purple/{batch_name}.purple.cnv.gene.tsv"),
-  purple_som_cnv = glue::glue("{umccrised_dir}/work/{batch_name}/purple/{batch_name}.purple.cnv.somatic.tsv"),
-  purple_germ_cnv = glue::glue("{umccrised_dir}/work/{batch_name}/purple/{batch_name}.purple.cnv.germline.tsv"),
-  purple_purity = glue::glue("{umccrised_dir}/work/{batch_name}/purple/{batch_name}.purple.purity.tsv"),
-  purple_qc = glue::glue("{umccrised_dir}/work/{batch_name}/purple/{batch_name}.purple.qc"),
-  purple_som_snv_vcf = glue::glue("{umccrised_dir}/work/{batch_name}/purple/{batch_name}.purple.somatic.vcf.gz"),
-  oncoviral_present_viruses = glue::glue("{umccrised_dir}/work/{batch_name}/oncoviruses/present_viruses.txt"),
-  oncoviral_breakpoints_tsv = glue::glue("{umccrised_dir}/work/{batch_name}/oncoviruses/oncoviral_breakpoints.tsv"),
-  conda_list = glue::glue("{umccrised_dir}/work/{batch_name}/conda_pkg_list.txt"),
-  result_outdir = glue::glue("{umccrised_dir}/{batch_name}/cancer_report_tables2")
-)
-
-render_me <- function() {
-  rmarkdown::render(
-    "cancer_report.Rmd",
-    params = params
-  )
-}
-render_me()
 ```
 
 ```{r load_pkgs}
@@ -111,7 +74,7 @@ library(gpgr)
 
 ```{r funcs}
 bnm <- params$batch_name
-img_dir <- file.path("img") # created when copying purple files to tmp dir
+img_dir <- params$img_dir # created when copying purple files to tmp dir
 result_outdir <- params$result_outdir # directory to write tables to
 blank_lines <- function(n = 10) {
   cat(rep("&nbsp;  ", n), sep = "\n")
@@ -148,8 +111,8 @@ sv_detail_table <- function(tab) {
 
 ```{r hrd_prep, results='hide'}
 #---- Homologous Recombination Deficiency ----#
-chord_sv_df <- gpgr::chord_mantavcf2df(params$somatic_sv_vcf)
-chord_res <- gpgr::chord_run(
+chord_sv_df <- sigrap::chord_mantavcf2df(params$somatic_sv_vcf)
+chord_res <- sigrap::chord_run(
   vcf.snv = params$somatic_snv,
   df.sv = chord_sv_df,
   sv.caller = "manta",
@@ -167,7 +130,7 @@ if (gpgr::vcf_is_empty(params$somatic_sv_vcf) |
     params$tumor_name, NA, NA, NA, NA, NA, NA, NA, NA
   )
 } else {
-  hrdetect_res <- gpgr::hrdetect_run(
+  hrdetect_res <- sigrap::hrdetect_run(
     nm = params$tumor_name,
     snvindel_vcf = params$somatic_snv,
     sv_vcf = params$somatic_sv_vcf,
@@ -187,30 +150,30 @@ mutpat_gr <- MutationalPatterns::read_vcfs_as_granges(
   type = "all"
 )
 
-mp_snv <- gpgr::sig_count_snv(vcf_gr = mutpat_gr, ref_genome = ref_genome)
-mp_dbs <- gpgr::sig_count_dbs(vcf_gr = mutpat_gr)
-mp_indel <- gpgr::sig_count_indel(vcf_gr = mutpat_gr, ref_genome = ref_genome)
+mp_snv <- sigrap::sig_count_snv(vcf_gr = mutpat_gr, ref_genome = ref_genome)
+mp_dbs <- sigrap::sig_count_dbs(vcf_gr = mutpat_gr)
+mp_indel <- sigrap::sig_count_indel(vcf_gr = mutpat_gr, ref_genome = ref_genome)
 
-mp_snv_plots <- gpgr::sig_plot_snv(
+mp_snv_plots <- sigrap::sig_plot_snv(
   gr_snv = mp_snv$gr_snv,
   snv_counts = mp_snv$snv_counts,
   ref_genome = ref_genome
 )
-mp_dbs_plots <- gpgr::sig_plot_dbs(dbs_counts = mp_dbs)
-mp_indel_plots <- gpgr::sig_plot_indel(indel_counts = mp_indel)
+mp_dbs_plots <- sigrap::sig_plot_dbs(dbs_counts = mp_dbs)
+mp_indel_plots <- sigrap::sig_plot_indel(indel_counts = mp_indel)
 
 sigs_snv_2015 <-
-  gpgr::cosmic_signatures_2015 %>%
-  gpgr::sig_contribution(mut_mat = mp_snv$snv_counts, signatures = .)
+  sigrap::cosmic_signatures_2015 %>%
+  sigrap::sig_contribution(mut_mat = mp_snv$snv_counts, signatures = .)
 sigs_snv_2020 <-
   MutationalPatterns::get_known_signatures(muttype = "snv", incl_poss_artifacts = FALSE) %>%
-  gpgr::sig_contribution(mut_mat = mp_snv$snv_counts, signatures = .)
+  sigrap::sig_contribution(mut_mat = mp_snv$snv_counts, signatures = .)
 sigs_dbs <-
   MutationalPatterns::get_known_signatures(muttype = "dbs") %>%
-  gpgr::sig_contribution(mut_mat = mp_dbs, signatures = .)
+  sigrap::sig_contribution(mut_mat = mp_dbs, signatures = .)
 sigs_indel <-
   MutationalPatterns::get_known_signatures(muttype = "indel") %>%
-  gpgr::sig_contribution(mut_mat = mp_indel, signatures = .)
+  sigrap::sig_contribution(mut_mat = mp_indel, signatures = .)
 
 gpgr::write_tsvjsongz(sigs_snv_2015, glue("sigs/{bnm}-snv_2015"), result_outdir)
 gpgr::write_tsvjsongz(sigs_snv_2020, glue("sigs/{bnm}-snv_2020"), result_outdir)
@@ -385,7 +348,7 @@ qc_summary_all %>%
       cell_text(weight = "bold")
     ),
     locations = cells_body(
-      columns = vars(value),
+      columns = value,
       rows = grepl("FAIL", value) & variable == "QC_Status"
     )
   ) %>%
@@ -395,7 +358,7 @@ qc_summary_all %>%
       cell_text(weight = "bold")
     ),
     locations = cells_body(
-      columns = vars(value),
+      columns = value,
       rows = grepl("WARN_", value) & variable == "QC_Status"
     )
   ) %>%
@@ -405,7 +368,7 @@ qc_summary_all %>%
     ),
     locations = list(
       cells_stub(rows = TRUE),
-      cells_body(columns = vars(value))
+      cells_body(columns = value)
     )
   ) %>%
   gt::cols_align("left") %>%
@@ -598,7 +561,7 @@ blank_lines(1)
 
 ```{r sig_snv_2015_contr}
 sigs_snv_2015 %>%
-  gpgr::sig_contribution_table(type = "Sig", outdir = img_dir) %>%
+  sigrap::sig_contribution_table(type = "Sig", outdir = img_dir) %>%
   knitr::kable(format = "html") %>%
   kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
   kableExtra::scroll_box(height = "400px")
@@ -612,7 +575,7 @@ blank_lines(1)
 
 ```{r sig_snv_2020_contr}
 sigs_snv_2020 %>%
-  gpgr::sig_contribution_table(type = "SBS", outdir = img_dir) %>%
+  sigrap::sig_contribution_table(type = "SBS", outdir = img_dir) %>%
   knitr::kable() %>%
   kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
   kableExtra::scroll_box(height = "400px")
@@ -637,7 +600,7 @@ See [MutationalPatterns INDEL/DBS Characteristics](http://bioconductor.org/packa
 ```{r mp_indel_plots_contr, out.width="90%", fig.width=14}
 mp_indel_plots$p_indel_main | mp_indel_plots$p_indel_cont
 sigs_indel %>%
-  gpgr::sig_contribution_table(type = "ID", outdir = img_dir) %>%
+  sigrap::sig_contribution_table(type = "ID", outdir = img_dir) %>%
   knitr::kable() %>%
   kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
   kableExtra::scroll_box(height = "400px")
@@ -652,7 +615,7 @@ blank_lines(1)
 ```{r mp_dbs_plots_contr, out.width="90%", fig.width=14}
 mp_dbs_plots$p_dbs_main | mp_dbs_plots$p_dbs_cont
 sigs_dbs %>%
-  gpgr::sig_contribution_table(type = "DBS", outdir = img_dir) %>%
+  sigrap::sig_contribution_table(type = "DBS", outdir = img_dir) %>%
   knitr::kable() %>%
   kableExtra::kable_styling(c("hover", "striped"), font_size = 12) %>%
   kableExtra::scroll_box(height = "400px")
@@ -1582,13 +1545,13 @@ blank_lines(1)
 
 ```{r conda_list_main}
 conda_pkgs <-
-  readr::read_table2(params$conda_list,
+  readr::read_table(params$conda_list,
     col_names = c("env", "name", "version", "build", "channel"),
     col_types = "ccccc"
   ) %>%
   dplyr::mutate(
     channel = ifelse(is.na(channel), "MISSING", channel),
-    env = sub("env", "umccrise", env),
+    env = sub("^env", "umccrise", env),
     env = sub("^umccrise_", "", env)
   ) %>%
   dplyr::arrange(name) %>%
