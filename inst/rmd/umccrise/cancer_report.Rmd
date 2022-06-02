@@ -113,7 +113,7 @@ sv_detail_table <- function(tab) {
 #---- Homologous Recombination Deficiency ----#
 chord_sv_df <- sigrap::chord_mantavcf2df(params$somatic_sv_vcf)
 chord_res <- sigrap::chord_run(
-  vcf.snv = params$somatic_snv,
+  vcf.snv = params$somatic_snv_vcf,
   df.sv = chord_sv_df,
   sv.caller = "manta",
   sample.name = params$tumor_name,
@@ -124,7 +124,7 @@ chord_res <- sigrap::chord_run(
 hrdetect_res <- NULL
 # HRDetect doesn't handle empty files
 if (gpgr::vcf_is_empty(params$somatic_sv_vcf) |
-  gpgr::vcf_is_empty(params$somatic_snv)) {
+  gpgr::vcf_is_empty(params$somatic_snv_vcf)) {
   hrdetect_res <- tibble::tribble(
     ~sample, ~Probability, ~intercept, ~del.mh.prop, ~SNV3, ~SV3, ~SV5, ~hrd, ~SNV8,
     params$tumor_name, NA, NA, NA, NA, NA, NA, NA, NA
@@ -132,7 +132,7 @@ if (gpgr::vcf_is_empty(params$somatic_sv_vcf) |
 } else {
   hrdetect_res <- sigrap::hrdetect_run(
     nm = params$tumor_name,
-    snvindel_vcf = params$somatic_snv,
+    snvindel_vcf = params$somatic_snv_vcf,
     sv_vcf = params$somatic_sv_vcf,
     cnv_tsv = params$purple_som_cnv,
     genome = "hg38",
@@ -143,7 +143,7 @@ if (gpgr::vcf_is_empty(params$somatic_sv_vcf) |
 
 ```{r mutational_sigs_prep}
 mutpat_gr <- MutationalPatterns::read_vcfs_as_granges(
-  vcf_files = params$somatic_snv,
+  vcf_files = params$somatic_snv_vcf,
   sample_names = params$tumor_name,
   genome = ref_genome,
   group = "auto+sex",
@@ -183,7 +183,7 @@ gpgr::write_tsvjsongz(sigs_indel, glue("sigs/{bnm}-indel"), result_outdir)
 
 ```{r sv_prep}
 #---- Structural Variants ----#
-sv_path <- params$somatic_sv
+sv_path <- params$somatic_sv_tsv
 sv <- NULL
 sv_unmelted <- NULL
 sv_all <- NULL
