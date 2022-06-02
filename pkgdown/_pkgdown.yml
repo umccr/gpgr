@@ -25,6 +25,7 @@ reference:
 - contents:
   - abbreviate_effect
   - af_summary
+  - cancer_rmd
   - EFFECT_ABBREVIATIONS
   - hrd_results_tabs
   - plot_bnd_sr_pr_tot_lines

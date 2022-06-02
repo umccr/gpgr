@@ -13,10 +13,10 @@ require(DT)
 ```
 
 ```{r funcs, echo=FALSE}
-dt_table_random10 <- function(x) {
+dt_table_random10 <- function(x, n = 10) {
   # select 10 random rows
   x |>
-    dplyr::slice_sample(n = 10) |>
+    dplyr::slice_sample(n = n) |>
     DT::datatable(
       filter = list(position = "top", clear = FALSE, plain = TRUE),
       class = "cell-border display compact",
@@ -88,7 +88,7 @@ system.file("extdata/linx/tables/linx.clusters.tsv.gz", package = "gpgr") |>
 ```{r}
 system.file("extdata/linx/tables/linx.links.tsv.gz", package = "gpgr") |>
   gpgr::linx_links_read() |>
-  dt_table_random10()
+  dt_table_random10(n = 1)
 ```
 
 ### Fusions
@@ -148,7 +148,7 @@ system.file("extdata/linx/tables/linx.vis_copy_number.tsv.gz", package = "gpgr")
 ```{r}
 system.file("extdata/linx/tables/linx.vis_fusion.tsv.gz", package = "gpgr") |>
   gpgr::linx_visfusion_read() |>
-  dt_table_random10()
+  dt_table_random10(n = 1)
 ```
 
 ### Gene Exon
