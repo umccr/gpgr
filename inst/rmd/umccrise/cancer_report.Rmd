@@ -14,7 +14,6 @@ params:
   af_keygenes: 'x'
   batch_name: 'x'
   conda_list: 'x'
-  img_dir: 'x'
   key_genes: 'x'
   oncoviral_present_viruses: 'x'
   oncoviral_breakpoints_tsv: 'x'
@@ -74,7 +73,7 @@ library(gpgr)
 
 ```{r funcs}
 bnm <- params$batch_name
-img_dir <- params$img_dir # created when copying purple files to tmp dir
+img_dir <- "img_dir" # should be relative to the knitting directory
 result_outdir <- params$result_outdir # directory to write tables to
 blank_lines <- function(n = 10) {
   cat(rep("&nbsp;  ", n), sep = "\n")

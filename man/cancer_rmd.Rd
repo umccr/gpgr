@@ -77,7 +77,7 @@ Path to rendered HTML report.
 \description{
 Generates a UMCCR Cancer Report. It does so with the following steps:
 \enumerate{
-\item recursively copy the img_dir into tmp/img
+\item move the img_dir into 'tmp/img_dir'
 \item copy the rmd into tmp/cancer_report.Rmd
 \item render the rmd inside tmp/
 \item return the path to the output HTML
