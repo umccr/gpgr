@@ -103,9 +103,11 @@ cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, img_dir, 
     out_file <- glue::glue("{tumor_name}_cancer_report.html")
   }
   tmp_dir <- tempdir()
-  img_dir_tmp <- file.path(tmp_dir, "img_dir")
+  # R's file.copy('foo', 'bar/baz') copies 'foo' to 'bar/baz/foo'
+  img_dir_bname <- basename(img_dir)
+  # img_dir_tmp <- file.path(tmp_dir, "img_dir")
   rmd_dir <- system.file("rmd/umccrise", package = "gpgr")
-  file.rename(img_dir, img_dir_tmp)
+  cpdir(img_dir, tmp_dir) # /path/to/my/img_foo -> /tmp/img_foo
   cpdir(rmd_dir, tmp_dir)
   rmd_file <- file.path(tmp_dir, "umccrise", "cancer_report.Rmd")
   out_dir <- dirname(out_file)
@@ -115,6 +117,7 @@ cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, img_dir, 
     af_keygenes = af_keygenes,
     batch_name = batch_name,
     conda_list = conda_list,
+    img_dir = img_dir_bname,
     key_genes = key_genes,
     somatic_snv_vcf = somatic_snv_vcf,
     somatic_sv_tsv = somatic_sv_tsv,

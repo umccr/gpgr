@@ -14,6 +14,7 @@ params:
   af_keygenes: 'x'
   batch_name: 'x'
   conda_list: 'x'
+  img_dir: 'x'
   key_genes: 'x'
   oncoviral_present_viruses: 'x'
   oncoviral_breakpoints_tsv: 'x'
@@ -73,7 +74,7 @@ library(gpgr)
 
 ```{r funcs}
 bnm <- params$batch_name
-img_dir <- "img_dir" # should be relative to the knitting directory
+img_dir <- params$img_dir # should be relative to the knitting directory
 result_outdir <- params$result_outdir # directory to write tables to
 blank_lines <- function(n = 10) {
   cat(rep("&nbsp;  ", n), sep = "\n")
@@ -134,8 +135,7 @@ if (gpgr::vcf_is_empty(params$somatic_sv_vcf) |
     snvindel_vcf = params$somatic_snv_vcf,
     sv_vcf = params$somatic_sv_vcf,
     cnv_tsv = params$purple_som_cnv,
-    genome = "hg38",
-    snvoutdir = tempdir()
+    genome = "hg38"
   )
 }
 ```
@@ -663,7 +663,7 @@ along with an ID that is shared by grouped variants.
 
 ```{r purple_kataegis_table}
 kat <- gpgr::purple_kataegis(params$purple_som_snv_vcf)
-details::details(knitr::kable(kat$description), lang = NULL, summary = "Column Description")
+details::details(knitr::kable(kat$description), lang = "none", summary = "Column Description")
 if (nrow(kat$data) > 0) {
   DT::datatable(kat$data,
     filter = list(position = "top", clear = FALSE, plain = TRUE),
@@ -1037,7 +1037,7 @@ d %>%
     fns = list(tot = ~ sum(., na.rm = TRUE)),
     drop_trailing_zeros = TRUE
   ) %>%
-  gt::fmt_missing(columns = dplyr::everything()) %>%
+  gt::sub_missing(columns = dplyr::everything()) %>%
   gt::tab_style(
     style = list(
       cell_text(weight = "bold")
@@ -1072,7 +1072,7 @@ svtab_rawdt <- svtab_raw %>%
 ```
 
 ```{r svtab_raw_details, eval=!no_sv_found}
-details::details(sv_detail_table(svtab_raw), lang = NULL, summary = "Column Description")
+details::details(sv_detail_table(svtab_raw), lang = "none", summary = "Column Description")
 svtab_rawdt
 ```
 
@@ -1150,7 +1150,7 @@ sv_BND_purpledt <- sv_BND_purple %>%
 #### Main Columns
 
 ```{r sv_BND_main, eval=!no_sv_found}
-details::details(sv_detail_table(sv_BND_main), lang = NULL, summary = "Column Description")
+details::details(sv_detail_table(sv_BND_main), lang = "none", summary = "Column Description")
 sv_BND_maindt
 ```
 
@@ -1161,14 +1161,14 @@ blank_lines(2)
 #### Other Columns
 
 ```{r sv_BND_otherdt, eval=!no_sv_found}
-details::details(sv_detail_table(sv_BND_other), lang = NULL, summary = "Column Description")
+details::details(sv_detail_table(sv_BND_other), lang = "none", summary = "Column Description")
 sv_BND_otherdt
 ```
 
 #### PURPLE Inferred
 
 ```{r sv_BND_purple, eval=!no_sv_found}
-details::details(sv_detail_table(sv_BND_purple), lang = NULL, summary = "Column Description")
+details::details(sv_detail_table(sv_BND_purple), lang = "none", summary = "Column Description")
 sv_BND_purpledt
 ```
 
@@ -1284,7 +1284,7 @@ sv_noBND_manytxdt <- sv_noBND_manytx %>%
 #### Main Columns
 
 ```{r sv_noBND_main, eval=!no_sv_found}
-details::details(sv_detail_table(sv_noBND_main), lang = NULL, summary = "Column Description")
+details::details(sv_detail_table(sv_noBND_main), lang = "none", summary = "Column Description")
 sv_noBND_maindt
 ```
 
@@ -1295,21 +1295,21 @@ blank_lines(2)
 #### Other Columns
 
 ```{r sv_noBND2_other, eval=!no_sv_found}
-details::details(sv_detail_table(sv_noBND_other), lang = NULL, summary = "Column Description")
+details::details(sv_detail_table(sv_noBND_other), lang = "none", summary = "Column Description")
 sv_noBND_otherdt
 ```
 
 #### Many Genes
 
 ```{r sv_noBND_manygenes, eval=!no_sv_found}
-details::details(sv_detail_table(sv_noBND_manygenes), lang = NULL, summary = "Column Description")
+details::details(sv_detail_table(sv_noBND_manygenes), lang = "none", summary = "Column Description")
 sv_noBND_manygenesdt
 ```
 
 #### Many Transcripts
 
 ```{r sv_noBND_manytx, eval=!no_sv_found}
-details::details(sv_detail_table(sv_noBND_manytx), lang = NULL, summary = "Column Description")
+details::details(sv_detail_table(sv_noBND_manytx), lang = "none", summary = "Column Description")
 sv_noBND_manytxdt
 ```
 
