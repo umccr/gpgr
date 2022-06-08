@@ -1,10 +1,11 @@
-# gpgr 1.2.2 (2022-06-02)
+# gpgr 1.3.x (2022-xx-xx)
 
-- :star: Added CLI support for umccrise cancer report
+- :bug: Fix cancer report bugs ([pr48](https://github.com/umccr/gpgr/pull/48)).
+- :star: Added CLI support for umccrise cancer report.
   - Modularised CLI subparsers into separate files
-- :wrench: Refactored cancer report to use `{sigrap}` pkg for signature tools
-- :wrench: factorise `ClusterId` in LINX VisSvData table ([pr46](https://github.com/umccr/gpgr/pull/46))
-- :wrench: subset multiqc columns ([commit-b7331db](https://github.com/umccr/gpgr/commit/b7331db86151bcbd82268dad264acf823df7471d))
+- :wrench: Refactored cancer report to use `{sigrap}` pkg for signature tools.
+- :wrench: factorise `ClusterId` in LINX VisSvData table ([pr46](https://github.com/umccr/gpgr/pull/46)).
+- :wrench: subset multiqc columns ([commit-b7331db](https://github.com/umccr/gpgr/commit/b7331db86151bcbd82268dad264acf823df7471d)).
 
 # gpgr 1.2.0 (2022-02-07)
 
