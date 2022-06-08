@@ -104,11 +104,11 @@ cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, img_dir, 
   }
   tmp_dir <- tempdir()
   # R's file.copy('foo', 'bar/baz') copies 'foo' to 'bar/baz/foo'
-  img_dir_bname <- basename(img_dir)
-  # img_dir_tmp <- file.path(tmp_dir, "img_dir")
   rmd_dir <- system.file("rmd/umccrise", package = "gpgr")
-  cpdir(img_dir, tmp_dir) # /path/to/my/img_foo -> /tmp/img_foo
-  cpdir(rmd_dir, tmp_dir)
+  img_dir_b <- basename(img_dir)
+  rmd_dir_b <- basename(rmd_dir)
+  cpdir(rmd_dir, tmp_dir) # /path/to/rmd/umccrise -> /tmp/umccrise
+  cpdir(img_dir, file.path(tmp_dir, rmd_dir_b)) # /path/to/um/img -> /tmp/umccrise/img
   rmd_file <- file.path(tmp_dir, "umccrise", "cancer_report.Rmd")
   out_dir <- dirname(out_file)
   mkdir(out_dir)
@@ -117,7 +117,7 @@ cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, img_dir, 
     af_keygenes = af_keygenes,
     batch_name = batch_name,
     conda_list = conda_list,
-    img_dir = img_dir_bname,
+    img_dir = img_dir_b,
     key_genes = key_genes,
     somatic_snv_vcf = somatic_snv_vcf,
     somatic_sv_tsv = somatic_sv_tsv,
