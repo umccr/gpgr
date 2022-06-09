@@ -1,24 +1,25 @@
 
--   <a href="#gpgr---genomics-platform-group-reporting"
-    id="toc-gpgr---genomics-platform-group-reporting">gpgr - Genomics
+-   <a href="#-gpgr---genomics-platform-group-reporting"
+    id="toc--gpgr---genomics-platform-group-reporting">📚 gpgr - Genomics
     Platform Group Reporting</a>
     -   <a href="#installation" id="toc-installation">Installation</a>
     -   <a href="#main-modules" id="toc-main-modules">Main modules</a>
-        -   <a href="#purple" id="toc-purple">PURPLE</a>
-        -   <a href="#linx" id="toc-linx">LINX</a>
-    -   <a href="#cli" id="toc-cli">CLI</a>
+        -   <a href="#-linx" id="toc--linx">🕸 LINX</a>
+        -   <a href="#-purple" id="toc--purple">🔮 PURPLE</a>
+        -   <a href="#-umccrise" id="toc--umccrise">🐍 umccrise</a>
+    -   <a href="#-cli" id="toc--cli">💻 CLI</a>
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# gpgr - Genomics Platform Group Reporting
+# 📚 gpgr - Genomics Platform Group Reporting
 
 Contains reports and functions used in the Genomics Platform Group at
 the University of Melbourne Centre for Cancer Research.
 
+-   Docs: <https://umccr.github.io/gpgr/>
+
 [![Conda
 install](https://anaconda.org/umccr/r-gpgr/badges/installer/conda.svg)](https://anaconda.org/umccr/r-gpgr)
-
--   See <https://umccr.github.io/gpgr/>
 
 ## Installation
 
@@ -34,24 +35,45 @@ conda install r-gpgr -c umccr -c conda-forge -c bioconda
 
 ## Main modules
 
-### PURPLE
+### 🕸 LINX
 
-Read and process output files from
-[PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purple) -
-see vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
+-   Generate a HTML report with results from the `LINX` structural
+    variant visualisation tool from the Hartwig Medical Foundation
+    (<https://github.com/hartwigmedical/hmftools/tree/master/linx>). See
+    the [CLI](#cli) section below for options.
+-   For useful functions for reading/processing `LINX` results, see the
+    vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
 
-### LINX
+### 🔮 PURPLE
 
-Read and process output files from
-[LINX](https://github.com/hartwigmedical/hmftools/tree/master/linx) -
-see vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
+-   Read and process output files from the `PURPLE` purity/copy number
+    estimator tool from the Hartwig Medical Foundation
+    (<https://github.com/hartwigmedical/hmftools/tree/master/purple>).
+    See vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
 
-## CLI
+### 🐍 umccrise
+
+-   Generate a HTML report with results from the `umccrise` DRAGEN
+    tumor/normal post-processing workflow from UMCCR -
+    <https://github.com/umccr/umccrise>. See the [CLI](#cli) section
+    below for options.
+
+## 💻 CLI
+
+A `gpgr` command line interface is available for convenience.
+
+-   If you’re using the conda package, you can use the `gpgr.R` command
+    inside an activated conda environment.
+-   If you want to set it up on your local machine (non-conda), you can
+    use the `alias` command chunk below (or just make that script
+    available in your `PATH`).
+
+<!-- -->
 
     $ gpgr --help
-    usage: gpgr [-h] {linx,canrep} ...
+    usage: gpgr [-h] [-v] {linx,canrep} ...
 
-    GPG Reporting
+    UMCCR Genomics Platform Group Reporting
 
     positional arguments:
       {linx,canrep}  sub-command help
@@ -60,10 +82,16 @@ see vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
 
     optional arguments:
       -h, --help     show this help message and exit
+      -v, --version  show program's version number and exit
 
 
 
-    -------------------------
+    $ gpgr --version
+    gpgr 1.2.6
+
+
+
+    #------- LINX Report -------#
 
 
     $ gpgr linx --help
@@ -80,7 +108,7 @@ see vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
 
 
 
-    -------------------------
+    #------- Cancer Report -------#
 
 
     $ gpgr canrep --help

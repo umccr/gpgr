@@ -14,7 +14,7 @@ env:
   GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
 jobs:
-  build-conda-deploy-pkgdown:
+  condarise-dockerise-interwebz:
     # When merging to main and the commit message starts with 'Bump version:'
     if: "startsWith(github.event.head_commit.message, 'Bump version:')"
     name: Build and deploy conda pkg
@@ -106,7 +106,7 @@ jobs:
           config-inline: |
             [worker.oci]
               max-parallelism = 2
-      - name: 🐙 GitHub Container Rego login
+      - name: 🐙 GitHub CR login
         uses: docker/login-action@v2
         with:
           registry: ghcr.io

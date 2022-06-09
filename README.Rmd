@@ -16,14 +16,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-# gpgr - Genomics Platform Group Reporting
+# 📚 gpgr - Genomics Platform Group Reporting
 
 Contains reports and functions used in the Genomics Platform Group
 at the University of Melbourne Centre for Cancer Research.
 
-[![Conda install](https://anaconda.org/umccr/r-gpgr/badges/installer/conda.svg)](https://anaconda.org/umccr/r-gpgr)
+- Docs: <https://umccr.github.io/gpgr/>
 
-- See <https://umccr.github.io/gpgr/>
+[![Conda install](https://anaconda.org/umccr/r-gpgr/badges/installer/conda.svg)](https://anaconda.org/umccr/r-gpgr)
 
 ## Installation
 
@@ -39,42 +39,61 @@ conda install r-gpgr -c umccr -c conda-forge -c bioconda
 
 ## Main modules
 
-### PURPLE
+### 🕸 LINX
 
-Read and process output files from
-[PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purple) - see
-vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
+- Generate a HTML report with results from the `LINX` structural variant
+  visualisation tool from the Hartwig Medical Foundation
+  (<https://github.com/hartwigmedical/hmftools/tree/master/linx>).
+  See the [CLI](#cli) section below for options.
+- For useful functions for reading/processing `LINX` results, see the vignette at
+  <https://umccr.github.io/gpgr/articles/linx.html>.
 
-### LINX
+### 🔮 PURPLE
 
-Read and process output files from
-[LINX](https://github.com/hartwigmedical/hmftools/tree/master/linx) - see
-vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
+- Read and process output files from the `PURPLE` purity/copy number estimator
+  tool from the Hartwig Medical Foundation
+  (<https://github.com/hartwigmedical/hmftools/tree/master/purple>).
+  See vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
 
-## CLI
+### 🐍 umccrise
+
+- Generate a HTML report with results from the `umccrise` DRAGEN tumor/normal
+  post-processing workflow from UMCCR - <https://github.com/umccr/umccrise>.
+  See the [CLI](#cli) section below for options.
+
+## 💻 CLI
+
+A `gpgr` command line interface is available for convenience.
+
+- If you're using the conda package, you can use the `gpgr.R` command inside an
+  activated conda environment.
+- If you want to set it up on your local machine (non-conda), you can use the
+  `alias` command chunk below (or just make that script available in your `PATH`).
 
 ```{bash echo=FALSE}
-# alias to cli
 shopt -s expand_aliases
 gpgr_cli=$(Rscript -e 'x = system.file("cli/gpgr.R", package = "gpgr"); cat(x, "\n")')
 alias gpgr=$(which $(echo $gpgr_cli))
 
 echo "$ gpgr --help"
 gpgr --help
-
 echo ""
 echo ""
 echo ""
-echo "-------------------------"
+echo "$ gpgr --version"
+gpgr --version
+echo ""
+echo ""
+echo ""
+echo "#------- LINX Report -------#"
 echo ""
 echo ""
 echo "$ gpgr linx --help"
 gpgr linx --help
-
 echo ""
 echo ""
 echo ""
-echo "-------------------------"
+echo "#------- Cancer Report -------#"
 echo ""
 echo ""
 echo "$ gpgr canrep --help"
