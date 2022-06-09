@@ -3,8 +3,7 @@ name: conda-pkgdown
 on:
   push:
     branches:
-      - dockerise
-      #- main
+      - main
 
 env:
   atoken: ${{ secrets.ANACONDA_UPLOAD_TOKEN }}
@@ -17,7 +16,7 @@ env:
 jobs:
   build-conda-deploy-pkgdown:
     # When merging to main and the commit message starts with 'Bump version:'
-    #if: "startsWith(github.event.head_commit.message, 'Bump version:')"
+    if: "startsWith(github.event.head_commit.message, 'Bump version:')"
     name: Build and deploy conda pkg
     runs-on: ubuntu-latest
     defaults:
@@ -38,7 +37,7 @@ jobs:
           channels: "umccr,conda-forge,bioconda"
       - name: 🐍 Conda pkg build and upload
         run: |
-          mamba install conda-build conda-lock conda-verify anaconda-client boa dvc dvc-gdrive
+          mamba install conda-build conda-lock conda-verify anaconda-client boa dvc dvc-gdrive pip
           dvc pull
           ls -l inst/extdata/*
           conda mambabuild --R 4.1 ${recipe_path} --token ${atoken}
@@ -48,6 +47,9 @@ jobs:
           mv conda-lock.yml ${env_lock_path}/conda-lock.yml
       - name: 💾 Commit lockfile
         run: |
+          # TODO: the version bumping guarantees there will be changes,
+          # but during testing this can be problematic - need to
+          # commit only if changes exist.
           git status
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
@@ -99,22 +101,21 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: 🏯 Buildx setup
         uses: docker/setup-buildx-action@v2
-          with:
-            install: true
-            config-inline: |
-              [worker.oci]
-                max-parallelism = 2
+        with:
+          install: true
+          config-inline: |
+            [worker.oci]
+              max-parallelism = 2
       - name: 🐙 GitHub Container Rego login
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Docker img build and push
-        uses: 🐳 docker/build-push-action@v2
+      - name: 🐳 Docker img build and push
+        uses: docker/build-push-action@v2
         with:
           tags: ghcr.io/${{ github.repository }}:${{ env.VERSION }}
-          file: docker/Dockerfile
           context: . # yes, dot
           push: true
           platforms: linux/amd64
