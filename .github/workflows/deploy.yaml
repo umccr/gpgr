@@ -3,29 +3,31 @@ name: conda-pkgdown
 on:
   push:
     branches:
-      - main
+      - dockerise
+      #- main
 
 env:
   atoken: ${{ secrets.ANACONDA_UPLOAD_TOKEN }}
   recipe_path: conda/recipe
-  env_path: conda/env
+  env_yaml_path: conda/env/yaml
+  env_lock_path: conda/env/lock
   VERSION: '1.2.5' # versioned by bump2version
   GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
 jobs:
   build-conda-deploy-pkgdown:
     # When merging to main and the commit message starts with 'Bump version:'
-    if: "startsWith(github.event.head_commit.message, 'Bump version:')"
-    name: Build conda package & deploy pkgdown website
+    #if: "startsWith(github.event.head_commit.message, 'Bump version:')"
+    name: Build and deploy conda pkg
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash -l {0}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up miniconda
+      - name: Code checkout
+        uses: actions/checkout@v3
+      - name: Miniconda setup
         uses: conda-incubator/setup-miniconda@v2
         with:
           # Do everything inside the base env
@@ -34,31 +36,85 @@ jobs:
           activate-environment: ""
           mamba-version: "*"
           channels: "umccr,conda-forge,bioconda"
-      - name: Conda package build and upload
+      - name: :snake: Conda pkg build and upload
         run: |
-          mamba install conda-build conda-verify anaconda-client boa dvc dvc-gdrive
+          mamba install conda-build conda-lock conda-verify anaconda-client boa dvc dvc-gdrive
           dvc pull
           ls -l inst/extdata/*
           conda mambabuild --R 4.1 ${recipe_path} --token ${atoken}
-      - name: Install conda packages
-        run: mamba env create -n pkgdown -f ${env_path}/pkgdown.yaml
-      - name: Publish pkgdown website
+      - name: :lock: Conda lock
         run: |
-            git config --local user.email "actions@github.com"
-            git config --local user.name "GitHub Actions"
+          conda-lock --file ${env_yaml_path}/gpgr.yaml --platform linux-64
+          mv conda-lock.yml ${env_lock_path}/conda-lock.yml
+      - name: :white_check_mark: Commit lockfile
+        run: |
+          git status
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          MSG="[bot] Updating conda-lock file (v${VERSION})"
+          git add .
+          git commit -m "${MSG}"
+          git push
+
+      - name: :globe_with_meridians: Website publish
+        run: |
+            mamba env create -n pkgdown -f ${env_yaml_path}/pkgdown.yaml
             conda activate pkgdown
             printf "gpgr version:\n"
+            gpgr.R --version
             Rscript -e "packageVersion('gpgr')"
             Rscript -e "pkgdown::deploy_to_branch(pkg = '.', commit_message = paste(pkgdown:::construct_commit_message('.'), '- see https://umccr.github.io/gpgr/'), branch = 'gh-pages', new_process = FALSE)"
 
-      - name: Create tag
+      - name: :inbox_tray: Pull lock commit
+        id: pull_lock_commit
+        run: |
+            git pull --no-rebase
+            git --no-pager log --decorate=short --pretty=oneline -n3
+            LATEST_COMMIT_HASH="$(git --no-pager log -1 --format='%H')"
+            echo "::set-output name=latest_commit_hash::${LATEST_COMMIT_HASH}"
+      - name: :bookmark: Create tag
         uses: actions/github-script@v5
+        env:
+          LATEST_COMMIT_HASH: ${{ steps.pull_lock_commit.outputs.latest_commit_hash }}
         with:
           script: |
             const the_tag_name = 'refs/tags/v' + process.env.VERSION
+            const the_sha = process.env.LATEST_COMMIT_HASH
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: the_tag_name,
-              sha: context.sha
+              sha: the_sha
             })
+
+      # work with tag from above
+      - name: Code checkout
+        uses: actions/checkout@v3
+        with:
+          ref: v${{ env.VERSION }}
+      - name: Test tag
+        run: |
+            git --no-pager log --decorate=short --pretty=oneline -n5
+      - name: :european_castle: QEMU setup
+        uses: docker/setup-qemu-action@v2
+      - name: :japanese_castle: Buildx setup
+        uses: docker/setup-buildx-action@v2
+          with:
+            install: true
+            config-inline: |
+              [worker.oci]
+                max-parallelism = 2
+      - name: :octocat: GitHub Container Rego login
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker img build and push
+        uses: :whale: docker/build-push-action@v2
+        with:
+          tags: ghcr.io/${{ github.repository }}:${{ env.VERSION }}
+          file: docker/Dockerfile
+          context: . # yes, dot
+          push: true
+          platforms: linux/amd64
