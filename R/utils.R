@@ -210,6 +210,10 @@ pkg_exists <- function(p) {
   nzchar(system.file(package = p))
 }
 
+#' Print current timestamp for logging
+#'
+#' @return Current timestamp as character.
+#' @export
 date_log <- function() {
   as.character(paste0("[", as.POSIXct(Sys.time()), "]"))
 }
