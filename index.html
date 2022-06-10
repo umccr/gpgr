@@ -4,15 +4,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Reports and functions used in the Genomics Platform Group
-             at the University of Melbourne Centre for Cancer Research.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Genomics Platform Group Reporting • gpgr</title>
-<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Genomics Platform Group Reporting">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="pkgdown.js"></script><meta property="og:title" content="Genomics Platform Group Reporting">
 <meta property="og:description" content="Reports and functions used in the Genomics Platform Group
              at the University of Melbourne Centre for Cancer Research.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -20,81 +19,99 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
-    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+<body data-spy="scroll" data-target="#toc">
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
-    <a class="navbar-brand me-2" href="index.html">gpgr</a>
+    <div class="container template-home">
+      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="index.html">gpgr</a>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+      </span>
+    </div>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.4</small>
-
-    
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="reference/index.html">Reference</a>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+<li>
+  <a href="reference/index.html">Reference</a>
 </li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/devnotes.html">Developers</a>
-    <a class="dropdown-item" href="articles/linx.html">LINX</a>
-    <a class="dropdown-item" href="articles/purple.html">PURPLE</a>
-  </div>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/devnotes.html">Developers</a>
+    </li>
+    <li>
+      <a href="articles/linx.html">LINX</a>
+    </li>
+    <li>
+      <a href="articles/purple.html">PURPLE</a>
+    </li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="news/index.html">Changelog</a>
+<li>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/umccr/gpgr/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/umccr/gpgr/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
 </div>
-
-    
+<!--/.nav-collapse -->
   </div>
-</nav><div class="container template-home">
-<div class="row">
-  <main id="main" class="col-md-9"><ul>
+<!--/.container -->
+</div>
+<!--/.navbar -->
+
+      
+
+      </header><div class="row">
+  <div class="contents col-md-9">
+
+<ul>
 <li>
-<a href="#gpgr---genomics-platform-group-reporting" id="toc-gpgr---genomics-platform-group-reporting">gpgr - Genomics Platform Group Reporting</a>
+<a href="#-gpgr---genomics-platform-group-reporting" id="toc--gpgr---genomics-platform-group-reporting">📚 gpgr - Genomics Platform Group Reporting</a>
 <ul>
 <li><a href="#installation" id="toc-installation">Installation</a></li>
 <li>
 <a href="#main-modules" id="toc-main-modules">Main modules</a>
 <ul>
-<li><a href="#purple" id="toc-purple">PURPLE</a></li>
-<li><a href="#linx" id="toc-linx">LINX</a></li>
+<li><a href="#id_-linx" id="toc-id_-linx">🕸 LINX</a></li>
+<li><a href="#id_-purple" id="toc-id_-purple">🔮 PURPLE</a></li>
+<li><a href="#id_-umccrise" id="toc-id_-umccrise">🐍 umccrise</a></li>
 </ul>
 </li>
-<li><a href="#cli" id="toc-cli">CLI</a></li>
+<li><a href="#id_-developers" id="toc-id_-developers">🥳 Developers</a></li>
+<li><a href="#id_-cli" id="toc-id_-cli">💻 CLI</a></li>
 </ul>
 </li>
 </ul>
 <!-- README.md is generated from README.Rmd. Please edit that file --><div class="section level1">
-<div class="page-header"><h1 id="gpgr---genomics-platform-group-reporting">gpgr - Genomics Platform Group Reporting<a class="anchor" aria-label="anchor" href="#gpgr---genomics-platform-group-reporting"></a>
+<div class="page-header"><h1 id="id_-gpgr---genomics-platform-group-reporting">📚 gpgr - Genomics Platform Group Reporting<a class="anchor" aria-label="anchor" href="#id_-gpgr---genomics-platform-group-reporting"></a>
 </h1></div>
 <p>Contains reports and functions used in the Genomics Platform Group at the University of Melbourne Centre for Cancer Research.</p>
-<p><a href="https://anaconda.org/umccr/r-gpgr" class="external-link"><img src="https://anaconda.org/umccr/r-gpgr/badges/installer/conda.svg" alt="Conda install"></a></p>
 <ul>
-<li>See <a href="https://umccr.github.io/gpgr/" class="uri">https://umccr.github.io/gpgr/</a>
+<li>Docs: <a href="https://umccr.github.io/gpgr/" class="external-link uri">https://umccr.github.io/gpgr/</a>
 </li>
 </ul>
+<p><a href="https://anaconda.org/umccr/r-gpgr" class="external-link"><img src="https://anaconda.org/umccr/r-gpgr/badges/installer/conda.svg" alt="Conda install"></a></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -109,114 +126,145 @@
 <h2 id="main-modules">Main modules<a class="anchor" aria-label="anchor" href="#main-modules"></a>
 </h2>
 <div class="section level3">
-<h3 id="purple">PURPLE<a class="anchor" aria-label="anchor" href="#purple"></a>
+<h3 id="id_-linx">🕸 LINX<a class="anchor" aria-label="anchor" href="#id_-linx"></a>
 </h3>
-<p>Read and process output files from <a href="https://github.com/hartwigmedical/hmftools/tree/master/purple" class="external-link">PURPLE</a> - see vignette at <a href="https://umccr.github.io/gpgr/articles/purple.html" class="uri">https://umccr.github.io/gpgr/articles/purple.html</a>.</p>
+<ul>
+<li>Generate a HTML report with results from the <code>LINX</code> structural variant visualisation tool from the Hartwig Medical Foundation (<a href="https://github.com/hartwigmedical/hmftools/tree/master/linx" class="external-link uri">https://github.com/hartwigmedical/hmftools/tree/master/linx</a>). See the <a href="#cli">CLI</a> section below for options.</li>
+<li>For useful functions for reading/processing <code>LINX</code> results, see the vignette at <a href="https://umccr.github.io/gpgr/articles/linx.html" class="external-link uri">https://umccr.github.io/gpgr/articles/linx.html</a>.</li>
+</ul>
 </div>
 <div class="section level3">
-<h3 id="linx">LINX<a class="anchor" aria-label="anchor" href="#linx"></a>
+<h3 id="id_-purple">🔮 PURPLE<a class="anchor" aria-label="anchor" href="#id_-purple"></a>
 </h3>
-<p>Read and process output files from <a href="https://github.com/hartwigmedical/hmftools/tree/master/linx" class="external-link">LINX</a> - see vignette at <a href="https://umccr.github.io/gpgr/articles/linx.html" class="uri">https://umccr.github.io/gpgr/articles/linx.html</a>.</p>
+<ul>
+<li>Read and process output files from the <code>PURPLE</code> purity/copy number estimator tool from the Hartwig Medical Foundation (<a href="https://github.com/hartwigmedical/hmftools/tree/master/purple" class="external-link uri">https://github.com/hartwigmedical/hmftools/tree/master/purple</a>). See vignette at <a href="https://umccr.github.io/gpgr/articles/purple.html" class="external-link uri">https://umccr.github.io/gpgr/articles/purple.html</a>.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="id_-umccrise">🐍 umccrise<a class="anchor" aria-label="anchor" href="#id_-umccrise"></a>
+</h3>
+<ul>
+<li>Generate a HTML report with results from the <code>umccrise</code> DRAGEN tumor/normal post-processing workflow from UMCCR - <a href="https://github.com/umccr/umccrise" class="external-link uri">https://github.com/umccr/umccrise</a>. See the <a href="#cli">CLI</a> section below for options.</li>
+</ul>
 </div>
 </div>
 <div class="section level2">
-<h2 id="cli">CLI<a class="anchor" aria-label="anchor" href="#cli"></a>
+<h2 id="id_-developers">🥳 Developers<a class="anchor" aria-label="anchor" href="#id_-developers"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span> gpgr <span class="sc">--</span>help</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>usage<span class="sc">:</span> gpgr [<span class="sc">-</span>h] {linx,canrep} ...</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>GPG Reporting</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>positional arguments<span class="sc">:</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  {linx,canrep}  sub<span class="sc">-</span>command help</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    linx         UMCCR LINX Report.</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    canrep       UMCCR Cancer Report.</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>optional arguments<span class="sc">:</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>h, <span class="sc">--</span>help     show this help message and exit</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="sc">-------------------------</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="er">$</span> gpgr linx <span class="sc">--</span>help</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>usage<span class="sc">:</span> gpgr linx [<span class="sc">-</span>h] <span class="sc">--</span>sample SAMPLE <span class="sc">--</span>plot PLOT <span class="sc">--</span>table TABLE [<span class="sc">--</span>out OUT]</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                 [<span class="sc">--</span>quiet]</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>optional arguments<span class="sc">:</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>h, <span class="sc">--</span>help       show this help message and exit</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>sample SAMPLE  Sample name.</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>plot PLOT      Path to LINX plot directory.</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>table TABLE    Path to LINX table directory.</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>out OUT        HTML output file name [def<span class="sc">:</span> linx_{sample}.html].</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>quiet          Suppress log printing during rendering.</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="sc">-------------------------</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="er">$</span> gpgr canrep <span class="sc">--</span>help</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>usage<span class="sc">:</span> gpgr canrep [<span class="sc">-</span>h] <span class="sc">--</span>af_global AF_GLOBAL <span class="sc">--</span>af_keygenes AF_KEYGENES</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">--</span>batch_name BATCH_NAME <span class="sc">--</span>conda_list CONDA_LIST <span class="sc">--</span>img_dir</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                   IMG_DIR <span class="sc">--</span>key_genes KEY_GENES <span class="sc">--</span>somatic_snv_vcf</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>                   SOMATIC_SNV_VCF <span class="sc">--</span>somatic_sv_tsv SOMATIC_SV_TSV</span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">--</span>somatic_sv_vcf SOMATIC_SV_VCF <span class="sc">--</span>purple_som_gene_cnv</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>                   PURPLE_SOM_GENE_CNV <span class="sc">--</span>purple_som_cnv PURPLE_SOM_CNV</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">--</span>purple_germ_cnv PURPLE_GERM_CNV <span class="sc">--</span>purple_purity</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>                   PURPLE_PURITY <span class="sc">--</span>purple_qc PURPLE_QC <span class="sc">--</span>purple_som_snv_vcf</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>                   PURPLE_SOM_SNV_VCF <span class="sc">--</span>oncoviral_present_viruses</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>                   ONCOVIRAL_PRESENT_VIRUSES <span class="sc">--</span>oncoviral_breakpoints_tsv</span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>                   ONCOVIRAL_BREAKPOINTS_TSV [<span class="sc">--</span>out_file OUT_FILE] [<span class="sc">--</span>quiet]</span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">--</span>result_outdir RESULT_OUTDIR <span class="sc">--</span>tumor_name TUMOR_NAME</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>optional arguments<span class="sc">:</span></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>h, <span class="sc">--</span>help            show this help message and exit</span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>af_global AF_GLOBAL</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">af_tumor.txt</span><span class="st">`</span> file.</span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>af_keygenes AF_KEYGENES</span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">af_tumor_keygenes.txt</span><span class="st">`</span> file.</span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>batch_name BATCH_NAME</span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>                        Name of batch sample.</span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>conda_list CONDA_LIST</span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">conda_pkg_list.txt</span><span class="st">`</span> file.</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>img_dir IMG_DIR     Path to directory containing PURPLE plots.</span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>key_genes KEY_GENES</span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>                        Path to UMCCR cancer gene file.</span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>somatic_snv_vcf SOMATIC_SNV_VCF</span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">somatic-PASS.vcf.gz</span><span class="st">`</span> SNV VCF.</span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>somatic_sv_tsv SOMATIC_SV_TSV</span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">manta.tsv</span><span class="st">`</span> TSV file.</span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>somatic_sv_vcf SOMATIC_SV_VCF</span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">manta.vcf.gz</span><span class="st">`</span> VCF file.</span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>purple_som_gene_cnv PURPLE_SOM_GENE_CNV</span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">purple.cnv.gene.tsv</span><span class="st">`</span>.</span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>purple_som_cnv PURPLE_SOM_CNV</span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">purple.cnv.somatic.tsv</span><span class="st">`</span>.</span>
-<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>purple_germ_cnv PURPLE_GERM_CNV</span>
-<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">purple.cnv.germline.tsv</span><span class="st">`</span>.</span>
-<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>purple_purity PURPLE_PURITY</span>
-<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">purple.purity.tsv</span><span class="st">`</span>.</span>
-<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>purple_qc PURPLE_QC</span>
-<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">purple.qc</span><span class="st">`</span>.</span>
-<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>purple_som_snv_vcf PURPLE_SOM_SNV_VCF</span>
-<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">purple.somatic.vcf.gz</span><span class="st">`</span>.</span>
-<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>oncoviral_present_viruses ONCOVIRAL_PRESENT_VIRUSES</span>
-<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">oncoviruses/present_viruses.txt</span><span class="st">`</span>.</span>
-<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>oncoviral_breakpoints_tsv ONCOVIRAL_BREAKPOINTS_TSV</span>
-<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>                        Path to <span class="st">`</span><span class="at">oncoviruses/oncoviral_breakpoints.tsv</span><span class="st">`</span>.</span>
-<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>out_file OUT_FILE   Path to output HTML <span class="fu">file</span> (needs <span class="st">'.html'</span> suffix) [def<span class="sc">:</span></span>
-<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>                        {tumor_name}_cancer_report.html].</span>
-<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>quiet               Suppress log printing during rendering.</span>
-<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>result_outdir RESULT_OUTDIR</span>
-<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>                        Path to directory to write tidy JSON<span class="sc">/</span>TSV results.</span>
-<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>  <span class="sc">--</span>tumor_name TUMOR_NAME</span>
-<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>                        Name of tumor sample.</span></code></pre></div>
+<p>See <a href="https://umccr.github.io/gpgr/articles/devnotes.html" class="external-link uri">https://umccr.github.io/gpgr/articles/devnotes.html</a> for developer notes.</p>
+</div>
+<div class="section level2">
+<h2 id="id_-cli">💻 CLI<a class="anchor" aria-label="anchor" href="#id_-cli"></a>
+</h2>
+<p>A <code>gpgr</code> command line interface is available for convenience.</p>
+<ul>
+<li>If you’re using the conda package, the <code>gpgr.R</code> command will already be set up inside an activated conda environment.</li>
+<li>If you’re <em>not</em> using the conda package, you need to export the <code>gpgr/inst/cli/</code> directory to your <code>PATH</code> in order to use <code>gpgr.R</code>.</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">gpgr_cli</span><span class="op">=</span><span class="va">$(</span><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'x = system.file("cli", package = "gpgr"); cat(x, "\n")'</span> <span class="kw">|</span> <span class="fu">xargs</span><span class="va">)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">${gpgr_cli}</span><span class="st">:</span><span class="va">${PATH}</span><span class="st">"</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span> gpgr.R <span class="sc">--</span>version</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>gpgr.R <span class="dv">1</span>.<span class="fl">3.0</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span> gpgr.R <span class="sc">--</span>help</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>usage<span class="sc">:</span> gpgr.R [<span class="sc">-</span>h] [<span class="sc">-</span>v] {linx,canrep} ...</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>UMCCR Genomics Platform Group Reporting</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>positional arguments<span class="sc">:</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  {linx,canrep}  sub<span class="sc">-</span>command help</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    linx         UMCCR LINX Report.</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    canrep       UMCCR Cancer Report.</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>optional arguments<span class="sc">:</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>h, <span class="sc">--</span>help     show this help message and exit</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>v, <span class="sc">--</span>version  show program<span class="st">'s version number and exit</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="st">#------- LINX Report -------#</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="st">$ gpgr.R linx --help</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="st">usage: gpgr.R linx [-h] --sample SAMPLE --plot PLOT --table TABLE [--out OUT]</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="st">                   [--quiet]</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="st">optional arguments:</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="st">  -h, --help       show this help message and exit</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="st">  --sample SAMPLE  Sample name.</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="st">  --plot PLOT      Path to LINX plot directory.</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="st">  --table TABLE    Path to LINX table directory.</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="st">  --out OUT        HTML output file name [def: linx_{sample}.html].</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="st">  --quiet          Suppress log printing during rendering.</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="st">#------- Cancer Report -------#</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="st">$ gpgr.R canrep --help</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="st">usage: gpgr.R canrep [-h] --af_global AF_GLOBAL --af_keygenes AF_KEYGENES</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="st">                     --batch_name BATCH_NAME --conda_list CONDA_LIST --img_dir</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="st">                     IMG_DIR --key_genes KEY_GENES --somatic_snv_vcf</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="st">                     SOMATIC_SNV_VCF --somatic_sv_tsv SOMATIC_SV_TSV</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="st">                     --somatic_sv_vcf SOMATIC_SV_VCF --purple_som_gene_cnv</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="st">                     PURPLE_SOM_GENE_CNV --purple_som_cnv PURPLE_SOM_CNV</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="st">                     --purple_germ_cnv PURPLE_GERM_CNV --purple_purity</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="st">                     PURPLE_PURITY --purple_qc PURPLE_QC --purple_som_snv_vcf</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="st">                     PURPLE_SOM_SNV_VCF --oncoviral_present_viruses</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="st">                     ONCOVIRAL_PRESENT_VIRUSES --oncoviral_breakpoints_tsv</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="st">                     ONCOVIRAL_BREAKPOINTS_TSV [--out_file OUT_FILE] [--quiet]</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="st">                     --result_outdir RESULT_OUTDIR --tumor_name TUMOR_NAME</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="st">optional arguments:</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="st">  -h, --help            show this help message and exit</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="st">  --af_global AF_GLOBAL</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `af_tumor.txt` file.</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="st">  --af_keygenes AF_KEYGENES</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `af_tumor_keygenes.txt` file.</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="st">  --batch_name BATCH_NAME</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="st">                        Name of batch sample.</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="st">  --conda_list CONDA_LIST</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `conda_pkg_list.txt` file.</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="st">  --img_dir IMG_DIR     Path to directory containing PURPLE plots.</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="st">  --key_genes KEY_GENES</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to UMCCR cancer gene file.</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="st">  --somatic_snv_vcf SOMATIC_SNV_VCF</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `somatic-PASS.vcf.gz` SNV VCF.</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a><span class="st">  --somatic_sv_tsv SOMATIC_SV_TSV</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `manta.tsv` TSV file.</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a><span class="st">  --somatic_sv_vcf SOMATIC_SV_VCF</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `manta.vcf.gz` VCF file.</span></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="st">  --purple_som_gene_cnv PURPLE_SOM_GENE_CNV</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `purple.cnv.gene.tsv`.</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="st">  --purple_som_cnv PURPLE_SOM_CNV</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `purple.cnv.somatic.tsv`.</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="st">  --purple_germ_cnv PURPLE_GERM_CNV</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `purple.cnv.germline.tsv`.</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="st">  --purple_purity PURPLE_PURITY</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `purple.purity.tsv`.</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a><span class="st">  --purple_qc PURPLE_QC</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `purple.qc`.</span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="st">  --purple_som_snv_vcf PURPLE_SOM_SNV_VCF</span></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `purple.somatic.vcf.gz`.</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="st">  --oncoviral_present_viruses ONCOVIRAL_PRESENT_VIRUSES</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `oncoviruses/present_viruses.txt`.</span></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="st">  --oncoviral_breakpoints_tsv ONCOVIRAL_BREAKPOINTS_TSV</span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to `oncoviruses/oncoviral_breakpoints.tsv`.</span></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="st">  --out_file OUT_FILE   Path to output HTML file (needs '</span>.html<span class="st">' suffix) [def:</span></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a><span class="st">                        {tumor_name}_cancer_report.html].</span></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a><span class="st">  --quiet               Suppress log printing during rendering.</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a><span class="st">  --result_outdir RESULT_OUTDIR</span></span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a><span class="st">                        Path to directory to write tidy JSON/TSV results.</span></span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a><span class="st">  --tumor_name TUMOR_NAME</span></span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a><span class="st">                        Name of tumor sample.</span></span></code></pre></div>
 </div>
 </div>
 
-  </main><aside class="col-md-3"><div class="links">
+  </div>
+
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/umccr/gpgr/" class="external-link">Browse source code</a></li>
@@ -243,31 +291,31 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7502-7545" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Peter Diakumis <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7502-7545" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
 
 
-  </aside>
+  </div>
 </div>
 
 
-    <footer><div class="pkgdown-footer-left">
+      <footer><div class="copyright">
   <p></p>
-<p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>.</p>
+<p>Developed by Peter Diakumis.</p>
 </div>
 
-<div class="pkgdown-footer-right">
+<div class="pkgdown">
   <p></p>
 <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
-    </footer>
+      </footer>
 </div>
 
   
+
 
   
 
