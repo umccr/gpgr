@@ -1,24 +1,26 @@
 
--   <a href="#gpgr---genomics-platform-group-reporting"
-    id="toc-gpgr---genomics-platform-group-reporting">gpgr - Genomics
+-   <a href="#-gpgr---genomics-platform-group-reporting"
+    id="toc--gpgr---genomics-platform-group-reporting">📚 gpgr - Genomics
     Platform Group Reporting</a>
     -   <a href="#installation" id="toc-installation">Installation</a>
     -   <a href="#main-modules" id="toc-main-modules">Main modules</a>
-        -   <a href="#purple" id="toc-purple">PURPLE</a>
-        -   <a href="#linx" id="toc-linx">LINX</a>
-    -   <a href="#cli" id="toc-cli">CLI</a>
+        -   <a href="#id_-linx" id="toc-id_-linx">🕸 LINX</a>
+        -   <a href="#id_-purple" id="toc-id_-purple">🔮 PURPLE</a>
+        -   <a href="#id_-umccrise" id="toc-id_-umccrise">🐍 umccrise</a>
+    -   <a href="#id_-developers" id="toc-id_-developers">🥳 Developers</a>
+    -   <a href="#id_-cli" id="toc-id_-cli">💻 CLI</a>
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# gpgr - Genomics Platform Group Reporting
+# 📚 gpgr - Genomics Platform Group Reporting
 
 Contains reports and functions used in the Genomics Platform Group at
 the University of Melbourne Centre for Cancer Research.
 
+-   Docs: <https://umccr.github.io/gpgr/>
+
 [![Conda
 install](https://anaconda.org/umccr/r-gpgr/badges/installer/conda.svg)](https://anaconda.org/umccr/r-gpgr)
-
--   See <https://umccr.github.io/gpgr/>
 
 ## Installation
 
@@ -34,24 +36,55 @@ conda install r-gpgr -c umccr -c conda-forge -c bioconda
 
 ## Main modules
 
-### PURPLE
+### 🕸 LINX
 
-Read and process output files from
-[PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purple) -
-see vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
+-   Generate a HTML report with results from the `LINX` structural
+    variant visualisation tool from the Hartwig Medical Foundation
+    (<https://github.com/hartwigmedical/hmftools/tree/master/linx>). See
+    the [CLI](#cli) section below for options.
+-   For useful functions for reading/processing `LINX` results, see the
+    vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
 
-### LINX
+### 🔮 PURPLE
 
-Read and process output files from
-[LINX](https://github.com/hartwigmedical/hmftools/tree/master/linx) -
-see vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
+-   Read and process output files from the `PURPLE` purity/copy number
+    estimator tool from the Hartwig Medical Foundation
+    (<https://github.com/hartwigmedical/hmftools/tree/master/purple>).
+    See vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
 
-## CLI
+### 🐍 umccrise
 
-    $ gpgr --help
-    usage: gpgr [-h] {linx,canrep} ...
+-   Generate a HTML report with results from the `umccrise` DRAGEN
+    tumor/normal post-processing workflow from UMCCR -
+    <https://github.com/umccr/umccrise>. See the [CLI](#cli) section
+    below for options.
 
-    GPG Reporting
+## 🥳 Developers
+
+See <https://umccr.github.io/gpgr/articles/devnotes.html> for developer
+notes.
+
+## 💻 CLI
+
+A `gpgr` command line interface is available for convenience.
+
+-   If you’re using the conda package, the `gpgr.R` command will already
+    be set up inside an activated conda environment.
+-   If you’re *not* using the conda package, you need to export the
+    `gpgr/inst/cli/` directory to your `PATH` in order to use `gpgr.R`.
+
+``` bash
+gpgr_cli=$(Rscript -e 'x = system.file("cli", package = "gpgr"); cat(x, "\n")' | xargs)
+export PATH="${gpgr_cli}:${PATH}"
+```
+
+    $ gpgr.R --version
+    gpgr.R 1.2.6
+
+    $ gpgr.R --help
+    usage: gpgr.R [-h] [-v] {linx,canrep} ...
+
+    UMCCR Genomics Platform Group Reporting
 
     positional arguments:
       {linx,canrep}  sub-command help
@@ -60,15 +93,16 @@ see vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
 
     optional arguments:
       -h, --help     show this help message and exit
+      -v, --version  show program's version number and exit
 
 
 
-    -------------------------
+    #------- LINX Report -------#
 
 
-    $ gpgr linx --help
-    usage: gpgr linx [-h] --sample SAMPLE --plot PLOT --table TABLE [--out OUT]
-                     [--quiet]
+    $ gpgr.R linx --help
+    usage: gpgr.R linx [-h] --sample SAMPLE --plot PLOT --table TABLE [--out OUT]
+                       [--quiet]
 
     optional arguments:
       -h, --help       show this help message and exit
@@ -80,22 +114,22 @@ see vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
 
 
 
-    -------------------------
+    #------- Cancer Report -------#
 
 
-    $ gpgr canrep --help
-    usage: gpgr canrep [-h] --af_global AF_GLOBAL --af_keygenes AF_KEYGENES
-                       --batch_name BATCH_NAME --conda_list CONDA_LIST --img_dir
-                       IMG_DIR --key_genes KEY_GENES --somatic_snv_vcf
-                       SOMATIC_SNV_VCF --somatic_sv_tsv SOMATIC_SV_TSV
-                       --somatic_sv_vcf SOMATIC_SV_VCF --purple_som_gene_cnv
-                       PURPLE_SOM_GENE_CNV --purple_som_cnv PURPLE_SOM_CNV
-                       --purple_germ_cnv PURPLE_GERM_CNV --purple_purity
-                       PURPLE_PURITY --purple_qc PURPLE_QC --purple_som_snv_vcf
-                       PURPLE_SOM_SNV_VCF --oncoviral_present_viruses
-                       ONCOVIRAL_PRESENT_VIRUSES --oncoviral_breakpoints_tsv
-                       ONCOVIRAL_BREAKPOINTS_TSV [--out_file OUT_FILE] [--quiet]
-                       --result_outdir RESULT_OUTDIR --tumor_name TUMOR_NAME
+    $ gpgr.R canrep --help
+    usage: gpgr.R canrep [-h] --af_global AF_GLOBAL --af_keygenes AF_KEYGENES
+                         --batch_name BATCH_NAME --conda_list CONDA_LIST --img_dir
+                         IMG_DIR --key_genes KEY_GENES --somatic_snv_vcf
+                         SOMATIC_SNV_VCF --somatic_sv_tsv SOMATIC_SV_TSV
+                         --somatic_sv_vcf SOMATIC_SV_VCF --purple_som_gene_cnv
+                         PURPLE_SOM_GENE_CNV --purple_som_cnv PURPLE_SOM_CNV
+                         --purple_germ_cnv PURPLE_GERM_CNV --purple_purity
+                         PURPLE_PURITY --purple_qc PURPLE_QC --purple_som_snv_vcf
+                         PURPLE_SOM_SNV_VCF --oncoviral_present_viruses
+                         ONCOVIRAL_PRESENT_VIRUSES --oncoviral_breakpoints_tsv
+                         ONCOVIRAL_BREAKPOINTS_TSV [--out_file OUT_FILE] [--quiet]
+                         --result_outdir RESULT_OUTDIR --tumor_name TUMOR_NAME
 
     optional arguments:
       -h, --help            show this help message and exit

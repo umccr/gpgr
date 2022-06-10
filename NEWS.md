@@ -1,5 +1,7 @@
 # gpgr 1.3.x (2022-xx-xx)
 
+- :star: Add Docker support ([pr49](https://github.com/umccr/gpgr/pull/49)).
+- :star: Add conda-lock support ([pr49](https://github.com/umccr/gpgr/pull/49)).
 - :bug: Fix cancer report bugs ([pr48](https://github.com/umccr/gpgr/pull/48)).
 - :star: Added CLI support for umccrise cancer report.
   - Modularised CLI subparsers into separate files

@@ -40,7 +40,7 @@ vignettes/*.pdf
 
 
 # nogit data
-nogit/
-docs
-inst/doc
-outputs/
+/nogit
+/docs
+/inst/doc
+/outputs

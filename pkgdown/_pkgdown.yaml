@@ -39,13 +39,14 @@ reference:
 - title: "Others"
 - contents:
   - count_pieces
+  - date_log
   - is_vcf
+  - mkdir
+  - pkg_exists
+  - session_info_kable
   - split_double_col
   - tsv_is_empty
   - vcf_is_empty
-  - pkg_exists
-  - session_info_kable
-  - mkdir
 
 news:
   one_page: true

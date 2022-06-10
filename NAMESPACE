@@ -2,6 +2,7 @@
 
 export(af_summary)
 export(cancer_rmd)
+export(date_log)
 export(hrd_results_tabs)
 export(is_vcf)
 export(linx_breakend_process)

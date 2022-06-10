@@ -1,0 +1,9 @@
+name: gpgr
+
+channels:
+  - umccr
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - r-gpgr ==1.2.6 # versioned by bump2version
