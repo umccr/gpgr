@@ -9,7 +9,7 @@
 # To update a single package to the latest version compatible with the version constraints in the source:
 #     conda-lock lock --lockfile conda-lock.yml --update PACKAGE
 # To re-solve the entire environment, e.g. after changing a version constraint in the source file:
-#     conda-lock -f ../yaml/gpgr.yaml --lockfile conda-lock.yml
+#     conda-lock -f conda/env/yaml/gpgr.yaml --lockfile conda-lock.yml
 metadata:
   channels:
   - url: umccr
@@ -19,11 +19,11 @@ metadata:
   - url: bioconda
     used_env_vars: []
   content_hash:
-    linux-64: 4bc899e9afc82056280e05394552f8d21a6595940911c533cf3b7edb36054af8
+    linux-64: f9e467b80f0e954868996c98e4f6bc863040c8f404f22cb16a73bf4a47b212b6
   platforms:
   - linux-64
   sources:
-  - ../yaml/gpgr.yaml
+  - conda/env/yaml/gpgr.yaml
 package:
 - category: main
   dependencies: {}
@@ -807,17 +807,17 @@ package:
   version: '1.13'
 - category: main
   dependencies:
-    libgcc-ng: '>=9.3.0'
-    ncurses: '>=6.2,<7.0.0a0'
+    libgcc-ng: '>=12'
+    ncurses: '>=6.3,<7.0a0'
   hash:
-    md5: 5788de3c8d7a7d64ac56c784c4ef48e6
-    sha256: 30464670b3c81ac739e8df6b2c3c57b56d1e1408572540dec63bf4b8713163e4
+    md5: db2ebbe2943aae81ed051a6a9af8e0fa
+    sha256: f5f383193bdbe01c41cb0d6f99fec68e820875e842e6e8b392dbe1a9b6c43ed8
   manager: conda
   name: readline
   optional: false
   platform: linux-64
-  url: https://conda.anaconda.org/conda-forge/linux-64/readline-8.1-h46c0cb4_0.tar.bz2
-  version: '8.1'
+  url: https://conda.anaconda.org/conda-forge/linux-64/readline-8.1.2-h0f457ee_0.tar.bz2
+  version: 8.1.2
 - category: main
   dependencies:
     libgcc-ng: '>=9.4.0'
@@ -3691,12 +3691,12 @@ package:
     r-tidyr: ''
     r-tidyselect: ''
   hash:
-    md5: 10f6d9c799ad542ef1889139f3438812
+    md5: 953b2db7fc89ea5c3cc8d7dcf836f8bd
     sha256: null
   manager: conda
   name: r-gpgr
   optional: false
   platform: linux-64
-  url: https://conda.anaconda.org/umccr/noarch/r-gpgr-1.2.5-r41_0.tar.bz2
-  version: 1.2.5
+  url: https://conda.anaconda.org/umccr/noarch/r-gpgr-1.3.0-r41_0.tar.bz2
+  version: 1.3.0
 version: 1
