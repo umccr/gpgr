@@ -1,4 +1,4 @@
-# gpgr 1.3.x (2022-xx-xx)
+# gpgr 1.3.0 (2022-06-10)
 
 - :star: Add Docker support ([pr49](https://github.com/umccr/gpgr/pull/49)).
 - :star: Add conda-lock support ([pr49](https://github.com/umccr/gpgr/pull/49)).

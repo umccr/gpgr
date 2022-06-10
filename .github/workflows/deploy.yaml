@@ -1,4 +1,4 @@
-name: conda-docker-web
+name: conda-docker-docs
 
 on:
   push:
@@ -9,14 +9,14 @@ env:
   recipe_path: conda/recipe
   env_yaml_path: conda/env/yaml
   env_lock_path: conda/env/lock
-  VERSION: '1.2.6' # versioned by bump2version
+  VERSION: '1.3.0' # versioned by bump2version
   GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
 jobs:
-  condarise-dockerise-interwebz:
+  condarise-dockerise-document:
     # When merging to main and the commit message starts with 'Bump version:'
     if: "startsWith(github.event.head_commit.message, 'Bump version:')"
-    name: Build and deploy conda pkg
+    name: Conda Docker Docs
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -28,21 +28,24 @@ jobs:
       - name: Miniconda setup
         uses: conda-incubator/setup-miniconda@v2
         with:
-          # Do everything inside the base env
           auto-update-conda: true
-          auto-activate-base: true
-          activate-environment: ""
+          add-pip-as-python-dependency: false # conda-lock goes crazy if pip pre-installed
+          activate-environment: env1
           mamba-version: "*"
           channels: "umccr,conda-forge,bioconda"
       - name: 🐍 Conda pkg build and upload
         run: |
-          # pip needed for conda-lock
-          mamba install conda-build conda-lock conda-verify anaconda-client boa dvc dvc-gdrive pip
+          conda activate
+          mamba create --name cbuildenv conda-build conda-verify anaconda-client boa dvc dvc-gdrive
+          conda activate cbuildenv
           dvc pull
           ls -l inst/extdata/*
           conda mambabuild --R 4.1 ${recipe_path} --token ${atoken}
       - name: 🔒 Conda lock
         run: |
+          conda activate
+          mamba create --name lockenv conda-lock pip
+          conda activate lockenv
           conda-lock --file ${env_yaml_path}/gpgr.yaml --platform linux-64
           mv conda-lock.yml ${env_lock_path}/conda-lock.yml
       - name: 💾 Commit lockfile
@@ -60,8 +63,9 @@ jobs:
 
       - name: 🌐 Website publish
         run: |
-          mamba env create -n pkgdown -f ${env_yaml_path}/pkgdown.yaml
-          conda activate pkgdown
+          conda activate
+          mamba env create -n pkgdownenv -f ${env_yaml_path}/pkgdown.yaml
+          conda activate pkgdownenv
           gpgr.R --version
           Rscript -e "pkgdown::deploy_to_branch(pkg = '.', commit_message = paste(pkgdown:::construct_commit_message('.'), '- see https://umccr.github.io/gpgr/'), branch = 'gh-pages', new_process = FALSE)"
 
