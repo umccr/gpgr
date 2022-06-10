@@ -5,7 +5,7 @@ suppressPackageStartupMessages(require(cli))
 suppressPackageStartupMessages(require(gpgr))
 suppressPackageStartupMessages(require(glue))
 
-prog_nm <- "gpgr"
+prog_nm <- "gpgr.R"
 gpgr_version <- as.character(packageVersion("gpgr"))
 p <- argparse::ArgumentParser(description = "UMCCR Genomics Platform Group Reporting", prog = prog_nm)
 p$add_argument("-v", "--version", action = "version", version = glue::glue("{prog_nm} {gpgr_version}"))

@@ -39,7 +39,7 @@ conda install r-gpgr -c umccr -c conda-forge -c bioconda
 
 ## Main modules
 
-### 🕸 LINX
+### 🕸 LINX {#id_-linx}
 
 - Generate a HTML report with results from the `LINX` structural variant
   visualisation tool from the Hartwig Medical Foundation
@@ -48,54 +48,60 @@ conda install r-gpgr -c umccr -c conda-forge -c bioconda
 - For useful functions for reading/processing `LINX` results, see the vignette at
   <https://umccr.github.io/gpgr/articles/linx.html>.
 
-### 🔮 PURPLE
+### 🔮 PURPLE {#id_-purple}
 
 - Read and process output files from the `PURPLE` purity/copy number estimator
   tool from the Hartwig Medical Foundation
   (<https://github.com/hartwigmedical/hmftools/tree/master/purple>).
   See vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
 
-### 🐍 umccrise
+### 🐍 umccrise {#id_-umccrise}
 
 - Generate a HTML report with results from the `umccrise` DRAGEN tumor/normal
   post-processing workflow from UMCCR - <https://github.com/umccr/umccrise>.
   See the [CLI](#cli) section below for options.
 
-## 💻 CLI
+## 🥳 Developers {#id_-developers}
+
+See <https://umccr.github.io/gpgr/articles/devnotes.html> for developer notes.
+
+## 💻 CLI {#id_-cli}
 
 A `gpgr` command line interface is available for convenience.
 
-- If you're using the conda package, you can use the `gpgr.R` command inside an
-  activated conda environment.
-- If you want to set it up on your local machine (non-conda), you can use the
-  `alias` command chunk below (or just make that script available in your `PATH`).
+- If you're using the conda package, the `gpgr.R` command will already be set up
+  inside an activated conda environment.
+- If you're _not_ using the conda package, you need to export the
+  `gpgr/inst/cli/` directory to your `PATH` in order to use `gpgr.R`.
+
+```{bash echo=TRUE, eval=FALSE}
+gpgr_cli=$(Rscript -e 'x = system.file("cli", package = "gpgr"); cat(x, "\n")' | xargs)
+export PATH="${gpgr_cli}:${PATH}"
+```
 
 ```{bash echo=FALSE}
-shopt -s expand_aliases
-gpgr_cli=$(Rscript -e 'x = system.file("cli/gpgr.R", package = "gpgr"); cat(x, "\n")')
-alias gpgr=$(which $(echo $gpgr_cli))
+gpgr_cli=$(Rscript -e 'x = system.file("cli", package = "gpgr"); cat(x, "\n")' | xargs)
+export PATH="${gpgr_cli}:${PATH}"
 
-echo "$ gpgr --help"
-gpgr --help
+echo "$ gpgr.R --version"
+echo "gpgr.R 1.2.6"
 echo ""
-echo ""
-echo ""
-echo "$ gpgr --version"
-gpgr --version
+echo "$ gpgr.R --help"
+gpgr.R --help
 echo ""
 echo ""
 echo ""
 echo "#------- LINX Report -------#"
 echo ""
 echo ""
-echo "$ gpgr linx --help"
-gpgr linx --help
+echo "$ gpgr.R linx --help"
+gpgr.R linx --help
 echo ""
 echo ""
 echo ""
 echo "#------- Cancer Report -------#"
 echo ""
 echo ""
-echo "$ gpgr canrep --help"
-gpgr canrep --help
+echo "$ gpgr.R canrep --help"
+gpgr.R canrep --help
 ```

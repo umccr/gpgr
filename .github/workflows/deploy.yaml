@@ -1,10 +1,9 @@
-name: conda-pkgdown
+name: conda-docker-web
 
 on:
   push:
     branches:
       - main
-
 env:
   atoken: ${{ secrets.ANACONDA_UPLOAD_TOKEN }}
   recipe_path: conda/recipe
@@ -37,6 +36,7 @@ jobs:
           channels: "umccr,conda-forge,bioconda"
       - name: 🐍 Conda pkg build and upload
         run: |
+          # pip needed for conda-lock
           mamba install conda-build conda-lock conda-verify anaconda-client boa dvc dvc-gdrive pip
           dvc pull
           ls -l inst/extdata/*
@@ -60,20 +60,18 @@ jobs:
 
       - name: 🌐 Website publish
         run: |
-            mamba env create -n pkgdown -f ${env_yaml_path}/pkgdown.yaml
-            conda activate pkgdown
-            printf "gpgr version:\n"
-            gpgr.R --version
-            Rscript -e "packageVersion('gpgr')"
-            Rscript -e "pkgdown::deploy_to_branch(pkg = '.', commit_message = paste(pkgdown:::construct_commit_message('.'), '- see https://umccr.github.io/gpgr/'), branch = 'gh-pages', new_process = FALSE)"
+          mamba env create -n pkgdown -f ${env_yaml_path}/pkgdown.yaml
+          conda activate pkgdown
+          gpgr.R --version
+          Rscript -e "pkgdown::deploy_to_branch(pkg = '.', commit_message = paste(pkgdown:::construct_commit_message('.'), '- see https://umccr.github.io/gpgr/'), branch = 'gh-pages', new_process = FALSE)"
 
       - name: 📥 Pull lock commit
         id: pull_lock_commit
         run: |
-            git pull --no-rebase
-            git --no-pager log --decorate=short --pretty=oneline -n3
-            LATEST_COMMIT_HASH="$(git --no-pager log -1 --format='%H')"
-            echo "::set-output name=latest_commit_hash::${LATEST_COMMIT_HASH}"
+          git pull --no-rebase
+          git --no-pager log --decorate=short --pretty=oneline -n3
+          LATEST_COMMIT_HASH="$(git --no-pager log -1 --format='%H')"
+          echo "::set-output name=latest_commit_hash::${LATEST_COMMIT_HASH}"
       - name: 🔖 Create tag
         uses: actions/github-script@v5
         env:
@@ -94,9 +92,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: v${{ env.VERSION }}
-      - name: Test tag
-        run: |
-            git --no-pager log --decorate=short --pretty=oneline -n5
       - name: 🏰 QEMU setup
         uses: docker/setup-qemu-action@v2
       - name: 🏯 Buildx setup
