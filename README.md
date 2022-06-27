@@ -79,7 +79,7 @@ export PATH="${gpgr_cli}:${PATH}"
 ```
 
     $ gpgr.R --version
-    gpgr.R 1.3.0
+    gpgr.R 1.3.1
 
     $ gpgr.R --help
     usage: gpgr.R [-h] [-v] {linx,canrep} ...

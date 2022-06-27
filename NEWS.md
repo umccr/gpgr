@@ -1,3 +1,8 @@
+# gpgr 1.4.0-rc
+
+- :bug: Update LINX cluster plot path pattern ([issue50](https://github.com/umccr/gpgr/issues/50),
+  [pr51](https://github.com/umccr/gpgr/pull/51)).
+
 # gpgr 1.3.0 (2022-06-10)
 
 - :star: Add Docker support ([pr49](https://github.com/umccr/gpgr/pull/49)).
