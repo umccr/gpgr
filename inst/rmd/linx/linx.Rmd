@@ -25,23 +25,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r render_report_interactively, echo=FALSE, eval=FALSE}
-params <- list(
-  sample = "SBJ01285_PRJ211230_L2101732",
-  table_dir = here::here("nogit/linx/SBJ01285/linx_data_tables"),
-  plot_dir = here::here("nogit/linx/SBJ01285/linx_plots")
-)
-render_me <- function() {
-  rmarkdown::render(
-    here::here("inst/rmd/linx/linx.Rmd"),
-    params = params,
-    output_file = glue("{params$sample}_linx.html"),
-    output_dir = here::here("nogit/linx/html_reports")
-  )
-}
-render_me()
-```
-
 ```{r load_pkgs, message=FALSE, warning=FALSE}
 library(details)
 library(dplyr, warn.conflicts = FALSE)
@@ -99,7 +82,7 @@ linx_path_plot_chr <- function() {
 }
 
 linx_path_plot_cluster <- function() {
-  pat <- glue("{params$sample}\\.cluster(\\d+)\\.(.*)\\.sv(\\d+)\\.(\\d+)\\.png") |> as.character()
+  pat <- glue("{params$sample}\\.cluster-(\\d+)\\.sv(\\d+)\\.(\\d+)\\.png") |> as.character()
   x <- list.files(file.path(params$plot_dir), pattern = pat, full.names = TRUE)
   if (length(x) == 0) {
     warning(glue::glue("No LINX cluster plots found in\n{params$plot_dir}."))
@@ -107,7 +90,7 @@ linx_path_plot_cluster <- function() {
   }
   d <- str_match(x, pat) |>
     dplyr::as_tibble(.name_repair = "minimal") |>
-    set_names(c("path", "clusterId", "type", "svId", "nsegs")) |>
+    set_names(c("path", "clusterId", "svId", "nsegs")) |>
     dplyr::mutate(
       path = file.path(params$plot_dir, path),
       nsegs = as.integer(nsegs),
@@ -132,7 +115,7 @@ linx_path_plot_cluster <- function() {
 l <- linx_path_tab("svs") |>
   gpgr::linx_svs_process()
 
-details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
@@ -148,7 +131,7 @@ blank_lines(2)
 ```{r breakend}
 l <- linx_path_tab("breakend") |>
   gpgr::linx_breakend_process()
-details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
@@ -161,7 +144,7 @@ dt_table(l$tab)
 ```{r clusters}
 l <- linx_path_tab("clusters") |>
   gpgr::linx_clusters_process()
-details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
@@ -174,7 +157,7 @@ dt_table(l$tab)
 ```{r links}
 l <- linx_path_tab("links") |>
   gpgr::linx_links_process()
-details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
@@ -187,7 +170,7 @@ dt_table(l$tab)
 ```{r fusion}
 l <- linx_path_tab("fusion") |>
   gpgr::linx_fusion_process()
-details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
@@ -200,7 +183,7 @@ dt_table(l$tab)
 ```{r drivercatalog}
 l <- linx_path_tab("driver.catalog") |>
   gpgr::linx_drivercatalog_process()
-details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
@@ -213,7 +196,7 @@ dt_table(l$tab)
 ```{r drivers}
 l <- linx_path_tab("drivers") |>
   gpgr::linx_drivers_process()
-details::details(kable(l$descr), lang = NULL, summary = "Column Description")
+details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
@@ -315,7 +298,7 @@ if (!is.null(cluster_plots)) {
     r <- cluster_plots[i, ]
     cat(glue("\n### {r$clusterId}"), "\n\n\n")
     cat(glue(
-      "clusterId: {r$clusterId} | type: {r$type} | ",
+      "clusterId: {r$clusterId} | ",
       "svId: {r$svId} | nsegs: {r$nsegs}"
     ), "\n\n\n")
     cat(glue("<img src=\"{r$path}\" height=\"1000\"/>"), "\n\n\n")
