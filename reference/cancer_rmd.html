@@ -23,7 +23,7 @@ return the path to the output HTML
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
@@ -78,79 +78,122 @@ return the path to the output HTML
 </ol></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cancer_rmd</span><span class="op">(</span>
-  <span class="va">af_global</span>,
-  <span class="va">af_keygenes</span>,
-  <span class="va">batch_name</span>,
-  <span class="va">conda_list</span>,
-  <span class="va">img_dir</span>,
-  <span class="va">key_genes</span>,
-  <span class="va">somatic_snv_vcf</span>,
-  <span class="va">somatic_sv_tsv</span>,
-  <span class="va">somatic_sv_vcf</span>,
-  <span class="va">purple_som_gene_cnv</span>,
-  <span class="va">purple_som_cnv</span>,
-  <span class="va">purple_germ_cnv</span>,
-  <span class="va">purple_purity</span>,
-  <span class="va">purple_qc</span>,
-  <span class="va">purple_som_snv_vcf</span>,
-  <span class="va">oncoviral_present_viruses</span>,
-  <span class="va">oncoviral_breakpoints_tsv</span>,
-  <span class="va">result_outdir</span>,
-  <span class="va">tumor_name</span>,
-  out_file <span class="op">=</span> <span class="cn">NULL</span>,
-  quiet <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cancer_rmd</span><span class="op">(</span></span>
+<span>  <span class="va">af_global</span>,</span>
+<span>  <span class="va">af_keygenes</span>,</span>
+<span>  <span class="va">batch_name</span>,</span>
+<span>  <span class="va">conda_list</span>,</span>
+<span>  <span class="va">img_dir</span>,</span>
+<span>  <span class="va">key_genes</span>,</span>
+<span>  <span class="va">somatic_snv_vcf</span>,</span>
+<span>  <span class="va">somatic_sv_tsv</span>,</span>
+<span>  <span class="va">somatic_sv_vcf</span>,</span>
+<span>  <span class="va">purple_som_gene_cnv</span>,</span>
+<span>  <span class="va">purple_som_cnv</span>,</span>
+<span>  <span class="va">purple_germ_cnv</span>,</span>
+<span>  <span class="va">purple_purity</span>,</span>
+<span>  <span class="va">purple_qc</span>,</span>
+<span>  <span class="va">purple_som_snv_vcf</span>,</span>
+<span>  <span class="va">oncoviral_present_viruses</span>,</span>
+<span>  <span class="va">oncoviral_breakpoints_tsv</span>,</span>
+<span>  <span class="va">result_outdir</span>,</span>
+<span>  <span class="va">tumor_name</span>,</span>
+<span>  out_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>af_global</dt>
 <dd><p>Path to <code>af_tumor.txt</code> file.</p></dd>
+
+
 <dt>af_keygenes</dt>
 <dd><p>Path to <code>af_tumor_keygenes.txt</code> file.</p></dd>
+
+
 <dt>batch_name</dt>
 <dd><p>Name of batch sample.</p></dd>
+
+
 <dt>conda_list</dt>
 <dd><p>Path to <code>conda_pkg_list.txt</code> file.</p></dd>
+
+
 <dt>img_dir</dt>
 <dd><p>Path to directory containing PURPLE plots.</p></dd>
+
+
 <dt>key_genes</dt>
 <dd><p>Path to UMCCR cancer gene file.</p></dd>
+
+
 <dt>somatic_snv_vcf</dt>
 <dd><p>Path to <code>somatic-PASS.vcf.gz</code> SNV VCF.</p></dd>
+
+
 <dt>somatic_sv_tsv</dt>
 <dd><p>Path to <code>manta.tsv</code> TSV file.</p></dd>
+
+
 <dt>somatic_sv_vcf</dt>
 <dd><p>Path to <code>manta.vcf.gz</code> VCF file.</p></dd>
+
+
 <dt>purple_som_gene_cnv</dt>
 <dd><p>Path to <code>purple.cnv.gene.tsv</code>.</p></dd>
+
+
 <dt>purple_som_cnv</dt>
 <dd><p>Path to <code>purple.cnv.somatic.tsv</code>.</p></dd>
+
+
 <dt>purple_germ_cnv</dt>
 <dd><p>Path to <code>purple.cnv.germline.tsv</code>.</p></dd>
+
+
 <dt>purple_purity</dt>
 <dd><p>Path to <code>purple.purity.tsv</code>.</p></dd>
+
+
 <dt>purple_qc</dt>
 <dd><p>Path to <code>purple.qc</code>.</p></dd>
+
+
 <dt>purple_som_snv_vcf</dt>
 <dd><p>Path to <code>purple.somatic.vcf.gz</code>.</p></dd>
+
+
 <dt>oncoviral_present_viruses</dt>
 <dd><p>Path to <code>oncoviruses/present_viruses.txt</code>.</p></dd>
+
+
 <dt>oncoviral_breakpoints_tsv</dt>
 <dd><p>Path to <code>oncoviruses/oncoviral_breakpoints.tsv</code>.</p></dd>
+
+
 <dt>result_outdir</dt>
 <dd><p>Path to directory to write tidy JSON/TSV results.</p></dd>
+
+
 <dt>tumor_name</dt>
 <dd><p>Name of tumor sample.</p></dd>
+
+
 <dt>out_file</dt>
 <dd><p>Path to output HTML file (needs '.html' suffix) (def: <code>{tumor_name}_cancer_report.html</code>).</p></dd>
+
+
 <dt>quiet</dt>
 <dd><p>Suppress log printing during rendering.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Path to rendered HTML report.</p>
+    
+
+<p>Path to rendered HTML report.</p>
     </div>
 
   </div>
@@ -165,7 +208,7 @@ return the path to the output HTML
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

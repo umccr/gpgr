@@ -18,7 +18,7 @@ and selects columns of interest."><!-- mathjax --><script src="https://cdnjs.clo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
@@ -71,24 +71,27 @@ and selects columns of interest.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">purple_cnv_germ_process</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">purple_cnv_germ_process</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>Path to <code>purple.cnv.germline.tsv</code> file.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>List with two elements:</p><ul><li><p><code>tab</code>: Tibble with more condensed columns.</p></li>
+    
+
+<p>List with two elements:</p><ul><li><p><code>tab</code>: Tibble with more condensed columns.</p></li>
 <li><p><code>descr</code>: Description of tibble columns.</p></li>
 </ul></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.germline.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">(</span><span class="va">pp</span> <span class="op">&lt;-</span> <span class="fu">purple_cnv_germ_process</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.germline.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">pp</span> <span class="op">&lt;-</span> <span class="fu">purple_cnv_germ_process</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $tab</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 67 × 9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Chr     Start    End    CN `CN Min+Maj` `Start/End Seg…` Method `BAF (count)`</span>
@@ -131,7 +134,7 @@ and selects columns of interest.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
@@ -69,51 +69,62 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tsv_is_empty</span><span class="op">(</span>
-  <span class="va">x</span>,
-  comment <span class="op">=</span> <span class="st">"##"</span>,
-  col_types <span class="op">=</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/cols.html" class="external-link">cols</a></span><span class="op">(</span>.default <span class="op">=</span> <span class="st">"c"</span><span class="op">)</span>,
-  n_max <span class="op">=</span> <span class="fl">1</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tsv_is_empty</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  comment <span class="op">=</span> <span class="st">"##"</span>,</span>
+<span>  col_types <span class="op">=</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/cols.html" class="external-link">cols</a></span><span class="op">(</span>.default <span class="op">=</span> <span class="st">"c"</span><span class="op">)</span>,</span>
+<span>  n_max <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>Path to TSV file.</p></dd>
+
+
 <dt>comment</dt>
 <dd><p>Taken from <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_tsv()</a></code>.</p></dd>
+
+
 <dt>col_types</dt>
 <dd><p>Taken from <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_tsv()</a></code>.</p></dd>
+
+
 <dt>n_max</dt>
 <dd><p>Taken from <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_tsv()</a></code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Other arguments to be passed to <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_tsv()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>TRUE if there is at least one non-header row in the TSV, FALSE otherwise.</p>
+    
+
+<p>TRUE if there is at least one non-header row in the TSV, FALSE otherwise.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="va">tmp1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"col1\tcol2\tcol3"</span>, <span class="st">"1\t2\t3"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp1</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">(</span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu">tsv_is_empty</span><span class="op">(</span><span class="va">tmp1</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">tmp1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"col1\tcol2\tcol3"</span>, <span class="st">"1\t2\t3"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu">tsv_is_empty</span><span class="op">(</span><span class="va">tmp1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">tmp2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"col1\tcol2\tcol3"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp2</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">(</span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu">tsv_is_empty</span><span class="op">(</span><span class="va">tmp2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> /tmp/Rtmpa5D98B/file171d61ba02f does not contain any non-header rows.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">tmp2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"col1\tcol2\tcol3"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu">tsv_is_empty</span><span class="op">(</span><span class="va">tmp2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /tmp/Rtmpbe9QZV/file16ec38343625 does not contain any non-header rows.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">tmp3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"##meta1"</span>, <span class="st">"##meta2"</span>, <span class="st">"col1\tcol2\tcol3"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp3</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">(</span><span class="va">c</span> <span class="op">&lt;-</span> <span class="fu">tsv_is_empty</span><span class="op">(</span><span class="va">tmp3</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> /tmp/Rtmpa5D98B/file171d2e8fe37a does not contain any non-header rows.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">tmp3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"##meta1"</span>, <span class="st">"##meta2"</span>, <span class="st">"col1\tcol2\tcol3"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">c</span> <span class="op">&lt;-</span> <span class="fu">tsv_is_empty</span><span class="op">(</span><span class="va">tmp3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /tmp/Rtmpbe9QZV/file16ec2d18b067 does not contain any non-header rows.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 </code></pre></div>
     </div>
@@ -129,7 +140,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

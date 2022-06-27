@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
@@ -69,28 +69,31 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">abbreviate_effect</span><span class="op">(</span><span class="va">effects</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">abbreviate_effect</span><span class="op">(</span><span class="va">effects</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>effects</dt>
 <dd><p>Input string with effects.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An abbreviated string.</p>
+    
+
+<p>An abbreviated string.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="op">(</span><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">:::</span><span class="fu">abbreviate_effect</span><span class="op">(</span><span class="st">"3_prime_UTR_truncation&amp;start_lost&amp;splice_region_variant"</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">(</span><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">:::</span><span class="fu">abbreviate_effect</span><span class="op">(</span><span class="st">"3_prime_UTR_truncation&amp;start_lost&amp;splice_region_variant"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "3UTRtrunc, SpliceRegV, StartLoss"</span>
-<span class="r-in"><span class="op">(</span><span class="va">e2</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">:::</span><span class="fu">abbreviate_effect</span><span class="op">(</span><span class="st">"duplication&amp;foo&amp;gene_fusion&amp;BOOM&amp;intron_variant"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">e2</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">:::</span><span class="fu">abbreviate_effect</span><span class="op">(</span><span class="st">"duplication&amp;foo&amp;gene_fusion&amp;BOOM&amp;intron_variant"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "BOOM, Dup, foo, FusG, IntronV"</span>
-<span class="r-in"><span class="op">(</span><span class="va">e3</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">:::</span><span class="fu">abbreviate_effect</span><span class="op">(</span><span class="st">"TF_binding_site_variant&amp;TFBS_ablation"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">e3</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">:::</span><span class="fu">abbreviate_effect</span><span class="op">(</span><span class="st">"TF_binding_site_variant&amp;TFBS_ablation"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "TFBSDel, TFBSVar"</span>
-<span class="r-in"><span class="op">(</span><span class="va">e4</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">:::</span><span class="fu">abbreviate_effect</span><span class="op">(</span><span class="st">"foo&amp;bar&amp;stop_gained&amp;badaboom"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">e4</span> <span class="op">&lt;-</span> <span class="fu">gpgr</span><span class="fu">:::</span><span class="fu">abbreviate_effect</span><span class="op">(</span><span class="st">"foo&amp;bar&amp;stop_gained&amp;badaboom"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "badaboom, bar, foo, StopGain"</span>
 </code></pre></div>
     </div>
@@ -106,7 +109,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

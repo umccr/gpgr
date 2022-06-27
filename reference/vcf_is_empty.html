@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
@@ -69,47 +69,50 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">vcf_is_empty</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">vcf_is_empty</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>Path to VCF file.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>TRUE if there is at least one variant in the VCF, FALSE otherwise.</p>
+    
+
+<p>TRUE if there is at least one variant in the VCF, FALSE otherwise.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">(</span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">vcf_is_empty</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">vcf_is_empty</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">tmp1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"fakeFile"</span>, fileext <span class="op">=</span> <span class="st">"vcf"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"col1\tcol2\tcol3"</span>, <span class="st">"1\t2\t3"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp1</span><span class="op">)</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu">vcf_is_empty</span><span class="op">(</span><span class="va">tmp1</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">vcf_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"#CHROM"</span>, <span class="st">"POS"</span>, <span class="st">"ID"</span>, <span class="st">"REF"</span>, <span class="st">"ALT"</span>, <span class="st">"QUAL"</span>,</span>
-<span class="r-in">  <span class="st">"FILTER"</span>, <span class="st">"INFO"</span>, <span class="st">"FORMAT"</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">tmp2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"fakeFile"</span>, fileext <span class="op">=</span> <span class="st">"vcf"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">vcf_cols</span>, collapse <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp2</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">(</span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu">vcf_is_empty</span><span class="op">(</span><span class="va">tmp2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> /tmp/Rtmpa5D98B/fakeFile171de30040bvcf does not contain any non-header rows.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">tmp1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"fakeFile"</span>, fileext <span class="op">=</span> <span class="st">"vcf"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"col1\tcol2\tcol3"</span>, <span class="st">"1\t2\t3"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">vcf_is_empty</span><span class="op">(</span><span class="va">tmp1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">vcf_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"#CHROM"</span>, <span class="st">"POS"</span>, <span class="st">"ID"</span>, <span class="st">"REF"</span>, <span class="st">"ALT"</span>, <span class="st">"QUAL"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"FILTER"</span>, <span class="st">"INFO"</span>, <span class="st">"FORMAT"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tmp2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"fakeFile"</span>, fileext <span class="op">=</span> <span class="st">"vcf"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">vcf_cols</span>, collapse <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu">vcf_is_empty</span><span class="op">(</span><span class="va">tmp2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /tmp/Rtmpbe9QZV/fakeFile16ec70100ec6vcf does not contain any non-header rows.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">tmp3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"fakeFile"</span>, fileext <span class="op">=</span> <span class="st">"FOO"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">vcf_cols</span>, collapse <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp3</span><span class="op">)</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu">vcf_is_empty</span><span class="op">(</span><span class="va">tmp3</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">tmp3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"fakeFile"</span>, fileext <span class="op">=</span> <span class="st">"FOO"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">vcf_cols</span>, collapse <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span>, con <span class="op">=</span> <span class="va">tmp3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">vcf_is_empty</span><span class="op">(</span><span class="va">tmp3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -124,7 +127,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>
