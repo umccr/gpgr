@@ -6,6 +6,7 @@ canrep_add_args <- function(subp) {
   canrep$add_argument("--conda_list", help = "Path to `conda_pkg_list.txt` file.", required = TRUE)
   canrep$add_argument("--img_dir", help = "Path to directory containing PURPLE plots.", required = TRUE)
   canrep$add_argument("--key_genes", help = "Path to UMCCR cancer gene file.", required = TRUE)
+  canrep$add_argument("--somatic_snv_summary", help = "Path to `somatic_snv_summary.json`.", required = TRUE)
   canrep$add_argument("--somatic_snv_vcf", help = "Path to `somatic-PASS.vcf.gz` SNV VCF.", required = TRUE)
   canrep$add_argument("--somatic_sv_tsv", help = "Path to `manta.tsv` TSV file.", required = TRUE)
   canrep$add_argument("--somatic_sv_vcf", help = "Path to `manta.vcf.gz` VCF file.", required = TRUE)
@@ -24,7 +25,6 @@ canrep_add_args <- function(subp) {
 }
 
 canrep_parse_args <- function(args) {
-  # print(c("You've called canrep Here are the arguments: ", args))
   cli::cli_h1("Start rendering UMCCR Cancer Report!")
   res <- gpgr::cancer_rmd(
     af_global = args$af_global,
@@ -33,6 +33,7 @@ canrep_parse_args <- function(args) {
     conda_list = args$conda_list,
     img_dir = args$img_dir,
     key_genes = args$key_genes,
+    somatic_snv_summary = args$somatic_snv_summary,
     somatic_snv_vcf = args$somatic_snv_vcf,
     somatic_sv_tsv = args$somatic_sv_tsv,
     somatic_sv_vcf = args$somatic_sv_vcf,

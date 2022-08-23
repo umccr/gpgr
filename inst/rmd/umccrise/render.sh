@@ -15,20 +15,21 @@ $gpgr_cli canrep \
   --af_global "${umccrised_dir}/work/${batch_name}/cancer_report/afs/af_tumor.txt" \
   --af_keygenes "${umccrised_dir}/work/${batch_name}/cancer_report/afs/af_tumor_keygenes.txt" \
   --batch_name "${batch_name}" \
-  --conda_list  "${umccrised_dir}/work/${batch_name}/conda_pkg_list.txt" \
+  --conda_list "${umccrised_dir}/work/${batch_name}/conda_pkg_list.txt" \
   --img_dir "${umccrised_dir}/img" \
-  --key_genes  "${key_genes}" \
-  --somatic_snv_vcf  "${umccrised_dir}/${batch_name}/small_variants/${batch_name}-somatic-PASS.vcf.gz" \
-  --somatic_sv_tsv  "${umccrised_dir}/${batch_name}/structural/${batch_name}-manta.tsv" \
-  --somatic_sv_vcf  "${umccrised_dir}/${batch_name}/structural/${batch_name}-manta.vcf.gz" \
-  --purple_som_gene_cnv  "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.cnv.gene.tsv" \
-  --purple_som_cnv  "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.cnv.somatic.tsv" \
-  --purple_germ_cnv  "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.cnv.germline.tsv" \
-  --purple_purity  "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.purity.tsv" \
-  --purple_qc  "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.qc" \
-  --purple_som_snv_vcf  "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.somatic.vcf.gz" \
-  --oncoviral_present_viruses  "${umccrised_dir}/work/${batch_name}/oncoviruses/present_viruses.txt" \
-  --oncoviral_breakpoints_tsv  "${umccrised_dir}/work/${batch_name}/oncoviruses/oncoviral_breakpoints.tsv" \
-  --out_file  "${gpgr_dir}/nogit/umccrised_data/cancer_report_2269.html" \
-  --result_outdir  "${umccrised_dir}/${batch_name}/cancer_report_tables2" \
-  --tumor_name  tumor_name
+  --key_genes "${key_genes}" \
+  --somatic_snv_summary "${umccrised_dir}/work/${batch_name}/cancer_report/somatic_snv_summary.json" \
+  --somatic_snv_vcf "${umccrised_dir}/${batch_name}/small_variants/${batch_name}-somatic-PASS.vcf.gz" \
+  --somatic_sv_tsv "${umccrised_dir}/${batch_name}/structural/${batch_name}-manta.tsv" \
+  --somatic_sv_vcf "${umccrised_dir}/${batch_name}/structural/${batch_name}-manta.vcf.gz" \
+  --purple_som_gene_cnv "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.cnv.gene.tsv" \
+  --purple_som_cnv "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.cnv.somatic.tsv" \
+  --purple_germ_cnv "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.cnv.germline.tsv" \
+  --purple_purity "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.purity.tsv" \
+  --purple_qc "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.qc" \
+  --purple_som_snv_vcf "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.somatic.vcf.gz" \
+  --oncoviral_present_viruses "${umccrised_dir}/work/${batch_name}/oncoviruses/present_viruses.txt" \
+  --oncoviral_breakpoints_tsv "${umccrised_dir}/work/${batch_name}/oncoviruses/oncoviral_breakpoints.tsv" \
+  --out_file "${gpgr_dir}/nogit/umccrised_data/cancer_report_2269.html" \
+  --result_outdir "${umccrised_dir}/${batch_name}/cancer_report_tables2" \
+  --tumor_name ${tumor_name}
