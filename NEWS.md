@@ -2,6 +2,7 @@
 
 - :bug: Update LINX cluster plot path pattern ([issue50](https://github.com/umccr/gpgr/issues/50),
   [pr51](https://github.com/umccr/gpgr/pull/51)).
+- :star: umccrise canrep: add SNV summary ([pr53](https://github.com/umccr/gpgr/pull/53)).
 
 # gpgr 1.3.0 (2022-06-10)
 
