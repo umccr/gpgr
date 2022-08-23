@@ -57,8 +57,8 @@ linx_rmd <- function(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE
 #'
 #' Generates a UMCCR Cancer Report. It does so with the following steps:
 #' 1. move the img_dir into 'tmp/img_dir'
-#' 2. copy the rmd into tmp/cancer_report.Rmd
-#' 3. render the rmd inside tmp/
+#' 2. copy the rmd into 'tmp/cancer_report.Rmd'
+#' 3. render the rmd inside 'tmp/'
 #' 4. return the path to the output HTML
 #'
 #' @param af_global Path to `af_tumor.txt` file.
@@ -67,29 +67,32 @@ linx_rmd <- function(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE
 #' @param conda_list Path to `conda_pkg_list.txt` file.
 #' @param img_dir Path to directory containing PURPLE plots.
 #' @param key_genes Path to UMCCR cancer gene file.
-#' @param somatic_snv_vcf Path to `somatic-PASS.vcf.gz` SNV VCF.
-#' @param somatic_sv_tsv Path to `manta.tsv` TSV file.
-#' @param somatic_sv_vcf Path to `manta.vcf.gz` VCF file.
-#' @param purple_som_gene_cnv Path to `purple.cnv.gene.tsv`.
-#' @param purple_som_cnv Path to `purple.cnv.somatic.tsv`.
+#' @param oncoviral_breakpoints_tsv Path to `oncoviruses/oncoviral_breakpoints.tsv`.
+#' @param oncoviral_present_viruses Path to `oncoviruses/present_viruses.txt`.
 #' @param purple_germ_cnv Path to `purple.cnv.germline.tsv`.
 #' @param purple_purity Path to `purple.purity.tsv`.
 #' @param purple_qc Path to `purple.qc`.
+#' @param purple_som_cnv Path to `purple.cnv.somatic.tsv`.
+#' @param purple_som_gene_cnv Path to `purple.cnv.gene.tsv`.
 #' @param purple_som_snv_vcf Path to `purple.somatic.vcf.gz`.
-#' @param oncoviral_present_viruses Path to `oncoviruses/present_viruses.txt`.
-#' @param oncoviral_breakpoints_tsv Path to `oncoviruses/oncoviral_breakpoints.tsv`.
+#' @param result_outdir Path to directory to write tidy JSON/TSV results.
+#' @param somatic_snv_summary Path to `somatic_snv_summary.json` JSON.
+#' @param somatic_snv_vcf Path to `somatic-PASS.vcf.gz` SNV VCF.
+#' @param somatic_sv_tsv Path to `manta.tsv` TSV file.
+#' @param somatic_sv_vcf Path to `manta.vcf.gz` VCF file.
+#' @param tumor_name Name of tumor sample.
 #' @param out_file Path to output HTML file (needs '.html' suffix) (def: `{tumor_name}_cancer_report.html`).
 #' @param quiet Suppress log printing during rendering.
-#' @param result_outdir Path to directory to write tidy JSON/TSV results.
-#' @param tumor_name Name of tumor sample.
 #'
 #' @return Path to rendered HTML report.
 #' @export
 cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, img_dir, key_genes,
-                       somatic_snv_vcf, somatic_sv_tsv, somatic_sv_vcf, purple_som_gene_cnv,
-                       purple_som_cnv, purple_germ_cnv, purple_purity, purple_qc,
-                       purple_som_snv_vcf, oncoviral_present_viruses, oncoviral_breakpoints_tsv,
-                       result_outdir, tumor_name, out_file = NULL, quiet = FALSE) {
+                       oncoviral_breakpoints_tsv, oncoviral_present_viruses,
+                       purple_germ_cnv, purple_purity, purple_qc, purple_som_cnv,
+                       purple_som_gene_cnv, purple_som_snv_vcf, somatic_snv_summary,
+                       somatic_snv_vcf, somatic_sv_tsv, somatic_sv_vcf,
+                       result_outdir, tumor_name,
+                       out_file = NULL, quiet = FALSE) {
   assertthat::assert_that(
     dir.exists(img_dir),
     quiet %in% c(FALSE, TRUE)
@@ -119,6 +122,7 @@ cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, img_dir, 
     conda_list = conda_list,
     img_dir = img_dir_b,
     key_genes = key_genes,
+    somatic_snv_summary = somatic_snv_summary,
     somatic_snv_vcf = somatic_snv_vcf,
     somatic_sv_tsv = somatic_sv_tsv,
     somatic_sv_vcf = somatic_sv_vcf,

@@ -10,26 +10,27 @@ output:
   rmdformats::material:
     highlight: kate
 params:
-  af_global: 'x'
-  af_keygenes: 'x'
-  batch_name: 'x'
-  conda_list: 'x'
-  img_dir: 'x'
-  key_genes: 'x'
-  oncoviral_present_viruses: 'x'
-  oncoviral_breakpoints_tsv: 'x'
-  purple_germ_cnv: 'x'
-  purple_purity: 'x'
-  purple_qc: 'x'
-  purple_som_cnv: 'x'
-  purple_som_gene_cnv: 'x'
-  purple_som_snv_vcf: 'x'
-  result_outdir: 'x'
-  somatic_snv_vcf: 'x'
-  somatic_sv_tsv: 'x'
-  somatic_sv_vcf: 'x'
+  af_global: NULL
+  af_keygenes: NULL
+  batch_name: NULL
+  conda_list: NULL
+  img_dir: NULL
+  key_genes: NULL
+  oncoviral_breakpoints_tsv: NULL
+  oncoviral_present_viruses: NULL
+  purple_germ_cnv: NULL
+  purple_purity: NULL
+  purple_qc: NULL
+  purple_som_cnv: NULL
+  purple_som_gene_cnv: NULL
+  purple_som_snv_vcf: NULL
+  result_outdir: NULL
+  somatic_snv_summary: NULL
+  somatic_snv_vcf: NULL
+  somatic_sv_tsv: NULL
+  somatic_sv_vcf: NULL
   title: "UMCCR Cancer Report"
-  tumor_name: 'x'
+  tumor_name: NULL
 description: "Analysis of tumor/normal samples at UMCCR"
 title: "`r paste(params$batch_name, params$title)`"
 ---
@@ -239,6 +240,25 @@ blank_lines(2)
 <details>
 <summary>Description</summary>
 
+__SNV Summary__
+
+Starting from the raw DRAGEN calls, count the number of variants remaining after
+each filtration stage.
+
+- `raw`: raw DRAGEN calls.
+- `raw_pass`: PASSed raw.
+- `noalt`: in chr1-22, X, Y, M.
+- `sage`: including rescued by SAGE.
+- `pregnomad`: should be the same as above.
+- `gnomad`: in the hypermutated case, total remaining after removing those
+  with `gnomAD_AF >= 0.01` (that are not in hotspots).
+- `anno`: after any additional filters for hypermutated case.
+- `filt`: after applying main filters (tumor allele frequency, PCGR tiers etc.). Should be the same as above.
+- `filt_pass`: after removing those that failed to pass the thresholds set above.
+- `giab`: after removing those that are __not__ in GIAB confident regions.
+
+__PURPLE Summary__
+
 PURPLE outputs a QC status along with a summary
 for the inferred purity and ploidy of the somatic sample.
 The 'QC Status' field reflects how we have determined the purity of the sample.
@@ -276,6 +296,14 @@ summarise_sigs <- function(mut_sig_contr) {
     dplyr::pull(string) %>%
     paste(collapse = ", ")
 }
+
+snv_summary <- params$somatic_snv_summary %>%
+  jsonlite::read_json() %>%
+  base::unlist() %>%
+  tibble::enframe() %>%
+  dplyr::mutate(x = glue("{name}: {value}")) %>%
+  dplyr::pull(x) %>%
+  base::paste(collapse = ", ")
 
 hrd_summary <- list(
   chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
@@ -327,6 +355,7 @@ qc_summary_all <- dplyr::tribble(
     "Max: {cnv_summary[['germ']]$Max}; ",
     "N: {cnv_summary[['germ']]$N} "
   ), "",
+  17, "SNVs (Somatic)", snv_summary, "Summary of SNV filters, from raw to final.",
   18, "SVs (unmelted)", paste(rev(sv_summary$unmelted), collapse = ", "),
   "Summary of SVs as presented in raw VCF.",
   19, "SVs (melted)", paste(rev(sv_summary$melted), collapse = ", "),
@@ -371,6 +400,13 @@ qc_summary_all %>%
     )
   ) %>%
   gt::cols_align("left") %>%
+  # align rowname_col
+  gt::tab_style(
+    style = list(
+      cell_text(align = "left")
+    ),
+    locations = cells_stub(rows = TRUE)
+  ) %>%
   gt::opt_row_striping() %>%
   gt::tab_options(table.align = "left")
 
@@ -396,8 +432,6 @@ AFs range from 0 to 1, or 0%-100% (we filter out all novel variants with AF < 10
 <details>
 <summary>Details</summary>
 
-Variants are typically called in bcbio by 3 different callers, with calls supported by at least 2 of them used ("ensemble" approach).
-In some cases only a single caller is used due to technical reasons (e.g. highly mutated FFPE sample).
 
 The following post-processing steps occur:
 
