@@ -1,5 +1,7 @@
 # gpgr 1.4.0-rc
 
+- :bug: Handle empty BPI Start/End values ([pr55](https://github.com/umccr/gpgr/pull/55),
+  [issue54](https://github.com/umccr/gpgr/issues/54), [umccrise issue88](https://github.com/umccr/umccrise/issues/88)).
 - :bug: Update LINX cluster plot path pattern ([issue50](https://github.com/umccr/gpgr/issues/50),
   [pr51](https://github.com/umccr/gpgr/pull/51)).
 - :star: umccrise canrep: add SNV summary ([pr53](https://github.com/umccr/gpgr/pull/53)).
