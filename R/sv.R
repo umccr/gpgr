@@ -293,7 +293,8 @@ process_sv <- function(x) {
         is.na(.data$BND_mate_chrom),
         sub(".*chr(.*):.*", "orphan_\\1", .data$ALT),
         .data$BND_mate_chrom
-      )
+      ),
+      BND_mate_end = sub(".*chr(.*):(\\d+).*", "\\2", .data$ALT)
     )
 
   unmelted_other <- unmelted |>
@@ -305,12 +306,13 @@ process_sv <- function(x) {
       unmelted_other
     ) |>
     dplyr::mutate(
+      END_BPI = ifelse(is.na(.data$END_BPI), .data$end, .data$END_BPI),
       END_BPI = base::format(.data$END_BPI, big.mark = ",", trim = TRUE),
       Start = base::format(.data$Start, big.mark = ",", trim = TRUE),
       End = paste0(
         ifelse(.data$svtype == "BND", .data$BND_mate_chrom, .data$chrom),
         ":",
-        .data$END_BPI
+        ifelse(.data$svtype == "BND" & is.na(.data$END_BPI), .data$BND_mate_end, .data$END_BPI)
       ),
       Start = paste0(.data$chrom, ":", .data$Start)
     ) |>
