@@ -252,7 +252,11 @@ process_sv <- function(x) {
       Ploidy = round(as.double(.data$Ploidy_PURPLE), 2),
       chrom = sub("chr", "", .data$chrom),
       svtype = ifelse(is.na(.data$PURPLE_status), .data$svtype, "PURPLE_inf"),
-      Start = ifelse(is.na(.data$PURPLE_status), .data$START_BPI, .data$start),
+      # when BPI cannot be run, just use start
+      Start = ifelse(is.na(.data$PURPLE_status),
+        ifelse(is.na(.data$START_BPI), .data$start, .data$START_BPI),
+        .data$start
+      ),
       nann = count_pieces(.data$annotation, ","),
       vcfnum = dplyr::row_number(),
       vcfnum = sprintf(glue::glue("%0{nchar(nrow(unmelted))}d"), .data$vcfnum)
