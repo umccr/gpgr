@@ -298,12 +298,18 @@ summarise_sigs <- function(mut_sig_contr) {
 }
 
 snv_summary <- params$somatic_snv_summary %>%
-  jsonlite::read_json() %>%
+  jsonlite::read_json()
+snvs_max <- 500000
+hypermutated <- with(snv_summary, !is.null(pregnomad) && pregnomad > snvs_max && !is.null(gnomad) && gnomad > snvs_max)
+snv_summary <- snv_summary %>%
   base::unlist() %>%
   tibble::enframe() %>%
-  dplyr::mutate(x = glue("{name}: {value}")) %>%
+  dplyr::mutate(
+    value = base::format(value, big.mark = ",", trim = TRUE),
+    x = glue("{name}: {value}")
+  ) %>%
   dplyr::pull(x) %>%
-  base::paste(collapse = ", ")
+  base::paste(collapse = "; ")
 
 hrd_summary <- list(
   chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
@@ -339,6 +345,8 @@ if (no_sv_found) {
 
 qc_summary_all <- dplyr::tribble(
   ~n, ~variable, ~value, ~details,
+  4, "Hypermutated", ifelse(hypermutated, "TRUE", "FALSE"),
+  ifelse(hypermutated, "More than 500K SNVs detected, so keep only small variants within UMCCR cancer gene regions (Ensembl v107).", ""),
   5, "MutSigs (Old)", glue::glue("{summarise_sigs(sigs_snv_2015)}"),
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
@@ -388,6 +396,16 @@ qc_summary_all %>%
     locations = cells_body(
       columns = value,
       rows = grepl("WARN_", value) & variable == "QC_Status"
+    )
+  ) %>%
+  gt::tab_style(
+    style = list(
+      cell_fill(color = "#FED8B1"),
+      cell_text(weight = "bold")
+    ),
+    locations = cells_body(
+      columns = value,
+      rows = grepl("TRUE", value) & variable == "Hypermutated"
     )
   ) %>%
   gt::tab_style(
