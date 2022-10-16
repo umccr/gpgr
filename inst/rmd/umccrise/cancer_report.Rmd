@@ -71,6 +71,7 @@ library(stringr)
 library(tidyr)
 # umccr
 library(gpgr)
+library(sigrap)
 ```
 
 ```{r funcs}
@@ -1613,11 +1614,11 @@ conda_pkgs <-
 # main pkgs
 tibble::tibble(
   name = c(
-    "umccrise", "r-gpgr", "r-base", "pcgr", "cpsr", "cacao",
+    "umccrise", "r-gpgr", "r-sigrap", "r-base", "pcgr", "cpsr", "cacao",
+    "bioconductor-mutationalpatterns", "r-signature.tools.lib", "r-chord",
     "hmftools-purple", "hmftools-amber", "hmftools-cobalt", "hmftools-sage",
-    "gridss", "hmftools-linx",
-    "multiqc", "multiqc-bcbio", "reference-data",
-    "bed_annotation", "vcf-stuff", "snakemake",
+    "break-point-inspector", "multiqc", "multiqc-bcbio", "reference-data",
+    "bed_annotation", "vcf-stuff", "snakemake", "dvc", "ensembl-vep",
     "samtools", "bcftools", "htslib", "ngs_utils", "python", "pandoc"
   )
 ) %>%
