@@ -76,10 +76,12 @@ hrd_results_tabs <- function(hrdetect_res, chord_res) {
     ) |>
     gt::tab_spanner(
       label = "HRDetect",
+      id = "id_hrdetect",
       columns = c("HRDetect", "results_hrdetect")
     ) |>
     gt::tab_spanner(
       label = "CHORD",
+      id = "id_chord",
       columns = c("CHORD", "results_chord", "CHORD2", "results_chord2")
     ) |>
     gt::cols_label(
