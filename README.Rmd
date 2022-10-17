@@ -84,7 +84,7 @@ gpgr_cli=$(Rscript -e 'x = system.file("cli", package = "gpgr"); cat(x, "\n")' |
 export PATH="${gpgr_cli}:${PATH}"
 
 echo "$ gpgr.R --version"
-echo "gpgr.R 1.4.0"
+echo "gpgr.R 1.4.1"
 echo ""
 echo "$ gpgr.R --help"
 gpgr.R --help
