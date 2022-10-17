@@ -1,11 +1,13 @@
-# gpgr 1.4.0-rc
+# gpgr 1.4.0
 
-- :bug: Handle empty BPI Start/End values ([pr55](https://github.com/umccr/gpgr/pull/55),
-  [issue54](https://github.com/umccr/gpgr/issues/54), [umccrise issue88](https://github.com/umccr/umccrise/issues/88)).
 - :bug: Update LINX cluster plot path pattern ([issue50](https://github.com/umccr/gpgr/issues/50),
   [pr51](https://github.com/umccr/gpgr/pull/51)).
 - :star: umccrise canrep: add SNV summary ([pr53](https://github.com/umccr/gpgr/pull/53)).
   - add hypermutated status
+- :bug: Handle empty BPI Start/End values ([pr55](https://github.com/umccr/gpgr/pull/55),
+  [issue54](https://github.com/umccr/gpgr/issues/54), [umccrise issue88](https://github.com/umccr/umccrise/issues/88)).
+- :bug: `{gt}` v0.7.0 requires a unique `id` for each `tab_spanner` ([issue57](https://github.com/umccr/gpgr/issues/57),
+  [pr58](https://github.com/umccr/gpgr/pull/58)).
 
 # gpgr 1.3.0 (2022-06-10)
 
