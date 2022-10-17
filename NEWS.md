@@ -1,9 +1,13 @@
+# 1.5.0rc
+
+- add bpi status in canrep summary table
+
 # gpgr 1.4.0
 
 - :bug: Update LINX cluster plot path pattern ([issue50](https://github.com/umccr/gpgr/issues/50),
   [pr51](https://github.com/umccr/gpgr/pull/51)).
 - :star: umccrise canrep: add SNV summary ([pr53](https://github.com/umccr/gpgr/pull/53)).
-  - add hypermutated status
+  - add hypermutated status in canrep summary table
 - :bug: Handle empty BPI Start/End values ([pr55](https://github.com/umccr/gpgr/pull/55),
   [issue54](https://github.com/umccr/gpgr/issues/54), [umccrise issue88](https://github.com/umccr/umccrise/issues/88)).
 - :bug: `{gt}` v0.7.0 requires a unique `id` for each `tab_spanner` ([issue57](https://github.com/umccr/gpgr/issues/57),

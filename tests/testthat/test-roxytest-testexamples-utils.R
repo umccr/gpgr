@@ -2,7 +2,7 @@
 
 # File R/utils.R: @testexamples
 
-test_that("Function is_vcf() @ L21", {
+test_that("Function is_vcf() @ L31", {
   
   x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   (y <- is_vcf(x))
@@ -14,7 +14,7 @@ test_that("Function is_vcf() @ L21", {
 })
 
 
-test_that("Function vcf_is_empty() @ L95", {
+test_that("Function vcf_is_empty() @ L105", {
   
   x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   (y <- vcf_is_empty(x))
@@ -41,7 +41,7 @@ test_that("Function vcf_is_empty() @ L95", {
 })
 
 
-test_that("Function tsv_is_empty() @ L131", {
+test_that("Function tsv_is_empty() @ L141", {
   
   
   tmp1 <- tempfile()

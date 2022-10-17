@@ -1,3 +1,13 @@
+#' BPI run on VCF
+#'
+#' @param x Path to VCF file.
+#' @export
+is_vcf_bpi <- function(x) {
+  assertthat::assert_that(is_vcf(x))
+  d <- bedr::read.vcf(x, nrows = 0, verbose = FALSE) # nrows 0 parses just the vcf header
+  "bpiVersion" %in% names(d[["header"]])
+}
+
 #' Does the input file look like a VCF?
 #'
 #' Quickly checks that the input file has a 'vcf' or 'vcf.gz' suffix, and that

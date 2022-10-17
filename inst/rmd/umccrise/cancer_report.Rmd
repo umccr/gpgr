@@ -302,6 +302,7 @@ snv_summary <- params$somatic_snv_summary %>%
   jsonlite::read_json()
 snvs_max <- 500000
 hypermutated <- with(snv_summary, !is.null(pregnomad) && pregnomad > snvs_max && !is.null(gnomad) && gnomad > snvs_max)
+bpi_enabled <- gpgr::is_vcf_bpi(params$somatic_sv_vcf)
 snv_summary <- snv_summary %>%
   base::unlist() %>%
   tibble::enframe() %>%
@@ -348,6 +349,8 @@ qc_summary_all <- dplyr::tribble(
   ~n, ~variable, ~value, ~details,
   4, "Hypermutated", ifelse(hypermutated, "TRUE", "FALSE"),
   ifelse(hypermutated, "More than 500K SNVs detected, so keep only small variants within UMCCR cancer gene regions (Ensembl v107).", ""),
+  4, "BPI Enabled", ifelse(bpi_enabled, "TRUE", "FALSE"),
+  ifelse(bpi_enabled, "", "BPI was skipped, so SV tables will not have AF_BPI/AF_PURPLE values."),
   5, "MutSigs (Old)", glue::glue("{summarise_sigs(sigs_snv_2015)}"),
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
@@ -377,11 +380,13 @@ qc_summary_all <- dplyr::tribble(
   dplyr::arrange(n) %>%
   dplyr::select(-n)
 
+orange <- "#FED8B1"
+red <- "#FF4646"
 qc_summary_all %>%
   gt::gt(rowname_col = "variable") %>%
   gt::tab_style(
     style = list(
-      cell_fill(color = "#FF4646"),
+      cell_fill(color = red),
       cell_text(weight = "bold")
     ),
     locations = cells_body(
@@ -391,7 +396,7 @@ qc_summary_all %>%
   ) %>%
   gt::tab_style(
     style = list(
-      cell_fill(color = "#FED8B1"),
+      cell_fill(color = orange),
       cell_text(weight = "bold")
     ),
     locations = cells_body(
@@ -401,12 +406,22 @@ qc_summary_all %>%
   ) %>%
   gt::tab_style(
     style = list(
-      cell_fill(color = "#FED8B1"),
+      cell_fill(color = orange),
       cell_text(weight = "bold")
     ),
     locations = cells_body(
       columns = value,
       rows = grepl("TRUE", value) & variable == "Hypermutated"
+    )
+  ) %>%
+  gt::tab_style(
+    style = list(
+      cell_fill(color = orange),
+      cell_text(weight = "bold")
+    ),
+    locations = cells_body(
+      columns = value,
+      rows = grepl("FALSE", value) & variable == "BPI Enabled"
     )
   ) %>%
   gt::tab_style(
