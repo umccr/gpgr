@@ -68,7 +68,7 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
     readr::read_tsv(g, col_types = readr::cols(
       symbol = "c", oncogene = "l", tumorsuppressor = "l"
     )) |>
-    dplyr::select(.data$symbol, .data$oncogene, .data$tumorsuppressor)
+    dplyr::select("symbol", "oncogene", "tumorsuppressor")
   oncogenes <- genes |>
     dplyr::filter(.data$oncogene) |>
     dplyr::pull(.data$symbol)
@@ -96,13 +96,13 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
         TRUE ~ ""
       )
     ) |>
-    dplyr::select(.data$gene,
-      minCN = .data$minCopyNumber, maxCN = .data$maxCopyNumber,
-      chrom = .data$chromosome, .data$start, .data$end,
-      chrBand = .data$chromosomeBand, .data$onco_or_ts,
-      .data$transcriptID, minMinorAlleleCN = .data$minMinorAlleleCopyNumber,
-      somReg = .data$somaticRegions, .data$germDelReg, minReg = .data$minRegions,
-      .data$minRegStartEnd, .data$minRegSupportStartEndMethod
+    dplyr::select("gene",
+      minCN = "minCopyNumber", maxCN = "maxCopyNumber",
+      chrom = "chromosome", "start", "end",
+      chrBand = "chromosomeBand", "onco_or_ts",
+      "transcriptID", minMinorAlleleCN = "minMinorAlleleCopyNumber",
+      somReg = "somaticRegions", "germDelReg", minReg = "minRegions",
+      "minRegStartEnd", "minRegSupportStartEndMethod"
     )
 
   descr <- dplyr::tribble(
@@ -194,10 +194,10 @@ purple_cnv_som_process <- function(x) {
       `GC (windowCount)` = paste0(.data$gcContent, " (", .data$depthWindowCount, ")")
     ) |>
     dplyr::select(
-      .data$Chr,
-      Start = .data$start, End = .data$end, CN = .data$copyNumber,
-      `CN Min+Maj` = .data$`CopyNumber Min+Maj`, .data$`Start/End SegSupport`,
-      Method = .data$method, .data$`BAF (count)`, .data$`GC (windowCount)`
+      "Chr",
+      Start = "start", End = "end", CN = "copyNumber",
+      `CN Min+Maj` = `CopyNumber Min+Maj`, `Start/End SegSupport`,
+      Method = "method", `BAF (count)`, `GC (windowCount)`
     )
 
 
@@ -417,7 +417,7 @@ purple_purity_read <- function(x) {
     tidyr::pivot_longer(dplyr::everything(), names_to = "column", values_to = "value") |>
     dplyr::left_join(tab, by = "column") |>
     dplyr::mutate(value = toupper(.data$value)) |>
-    dplyr::select(.data$column, .data$value)
+    dplyr::select("column", "value")
 
   p <- structure(purple_purity$value, names = purple_purity$column)
 
@@ -472,7 +472,7 @@ purple_snv_vcf_read <- function(x) {
   d <- bedr::read.vcf(x, split.info = TRUE, verbose = FALSE)
   info <-
     tibble::as_tibble(d$header[["INFO"]]) |>
-    dplyr::select(.data$ID, .data$Description)
+    dplyr::select("ID", "Description")
 
   info_cols <- c(
     "AF", "PURPLE_AF", "PURPLE_CN",

@@ -16,9 +16,9 @@ session_info_kable <- function(pkgs) {
     tibble::enframe(name = "name", value = "value")
   si_pkg <- unclass(si[["packages"]]) |>
     dplyr::as_tibble() |>
-    dplyr::select(.data$package,
-      version = .data$ondiskversion,
-      datestamp = .data$date, .data$source
+    dplyr::select("package",
+      version = "ondiskversion",
+      datestamp = "date", "source"
     ) |>
     dplyr::filter(.data$package %in% pkgs)
 

@@ -143,7 +143,7 @@ af_summary <- function(af_global_file, af_keygenes_file) {
 
   af_keygenes <-
     readr::read_tsv(af_keygenes_file, col_types = "cicccd") |>
-    dplyr::select(.data$af) |>
+    dplyr::select("af") |>
     dplyr::mutate(set = "Key genes CDS")
 
   af_both <-

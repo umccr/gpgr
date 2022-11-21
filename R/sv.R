@@ -40,13 +40,13 @@ split_double_col <- function(d, nms) {
 
   outd |>
     dplyr::mutate(
-      avg = round(rowMeans(dplyr::select(outd, .data$x1, .data$x2), na.rm = TRUE), 2),
+      avg = round(rowMeans(dplyr::select(outd, "x1", "x2"), na.rm = TRUE), 2),
       out = as.character(glue::glue("{avg} ({x1}, {x2})")),
       out = ifelse(.data$out == "NaN (NA, NA)", NA_character_, .data$out)
     ) |>
-    dplyr::select(.data$num, .data$col_nm, .data$out) |>
+    dplyr::select("num", "col_nm", "out") |>
     tidyr::pivot_wider(names_from = "col_nm", values_from = "out") |>
-    dplyr::select(-.data$num)
+    dplyr::select(-"num")
 }
 
 
@@ -319,14 +319,14 @@ process_sv <- function(x) {
       )
     ) |>
     dplyr::select(
-      .data$vcfnum, .data$nann,
-      TierTop = .data$tier,
-      .data$Start, .data$End,
-      Type = .data$svtype,
-      .data$BND_ID, .data$BND_mate,
-      .data$SR_alt, .data$PR_alt, .data$SR_PR_sum, .data$SR_PR_ref, .data$Ploidy,
-      .data$AF_PURPLE, .data$AF_BPI, CNC = .data$CN_change_PURPLE,
-      CN = .data$CN_PURPLE, SScore = .data$somaticscore, .data$annotation
+      "vcfnum", "nann",
+      TierTop = "tier",
+      "Start", "End",
+      Type = "svtype",
+      "BND_ID", "BND_mate",
+      "SR_alt", "PR_alt", "SR_PR_sum", "SR_PR_ref", "Ploidy",
+      "AF_PURPLE", "AF_BPI", CNC = "CN_change_PURPLE",
+      CN = "CN_PURPLE", SScore = "somaticscore", "annotation"
     )
 
   abbreviate_effectv <- Vectorize(abbreviate_effect)
@@ -380,7 +380,7 @@ plot_bnd_sr_pr_tot_lines <- function(d,
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>
-    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt, Tier = .data$TierTop, .data$BND_ID) |>
+    dplyr::select(SR = "SR_alt", PR = "PR_alt", Tier = "TierTop", "BND_ID") |>
     dplyr::distinct() |>
     dplyr::mutate(
       PR = ifelse(is.na(.data$PR), 0, .data$PR),
@@ -443,7 +443,7 @@ plot_bnd_sr_pr_tot_hist <- function(d,
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>
-    dplyr::select(SR = .data$SR_alt, PR = .data$PR_alt, .data$BND_ID) |>
+    dplyr::select(SR = "SR_alt", PR = "PR_alt", "BND_ID") |>
     dplyr::distinct() |>
     dplyr::mutate(
       PR = ifelse(is.na(.data$PR), 0, .data$PR),

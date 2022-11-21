@@ -196,7 +196,7 @@ linx_read_table <- function(x, tab) {
   subset_tab <- function(tab) {
     LINX_DESCRIPTIONS |>
       dplyr::filter(.data$Table == tab) |>
-      dplyr::select(-.data$Table)
+      dplyr::select(-"Table")
   }
 
   descr <- subset_tab(tab)
@@ -219,7 +219,7 @@ linx_read_table <- function(x, tab) {
 linx_descr_tab <- function(tab) {
   LINX_DESCRIPTIONS |>
     dplyr::filter(.data$Table == tab) |>
-    dplyr::select(.data$Field, .data$Description)
+    dplyr::select("Field", "Description")
 }
 
 #' Read LINX SVS File

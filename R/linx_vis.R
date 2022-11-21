@@ -23,7 +23,7 @@ linx_viscopynumber_read <- function(x) {
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
     dplyr::mutate(Chrom = sub("chr", "", .data$Chromosome)) |>
-    dplyr::select(.data$Chrom, .data$Start, .data$End, CN = .data$CopyNumber, .data$BAF) |>
+    dplyr::select("Chrom", "Start", "End", CN = "CopyNumber", "BAF") |>
     dplyr::arrange(mixedrank(.data$Chrom)) |>
     dplyr::mutate(Chrom = as.factor(.data$Chrom))
 }
@@ -83,7 +83,7 @@ linx_visgeneexon_read <- function(x) {
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
-    dplyr::select(-.data$SampleId) |>
+    dplyr::select(-"SampleId") |>
     dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome)) |>
     dplyr::arrange(.data$ClusterId, .data$Gene, .data$Chromosome) |>
     dplyr::mutate(ClusterId = factor(.data$ClusterId)) |>
@@ -114,7 +114,7 @@ linx_visproteindomain_read <- function(x) {
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
-    dplyr::select(-.data$SampleId) |>
+    dplyr::select("SampleId") |>
     dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome)) |>
     dplyr::arrange(.data$ClusterId, .data$Chromosome, .data$Start) |>
     dplyr::mutate(ClusterId = factor(.data$ClusterId)) |>
@@ -145,7 +145,7 @@ linx_vissegments_read <- function(x) {
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
-    dplyr::select(-.data$SampleId) |>
+    dplyr::select(-"SampleId") |>
     dplyr::mutate(Chromosome = sub("chr", "", .data$Chromosome)) |>
     dplyr::arrange(.data$ClusterId, .data$ChainId, .data$Chromosome) |>
     dplyr::mutate(ClusterId = factor(.data$ClusterId))
@@ -178,11 +178,11 @@ linx_vissvdata_read <- function(x) {
   assertthat::assert_that(ncol(d) == length(nm))
   assertthat::assert_that(all(colnames(d) == names(nm)))
   d |>
-    dplyr::select(-.data$SampleId) |>
+    dplyr::select(-"SampleId") |>
     dplyr::arrange(.data$ClusterId, .data$ChainId) |>
     dplyr::mutate(ClusterId = factor(.data$ClusterId)) |>
     dplyr::select(
-      .data$ClusterId, .data$ChrStart, .data$ChrEnd,
-      .data$PosStart, .data$PosEnd, dplyr::everything()
+      "ClusterId", "ChrStart", "ChrEnd",
+      "PosStart", "PosEnd", dplyr::everything()
     )
 }
