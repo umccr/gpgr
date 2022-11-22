@@ -75,7 +75,7 @@ jobs:
           git pull --no-rebase
           git --no-pager log --decorate=short --pretty=oneline -n3
           LATEST_COMMIT_HASH="$(git --no-pager log -1 --format='%H')"
-          echo "::set-output name=latest_commit_hash::${LATEST_COMMIT_HASH}"
+          echo "latest_commit_hash=${LATEST_COMMIT_HASH}" >> $GITHUB_OUTPUT
       - name: 🔖 Create tag
         uses: actions/github-script@v5
         env:
