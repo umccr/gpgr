@@ -196,8 +196,8 @@ purple_cnv_som_process <- function(x) {
     dplyr::select(
       "Chr",
       Start = "start", End = "end", CN = "copyNumber",
-      `CN Min+Maj` = `CopyNumber Min+Maj`, `Start/End SegSupport`,
-      Method = "method", `BAF (count)`, `GC (windowCount)`
+      `CN Min+Maj` = "CopyNumber Min+Maj", "Start/End SegSupport",
+      Method = "method", "BAF (count)", "GC (windowCount)"
     )
 
 
