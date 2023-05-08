@@ -63,7 +63,7 @@ LINX_DESCRIPTIONS <- tibble::tribble(
     "Location of the breakend relative to the transcript. ",
     "[UPSTREAM (within 100kb upstream of the 1st base of the transcript), INTRONIC, EXONIC]"
   ),
-  "breakend", "codingContext", "c", paste0(
+  "breakend", "codingType", "c", paste0(
     "Location of the breakend relative to the coding context of the transcript. ",
     "[CODING, NON_CODING, UTR_5P, UTR_3P, ENHANCER (IG enhancer rearrangements only)"
   ),
