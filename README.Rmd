@@ -23,7 +23,8 @@ at the University of Melbourne Centre for Cancer Research.
 
 - Docs: <https://umccr.github.io/gpgr/>
 
-[![Conda install](https://anaconda.org/umccr/r-gpgr/badges/installer/conda.svg)](https://anaconda.org/umccr/r-gpgr)
+[![Conda install](https://anaconda.org/umccr/r-gpgr/badges/version.svg)](https://anaconda.org/umccr/r-gpgr)
+[![Conda install](https://anaconda.org/umccr/r-gpgr/badges/latest_release_date.svg)](https://anaconda.org/umccr/r-gpgr)
 
 ## Installation
 
@@ -74,34 +75,26 @@ A `gpgr` command line interface is available for convenience.
 - If you're _not_ using the conda package, you need to export the
   `gpgr/inst/cli/` directory to your `PATH` in order to use `gpgr.R`.
 
-```{bash echo=TRUE, eval=FALSE}
+```{bash eval=FALSE}
 gpgr_cli=$(Rscript -e 'x = system.file("cli", package = "gpgr"); cat(x, "\n")' | xargs)
 export PATH="${gpgr_cli}:${PATH}"
 ```
 
-```{bash echo=FALSE}
+```{bash prompt=TRUE, echo=FALSE}
 gpgr_cli=$(Rscript -e 'x = system.file("cli", package = "gpgr"); cat(x, "\n")' | xargs)
 export PATH="${gpgr_cli}:${PATH}"
-
-echo "$ gpgr.R --version"
-echo "gpgr.R 1.4.1"
+echo "gpgr.R --version" & gpgr.R --version
 echo ""
-echo "$ gpgr.R --help"
-gpgr.R --help
+echo "#-----------------------------------#"
+echo "gpgr.R --help" & gpgr.R --help
 echo ""
-echo ""
-echo ""
+echo "#-----------------------------------#"
 echo "#------- LINX Report -------#"
+echo "gpgr.R linx --help" & gpgr.R linx --help
 echo ""
-echo ""
-echo "$ gpgr.R linx --help"
-gpgr.R linx --help
-echo ""
-echo ""
-echo ""
+echo "#-----------------------------------#"
 echo "#------- Cancer Report -------#"
+echo "gpgr.R canrep --help" & gpgr.R canrep --help
 echo ""
-echo ""
-echo "$ gpgr.R canrep --help"
-gpgr.R canrep --help
+echo "#-----------------------------------#"
 ```

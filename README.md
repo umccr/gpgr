@@ -1,14 +1,13 @@
 
--   <a href="#-gpgr---genomics-platform-group-reporting"
-    id="toc--gpgr---genomics-platform-group-reporting">📚 gpgr - Genomics
-    Platform Group Reporting</a>
-    -   <a href="#installation" id="toc-installation">Installation</a>
-    -   <a href="#main-modules" id="toc-main-modules">Main modules</a>
-        -   <a href="#id_-linx" id="toc-id_-linx">🕸 LINX</a>
-        -   <a href="#id_-purple" id="toc-id_-purple">🔮 PURPLE</a>
-        -   <a href="#id_-umccrise" id="toc-id_-umccrise">🐍 umccrise</a>
-    -   <a href="#id_-developers" id="toc-id_-developers">🥳 Developers</a>
-    -   <a href="#id_-cli" id="toc-id_-cli">💻 CLI</a>
+- [📚 gpgr - Genomics Platform Group
+  Reporting](#-gpgr---genomics-platform-group-reporting)
+  - [Installation](#installation)
+  - [Main modules](#main-modules)
+    - [🕸 LINX](#id_-linx)
+    - [🔮 PURPLE](#id_-purple)
+    - [🐍 umccrise](#id_-umccrise)
+  - [🥳 Developers](#id_-developers)
+  - [💻 CLI](#id_-cli)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -17,10 +16,12 @@
 Contains reports and functions used in the Genomics Platform Group at
 the University of Melbourne Centre for Cancer Research.
 
--   Docs: <https://umccr.github.io/gpgr/>
+- Docs: <https://umccr.github.io/gpgr/>
 
 [![Conda
-install](https://anaconda.org/umccr/r-gpgr/badges/installer/conda.svg)](https://anaconda.org/umccr/r-gpgr)
+install](https://anaconda.org/umccr/r-gpgr/badges/version.svg)](https://anaconda.org/umccr/r-gpgr)
+[![Conda
+install](https://anaconda.org/umccr/r-gpgr/badges/latest_release_date.svg)](https://anaconda.org/umccr/r-gpgr)
 
 ## Installation
 
@@ -28,7 +29,7 @@ install](https://anaconda.org/umccr/r-gpgr/badges/installer/conda.svg)](https://
 remotes::install_github("umccr/gpgr")
 ```
 
--   Or if used inside a conda environment:
+- Or if used inside a conda environment:
 
 ``` bash
 conda install r-gpgr -c umccr -c conda-forge -c bioconda
@@ -38,26 +39,26 @@ conda install r-gpgr -c umccr -c conda-forge -c bioconda
 
 ### 🕸 LINX
 
--   Generate a HTML report with results from the `LINX` structural
-    variant visualisation tool from the Hartwig Medical Foundation
-    (<https://github.com/hartwigmedical/hmftools/tree/master/linx>). See
-    the [CLI](#cli) section below for options.
--   For useful functions for reading/processing `LINX` results, see the
-    vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
+- Generate a HTML report with results from the `LINX` structural variant
+  visualisation tool from the Hartwig Medical Foundation
+  (<https://github.com/hartwigmedical/hmftools/tree/master/linx>). See
+  the [CLI](#cli) section below for options.
+- For useful functions for reading/processing `LINX` results, see the
+  vignette at <https://umccr.github.io/gpgr/articles/linx.html>.
 
 ### 🔮 PURPLE
 
--   Read and process output files from the `PURPLE` purity/copy number
-    estimator tool from the Hartwig Medical Foundation
-    (<https://github.com/hartwigmedical/hmftools/tree/master/purple>).
-    See vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
+- Read and process output files from the `PURPLE` purity/copy number
+  estimator tool from the Hartwig Medical Foundation
+  (<https://github.com/hartwigmedical/hmftools/tree/master/purple>). See
+  vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
 
 ### 🐍 umccrise
 
--   Generate a HTML report with results from the `umccrise` DRAGEN
-    tumor/normal post-processing workflow from UMCCR -
-    <https://github.com/umccr/umccrise>. See the [CLI](#cli) section
-    below for options.
+- Generate a HTML report with results from the `umccrise` DRAGEN
+  tumor/normal post-processing workflow from UMCCR -
+  <https://github.com/umccr/umccrise>. See the [CLI](#cli) section below
+  for options.
 
 ## 🥳 Developers
 
@@ -68,20 +69,21 @@ notes.
 
 A `gpgr` command line interface is available for convenience.
 
--   If you’re using the conda package, the `gpgr.R` command will already
-    be set up inside an activated conda environment.
--   If you’re *not* using the conda package, you need to export the
-    `gpgr/inst/cli/` directory to your `PATH` in order to use `gpgr.R`.
+- If you’re using the conda package, the `gpgr.R` command will already
+  be set up inside an activated conda environment.
+- If you’re *not* using the conda package, you need to export the
+  `gpgr/inst/cli/` directory to your `PATH` in order to use `gpgr.R`.
 
 ``` bash
 gpgr_cli=$(Rscript -e 'x = system.file("cli", package = "gpgr"); cat(x, "\n")' | xargs)
 export PATH="${gpgr_cli}:${PATH}"
 ```
 
-    $ gpgr.R --version
+    gpgr.R --version
     gpgr.R 1.4.1
 
-    $ gpgr.R --help
+    #-----------------------------------#
+    gpgr.R --help
     usage: gpgr.R [-h] [-v] {linx,canrep} ...
 
     UMCCR Genomics Platform Group Reporting
@@ -91,20 +93,17 @@ export PATH="${gpgr_cli}:${PATH}"
         linx         UMCCR LINX Report.
         canrep       UMCCR Cancer Report.
 
-    optional arguments:
+    options:
       -h, --help     show this help message and exit
       -v, --version  show program's version number and exit
 
-
-
+    #-----------------------------------#
     #------- LINX Report -------#
-
-
-    $ gpgr.R linx --help
+    gpgr.R linx --help
     usage: gpgr.R linx [-h] --sample SAMPLE --plot PLOT --table TABLE [--out OUT]
                        [--quiet]
 
-    optional arguments:
+    options:
       -h, --help       show this help message and exit
       --sample SAMPLE  Sample name.
       --plot PLOT      Path to LINX plot directory.
@@ -112,26 +111,24 @@ export PATH="${gpgr_cli}:${PATH}"
       --out OUT        HTML output file name [def: linx_{sample}.html].
       --quiet          Suppress log printing during rendering.
 
-
-
+    #-----------------------------------#
     #------- Cancer Report -------#
-
-
-    $ gpgr.R canrep --help
+    gpgr.R canrep --help
     usage: gpgr.R canrep [-h] --af_global AF_GLOBAL --af_keygenes AF_KEYGENES
                          --batch_name BATCH_NAME --conda_list CONDA_LIST --img_dir
-                         IMG_DIR --key_genes KEY_GENES --somatic_snv_vcf
-                         SOMATIC_SNV_VCF --somatic_sv_tsv SOMATIC_SV_TSV
-                         --somatic_sv_vcf SOMATIC_SV_VCF --purple_som_gene_cnv
-                         PURPLE_SOM_GENE_CNV --purple_som_cnv PURPLE_SOM_CNV
-                         --purple_germ_cnv PURPLE_GERM_CNV --purple_purity
-                         PURPLE_PURITY --purple_qc PURPLE_QC --purple_som_snv_vcf
-                         PURPLE_SOM_SNV_VCF --oncoviral_present_viruses
-                         ONCOVIRAL_PRESENT_VIRUSES --oncoviral_breakpoints_tsv
-                         ONCOVIRAL_BREAKPOINTS_TSV [--out_file OUT_FILE] [--quiet]
-                         --result_outdir RESULT_OUTDIR --tumor_name TUMOR_NAME
+                         IMG_DIR --key_genes KEY_GENES --somatic_snv_summary
+                         SOMATIC_SNV_SUMMARY --somatic_snv_vcf SOMATIC_SNV_VCF
+                         --somatic_sv_tsv SOMATIC_SV_TSV --somatic_sv_vcf
+                         SOMATIC_SV_VCF --purple_som_gene_cnv PURPLE_SOM_GENE_CNV
+                         --purple_som_cnv PURPLE_SOM_CNV --purple_germ_cnv
+                         PURPLE_GERM_CNV --purple_purity PURPLE_PURITY --purple_qc
+                         PURPLE_QC --purple_som_snv_vcf PURPLE_SOM_SNV_VCF
+                         --oncoviral_present_viruses ONCOVIRAL_PRESENT_VIRUSES
+                         --oncoviral_breakpoints_tsv ONCOVIRAL_BREAKPOINTS_TSV
+                         [--out_file OUT_FILE] [--quiet] --result_outdir
+                         RESULT_OUTDIR --tumor_name TUMOR_NAME
 
-    optional arguments:
+    options:
       -h, --help            show this help message and exit
       --af_global AF_GLOBAL
                             Path to `af_tumor.txt` file.
@@ -144,6 +141,8 @@ export PATH="${gpgr_cli}:${PATH}"
       --img_dir IMG_DIR     Path to directory containing PURPLE plots.
       --key_genes KEY_GENES
                             Path to UMCCR cancer gene file.
+      --somatic_snv_summary SOMATIC_SNV_SUMMARY
+                            Path to `somatic_snv_summary.json`.
       --somatic_snv_vcf SOMATIC_SNV_VCF
                             Path to `somatic-PASS.vcf.gz` SNV VCF.
       --somatic_sv_tsv SOMATIC_SV_TSV
@@ -173,3 +172,5 @@ export PATH="${gpgr_cli}:${PATH}"
                             Path to directory to write tidy JSON/TSV results.
       --tumor_name TUMOR_NAME
                             Name of tumor sample.
+
+    #-----------------------------------#

@@ -1,6 +1,9 @@
-# 1.5.0rc
+# gpgr 1.5.0rc
 
 - add bpi status in canrep summary table
+- :bug: LINX >= 1.23 has renamed `codingContext` to `codingType` in the `breakend` table
+  ([issue59](https://github.com/umccr/gpgr/issues/59), [pr60](https://github.com/umccr/gpgr/pull/60)).
+  - also updated relevant DVC file
 
 # gpgr 1.4.0
 
