@@ -1,0 +1,4 @@
+outs:
+- md5: 15bdcf661aea6bdfa42a347018b22374
+  size: 41
+  path: linx.version

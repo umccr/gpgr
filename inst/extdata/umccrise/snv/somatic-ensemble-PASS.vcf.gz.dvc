@@ -1,0 +1,4 @@
+outs:
+- md5: 9ddb3cd0b1b13034d73ab72cecca9762
+  size: 793337
+  path: somatic-ensemble-PASS.vcf.gz

@@ -1,0 +1,4 @@
+outs:
+- md5: 4f2982ce965dfdf08db2b06fd916ba84
+  size: 98701
+  path: manta.tsv

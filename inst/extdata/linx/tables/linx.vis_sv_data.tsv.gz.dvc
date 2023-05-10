@@ -1,0 +1,4 @@
+outs:
+- md5: 1960569a5ccaf8e347d9768bfaf5a851
+  size: 17185
+  path: linx.vis_sv_data.tsv.gz

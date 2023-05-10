@@ -1,0 +1,4 @@
+outs:
+- md5: 209a3c37739f12973bf8307186fa4c5f
+  size: 217780
+  path: manta.vcf.gz
