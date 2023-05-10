@@ -1,0 +1,4 @@
+outs:
+- md5: b72ecef7ff74e482958bd15772996019
+  size: 113803
+  path: purple.somatic.vcf.gz

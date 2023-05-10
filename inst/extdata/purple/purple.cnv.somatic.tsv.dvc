@@ -1,0 +1,4 @@
+outs:
+- md5: 8ea1a5ec3db03e5531f98a880684b545
+  size: 7080
+  path: purple.cnv.somatic.tsv

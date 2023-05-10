@@ -1,0 +1,4 @@
+outs:
+- md5: a69cebed42afe739e261bfaa5a3dcba0
+  size: 2468
+  path: linx.clusters.tsv.gz

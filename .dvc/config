@@ -1,4 +1,4 @@
 [core]
-    remote = storage
-['remote "storage"']
-    url = gdrive://1-HP5ejf8HdscqgaamxWUWdmrKbF-h7Sr
+    remote = umccr_gdrive_gpgr
+['remote "umccr_gdrive_gpgr"']
+    url = gdrive://1brtSakyeEDxeDztYq2GpmKGkU5jt2yz5
