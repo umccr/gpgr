@@ -80,7 +80,7 @@ export PATH="${gpgr_cli}:${PATH}"
 ```
 
     gpgr.R --version
-    gpgr.R 1.4.2
+    gpgr.R 1.4.3
 
     #-----------------------------------#
     gpgr.R --help
