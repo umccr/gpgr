@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.3</span>
       </span>
     </div>
 
@@ -90,15 +90,13 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/linx/tables/linx.links.tsv.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">linx_links_read</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 17</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   cluste…¹ chainId chain…² chain…³ lower…⁴ upper…⁵ lower…⁶ upper…⁷ chrom…⁸ arm  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 139      0       0             2 159     158     true    false   chrX    P    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 7 more variables: assembled &lt;chr&gt;, traversedSVCount &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   clusterId chainId chainIndex chainCount lowerSvId upperSvId</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 139       0       0                   2 159       158      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 11 more variables: lowerBreakendIsStart &lt;chr&gt;, upperBreakendIsStart &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   chromosome &lt;chr&gt;, arm &lt;chr&gt;, assembled &lt;chr&gt;, traversedSVCount &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   length &lt;dbl&gt;, junctionCopyNumber &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   junctionCopyNumberUncertainty &lt;dbl&gt;, pseudogeneInfo &lt;chr&gt;, ecDna &lt;chr&gt;, and</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   abbreviated variable names ¹​clusterId, ²​chainIndex, ³​chainCount,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​lowerSvId, ⁵​upperSvId, ⁶​lowerBreakendIsStart, ⁷​upperBreakendIsStart,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁸​chromosome</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   junctionCopyNumberUncertainty &lt;dbl&gt;, pseudogeneInfo &lt;chr&gt;, ecDna &lt;chr&gt;</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -113,7 +111,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

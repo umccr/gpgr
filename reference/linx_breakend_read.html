@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.3</span>
       </span>
     </div>
 
@@ -90,25 +90,25 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/linx/tables/linx.breakend.tsv.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">linx_breakend_read</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4,483 × 26</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id    svId  isStart gene      trans…¹ canon…² geneO…³ disru…⁴ repor…⁵ undis…⁶</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 0     0     true    AL513320… ENST00… true    Upstre… false   false      2.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 1     0     true    WRAP73    ENST00… true    Upstre… false   false      2.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 2     0     true    TP73      ENST00… true    Downst… true    false      2.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 3     0     true    AL136528… ENST00… true    Upstre… false   false      2.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 4     0     true    AL136528… ENST00… true    Upstre… false   false      2.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 5     0     true    RF02197   ENST00… true    Downst… false   false      2.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 6     0     true    CCDC27    ENST00… true    Downst… false   false      2.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 7     0     true    SMIM1     ENST00… true    Downst… false   false      2.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 8     0     true    RN7SL574P ENST00… true    Downst… false   false      2.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 9     0     true    AL365330… ENST00… true    Downst… false   false      2.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 4,473 more rows, 16 more variables: regionType &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   codingContext &lt;chr&gt;, biotype &lt;chr&gt;, exonicBasePhase &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id    svId  isStart gene    transcriptId canonical geneOrientation disruptive</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 0     0     true    AL5133… ENST0000043… true      Upstream        false     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 1     0     true    WRAP73  ENST0000027… true      Upstream        false     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 2     0     true    TP73    ENST0000037… true      Downstream      true      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 3     0     true    AL1365… ENST0000044… true      Upstream        false     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 4     0     true    AL1365… ENST0000041… true      Upstream        false     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 5     0     true    RF02197 ENST0000061… true      Downstream      false     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 6     0     true    CCDC27  ENST0000029… true      Downstream      false     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 7     0     true    SMIM1   ENST0000044… true      Downstream      false     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 8     0     true    RN7SL5… ENST0000058… true      Downstream      false     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 9     0     true    AL3653… ENST0000060… true      Downstream      false     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4,473 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 18 more variables: reportedDisruption &lt;chr&gt;, undisruptedCopyNumber &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   regionType &lt;chr&gt;, codingType &lt;chr&gt;, biotype &lt;chr&gt;, exonicBasePhase &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nextSpliceExonRank &lt;dbl&gt;, nextSpliceExonPhase &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   nextSpliceDistance &lt;dbl&gt;, totalExonCount &lt;dbl&gt;, type &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   chromosome &lt;chr&gt;, orientation &lt;chr&gt;, strand &lt;chr&gt;, chrBand &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   exonUp &lt;dbl&gt;, exonDown &lt;dbl&gt;, junctionCopyNumber &lt;dbl&gt;, and abbreviated</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   variable names ¹​transcriptId, ²​canonical, ³​geneOrientation, ⁴​disruptive, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   exonUp &lt;dbl&gt;, exonDown &lt;dbl&gt;, junctionCopyNumber &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -123,7 +123,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

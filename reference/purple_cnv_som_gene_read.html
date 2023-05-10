@@ -19,7 +19,7 @@ alterations of each gene in the HMF panel
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gpgr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.3</span>
       </span>
     </div>
 
@@ -94,25 +94,25 @@ alterations of each gene in the HMF panel
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.gene.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">purple_cnv_som_gene_read</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 240 × 20</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    chromosome  start    end gene  minCo…¹ maxCo…² unused somat…³ germl…⁴ germl…⁵</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr1        <span style="text-decoration: underline;">11</span>869  <span style="text-decoration: underline;">14</span>409 DDX1…    1.02    1.02 0            1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr1        <span style="text-decoration: underline;">14</span>404  <span style="text-decoration: underline;">29</span>570 WASH…    1.02    1.02 0            1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr1        <span style="text-decoration: underline;">17</span>369  <span style="text-decoration: underline;">17</span>436 MIR6…    1.02    1.02 0            1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr1        <span style="text-decoration: underline;">29</span>554  <span style="text-decoration: underline;">31</span>097 MIR1…    1.02    1.02 0            1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr1        <span style="text-decoration: underline;">30</span>366  <span style="text-decoration: underline;">30</span>503 MIR1…    1.02    1.02 0            1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr1        <span style="text-decoration: underline;">34</span>554  <span style="text-decoration: underline;">36</span>081 FAM1…    1.02    1.02 0            1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr1        <span style="text-decoration: underline;">69</span>091  <span style="text-decoration: underline;">70</span>008 OR4F5    1.02    1.02 0            1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr1       <span style="text-decoration: underline;">185</span>217 <span style="text-decoration: underline;">195</span>411 FO53…    1.02    1.02 0            1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr1       <span style="text-decoration: underline;">187</span>891 <span style="text-decoration: underline;">187</span>958 MIR6…    1.02    1.02 0            1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr1       <span style="text-decoration: underline;">450</span>740 <span style="text-decoration: underline;">451</span>678 OR4F…    1.02    1.02 0            1       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 230 more rows, 10 more variables: transcriptId &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    chromosome  start    end gene        minCopyNumber maxCopyNumber unused</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr1        <span style="text-decoration: underline;">11</span>869  <span style="text-decoration: underline;">14</span>409 DDX11L1              1.02          1.02 0     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr1        <span style="text-decoration: underline;">14</span>404  <span style="text-decoration: underline;">29</span>570 WASH7P               1.02          1.02 0     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr1        <span style="text-decoration: underline;">17</span>369  <span style="text-decoration: underline;">17</span>436 MIR6859-1            1.02          1.02 0     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr1        <span style="text-decoration: underline;">29</span>554  <span style="text-decoration: underline;">31</span>097 MIR1302-2HG          1.02          1.02 0     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr1        <span style="text-decoration: underline;">30</span>366  <span style="text-decoration: underline;">30</span>503 MIR1302-2            1.02          1.02 0     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr1        <span style="text-decoration: underline;">34</span>554  <span style="text-decoration: underline;">36</span>081 FAM138A              1.02          1.02 0     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr1        <span style="text-decoration: underline;">69</span>091  <span style="text-decoration: underline;">70</span>008 OR4F5                1.02          1.02 0     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr1       <span style="text-decoration: underline;">185</span>217 <span style="text-decoration: underline;">195</span>411 FO538757.1           1.02          1.02 0     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr1       <span style="text-decoration: underline;">187</span>891 <span style="text-decoration: underline;">187</span>958 MIR6859-2            1.02          1.02 0     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr1       <span style="text-decoration: underline;">450</span>740 <span style="text-decoration: underline;">451</span>678 OR4F29               1.02          1.02 0     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 230 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 13 more variables: somaticRegions &lt;dbl&gt;, germlineHomDeletionRegions &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   germlineHetToHomDeletionRegions &lt;dbl&gt;, transcriptId &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   transcriptVersion &lt;chr&gt;, chromosomeBand &lt;chr&gt;, minRegions &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   minRegionStart &lt;int&gt;, minRegionEnd &lt;int&gt;, minRegionStartSupport &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   minRegionEndSupport &lt;chr&gt;, minRegionMethod &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   minMinorAlleleCopyNumber &lt;dbl&gt;, and abbreviated variable names</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ¹​minCopyNumber, ²​maxCopyNumber, ³​somaticRegions,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​germlineHomDeletionRegions, ⁵​germlineHetToHomDeletionRegions</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   minMinorAlleleCopyNumber &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -127,7 +127,7 @@ alterations of each gene in the HMF panel
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
