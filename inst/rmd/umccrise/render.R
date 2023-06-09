@@ -22,7 +22,6 @@ params <- list(
   oncoviral_breakpoints_tsv = glue::glue("{umccrised_dir}/work/{batch_name}/oncoviruses/oncoviral_breakpoints.tsv"),
   oncoviral_present_viruses = glue::glue("{umccrised_dir}/work/{batch_name}/oncoviruses/present_viruses.txt"),
   out_file = here::here("nogit/umccrised_data/SBJ02269/foo_cancer_report.html"),
-  purple_germ_cnv = glue::glue("{umccrised_dir}/work/{batch_name}/purple/{batch_name}.purple.cnv.germline.tsv"),
   purple_purity = glue::glue("{umccrised_dir}/work/{batch_name}/purple/{batch_name}.purple.purity.tsv"),
   purple_qc = glue::glue("{umccrised_dir}/work/{batch_name}/purple/{batch_name}.purple.qc"),
   purple_som_cnv = glue::glue("{umccrised_dir}/work/{batch_name}/purple/{batch_name}.purple.cnv.somatic.tsv"),

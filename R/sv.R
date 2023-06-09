@@ -73,6 +73,7 @@ split_double_col <- function(d, nms) {
 #' expect_equal(m, 2)
 #' expect_error(gpgr:::count_pieces("foo", NA))
 #'
+#' @export
 count_pieces <- function(x, sep) {
   ifelse(nchar(x) == 0, 0, stringr::str_count(x, sep) + 1)
 }
@@ -107,6 +108,7 @@ count_pieces <- function(x, sep) {
 #' expect_equal(e3, "TFBSDel, TFBSVar")
 #' expect_equal(e4, "badaboom, bar, foo, StopGain")
 #'
+#' @export
 abbreviate_effect <- function(effects) {
   effect_abbrev_nms <- names(gpgr::EFFECT_ABBREVIATIONS)
 
@@ -147,22 +149,18 @@ umccrise_read_sv_tsv <- function(x) {
     "sample", "Tumor sample name", "c",
     "chrom", "CHROM column in VCF", "c",
     "start", "POS column in VCF", "i",
-    "end", "INFO/END: End position of the variant described in this record", "i",
     "svtype", "INFO/SVTYPE: Type of structural variant", "c",
-    "split_read_support", "FORMAT/SR of tumor sample: Split reads for the ref and alt alleles in the order listed, for reads where P(allele|read)>0.999", "c",
-    "paired_support_PE", "FORMAT/PE of tumor sample: ??", "c",
-    "paired_support_PR", "FORMAT/PR of tumor sample: Spanning paired-read support for the ref and alt alleles in the order listed, for reads where P(allele|read)>0.999", "c",
-    "AF_BPI", "INFO/BPI_AF: AF at each breakpoint (so AF_BPI1,AF_BPI2)", "c",
-    "somaticscore", "INFO/SOMATICSCORE: Somatic variant quality score", "i",
+    "SR_alt", "FORMAT/SR of tumor sample", "i",
+    "PR_alt", "FORMAT/RP of tumor sample", "i",
+    "SR_ref", "FORMAT/REF of tumor sample", "i",
+    "PR_ref", "FORMAT/REFPAIR of tumor sample", "i",
+    "QUAL", "QUAL column in VCF", "f",
     "tier", "INFO/SV_TOP_TIER (or 4 if missing): Highest priority tier for the effects of a variant entry", "c",
     "annotation", "INFO/SIMPLE_ANN: Simplified structural variant annotation: 'SVTYPE | EFFECT | GENE(s) | TRANSCRIPT | PRIORITY (1-4)'", "c",
     "AF_PURPLE", "INFO/PURPLE_AF: AF at each breakend (purity adjusted) (so AF_PURPLE1,AF_PURPLE2)", "c",
     "CN_PURPLE", "INFO/PURPLE_CN: CN at each breakend (purity adjusted) (so CN_PURPLE1,CN_PURPLE2)", "c",
     "CN_change_PURPLE", "INFO/PURPLE_CN_CHANGE: change in CN at each breakend (purity adjusted) (so CN_change_PURPLE1,CN_change_PURPLE2)", "c",
-    "Ploidy_PURPLE", "INFO/PURPLE_PLOIDY: Ploidy of variant (purity adjusted)", "d",
     "PURPLE_status", "INFERRED if FILTER=INFERRED, or RECOVERED if has INFO/RECOVERED, else blank. INFERRED: Breakend inferred from copy number transition", "c",
-    "START_BPI", "INFO/BPI_START: BPI adjusted breakend location", "i",
-    "END_BPI", "INFO/BPI_END: BPI adjusted breakend location", "i",
     "ID", "ID column in VCF", "c",
     "MATEID", "INFO/MATEID: ID of mate breakend", "c",
     "ALT", "ALT column in VCF", "c"
@@ -205,6 +203,7 @@ process_sv <- function(x) {
       melted = NULL
     ))
   }
+
   col_descr <- dplyr::tribble(
     ~Column, ~Description,
     "nrow", "Row number that connects variants between tables in same tab set.",
@@ -213,8 +212,8 @@ process_sv <- function(x) {
     "Tier", "Priority of the specific event (from simple_sv_annotation: 1 highest, 4 lowest).",
     "Tier (Top)", "Priority of the specific event (Top tier of all event's annotations): 1 highest, 4 lowest. ",
     "Chr", "Chromosome.",
-    "Start", "Start position as inferred by BPI. For PURPLE-inferred SVs we use POS.",
-    "End", "End position. For BNDs = Chr:Start of the mate.Values are inferred by BPI (PURPLE-inferred SVs do not have an End).",
+    "Start", "Start position.",
+    "End", "End position.",
     "ID", "ID of BND from Manta. For PURPLE-inferred SVs this is PURPLE.",
     "MATEID", "ID of BND mate from Manta.",
     "BND_ID", "ID of BND pair simplified. BNDs with the same BND_ID belong to the same translocation event.",
@@ -223,40 +222,31 @@ process_sv <- function(x) {
     "Transcript", "Transcripts involved in the event. DEL/DUP/INS events involving more than 2 transcripts are shown within separate table.",
     "Effect", "SV effect (based on http://snpeff.sourceforge.net/SnpEff_manual.html#input).",
     "Detail", "Prioritisation detail (from simple_sv_annotation).",
-    "Ploidy", "Ploidy of variant from PURPLE (purity adjusted).",
     "AF_PURPLE", "PURPLE AF at each breakend preceded by their average.",
-    "AF_BPI", "BPI AF at each breakend preceded by their average.",
     "CN", "Copy Number at each breakend preceded by their average.",
     "CNC", "Copy Number Change at each breakend preceded by their average.",
     "SR_alt", "Number of Split Reads supporting the alt allele, where P(allele|read)>0.999.",
     "PR_alt", "Number of Paired Reads supporting the alt allele, where P(allele|read)>0.999.",
     "SR_PR_ref", "Number of Split Reads and Paired Reads supporting the ref allele, where P(allele|read)>0.999.",
     "SR_PR_sum", "Sum of SR_alt and PR_alt.",
-    "Type", "Type of structural variant.",
-    "SScore", "Somatic variant quality score.",
+    "Type", "Simple type interpretation of SV.",
+    "Quality", "Variant quality score.",
     "ntrx", "Number of transcripts for given event.",
     "ngen", "Number of genes for given event.",
     "nann", "Number of annotations for given event."
   )
 
-  cols_to_split <- c("AF_BPI", "AF_PURPLE", "CN_PURPLE", "CN_change_PURPLE")
+  cols_to_split <- c("AF_PURPLE", "CN_PURPLE", "CN_change_PURPLE")
   double_cols <- split_double_col(sv, cols_to_split)
   unmelted <- sv |>
     dplyr::select(-dplyr::all_of(c(cols_to_split, "caller", "sample"))) |>
-    dplyr::bind_cols(double_cols) |>
-    tidyr::separate(.data$split_read_support, c("SR_ref", "SR_alt"), ",", convert = TRUE) |>
-    tidyr::separate(.data$paired_support_PR, c("PR_ref", "PR_alt"), ",", convert = TRUE)
+    dplyr::bind_cols(double_cols)
   unmelted <- unmelted |>
     dplyr::mutate(
-      SR_PR_ref = paste0(.data$SR_ref, ",", .data$PR_ref),
-      Ploidy = round(as.double(.data$Ploidy_PURPLE), 2),
+      SR_PR_ref = paste0(.data$SR_ref, ",", .data$PR_alt),
       chrom = sub("chr", "", .data$chrom),
       svtype = ifelse(is.na(.data$PURPLE_status), .data$svtype, "PURPLE_inf"),
-      # when BPI cannot be run, just use start
-      Start = ifelse(is.na(.data$PURPLE_status),
-        ifelse(is.na(.data$START_BPI), .data$start, .data$START_BPI),
-        .data$start
-      ),
+      Start = .data$start,
       nann = count_pieces(.data$annotation, ","),
       vcfnum = dplyr::row_number(),
       vcfnum = sprintf(glue::glue("%0{nchar(nrow(unmelted))}d"), .data$vcfnum)
@@ -268,16 +258,17 @@ process_sv <- function(x) {
   # BND IDs
   # Two BND mates share the same ID up to the last digit (0 or 1)
   unmelted_bnd1 <- unmelted |>
-    dplyr::filter(.data$svtype == "BND") |>
+    dplyr::filter(!.data$svtype %in% c("PURPLE_inf", "SGL")) |>
     tidyr::separate(.data$ID, into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) |>
     dplyr::group_by(.data$BND_group)
+  assertthat::assert_that(all(unmelted_bnd1$BND_mate %in% c("o", "h")))
   unmelted_bnd1 <- unmelted_bnd1 |>
     dplyr::mutate(
       # index per group 1, 2, 3..
       BND_ID = dplyr::cur_group_id(),
       # turns into 001, 002, 003... if you've got 100+ rows
       BND_ID = sprintf(glue::glue("%0{nchar(nrow(unmelted_bnd1))}d"), .data$BND_ID),
-      BND_mate = ifelse(.data$BND_mate == 0, "A", "B")
+      BND_mate = ifelse(.data$BND_mate == "o", "A", "B")
     ) |>
     dplyr::ungroup()
 
@@ -299,7 +290,7 @@ process_sv <- function(x) {
     )
 
   unmelted_other <- unmelted |>
-    dplyr::filter(.data$svtype != "BND")
+    dplyr::filter(.data$svtype %in% c("PURPLE_inf", "SGL"))
 
   unmelted_all <-
     dplyr::bind_rows(
@@ -309,24 +300,40 @@ process_sv <- function(x) {
     dplyr::mutate(
       Start = base::format(.data$Start, big.mark = ",", trim = TRUE),
       Start = paste0(.data$chrom, ":", .data$Start),
-      END_tmp = ifelse(is.na(.data$END_BPI), .data$end, .data$END_BPI),
-      END_tmp = ifelse(is.na(.data$END_tmp) & .data$svtype == "BND", .data$BND_mate_end, .data$END_tmp),
-      END_tmp = base::format(.data$END_tmp, big.mark = ",", trim = TRUE),
-      End = paste0(
-        ifelse(.data$svtype == "BND", .data$BND_mate_chrom, .data$chrom),
-        ":",
-        .data$END_tmp
+      END_tmp = ifelse(!.data$svtype %in% c("PURPLE_inf", "SGL"), .data$BND_mate_end, NA_character_),
+      END_tmp = ifelse(
+        is.na(.data$END_tmp),
+        NA_character_,
+        base::format(as.integer(.data$END_tmp), big.mark = ",", trim = TRUE)
+      ),
+      End = ifelse(
+        is.na(.data$END_tmp),
+        NA_character_,
+        paste0(
+          ifelse(.data$svtype == "BND", .data$BND_mate_chrom, .data$chrom),
+          ":",
+          .data$END_tmp
+        )
       )
     ) |>
     dplyr::select(
-      "vcfnum", "nann",
+      "vcfnum",
+      "nann",
       TierTop = "tier",
-      "Start", "End",
+      "Start",
+      "End",
       Type = "svtype",
-      "BND_ID", "BND_mate",
-      "SR_alt", "PR_alt", "SR_PR_sum", "SR_PR_ref", "Ploidy",
-      "AF_PURPLE", "AF_BPI", CNC = "CN_change_PURPLE",
-      CN = "CN_PURPLE", SScore = "somaticscore", "annotation"
+      "BND_ID",
+      "BND_mate",
+      "SR_alt",
+      "PR_alt",
+      "SR_PR_sum",
+      "SR_PR_ref",
+      "AF_PURPLE",
+      CNC = "CN_change_PURPLE",
+      CN = "CN_PURPLE",
+      Quality= "QUAL",
+      "annotation",
     )
 
   abbreviate_effectv <- Vectorize(abbreviate_effect)

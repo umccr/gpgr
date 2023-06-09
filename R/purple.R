@@ -18,13 +18,12 @@
 purple_cnv_som_gene_read <- function(x) {
   nm <- c(
     "chromosome" = "c", "start" = "i", "end" = "i", "gene" = "c",
-    "minCopyNumber" = "d", "maxCopyNumber" = "d",
-    "unused" = "c", "somaticRegions" = "d", "germlineHomDeletionRegions" = "d",
-    "germlineHetToHomDeletionRegions" = "d",
-    "transcriptId" = "c", "transcriptVersion" = "c", "chromosomeBand" = "c",
+    "minCopyNumber" = "d", "maxCopyNumber" = "d", "somaticRegions" = "d",
+    "transcriptId" = "c", "isCanonical" = "c", "chromosomeBand" = "c",
     "minRegions" = "d", "minRegionStart" = "i", "minRegionEnd" = "i",
     "minRegionStartSupport" = "c", "minRegionEndSupport" = "c",
-    "minRegionMethod" = "c", "minMinorAlleleCopyNumber" = "d"
+    "minRegionMethod" = "c", "minMinorAlleleCopyNumber" = "d",
+    "depthWindowCount" = "i"
   )
 
   ctypes <- paste(nm, collapse = "")
@@ -33,7 +32,6 @@ purple_cnv_som_gene_read <- function(x) {
   assertthat::assert_that(all(colnames(purple_cnv_gene) == names(nm)))
   purple_cnv_gene
 }
-
 
 #' Process PURPLE CNV Gene File for UMCCRISE
 #'
@@ -80,13 +78,12 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
     dplyr::filter(.data$gene %in% genes$symbol) |>
     dplyr::mutate(
       chromosome = as.factor(.data$chromosome),
-      transcriptID = paste0(.data$transcriptId, ".", .data$transcriptVersion),
+      transcriptID = paste0(.data$transcriptId),
       minRegStartEnd = paste0(.data$minRegionStart, "-", .data$minRegionEnd),
       minRegSupportStartEndMethod = paste0(
         .data$minRegionStartSupport, "-", .data$minRegionEndSupport,
         " (", .data$minRegionMethod, ")"
       ),
-      germDelReg = paste0(.data$germlineHomDeletionRegions, "/", .data$germlineHetToHomDeletionRegions),
       oncogene = .data$gene %in% oncogenes,
       tsgene = .data$gene %in% tsgenes,
       onco_or_ts = dplyr::case_when(
@@ -101,7 +98,7 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
       chrom = "chromosome", "start", "end",
       chrBand = "chromosomeBand", "onco_or_ts",
       "transcriptID", minMinorAlleleCN = "minMinorAlleleCopyNumber",
-      somReg = "somaticRegions", "germDelReg", minReg = "minRegions",
+      somReg = "somaticRegions", minReg = "minRegions",
       "minRegStartEnd", "minRegSupportStartEndMethod"
     )
 
@@ -115,7 +112,6 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
     "transcriptID", "Ensembl transcript ID (dot version)",
     "minMinorAlleleCN", "Minimum allele ploidy found over the gene exons - useful for identifying LOH events",
     "somReg (somaticRegions)", "Count of somatic copy number regions this gene spans",
-    "germDelReg (germlineHomDeletionRegions / germlineHetToHomDeletionRegions)", "Number of regions spanned by this gene that are (homozygously deleted in the germline / both heterozygously deleted in the germline and homozygously deleted in the tumor)",
     "minReg (minRegions)", "Number of somatic regions inside the gene that share the min copy number",
     "minRegStartEnd", "Start/End base of the copy number region overlapping the gene with the minimum copy number",
     "minRegSupportStartEndMethod", "Start/end support of the CN region overlapping the gene with the min CN (plus determination method)"
@@ -162,8 +158,7 @@ purple_cnv_som_read <- function(x) {
 
 #' Process PURPLE CNV Somatic File for UMCCRISE
 #'
-#' Processes the `purple.cnv.somatic.tsv` file.
-#' and selects columns of interest.
+#' Processes the `purple.cnv.somatic.tsv` file and selects columns of interest.
 #'
 #' @param x Path to `purple.cnv.somatic.tsv` file.
 #'
@@ -230,49 +225,142 @@ purple_cnv_som_process <- function(x) {
   )
 }
 
-#' Read PURPLE CNV Germline File
+#' Process an Annotated PURPLE CNV Somatic File
 #'
-#' Reads the `purple.cnv.germline.tsv` file.
+#' Processes the annotated and prioritised `purple.cnv.somatic.tsv` file.
 #'
-#' @param x Path to `purple.cnv.germline.tsv` file.
+#' @param x Path to annotated and prioritised `purple.cnv.somatic.tsv` file.
+#'
+#' @return List with two elements:
+#' * `tab`: Tibble containing selected data.
+#' * `descr`: Description of tibble columns.
+#'
+#' @examples
+#' x <- system.file("extdata/sash/purple.cnv.gene.annotated.tsv", package = "gpgr")
+#' (p <- purple_cnv_som_ann_process(x))
+#' @testexamples
+#' expect_equal(colnames(p)[ncol(p)], "annotation")
+#'
+#' @export
+purple_cnv_som_ann_process <- function(x) {
+  purple_cnv_somatic_ann <- purple_cnv_som_ann_read(x)
+
+  purple_cnv_somatic_ann___d <- purple_cnv_somatic_ann |>
+    dplyr::mutate(
+      Chr = as.factor(.data$chromosome),
+      minorAlleleCopyNumber = round(.data$minorAlleleCopyNumber, 1),
+      majorAlleleCopyNumber = round(.data$majorAlleleCopyNumber, 1),
+      `CopyNumber Min+Maj` = paste0(.data$minorAlleleCopyNumber, "+", .data$majorAlleleCopyNumber),
+      copyNumber = round(.data$copyNumber, 1),
+      bafAdj = round(.data$baf, 2),
+      gcContent = round(.data$gcContent, 2),
+      `Start/End SegSupport` = paste0(.data$segmentStartSupport, "-", .data$segmentEndSupport),
+      `BAF (count)` = paste0(.data$bafAdj, " (", .data$bafCount, ")"),
+      `GC (windowCount)` = paste0(.data$gcContent, " (", .data$depthWindowCount, ")"),
+      TopTier = sv_top_tier,
+      annotation = simple_ann
+    ) |>
+    dplyr::select(
+      "Chr",
+      Start = "start", End = "end", Type = "svtype", CN = "copyNumber",
+      `CN Min+Maj` = "CopyNumber Min+Maj", "Start/End SegSupport",
+      Method = "method", "BAF (count)", "GC (windowCount)", "TopTier", "annotation"
+    )
+
+  abbreviate_effectv <- Vectorize(gpgr::abbreviate_effect)
+
+  purple_cnv_somatic_ann <- purple_cnv_somatic_ann___d |>
+    dplyr::mutate(annotation = strsplit(.data$annotation, ",")) |>
+    tidyr::unnest(.data$annotation) |>
+    tidyr::separate(
+      .data$annotation, c("Event", "Effect", "Genes", "Transcript", "Detail", "Tier"),
+      sep = "\\|", convert = FALSE
+    ) |>
+    dplyr::mutate(
+      ntrx = gpgr::count_pieces(.data$Transcript, "&"),
+      ngen = gpgr::count_pieces(.data$Genes, "&"),
+      neff = gpgr::count_pieces(.data$Effect, "&"),
+      Transcript = .data$Transcript |> stringr::str_replace_all("&", ", "),
+      Genes = .data$Genes |> stringr::str_replace_all("&", ", "),
+      Effect = abbreviate_effectv(.data$Effect),
+      `Tier (Top)` = glue::glue("{Tier} ({TopTier})")
+    ) |>
+    dplyr::distinct() |>
+    dplyr::filter(Detail != 'unprioritized') |>
+    dplyr::arrange(.data$`Tier (Top)`, .data$Genes, .data$Effect)
+
+  descr <- dplyr::tribble(
+    ~Column, ~Description,
+    "Chr/Start/End", "Coordinates of copy number segment",
+    "Type", "Simple type interpretation of SV.",
+    "CN", "Fitted absolute copy number of segment adjusted for purity and ploidy",
+    "CN Min+Maj", "CopyNumber of minor + major allele adjusted for purity",
+    "Start/End SegSupport", paste0(
+      "Type of SV support for the CN breakpoint at ",
+      "start/end of region. Allowed values: ",
+      "CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), ",
+      "SGL (single breakend SV support), NONE (no SV support for CN breakpoint), ",
+      "MULT (multiple SV support at exact breakpoint)"
+    ),
+    "Method", paste0(
+      "Method used to determine the CN of the region. Allowed values: ",
+      "BAF_WEIGHTED (avg of all depth windows for the region), ",
+      "STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), ",
+      "LONG_ARM (inferred from the long arm), GERMLINE_AMPLIFICATION ",
+      "(inferred using special logic to handle regions of germline amplification)"
+    ),
+    "BAF (count)", "Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf points covered by this segment)",
+    "GC (windowCount)", "Proportion of segment that is G or C (Count of COBALT windows covered by this segment)",
+    "TierTop", "Top priority of the event (from simple_sv_annotation: 1 highest, 4 lowest).",
+    "annotation", "INFO/SIMPLE_ANN: Simplified structural variant annotation: 'SVTYPE | EFFECT | GENE(s) | TRANSCRIPT | PRIORITY (1-4)'"
+  )
+
+  list(
+    tab = purple_cnv_somatic_ann,
+    descr = descr
+  )
+}
+
+#' Read an Annotated PURPLE CNV Somatic File
+#'
+#' Reads the annotated and prioritised `purple.cnv.somatic.tsv` file.
+#'
+#' @param x Path to annotated and prioritised `purple.cnv.somatic.tsv` file.
 #'
 #' @return The input file as a tibble.
 #'
 #' @examples
-#' x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
-#' (p <- purple_cnv_germ_read(x))
+#' x <- system.file("extdata/sash/purple.cnv.gene.annotated.tsv", package = "gpgr")
+#' (p <- purple_cnv_som_ann_read(x))
 #' @testexamples
-#' expect_equal(colnames(p)[ncol(p)], "majorAlleleCopyNumber")
+#' expect_equal(colnames(p)[ncol(p)], "simple_ann")
 #'
 #' @export
-purple_cnv_germ_read <- function(x) {
-  # as of PURPLE v2.39, germline and somatic files have same columns.
-  purple_cnv_germline <- purple_cnv_som_read(x)
-  purple_cnv_germline
-}
+purple_cnv_som_ann_read <- function(x) {
+  nm <- c(
+    "chromosome" = "c",
+    "start" = "i",
+    "end" = "i",
+    "svtype" = "c",
+    "baf" = "d",
+    "bafCount" = "d",
+    "copyNumber" = "d",
+    "depthWindowCount" = "i",
+    "gcContent" = "d",
+    "majorAlleleCopyNumber" = "d",
+    "method" = "c",
+    "minorAlleleCopyNumber" = "d",
+    "segmentEndSupport" = "c",
+    "segmentStartSupport" = "c",
+    "sv_top_tier" = "i",
+    "simple_ann" = "c"
+  )
 
-#' Process PURPLE CNV germline File for UMCCRISE
-#'
-#' Processes the `purple.cnv.germline.tsv` file.
-#' and selects columns of interest.
-#'
-#' @param x Path to `purple.cnv.germline.tsv` file.
-#'
-#' @return List with two elements:
-#' * `tab`: Tibble with more condensed columns.
-#' * `descr`: Description of tibble columns.
-#'
-#' @examples
-#' x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
-#' (pp <- purple_cnv_germ_process(x))
-#' @testexamples
-#' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
-#'
-#' @export
-purple_cnv_germ_process <- function(x) {
-  # as of PURPLE v2.39, germline and somatic files have same columns.
-  processed_purple_cnv_germline <- purple_cnv_som_process(x)
-  processed_purple_cnv_germline
+  ctypes <- paste(nm, collapse = "")
+  purple_cnv_somatic_ann <- readr::read_tsv(x, col_types = ctypes)
+  assertthat::assert_that(ncol(purple_cnv_somatic_ann) == length(nm))
+  assertthat::assert_that(all(colnames(purple_cnv_somatic_ann) == names(nm)))
+  purple_cnv_somatic_ann
 }
 
 #' Read PURPLE version file
@@ -328,7 +416,8 @@ purple_qc_read <- function(x) {
   nm <- c(
     "QCStatus", "Method", "CopyNumberSegments",
     "UnsupportedCopyNumberSegments", "Purity", "AmberGender",
-    "CobaltGender", "DeletedGenes", "Contamination", "GermlineAberrations"
+    "CobaltGender", "DeletedGenes", "Contamination", "GermlineAberrations",
+    "AmberMeanDepth"
   )
 
   assertthat::assert_that(all(purple_qc$key == nm))
@@ -350,6 +439,8 @@ purple_qc_read <- function(x) {
     "Rate of contamination in tumor sample as determined by AMBER.",
     16, "GermlineAberrations", glue::glue('{q["GermlineAberrations"]}'),
     "Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.",
+    18, "AmberMeanDepth", glue::glue('{q["AmberMeanDepth"]}'),
+    "Mean depth as determined by AMBER.",
   )
 
   list(
@@ -401,7 +492,9 @@ purple_purity_read <- function(x) {
     "tmlStatus", "c",
     "tmbPerMb", "d",
     "tmbStatus", "c",
-    "svTumorMutationalBurden", "d"
+    "svTumorMutationalBurden", "d",
+    "runMode", "c",
+    "targeted", "c"
   )
 
   ctypes <- paste(tab$type, collapse = "")
@@ -475,7 +568,7 @@ purple_snv_vcf_read <- function(x) {
     dplyr::select("ID", "Description")
 
   info_cols <- c(
-    "AF", "PURPLE_AF", "PURPLE_CN",
+    "PURPLE_AF", "PURPLE_CN",
     "PURPLE_GERMLINE", "PURPLE_MACN", "PURPLE_VCN",
     "HMF_HOTSPOT", "KT", "MH", "SUBCL", "TNC"
   )
@@ -506,7 +599,7 @@ purple_snv_vcf_read <- function(x) {
 purple_kataegis <- function(x) {
   d <- purple_snv_vcf_read(x)
   info_cols <- c(
-    "KT", "AF", "PURPLE_AF", "PURPLE_CN",
+    "KT", "PURPLE_AF", "PURPLE_CN",
     "PURPLE_MACN", "PURPLE_VCN", "SUBCL",
     "MH", "TNC"
   )

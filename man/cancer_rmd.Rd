@@ -11,15 +11,14 @@ cancer_rmd(
   conda_list,
   img_dir,
   key_genes,
-  oncoviral_breakpoints_tsv,
-  oncoviral_present_viruses,
-  purple_germ_cnv,
+  virusbreakend_tsv,
+  virusbreakend_vcf,
   purple_purity,
   purple_qc,
+  purple_som_cnv_ann,
   purple_som_cnv,
   purple_som_gene_cnv,
   purple_som_snv_vcf,
-  somatic_snv_summary,
   somatic_snv_vcf,
   somatic_sv_tsv,
   somatic_sv_vcf,
@@ -42,23 +41,21 @@ cancer_rmd(
 
 \item{key_genes}{Path to UMCCR cancer gene file.}
 
-\item{oncoviral_breakpoints_tsv}{Path to \code{oncoviruses/oncoviral_breakpoints.tsv}.}
+\item{virusbreakend_tsv}{Path to VIRUSBreakend summary file.}
 
-\item{oncoviral_present_viruses}{Path to \code{oncoviruses/present_viruses.txt}.}
-
-\item{purple_germ_cnv}{Path to \code{purple.cnv.germline.tsv}.}
+\item{virusbreakend_vcf}{Path to VIRUSBreakend VCF file.}
 
 \item{purple_purity}{Path to \code{purple.purity.tsv}.}
 
 \item{purple_qc}{Path to \code{purple.qc}.}
+
+\item{purple_som_cnv_ann}{Path to annotated and prioritised \code{purple.cnv.somatic.tsv}.}
 
 \item{purple_som_cnv}{Path to \code{purple.cnv.somatic.tsv}.}
 
 \item{purple_som_gene_cnv}{Path to \code{purple.cnv.gene.tsv}.}
 
 \item{purple_som_snv_vcf}{Path to \code{purple.somatic.vcf.gz}.}
-
-\item{somatic_snv_summary}{Path to \code{somatic_snv_summary.json} JSON.}
 
 \item{somatic_snv_vcf}{Path to \code{somatic-PASS.vcf.gz} SNV VCF.}
 
