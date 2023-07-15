@@ -4,6 +4,10 @@
 - :bug: LINX >= 1.23 has renamed `codingContext` to `codingType` in the `breakend` table
   ([issue59](https://github.com/umccr/gpgr/issues/59), [pr60](https://github.com/umccr/gpgr/pull/60)).
   - also updated relevant DVC file
+- :bug: LINX >= 1.24 has added a `reportableReasons` in the `fusion` table
+  ([issue64](https://github.com/umccr/gpgr/issues/64), [pr65](https://github.com/umccr/gpgr/pull/65)).
+- :bug: pkgdown config needs to have `.yml`, not `.yaml` suffix (see [r-lib/pkgdown#2244](https://github.com/r-lib/pkgdown/issues/2244)) ([ci040bd2f](https://github.com/umccr/gpgr/commit/040bd2f)).
+- :star: build conda pkg for R v4.2 ([ci0dbe49d](https://github.com/umccr/gpgr/commit/0dbe49d)).
 
 # gpgr 1.4.0
 

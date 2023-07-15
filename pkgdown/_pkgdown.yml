@@ -5,48 +5,5 @@ url: https://umccr.github.io/gpgr/
 authors:
   Peter Diakumis:
     href: https://github.com/pdiakumis
-
-reference:
-- title: "PURPLE"
-  desc: >
-    Functions related to PURPLE (https://github.com/hartwigmedical/hmftools/tree/master/purple)
-- contents:
-  - starts_with("purple")
-
-- title: "LINX"
-  desc: >
-    Functions related to LINX (https://github.com/hartwigmedical/hmftools/tree/master/linx)
-- contents:
-  - starts_with("linx")
-
-- title: "umccrise"
-  desc: >
-    Functions related to umccrise (https://github.com/umccr/umccrise)
-- contents:
-  - abbreviate_effect
-  - af_summary
-  - cancer_rmd
-  - EFFECT_ABBREVIATIONS
-  - hrd_results_tabs
-  - plot_bnd_sr_pr_tot_lines
-  - plot_bnd_sr_pr_tot_hist
-  - process_sv
-  - umccrise_read_sv_tsv
-  - write_jsongz
-  - write_tsvgz
-  - write_tsvjsongz
-
-- title: "Others"
-- contents:
-  - count_pieces
-  - date_log
-  - is_vcf
-  - mkdir
-  - pkg_exists
-  - session_info_kable
-  - split_double_col
-  - tsv_is_empty
-  - vcf_is_empty
-
 news:
   one_page: true
