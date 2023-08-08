@@ -17,6 +17,7 @@ requirements:
     - git
   host:
     - r-base
+    - r-assertthat
     - r-bedr
     - r-dplyr
     - r-ggplot2
@@ -46,6 +47,7 @@ requirements:
 
   run:
     - r-base
+    - r-assertthat
     - r-bedr
     - r-dplyr
     - r-ggplot2
