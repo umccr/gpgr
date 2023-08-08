@@ -247,5 +247,8 @@ cpdir <- function(from, to) {
 
 # https://stackoverflow.com/a/61647053/2169986
 mixedrank <- function(x) {
+  if (length(x) == 0) {
+    return(x)
+  }
   order(gtools::mixedorder(x))
 }

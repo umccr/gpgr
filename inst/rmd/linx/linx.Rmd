@@ -26,15 +26,15 @@ knitr::opts_chunk$set(
 ```
 
 ```{r load_pkgs, message=FALSE, warning=FALSE}
-library(details)
-library(dplyr, warn.conflicts = FALSE)
-library(DT)
-library(glue)
+library(assertthat, include.only = "assert_that")
+library(details, include.only = "details")
+library(dplyr, include.only = c("select", "mutate", "filter", "arrange"))
+library(DT, include.only = "datatable")
+library(glue, include.only = "glue")
 library(gpgr)
 library(knitr, include.only = "kable")
 library(purrr, include.only = "set_names")
 library(stringr, include.only = "str_match")
-library(tibble)
 ```
 
 ```{r funcs}
@@ -57,9 +57,10 @@ dt_table <- function(x) {
     )
 }
 
-linx_path_tab <- function(type) {
+# path to table
+ptab <- function(type) {
   x <- file.path(params$table_dir, glue("{params$sample}.linx.{type}.tsv"))
-  stopifnot(file.exists(x))
+  assertthat::assert_that(file.exists(x), msg = glue::glue("The file {x} does not exist!"))
   x
 }
 
@@ -102,19 +103,38 @@ linx_path_plot_cluster <- function() {
 }
 ```
 
+```{r read_tables}
+tabs <- list(
+  main_svs = ptab("svs") |> gpgr::linx_svs_process(),
+  main_breakend = ptab("breakend") |> gpgr::linx_breakend_process(),
+  main_clusters = ptab("clusters") |> gpgr::linx_clusters_process(),
+  main_links = ptab("links") |> gpgr::linx_links_process(),
+  main_fusion = ptab("fusion") |> gpgr::linx_fusion_process(),
+  main_drivercatalog = ptab("driver.catalog") |> gpgr::linx_drivercatalog_process(),
+  main_drivers = ptab("drivers") |> gpgr::linx_drivers_process(),
+  vis_copy_number = ptab("vis_copy_number") |> gpgr::linx_viscopynumber_read(),
+  vis_fusion = ptab("vis_fusion") |> gpgr::linx_visfusion_read(),
+  vis_gene_exon = ptab("vis_gene_exon") |> gpgr::linx_visgeneexon_read(),
+  vis_protein_domain = ptab("vis_protein_domain") |> gpgr::linx_visproteindomain_read(),
+  vis_segments = ptab("vis_segments") |> gpgr::linx_vissegments_read(),
+  vis_sv_data = ptab("vis_sv_data") |> gpgr::linx_vissvdata_read()
+)
+```
+
 ## Tables {.tabset #tables}
 
 ### Main {.tabset}
 
-#### Annotations
+```{r svs0}
+l <- tabs$main_svs
+```
+
+#### Annotations (`r nrow(l$tab)`)
 
 - additional annotations of each non PON filtered break junction
 - `svs.tsv`
 
 ```{r svs}
-l <- linx_path_tab("svs") |>
-  gpgr::linx_svs_process()
-
 details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
@@ -123,93 +143,107 @@ dt_table(l$tab)
 blank_lines(2)
 ```
 
-#### Breakends
+```{r breakend0}
+l <- tabs$main_breakend
+```
+
+#### Breakends (`r nrow(l$tab)`)
 
 - impact of each non PON filtered break junction on each overlapping gene
 - `breakend.tsv`
 
 ```{r breakend}
-l <- linx_path_tab("breakend") |>
-  gpgr::linx_breakend_process()
 details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
-#### Clusters
+```{r clusters0}
+l <- tabs$main_clusters
+```
+
+#### Clusters (`r nrow(l$tab)`)
 
 - clustering of all non PON filtered SV events and their resolved
   classification.
 - `clusters.tsv`
 
 ```{r clusters}
-l <- linx_path_tab("clusters") |>
-  gpgr::linx_clusters_process()
 details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
-#### Links
+```{r links0}
+l <- tabs$main_links
+```
+
+#### Links (`r nrow(l$tab)`)
 
 - segments joining break junction pairs predicted to be linked and phased in
   _cis_ on the derivative chromosome.
 - `links.tsv`
 
 ```{r links}
-l <- linx_path_tab("links") |>
-  gpgr::linx_links_process()
 details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
-#### Fusions
+```{r fusion0}
+l <- tabs$main_fusion
+```
+
+#### Fusions (`r nrow(l$tab)`)
 
 - All inframe and outframe fusions predicted in the sample including HMF
   fusion knowledgebase annotations.
 - `fusion.tsv`
 
 ```{r fusion}
-l <- linx_path_tab("fusion") |>
-  gpgr::linx_fusion_process()
 details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
-#### Driver Catalog
+```{r drivercatalog0}
+l <- tabs$main_drivercatalog
+```
+
+#### Driver Catalog (`r nrow(l$tab)`)
 
 - Reproduction of the driver catalog produced by PURPLE with homozygous
   disruption events appended.
 - `driver.catalog.tsv`
 
 ```{r drivercatalog}
-l <- linx_path_tab("driver.catalog") |>
-  gpgr::linx_drivercatalog_process()
 details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
-#### Drivers
+```{r drivers0}
+l <- tabs$main_drivers
+```
+
+#### Drivers (`r nrow(l$tab)`)
 
 - Linkage of drivers from driver catalog to SV cluster which contributed to
   those drivers including LOH, deletion, disruption and amplification events.
 - `drivers.tsv`
 
 ```{r drivers}
-l <- linx_path_tab("drivers") |>
-  gpgr::linx_drivers_process()
 details::details(kable(l$descr), lang = "none", summary = "Column Description")
 dt_table(l$tab)
 ```
 
 ### Vis {.tabset}
 
-#### Copy Number
+```{r vis_copy_number0}
+l <- tabs$vis_copy_number
+```
+
+#### Copy Number (`r nrow(l)`)
 
 - `vis_copy_number.tsv`
 
 ```{r vis_copy_number}
-linx_path_tab("vis_copy_number") |>
-  gpgr::linx_viscopynumber_read() |>
-  dt_table() |>
+dt_table(l) |>
   DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
 ```
 
@@ -217,59 +251,68 @@ linx_path_tab("vis_copy_number") |>
 blank_lines(2)
 ```
 
-#### Fusion
+```{r vis_fusion0}
+l <- tabs$vis_fusion
+```
+
+#### Fusion (`r nrow(l)`)
 
 - `vis_fusion.tsv`
 
 ```{r vis_fusion}
-linx_path_tab("vis_fusion") |>
-  gpgr::linx_visfusion_read() |>
-  dt_table()
+dt_table(l)
 ```
 
-#### Gene Exon
+```{r vis_gene_exon0}
+l <- tabs$vis_gene_exon
+```
+
+#### Gene Exon (`r nrow(l)`)
 
 - `vis_gene_exon.tsv`
 
 ```{r vis_gene_exon}
-linx_path_tab("vis_gene_exon") |>
-  gpgr::linx_visgeneexon_read() |>
-  dt_table() |>
+dt_table(l) |>
   DT::formatCurrency(~ ExonStart + ExonEnd, currency = "", interval = 3, mark = ",", digits = 0)
 ```
 
-#### Protein Domain
+```{r vis_protein_domain0}
+l <- tabs$vis_protein_domain
+```
+
+#### Protein Domain (`r nrow(l)`)
 
 - `vis_protein_domain.tsv`
 
 ```{r vis_protein_domain}
-linx_path_tab("vis_protein_domain") |>
-  gpgr::linx_visproteindomain_read() |>
-  dt_table() |>
+dt_table(l) |>
   DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
 ```
 
-#### Segments
+```{r vis_segments0}
+l <- tabs$vis_segments
+```
+
+#### Segments (`r nrow(l)`)
 
 - `vis_segments.tsv`
 
 ```{r vis_segments}
-linx_path_tab("vis_segments") |>
-  gpgr::linx_vissegments_read() |>
-  dt_table()
+dt_table(l)
 ```
 
-#### SV Data
+```{r vis_sv_data0}
+l <- tabs$vis_sv_data
+```
+
+#### SV Data (`r nrow(l)`)
 
 - `vis_sv_data.tsv`
 
 ```{r vis_sv_data}
-linx_path_tab("vis_sv_data") |>
-  gpgr::linx_vissvdata_read() |>
-  dt_table() |>
+dt_table(l) |>
   DT::formatCurrency(~ PosStart + PosEnd, currency = "", interval = 3, mark = ",", digits = 0)
 ```
-
 
 ## Plots (Chromosome) {.tabset #plots-chrom}
 
@@ -285,6 +328,8 @@ if (!is.null(chrom_plots)) {
     blank_lines(1)
     cat("\n\n\n")
   }
+} else {
+  cat("No LINX chromosome plots were generated")
 }
 ```
 
@@ -305,6 +350,8 @@ if (!is.null(cluster_plots)) {
     blank_lines(2)
     cat("\n\n\n")
   }
+} else {
+  cat("No LINX cluster plots were generated")
 }
 ```
 
