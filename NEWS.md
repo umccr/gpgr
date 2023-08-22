@@ -1,4 +1,4 @@
-# gpgr 1.5.0rc
+# gpgr 1.5.0
 
 - add bpi status in canrep summary table
 - :bug: LINX >= 1.23 has renamed `codingContext` to `codingType` in the `breakend` table
@@ -10,6 +10,7 @@
 - :star: build conda pkg for R v4.2 ([ci0dbe49d](https://github.com/umccr/gpgr/commit/0dbe49d)).
 - :bug: LINX `vis_copy_number` tables that were empty were triggering `mixedrank` with an empty input ([issue66](https://github.com/umccr/gpgr/issues/64), [pr67](https://github.com/umccr/gpgr/pull/67)).
   - :star: added row counts to tabs in LINX report in same PR.
+- :wrench: use [micromamba](https://github.com/mamba-org/setup-micromamba/tree/main) GitHub Action
 
 # gpgr 1.4.0
 
