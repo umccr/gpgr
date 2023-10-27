@@ -123,6 +123,440 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
   )
 }
 
+sash_read_cnv_tsv <- function(x) {
+
+  nm <- c(
+    "chromosome" = "c",
+    "start" = "i",
+    "end" = "i",
+    "svtype" = "c",
+    "baf" = "d",
+    "bafCount" = "d",
+    "copyNumber" = "d",
+    "depthWindowCount" = "i",
+    "gcContent" = "d",
+    "majorAlleleCopyNumber" = "d",
+    "method" = "c",
+    "minorAlleleCopyNumber" = "d",
+    "segmentEndSupport" = "c",
+    "segmentStartSupport" = "c",
+    "sv_top_tier" = "i",
+    "simple_ann" = "c"
+  )
+
+  ctypes <- paste(nm, collapse = "")
+  d <- readr::read_tsv(x, col_types = ctypes)
+  assertthat::assert_that(ncol(d) == length(nm))
+  assertthat::assert_that(all(colnames(d) == names(nm)))
+  d
+}
+
+split_chromosome_annotations <- function(x) {
+  x.grouped <- x |>
+    dplyr::group_by(
+      record_type=ifelse(grepl('chrom_[0-9XY]+', Detail), 'chromosome', 'other')
+    )
+
+  keys <- x.grouped |>
+    dplyr::group_keys() |>
+    dplyr::pull(record_type)
+
+  x.split <- x.grouped |>
+    dplyr::group_split(.keep=FALSE) |>
+    purrr::set_names(keys)
+
+  chromosome <- purrr::pluck(x.split, 'chromosome') |>
+    dplyr::select(
+      "Event ID" = "event_id",
+      "Tier (top)",
+      "Start" = "start",
+      "End" = "end",
+      "SV Type" = "svtype",
+      "Effect",
+      "Chromosome" = "Detail",
+      "PURPLE CN" = "copyNumber",
+      "PURPLE CN Min+Maj",
+    )
+
+  list(
+    chromosome=chromosome,
+    other=purrr::pluck(x.split, 'other')
+  )
+}
+
+split_fusion_annotations <- function(x) {
+
+  fusion_annotations <- c(
+    'BidFusG',
+    'FusG',
+    'bidirectional_gene_fusion',
+    'gene_fusion'
+  )
+
+  x.grouped <- x |>
+    dplyr::group_by(
+      record_type=ifelse(Effect %in% fusion_annotations, 'fusion', 'other')
+    )
+
+  keys <- x.grouped |>
+    dplyr::group_keys() |>
+    dplyr::pull(record_type)
+
+  x.split <- x.grouped |>
+    dplyr::group_split(.keep=FALSE) |>
+    purrr::set_names(keys)
+
+  fusions <- purrr::pluck(x.split, 'fusion') |>
+    dplyr::select(
+      "Event ID" = "event_id",
+      "Annotation ID" = "annotation_id",
+      "Tier (top)",
+      "Start" = "start",
+      "End" = "end",
+      "SV Type" = "svtype",
+      "Effect",
+      "Genes",
+      "Transcripts" = "Transcript",
+      "Detail",
+      "PURPLE CN" = "copyNumber",
+      "PURPLE CN Min+Maj",
+    )
+
+  list(
+    fusions=fusions,
+    other=purrr::pluck(x.split, 'other')
+  )
+}
+
+count_event_genes <- function(.data) {
+  .data |>
+    dplyr::pull(Genes) |>
+    strsplit('&') |>
+    unlist() |>
+    unique() |>
+    length()
+}
+
+set_event_type <- function(x) {
+  x |>
+    dplyr::group_by(event_id) |>
+    dplyr::mutate(
+      `Gene count (event)` = count_event_genes(dplyr::pick(Genes)),
+      event_category = dplyr::case_when(
+        `Gene count (event)` == 0 ~ 'none',
+        `Gene count (event)` == 1 ~ 'small',
+        `Gene count (event)` >= 2 & `Gene count (event)` <= 3 ~ 'medium',
+        .default = 'large',
+      )
+    ) |>
+    dplyr::ungroup()
+}
+
+set_many_transcripts_cnv <- function(x) {
+  # Set many transcripts
+  x.tmp <- x |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      transcript_count = strsplit(Transcript, '&') |> unlist() |> unique() |> length()
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      many_transcripts = ifelse(transcript_count > 2, 'many_transcripts', 'few_transcripts'),
+      many_transcripts = ifelse(event_category %in% c('small', 'medium'), many_transcripts, NA),
+    ) |>
+    # Sort rows
+    dplyr::arrange(`Tier (top)`, Genes, Effect)
+
+  # Build the many transcripts table
+  mt <- x.tmp |>
+    dplyr::filter(many_transcripts == 'many_transcripts') |>
+    # Remove unneeded columns and rename others
+    dplyr::select(
+      "Event ID" = "event_id",
+      "Annotation ID" = "annotation_id",
+      "Tier (top)",
+      "Start" = "start",
+      "End" = "end",
+      "Transcript count" = "transcript_count",
+      "Transcripts" = "Transcript",
+    )
+
+  # Clear transcript where appropriate
+  x.ready <- x.tmp |>
+    dplyr::mutate(
+      Transcript = ifelse(
+        many_transcripts == 'few_transcripts' | is.na(many_transcripts),
+        Transcript,
+        paste0('Many transcripts (', transcript_count, ')')
+      )
+    ) |>
+    dplyr::select(c(-many_transcripts, -transcript_count))
+
+  list(
+    many_transcripts=mt,
+    cnv=x.ready
+  )
+}
+
+split_priority <- function(x) {
+  x.grouped <- x |>
+    dplyr::group_by(
+      prioritised = ifelse(Tier < 4, 'prioritised', 'unprioritised')
+    )
+
+  keys <- x.grouped |>
+    dplyr::group_keys() |>
+    dplyr::pull(prioritised)
+
+  x.split <- x.grouped |>
+    dplyr::group_split(.keep=FALSE) |>
+    purrr::set_names(keys)
+
+  list(
+    prioritised = purrr::pluck(x.split, 'prioritised'),
+    unprioritised = purrr::pluck(x.split, 'unprioritised', .default=x[NULL, ]) |> dplyr::select(-Transcript)
+  )
+}
+
+split_event_type <- function(x) {
+
+  x.grouped <- x |>
+    dplyr::group_by(event_category)
+
+  keys <- x.grouped |>
+    dplyr::group_keys() |>
+    dplyr::pull(event_category)
+
+  x.split <- x.grouped |>
+    dplyr::group_split(.keep=FALSE) |>
+    purrr::set_names(keys)
+
+  list(
+    none = purrr::pluck(x.split, 'none'),
+    small = purrr::pluck(x.split, 'small'),
+    medium = purrr::pluck(x.split, 'medium'),
+    large = purrr::pluck(x.split, 'large')
+  )
+}
+
+collapse_annotations <- function(x) {
+  x |>
+    dplyr::summarise(
+      `Gene count (effect)` = length(unique(unlist(strsplit(Genes, '&')))),
+      Genes = paste0(sort(unique(unlist(strsplit(Genes, '&')))), collapse=','),
+      Detail = paste0(sort(unique(Detail)), collapse=','),
+      `Tier (highest)` = min(Tier),
+      `Tier (lowest)` = max(Tier),
+    ) |>
+    dplyr::ungroup()
+}
+
+set_many_genes <- function(x) {
+  # Set many genes
+  x.tmp <- x |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      gene_count = strsplit(Genes, c(',|&')) |> unlist() |> unique() |> length()
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      many_genes = ifelse(gene_count > 2, 'many_genes', 'few_genes'),
+    ) |>
+    # Sort rows
+    dplyr::arrange(`Tier (top)`, Genes, Effect)
+
+  # Build the many genes table
+  mt <- x.tmp |>
+    dplyr::filter(many_genes == 'many_genes') |>
+    # Remove unneeded columns and rename others
+    dplyr::select(
+      "Event ID" = "event_id",
+      "Tier (top)",
+      "Start" = "start",
+      "End" = "end",
+      "SV Type" = "svtype",
+      "Effect",
+      "Gene count (event)",
+      "Gene count (effect)",
+      "Genes",
+    )
+
+  # Clear genes where appropriate
+  x.ready <- x.tmp |>
+    dplyr::mutate(
+      Genes = ifelse(
+        many_genes == 'few_genes' | is.na(many_genes),
+        Genes,
+        paste0('Many genes (', gene_count, ')')
+      )
+    ) |>
+    dplyr::select(c(-many_genes, -gene_count))
+
+  list(
+    many_genes=mt,
+    cnv=x.ready
+  )
+}
+
+#' @export
+process_cnv_tsv <- function(x) {
+  # Read input
+  cnv.input <- sash_read_cnv_tsv(x)
+
+  # Prepare input
+  cnv.ready <- cnv.input |>
+    dplyr::mutate(
+      chrom_simple = stringr::str_remove(chromosome, 'chr'),
+      start = paste(chrom_simple, base::format(start, big.mark = ",", trim = TRUE), sep=":"),
+      end = paste(chrom_simple, base::format(end, big.mark = ",", trim = TRUE), sep=":"),
+    ) |>
+    dplyr::select(-c(
+      chromosome,
+      chrom_simple,
+    ))
+
+  # Melt annotations
+  cnv.tmp <- cnv.ready |>
+    dplyr::mutate(event_id = dplyr::row_number()) |>
+    # Split into individual annotations
+    dplyr::mutate(annotation = strsplit(simple_ann, ",")) |>
+    # Convert annotation fields into columns
+    tidyr::unnest(annotation) |>
+    tidyr::separate(
+      annotation, c("Event", "Effect", "Genes", "Transcript", "Detail", "Tier"),
+      sep = "\\|", convert = FALSE
+    ) |>
+    # Create new columns and modify existing ones
+    dplyr::mutate(
+      copyNumber = as.numeric(copyNumber) |> round(2) %>% sprintf("%.2f", .),
+      minorAlleleCopyNumber = as.numeric(minorAlleleCopyNumber) |> round(2) %>% sprintf("%.2f", .),
+      majorAlleleCopyNumber = as.numeric(majorAlleleCopyNumber) |> round(2) %>% sprintf("%.2f", .),
+      'PURPLE CN Min+Maj' = paste0(minorAlleleCopyNumber, "+", majorAlleleCopyNumber),
+      "Tier (top)" = paste0(Tier, " (", sv_top_tier, ")"),
+    ) |>
+    # Set unique annotation ID
+    dplyr::mutate(annotation_id = dplyr::row_number()) |>
+    # Remove unused columns
+    dplyr::select(-c(
+      baf,
+      bafCount,
+      depthWindowCount,
+      Event,
+      gcContent,
+      majorAlleleCopyNumber,
+      method,
+      minorAlleleCopyNumber,
+      segmentEndSupport,
+      segmentStartSupport,
+      simple_ann,
+      sv_top_tier,
+    )) |>
+    # Sort rows
+    dplyr::arrange(`Tier (top)`, Genes, Effect)
+
+  # Drop specific annotations
+  cnv.tmp <- cnv.tmp |>
+    dplyr::filter(Effect != 'intergenic_region')
+
+  # Abbreviate effects
+  abbreviate_effectv <- Vectorize(gpgr::abbreviate_effect)
+  cnv.tmp$Effect <- abbreviate_effectv(cnv.tmp$Effect)
+
+  # Split chromosome annotations
+  cnv.chromosome_split <- split_chromosome_annotations(cnv.tmp)
+  cnv.chromosome <- cnv.chromosome_split$chromosome
+  cnv.tmp <- cnv.chromosome_split$other
+
+  # Split fusion annotations
+  cnv.fusion_split <- split_fusion_annotations(cnv.tmp)
+  cnv.fusion <- cnv.fusion_split$fusion
+  cnv.tmp <- cnv.fusion_split$other
+
+  # Set event type based on the number of genes impacted
+  cnv.tmp <- set_event_type(cnv.tmp)
+
+  # Set and create many transcripts table
+  cnv.many_transcripts_data <- set_many_transcripts_cnv(cnv.tmp)
+  cnv.many_transcripts <- purrr::pluck(cnv.many_transcripts_data, 'many_transcripts')
+  cnv.tmp <- purrr::pluck(cnv.many_transcripts_data, 'cnv')
+
+  # Split into prioritised and unprioritised
+  cnv.priority_split <- split_priority(cnv.tmp)
+  cnv.unprioritised.tmp <- cnv.priority_split$unprioritised
+  cnv.prioritised.tmp <- cnv.priority_split$prioritised
+
+  # Split into event type assigned above
+  cnv.event_type_split <- split_event_type(cnv.prioritised.tmp)
+  cnv.small.tmp <- cnv.event_type_split$small
+  cnv.medium.tmp <- cnv.event_type_split$medium
+  cnv.large.tmp <- cnv.event_type_split$large
+
+  # Temporary set dplyr summarise warning off
+  summarise_info_opt <- getOption('dplyr.summarise.inform')
+  options(dplyr.summarise.inform = FALSE)
+
+  # Collapse large event type annotations into single records, drop transcripts
+  cnv.large.tmp <- cnv.large.tmp |>
+    dplyr::group_by(dplyr::across(c(-Genes, -Transcript, -Tier, -Detail, -annotation_id))) |>
+    collapse_annotations()
+
+  cnv.large.many_genes_data <- set_many_genes(cnv.large.tmp)
+  cnv.large.many_genes <- cnv.large.many_genes_data$many_genes
+  cnv.large.tmp <- cnv.large.many_genes_data$cnv
+
+  # Select then collapse only large event type annotations into single records
+  cnv.unprioritised.tmp <- cnv.unprioritised.tmp |>
+    dplyr::filter(event_category == 'large') |>
+    dplyr::group_by(dplyr::across(c(-Genes, -Tier, -Detail, -annotation_id))) |>
+    collapse_annotations() |>
+    dplyr::ungroup() |>
+    dplyr::bind_rows(
+      cnv.unprioritised.tmp |> dplyr::filter(event_category != 'large')
+    )
+  cnv.unprioritised.many_genes_data <- set_many_genes(cnv.unprioritised.tmp)
+  cnv.unprioritised.many_genes <- cnv.unprioritised.many_genes_data$many_genes
+  cnv.unprioritised.tmp <- cnv.unprioritised.many_genes_data$cnv
+
+  # Restore dplyr summarise warning setting
+  options(dplyr.summarise.inform = summarise_info_opt)
+
+  # Select columns for remaining tables
+  columns <- c(
+      "Event ID" = "event_id",
+      "Tier (top)",
+      "Tier lowest (effect)",
+      "Tier lowest (effect)",
+      "Start" = "start",
+      "End" = "end",
+      "SV Type" = "svtype",
+      "Effect",
+      "Gene count (event)",
+      "Gene count (effect)",
+      "Genes",
+      "Transcripts" = "Transcript",
+      "Detail",
+      "PURPLE CN" = "copyNumber",
+      "PURPLE CN Min+Maj"
+  )
+
+  cnv.small <- cnv.small.tmp |> dplyr::select(tidyselect::any_of(columns))
+  cnv.medium <- cnv.medium.tmp |> dplyr::select(tidyselect::any_of(columns))
+  cnv.large <- cnv.large.tmp |> dplyr::select(tidyselect::any_of(columns))
+  cnv.unprioritised <- cnv.unprioritised.tmp |> dplyr::select(tidyselect::any_of(columns))
+
+  list(
+    small = cnv.small,
+    medium = cnv.medium,
+    large = cnv.large,
+    many_genes_prioritised = cnv.large.many_genes,
+    many_transcripts = cnv.many_transcripts,
+    unprioritised = cnv.unprioritised,
+    many_genes_unprioritised = cnv.unprioritised.many_genes,
+    fusion = cnv.fusion,
+    chromsome = cnv.chromosome
+  )
+}
+
 #' Read PURPLE CNV Somatic File
 #'
 #' Reads the `purple.cnv.somatic.tsv` file, which contains the copy number
@@ -222,173 +656,6 @@ purple_cnv_som_process <- function(x) {
   list(
     tab = purple_cnv_somatic,
     descr = descr
-  )
-}
-
-#' Process an Annotated PURPLE CNV Somatic File
-#'
-#' Processes the annotated and prioritised `purple.cnv.somatic.tsv` file.
-#'
-#' @param x Path to annotated and prioritised `purple.cnv.somatic.tsv` file.
-#'
-#' @return List with two elements:
-#' * `tab`: Tibble containing selected data.
-#' * `descr`: Description of tibble columns.
-#'
-#' @examples
-#' x <- system.file("extdata/sash/purple.cnv.gene.annotated.tsv", package = "gpgr")
-#' (p <- purple_cnv_som_ann_process(x))
-#' @testexamples
-#' expect_equal(colnames(p)[ncol(p)], "annotation")
-#'
-#' @export
-purple_cnv_som_ann_process <- function(x) {
-  purple_cnv_somatic_ann <- purple_cnv_som_ann_read(x)
-
-  purple_cnv_somatic_ann___d <- purple_cnv_somatic_ann |>
-    dplyr::mutate(
-      Chr = as.factor(.data$chromosome),
-      minorAlleleCopyNumber = round(.data$minorAlleleCopyNumber, 1),
-      majorAlleleCopyNumber = round(.data$majorAlleleCopyNumber, 1),
-      `CopyNumber Min+Maj` = paste0(.data$minorAlleleCopyNumber, "+", .data$majorAlleleCopyNumber),
-      copyNumber = round(.data$copyNumber, 1),
-      bafAdj = round(.data$baf, 2),
-      gcContent = round(.data$gcContent, 2),
-      `Start/End SegSupport` = paste0(.data$segmentStartSupport, "-", .data$segmentEndSupport),
-      `BAF (count)` = paste0(.data$bafAdj, " (", .data$bafCount, ")"),
-      `GC (windowCount)` = paste0(.data$gcContent, " (", .data$depthWindowCount, ")"),
-      TopTier = sv_top_tier,
-      annotation = simple_ann
-    ) |>
-    dplyr::select(
-      "Chr",
-      Start = "start", End = "end", Type = "svtype", CN = "copyNumber",
-      `CN Min+Maj` = "CopyNumber Min+Maj", "Start/End SegSupport",
-      Method = "method", "BAF (count)", "GC (windowCount)", "TopTier", "annotation"
-    )
-
-  abbreviate_effectv <- Vectorize(gpgr::abbreviate_effect)
-
-  purple_cnv_somatic_ann <- purple_cnv_somatic_ann___d |>
-    dplyr::mutate(annotation = strsplit(.data$annotation, ",")) |>
-    tidyr::unnest(.data$annotation) |>
-    tidyr::separate(
-      .data$annotation, c("Event", "Effect", "Genes", "Transcript", "Detail", "Tier"),
-      sep = "\\|", convert = FALSE
-    ) |>
-    dplyr::mutate(
-      ntrx = gpgr::count_pieces(.data$Transcript, "&"),
-      ngen = gpgr::count_pieces(.data$Genes, "&"),
-      neff = gpgr::count_pieces(.data$Effect, "&"),
-      Transcript = .data$Transcript |> stringr::str_replace_all("&", ", "),
-      Genes = .data$Genes |> stringr::str_replace_all("&", ", "),
-      Effect = abbreviate_effectv(.data$Effect),
-      `Tier (Top)` = glue::glue("{Tier} ({TopTier})")
-    ) |>
-    dplyr::distinct() |>
-    dplyr::filter(Detail != 'unprioritized') |>
-    dplyr::arrange(.data$`Tier (Top)`, .data$Genes, .data$Effect)
-
-  descr <- dplyr::tribble(
-    ~Column, ~Description,
-    "Chr/Start/End", "Coordinates of copy number segment",
-    "Type", "Simple type interpretation of SV.",
-    "CN", "Fitted absolute copy number of segment adjusted for purity and ploidy",
-    "CN Min+Maj", "CopyNumber of minor + major allele adjusted for purity",
-    "Start/End SegSupport", paste0(
-      "Type of SV support for the CN breakpoint at ",
-      "start/end of region. Allowed values: ",
-      "CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), ",
-      "SGL (single breakend SV support), NONE (no SV support for CN breakpoint), ",
-      "MULT (multiple SV support at exact breakpoint)"
-    ),
-    "Method", paste0(
-      "Method used to determine the CN of the region. Allowed values: ",
-      "BAF_WEIGHTED (avg of all depth windows for the region), ",
-      "STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), ",
-      "LONG_ARM (inferred from the long arm), GERMLINE_AMPLIFICATION ",
-      "(inferred using special logic to handle regions of germline amplification)"
-    ),
-    "BAF (count)", "Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf points covered by this segment)",
-    "GC (windowCount)", "Proportion of segment that is G or C (Count of COBALT windows covered by this segment)",
-    "TierTop", "Top priority of the event (from simple_sv_annotation: 1 highest, 4 lowest).",
-    "annotation", "INFO/SIMPLE_ANN: Simplified structural variant annotation: 'SVTYPE | EFFECT | GENE(s) | TRANSCRIPT | PRIORITY (1-4)'"
-  )
-
-  list(
-    tab = purple_cnv_somatic_ann,
-    descr = descr
-  )
-}
-
-#' Read an Annotated PURPLE CNV Somatic File
-#'
-#' Reads the annotated and prioritised `purple.cnv.somatic.tsv` file.
-#'
-#' @param x Path to annotated and prioritised `purple.cnv.somatic.tsv` file.
-#'
-#' @return The input file as a tibble.
-#'
-#' @examples
-#' x <- system.file("extdata/sash/purple.cnv.gene.annotated.tsv", package = "gpgr")
-#' (p <- purple_cnv_som_ann_read(x))
-#' @testexamples
-#' expect_equal(colnames(p)[ncol(p)], "simple_ann")
-#'
-#' @export
-purple_cnv_som_ann_read <- function(x) {
-  nm <- c(
-    "chromosome" = "c",
-    "start" = "i",
-    "end" = "i",
-    "svtype" = "c",
-    "baf" = "d",
-    "bafCount" = "d",
-    "copyNumber" = "d",
-    "depthWindowCount" = "i",
-    "gcContent" = "d",
-    "majorAlleleCopyNumber" = "d",
-    "method" = "c",
-    "minorAlleleCopyNumber" = "d",
-    "segmentEndSupport" = "c",
-    "segmentStartSupport" = "c",
-    "sv_top_tier" = "i",
-    "simple_ann" = "c"
-  )
-
-  ctypes <- paste(nm, collapse = "")
-  purple_cnv_somatic_ann <- readr::read_tsv(x, col_types = ctypes)
-  assertthat::assert_that(ncol(purple_cnv_somatic_ann) == length(nm))
-  assertthat::assert_that(all(colnames(purple_cnv_somatic_ann) == names(nm)))
-  purple_cnv_somatic_ann
-}
-
-#' Read PURPLE version file
-#'
-#' Reads the `purple.version` file containing the PURPLE version and build date.
-#'
-#' @param x Path to the `purple.version` file.
-#'
-#' @return A list with the elements:
-#' * `version`: The version of PURPLE used.
-#' * `build_date`: The build date of the PURPLE version.
-#'
-#' @examples
-#' x <- system.file("extdata/purple/purple.version", package = "gpgr")
-#' (v <- purple_version_read(x))
-#' @testexamples
-#' expect_equal(length(v), 2)
-#' expect_equal(names(v), c("version", "build_date"))
-#' expect_equal(v$version, "2.51")
-#'
-#' @export
-purple_version_read <- function(x) {
-  tab <- readr::read_delim(x, delim = "=", col_names = c("key", "value"), col_types = "cc")
-  assertthat::assert_that(nrow(tab) == 2, all(tab$key == c("version", "build.date")))
-
-  list(
-    version = tab$value[tab$key == "version"],
-    build_date = tab$value[tab$key == "build.date"]
   )
 }
 

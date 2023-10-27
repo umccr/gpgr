@@ -125,28 +125,10 @@ abbreviate_effect <- function(effects) {
     paste(collapse = ", ")
 }
 
-#' Read SV TSV
-#'
-#' Reads the Manta TSV file output by umccrise.
-#'
-#' @param x Path to `manta.tsv` output by umccrise.
-#'
-#' @return A tibble corresponding to the input TSV file.
-#'
-#' @examples
-#' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-#' (sv <- umccrise_read_sv_tsv(x)$data)
-#' @testexamples
-#' expect_equal(colnames(sv)[ncol(sv)], "ALT")
-#'
-#' @export
-umccrise_read_sv_tsv <- function(x) {
+sash_read_sv_tsv <- function(x) {
 
-  # tsv column names, description and types
   tab <- dplyr::tribble(
     ~Column, ~Description, ~Type,
-    "caller", "Manta SV caller", "c",
-    "sample", "Tumor sample name", "c",
     "chrom", "CHROM column in VCF", "c",
     "start", "POS column in VCF", "i",
     "svtype", "INFO/SVTYPE: Type of structural variant", "c",
@@ -167,201 +149,272 @@ umccrise_read_sv_tsv <- function(x) {
   )
 
   ctypes <- paste(tab$Type, collapse = "")
-  somatic_sv_tsv <- readr::read_tsv(x, col_names = TRUE, col_types = ctypes)
-  assertthat::assert_that(ncol(somatic_sv_tsv) == nrow(tab))
-  assertthat::assert_that(all(colnames(somatic_sv_tsv) == tab$Column))
+  d <- readr::read_tsv(x, col_names = TRUE, col_types = ctypes)
+  assertthat::assert_that(ncol(d) == nrow(tab))
+  assertthat::assert_that(all(colnames(d) == tab$Column))
   list(
-    data = somatic_sv_tsv,
+    data = d,
     descr = tab
   )
 }
 
-#' Process Structural Variants
-#'
-#' Processes the Manta TSV file output by umccrise.
-#'
-#' @param x Path to `manta.tsv` output by umccrise.
-#' @return A list with melted/unmelted tibbles (these are NULL if TSV file was empty).
-#'
-#' @examples
-#' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-#' (sv <- process_sv(x))
-#' @testexamples
-#' expect_true(inherits(sv, "list"))
-#' expect_equal(length(sv), 4)
-#' expect_equal(names(sv), c("unmelted", "melted", "tsv_descr", "col_descr"))
-#'
-#' @export
-process_sv <- function(x) {
-  sv <- umccrise_read_sv_tsv(x)
-  tsv_descr <- sv$descr
-  sv <- sv$data
 
-  if (nrow(sv) == 0) {
-    return(list(
-      unmelted = NULL,
-      melted = NULL
-    ))
-  }
-
-  col_descr <- dplyr::tribble(
-    ~Column, ~Description,
-    "nrow", "Row number that connects variants between tables in same tab set.",
-    "vcfnum", "Original event row number that connects variants to events.",
-    "TierTop", "Top priority of the event (from simple_sv_annotation: 1 highest, 4 lowest).",
-    "Tier", "Priority of the specific event (from simple_sv_annotation: 1 highest, 4 lowest).",
-    "Tier (Top)", "Priority of the specific event (Top tier of all event's annotations): 1 highest, 4 lowest. ",
-    "Chr", "Chromosome.",
-    "Start", "Start position.",
-    "End", "End position.",
-    "ID", "ID of BND from Manta. For PURPLE-inferred SVs this is PURPLE.",
-    "MATEID", "ID of BND mate from Manta.",
-    "BND_ID", "ID of BND pair simplified. BNDs with the same BND_ID belong to the same translocation event.",
-    "BND_mate", "A or B depending on whether the first or second mate of the BND pair.",
-    "Genes", "Genes involved in the event. DEL/DUP/INS events involving more than 2 genes are shown within separate table.",
-    "Transcript", "Transcripts involved in the event. DEL/DUP/INS events involving more than 2 transcripts are shown within separate table.",
-    "Effect", "SV effect (based on http://snpeff.sourceforge.net/SnpEff_manual.html#input).",
-    "Detail", "Prioritisation detail (from simple_sv_annotation).",
-    "AF_PURPLE", "PURPLE AF at each breakend preceded by their average.",
-    "CN", "Copy Number at each breakend preceded by their average.",
-    "CNC", "Copy Number Change at each breakend preceded by their average.",
-    "SR_alt", "Number of Split Reads supporting the alt allele, where P(allele|read)>0.999.",
-    "PR_alt", "Number of Paired Reads supporting the alt allele, where P(allele|read)>0.999.",
-    "SR_PR_ref", "Number of Split Reads and Paired Reads supporting the ref allele, where P(allele|read)>0.999.",
-    "SR_PR_sum", "Sum of SR_alt and PR_alt.",
-    "Type", "Simple type interpretation of SV.",
-    "Quality", "Variant quality score.",
-    "ntrx", "Number of transcripts for given event.",
-    "ngen", "Number of genes for given event.",
-    "nann", "Number of annotations for given event."
+split_svs <- function(x) {
+  list(
+    purple_inferred = dplyr::filter(x, Type == "PURPLE_inf"),
+    sgl = dplyr::filter(x, Type == "SGL"),
+    bps = dplyr::filter(x, ! Type %in% c("PURPLE_inf", "SGL"))
   )
+}
 
-  cols_to_split <- c("AF_PURPLE", "CN_PURPLE", "CN_change_PURPLE")
-  double_cols <- split_double_col(sv, cols_to_split)
-  unmelted <- sv |>
-    dplyr::select(-dplyr::all_of(c(cols_to_split, "caller", "sample"))) |>
-    dplyr::bind_cols(double_cols)
-  unmelted <- unmelted |>
+
+join_breakpoint_entries <- function(x) {
+  # Group by GRIDSS identifier (clipping trailing h/o [h: High, o: lOwer])
+  bps <- x |>
+    tidyr::separate(ID, into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE)|>
+    dplyr::group_by(BND_group)
+
+  # Set a sequential breakpoint identifier
+  bps_groups <- bps |> dplyr::n_groups()
+  bps |>
     dplyr::mutate(
-      SR_PR_ref = paste0(.data$SR_ref, ",", .data$PR_alt),
-      chrom = sub("chr", "", .data$chrom),
-      svtype = ifelse(is.na(.data$PURPLE_status), .data$svtype, "PURPLE_inf"),
-      Start = .data$start,
-      nann = count_pieces(.data$annotation, ","),
-      vcfnum = dplyr::row_number(),
-      vcfnum = sprintf(glue::glue("%0{nchar(nrow(unmelted))}d"), .data$vcfnum)
+      # Assign a unique ID based on current group
+      BND_ID = sprintf(paste0("%0", nchar(bps_groups), "d"), dplyr::cur_group_id()),
+      BND_mate = ifelse(BND_mate == "o", "A", "B"),
     ) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      end_position = sub("^.*:(\\d+).*$", "\\1", ALT) |> as.numeric() |> base::format(big.mark = ",", trim = TRUE),
+      end_chrom = sub("^.*chr(.*):.*$", "\\1", ALT),
+      end = paste0(end_chrom, ":", end_position),
+    ) |>
+    dplyr::select(-c(end_position, end_chrom))
+}
+
+
+remove_gene_fusion_dups <- function(.data, columns) {
+  # Order elements of multi-entry effect values for reliable comparison
+  v.groups <- c("frameshift_variant&gene_fusion", "gene_fusion")
+  v.effects_ordered <- sapply(.data$Effect, function(s) {
+    c <- stringr::str_split(s, '&') |> unlist()
+    paste0(sort(c), collapse='&')
+  })
+
+  if (all(v.groups %in% v.effects_ordered)) {
+    .data |> dplyr::filter(Effect != "gene_fusion")
+  } else {
+    .data
+  }
+}
+
+
+set_many_transcripts_sv <- function(x) {
+  # Set many transcripts
+  x.tmp <- x |>
     dplyr::rowwise() |>
-    dplyr::mutate(SR_PR_sum = sum(.data$SR_alt, .data$PR_alt, na.rm = TRUE)) |>
-    dplyr::ungroup()
-
-  # BND IDs
-  # Two BND mates share the same ID up to the last digit (0 or 1)
-  unmelted_bnd1 <- unmelted |>
-    dplyr::filter(!.data$svtype %in% c("PURPLE_inf", "SGL")) |>
-    tidyr::separate(.data$ID, into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) |>
-    dplyr::group_by(.data$BND_group)
-  assertthat::assert_that(all(unmelted_bnd1$BND_mate %in% c("o", "h")))
-  unmelted_bnd1 <- unmelted_bnd1 |>
     dplyr::mutate(
-      # index per group 1, 2, 3..
-      BND_ID = dplyr::cur_group_id(),
-      # turns into 001, 002, 003... if you've got 100+ rows
-      BND_ID = sprintf(glue::glue("%0{nchar(nrow(unmelted_bnd1))}d"), .data$BND_ID),
-      BND_mate = ifelse(.data$BND_mate == "o", "A", "B")
+      transcript_count = strsplit(Transcripts, "&") |> unlist() |> unique() |> length()
     ) |>
-    dplyr::ungroup()
-
-  # Grab each BND mate's chrom
-  # Orphan mates have that info in the ALT field
-  match_id2mateid <- match(unmelted_bnd1$ID, unmelted_bnd1$MATEID)
-  unmelted_bnd2 <- unmelted_bnd1[match_id2mateid, c("chrom")] |>
-    dplyr::rename(BND_mate_chrom = .data$chrom)
-
-  unmelted_bnd <- dplyr::bind_cols(unmelted_bnd1, unmelted_bnd2) |>
+    dplyr::ungroup() |>
     dplyr::mutate(
-      BND_mate_chrom = ifelse(
-        is.na(.data$BND_mate_chrom),
-        sub(".*chr(.*):.*", "orphan_\\1", .data$ALT),
-        .data$BND_mate_chrom
-      ),
-      BND_mate_end = sub(".*chr(.*):(\\d+).*", "\\2", .data$ALT),
-      BND_mate_end = as.numeric(.data$BND_mate_end)
+      many_transcripts = ifelse(transcript_count > 2, "many_transcripts", "few_transcripts")
     )
 
-  unmelted_other <- unmelted |>
-    dplyr::filter(.data$svtype %in% c("PURPLE_inf", "SGL"))
-
-  unmelted_all <-
-    dplyr::bind_rows(
-      unmelted_bnd,
-      unmelted_other
-    ) |>
-    dplyr::mutate(
-      Start = base::format(.data$Start, big.mark = ",", trim = TRUE),
-      Start = paste0(.data$chrom, ":", .data$Start),
-      END_tmp = ifelse(!.data$svtype %in% c("PURPLE_inf", "SGL"), .data$BND_mate_end, NA_character_),
-      END_tmp = ifelse(
-        is.na(.data$END_tmp),
-        NA_character_,
-        base::format(as.integer(.data$END_tmp), big.mark = ",", trim = TRUE)
-      ),
-      End = ifelse(
-        is.na(.data$END_tmp),
-        NA_character_,
-        paste0(
-          ifelse(.data$svtype == "BND", .data$BND_mate_chrom, .data$chrom),
-          ":",
-          .data$END_tmp
-        )
-      )
-    ) |>
+  # Build the many transcripts table
+  mt <- x.tmp |>
+    dplyr::filter(many_transcripts == "many_transcripts") |>
+    # Remove unneeded columns and rename others
     dplyr::select(
-      "vcfnum",
-      "nann",
-      TierTop = "tier",
+      "Record ID",
+      "Annotation ID",
+      "Tier (top)",
       "Start",
       "End",
-      Type = "svtype",
-      "BND_ID",
-      "BND_mate",
+      "Transcript count" = "transcript_count",
+      "Transcripts",
+    )
+
+  # Clear transcript where appropriate
+  x.ready <- x.tmp |>
+    dplyr::mutate(
+      Transcripts = ifelse(
+        many_transcripts == "few_transcripts" | is.na(many_transcripts),
+        Transcripts,
+        paste0("Many transcripts (", transcript_count, ")")
+      )
+    ) |>
+    dplyr::select(c(-many_transcripts, -transcript_count))
+
+  list(
+    many_transcripts = mt,
+    sv = x.ready
+  )
+}
+
+
+#' @export
+process_sv <- function(x) {
+  # Read input and set column information
+  sv.input <- sash_read_sv_tsv(x)
+
+  # Early return if no data to process
+  if (nrow(sv.input$data) == 0) {
+    return()
+  }
+
+  # Prepare input
+  sv.ready <- sv.input$data |>
+    dplyr::mutate(
+      "annotation_count" = count_pieces(annotation, ","),
+      "Top Tier"= tier,
+      "SR_PR_ref" = paste0(SR_ref, ",", PR_ref),
+      "SR_PR_sum" = SR_alt + PR_alt,
+      start = paste(chrom, base::format(start, big.mark = ",", trim = TRUE), sep=":"),
+      Type = ifelse(is.na(PURPLE_status), svtype, "PURPLE_inf"),
+      "Record ID" = dplyr::row_number(),
+    ) |>
+    dplyr::select(-c(
+      chrom,
+      PURPLE_status,
+      tier,
+      svtype,
+    ))
+
+  # Split SVs by PURPLE inferred, single breakends, and breakpoints
+  sv.split <- split_svs(sv.ready)
+
+  # Combine joined breakpoints and single breakends
+  sv.bps <- join_breakpoint_entries(sv.split$bps)
+  sv.tmp <- dplyr::bind_rows(sv.split$sgl, sv.bps)
+
+  # Prepare PURPLE inf, add event id continue from assignment above
+  sv.purple_inf_full <- purrr::pluck(sv.split$purple_inferred) |>
+    dplyr::mutate(
+      CN_PURPLE = as.numeric(CN_PURPLE) |> round(2) %>% sprintf("%.2f", .),
+      CN_change_PURPLE = as.numeric(CN_change_PURPLE) |> round(3) %>% sprintf("%.3f", .),
+    ) |>
+    dplyr::rename(
+      "PURPLE CN" = CN_PURPLE,
+      "PURPLE CN Change" = CN_change_PURPLE,
+      "VCF ID" = ID,
+    )
+
+  # Select columns for dedicated PURPLE inf table
+  sv.purple_inf <- sv.purple_inf_full |>
+    dplyr::select(
+      "Record ID",
+      "VCF ID",
+      "Position" = "start",
+      "PURPLE CN",
+      "PURPLE CN Change",
+    )
+
+  # Format some columns
+  cols_to_split <- c("AF_PURPLE", "CN_PURPLE")
+  double_cols <- split_double_col(sv.tmp, cols_to_split)
+  sv.tmp <- sv.tmp |>
+    dplyr::select(-c(cols_to_split)) |>
+    dplyr::bind_cols(double_cols)
+
+  # Format a table for to be used as the SV Map
+  sv.unmelted <- dplyr::bind_rows(sv.tmp, sv.purple_inf_full)
+  sv.map <- sv.unmelted |>
+    dplyr::select(
+      "Record ID",
+      "Annotations" = "annotation_count",
+      "Top Tier",
+      "Start" = "start",
+      "End" = "end",
+      "Type",
+      "Breakend ID" = "BND_ID",
+      "Breakend Mate" = "BND_mate",
       "SR_alt",
       "PR_alt",
       "SR_PR_sum",
       "SR_PR_ref",
-      "AF_PURPLE",
-      CNC = "CN_change_PURPLE",
-      CN = "CN_PURPLE",
-      Quality= "QUAL",
-      "annotation",
-    )
+      "PURPLE AF" = "AF_PURPLE",
+      "PURPLE CN" = "CN_PURPLE",
+    ) |>
+    dplyr::arrange(`Record ID`)
 
-  abbreviate_effectv <- Vectorize(abbreviate_effect)
-
-  melted <- unmelted_all |>
-    dplyr::mutate(annotation = strsplit(.data$annotation, ",")) |>
-    tidyr::unnest(.data$annotation) |>
+  # Melt annotations
+  sv.melted_all <- sv.unmelted |>
+    # Split into individual annotations
+    dplyr::mutate(annotation = strsplit(annotation, ",")) |>
+    # Convert annotation fields into columns
+    tidyr::unnest(annotation) |>
     tidyr::separate(
-      .data$annotation, c("Event", "Effect", "Genes", "Transcript", "Detail", "Tier"),
+      annotation, c("Event", "Effect", "Genes", "Transcript", "Detail", "Tier"),
       sep = "\\|", convert = FALSE
     ) |>
+    # Remove gene_fusion annotations for variants where frameshift_variant&gene_fusion already exist
+    dplyr::group_by(across(-Effect)) |>
+    dplyr::group_modify(remove_gene_fusion_dups) |>
+    dplyr::ungroup() |>
+    # Set unique annotation ID, remove unused columns
+    dplyr::mutate(annotation_id = dplyr::row_number()) |>
+    dplyr::select(c(-Event, -ALT)) |>
+    # Create new tier column
     dplyr::mutate(
-      ntrx = count_pieces(.data$Transcript, "&"),
-      ngen = count_pieces(.data$Genes, "&"),
-      neff = count_pieces(.data$Effect, "&"),
-      Transcript = .data$Transcript |> stringr::str_replace_all("&", ", "),
-      Genes = .data$Genes |> stringr::str_replace_all("&", ", "),
-      Effect = abbreviate_effectv(.data$Effect),
-      `Tier (Top)` = glue::glue("{Tier} ({TierTop})")
+      "Tier (top)" = paste0(Tier, " (", `Top Tier`, ")"),
     ) |>
-    dplyr::distinct() |>
-    dplyr::arrange(.data$`Tier (Top)`, .data$Genes, .data$Effect)
+    # Sort rows
+    dplyr::arrange(`Tier (top)`, `Record ID`, Genes, Effect)
 
+  # Abbreviate effects
+  abbreviate_effectv <- Vectorize(gpgr::abbreviate_effect)
+  sv.melted_all$Effect <- abbreviate_effectv(sv.melted_all$Effect)
+
+  # Exclude PURPLE inferred
+  sv.melted <- sv.melted_all |>
+    dplyr::filter(Type != "PURPLE_inf")
+
+  # Select columns
+  sv.tmp <- sv.melted |>
+    dplyr::select(
+      "Record ID",
+      "Annotation ID" = "annotation_id",
+      "Tier (top)",
+      "Start" = "start",
+      "End" = "end",
+      "Breakend ID" = "BND_ID",
+      "Breakend Mate" = "BND_mate",
+      "Effect",
+      "Genes",
+      "Transcripts" = "Transcript",
+      "Effect",
+      "Detail",
+      "SR_alt",
+      "PR_alt",
+      "SR_PR_sum",
+      "PURPLE AF" = "AF_PURPLE",
+      "PURPLE CN" = "CN_PURPLE",
+      # Removed after ops
+      "Tier",
+    )
+
+  # Split into priority groups, remove Tier column once split
+  sv.prioritised.tmp <- dplyr::filter(sv.tmp, Tier <= 3) |> dplyr::select(-Tier)
+  sv.unprioritised.tmp = dplyr::filter(sv.tmp, Tier >= 4) |> dplyr::select(-Tier)
+
+  # Set many transcripts
+  sv.many_transcript_data.prioritised <- set_many_transcripts_sv(sv.prioritised.tmp)
+  sv.prioritised.many_transcripts <- purrr::pluck(sv.many_transcript_data.prioritised, "many_transcripts")
+  sv.prioritised <- purrr::pluck(sv.many_transcript_data.prioritised, "sv")
+
+  sv.many_transcript_data.unprioritised <- set_many_transcripts_sv(sv.unprioritised.tmp)
+  sv.unprioritised.many_transcripts <- purrr::pluck(sv.many_transcript_data.unprioritised, "many_transcripts")
+  sv.unprioritised <- purrr::pluck(sv.many_transcript_data.unprioritised, "sv")
+
+  # Split into priority groups
   list(
-    unmelted = unmelted_all,
-    melted = melted,
-    tsv_descr = tsv_descr,
-    col_descr = col_descr
+    map = sv.map,
+    map_melted = sv.melted_all,
+    prioritised = sv.prioritised,
+    many_transcripts_prioritised = sv.prioritised.many_transcripts,
+    unprioritised = sv.unprioritised,
+    many_transcripts_unprioritised = sv.unprioritised.many_transcripts,
+    purple_inferred = sv.purple_inf
   )
 }
 
@@ -387,7 +440,7 @@ plot_bnd_sr_pr_tot_lines <- function(d,
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>
-    dplyr::select(SR = "SR_alt", PR = "PR_alt", Tier = "TierTop", "BND_ID") |>
+    dplyr::select(SR = "SR_alt", PR = "PR_alt", Tier = "Top Tier", "Breakend ID") |>
     dplyr::distinct() |>
     dplyr::mutate(
       PR = ifelse(is.na(.data$PR), 0, .data$PR),
@@ -450,7 +503,7 @@ plot_bnd_sr_pr_tot_hist <- function(d,
   assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>
-    dplyr::select(SR = "SR_alt", PR = "PR_alt", "BND_ID") |>
+    dplyr::select(SR = "SR_alt", PR = "PR_alt", "Breakend ID") |>
     dplyr::distinct() |>
     dplyr::mutate(
       PR = ifelse(is.na(.data$PR), 0, .data$PR),

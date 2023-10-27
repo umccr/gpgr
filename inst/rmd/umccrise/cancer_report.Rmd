@@ -26,6 +26,7 @@ params:
   purple_som_snv_vcf: NULL
   result_outdir: NULL
   somatic_snv_vcf: NULL
+  somatic_snv_summary: NULL
   somatic_sv_tsv: NULL
   somatic_sv_vcf: NULL
   title: "UMCCR Cancer Report"
@@ -184,32 +185,10 @@ gpgr::write_tsvjsongz(sigs_indel, glue("sigs/{bnm}-indel"), result_outdir)
 #---- Structural Variants ----#
 sv_path <- params$somatic_sv_tsv
 sv <- NULL
-sv_unmelted <- NULL
-sv_all <- NULL
-no_sv_found <- TRUE
-sv_tsv_descr <- NULL
-sv_col_descr <- NULL
-if (sv_path == "NA") {
-  sv_unmelted <- tibble(WARNING = "Structural variants were not called")
-  sv_all <- tibble(WARNING = "Structural variants were not called")
-} else {
-  no_sv_found <- gpgr::tsv_is_empty(sv_path)
-  if (no_sv_found) {
-    sv_unmelted <- tibble(WARNING = "THERE WERE 0 SVs PRIORITISED!")
-    sv_all <- tibble(WARNING = "THERE WERE 0 SVs PRIORITISED!")
-    sv_tsv_descr <- tibble(Column = "THERE WERE 0 SVs PRIORITISED!")
-    sv_col_descr <- tibble(Column = "THERE WERE 0 SVs PRIORITISED!")
-  } else {
-    sv <- gpgr::process_sv(sv_path)
-    sv_unmelted <- sv$unmelted
-    sv_all <- sv$melted
-    sv_tsv_descr <- sv$tsv_descr
-    sv_col_descr <- sv$col_descr
-  }
+no_sv_found <- gpgr::tsv_is_empty(sv_path)
+if (!no_sv_found) {
+  sv <- gpgr::process_sv(sv_path)
 }
-
-gpgr::write_tsvjsongz(sv_unmelted, glue("sv/{bnm}-01_sv_unmelted"), result_outdir)
-gpgr::write_tsvjsongz(sv_all, glue("sv/{bnm}-02_sv_melted"), result_outdir)
 ```
 
 ```{r purple_prep}
@@ -277,6 +256,25 @@ summarise_sigs <- function(mut_sig_contr) {
     paste(collapse = ", ")
 }
 
+snv_summary_counts <- params$somatic_snv_summary |>
+  jsonlite::read_json()
+
+# NOTE(SW): hypermutated status is determine indirectly by different counts between 'sage' and
+# 'annotated' since this indicates that the bolt hypermutated logic evaluated as true and applied
+# variant selection
+
+hypermutated <- snv_summary_counts$sage != snv_summary_counts$annotated
+
+snv_summary <- snv_summary_counts |>
+  unlist() |>
+  tibble::enframe() |>
+  dplyr::mutate(
+    value = format(value, big.mark = ",", trim = TRUE),
+    x = glue::glue("{name}: {value}"),
+  ) |>
+  dplyr::pull(x) |>
+  paste(collapse = "; ")
+
 hrd_summary <- list(
   chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
   hrdetect = hrdetect_res[, "Probability", drop = TRUE]
@@ -296,8 +294,8 @@ if (no_sv_found) {
 } else {
   sv_summary <-
     list(
-      unmelted = sv_unmelted %>% dplyr::select(Type),
-      melted = sv_all %>% dplyr::select(Type)
+      unmelted = sv$map %>% dplyr::select(Type),
+      melted = sv$map_melted %>% dplyr::select(Type)
     ) %>%
     purrr::map(function(x) addmargins(table(x, useNA = "ifany"))) %>%
     do.call("rbind", .) %>%
@@ -311,6 +309,11 @@ if (no_sv_found) {
 
 qc_summary_all <- dplyr::tribble(
   ~n, ~variable, ~value, ~details,
+  4, "Hypermutated", ifelse(hypermutated, "TRUE", "FALSE"),
+  ifelse(hypermutated, glue::glue(
+    "More than 500K SNVs detected (including non-PASS), priority regions and/or variants ",
+    "selected for processing.",
+  ), ""),
   5, "MutSigs (Old)", glue::glue("{summarise_sigs(sigs_snv_2015)}"),
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
@@ -322,6 +325,7 @@ qc_summary_all <- dplyr::tribble(
     "Max: {cnv_summary[['som']]$Max}; ",
     "N: {cnv_summary[['som']]$N} "
   ), "",
+  17, "SNVs (Somatic)", snv_summary, "Summary SNV counts across main processes, in order",
   18, "SVs (unmelted)", paste(rev(sv_summary$unmelted), collapse = ", "),
   "Summary of SVs as presented in raw VCF.",
   19, "SVs (melted)", paste(rev(sv_summary$melted), collapse = ", "),
@@ -886,13 +890,27 @@ DEL    | intergenic_region       | TXNIP-HFE2 | ENSG00000265972-ENSG00000168509 
 
 </details>
 
+```{r}
+sv.dt <- sv |> purrr::map(function(x) {
+  x |> DT::datatable(
+    filter = list(position = "top", clear = FALSE, plain = TRUE),
+    class = "cell-border display compact",
+    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+    options = list(
+      scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+      buttons = c("csv", "excel"), dom = "Blfrtip"
+    )
+  )
+})
+```
+
 ### Summary {.tabset .tabset-fade #sv-summary}
 
 #### Plots
 
 ```{r plot_bnd_sr_pr_tot_lines, fig.width=12, fig.height=12, out.width="90%"}
-p1 <- gpgr:::plot_bnd_sr_pr_tot_lines(sv_unmelted)
-p2 <- gpgr::plot_bnd_sr_pr_tot_hist(sv_unmelted) + ggplot2::theme(legend.position = "none")
+p1 <- gpgr:::plot_bnd_sr_pr_tot_lines(sv$map)
+p2 <- gpgr::plot_bnd_sr_pr_tot_hist(sv$map) + ggplot2::theme(legend.position = "none")
 ((p1$p_all | p2) / p1$p_tier)
 ```
 
@@ -901,17 +919,17 @@ p2 <- gpgr::plot_bnd_sr_pr_tot_hist(sv_unmelted) + ggplot2::theme(legend.positio
 ```{r sv_summary, eval=!no_sv_found}
 d <-
   list(
-    unmelted = sv_unmelted %>% dplyr::select(Tier = TierTop, Type),
-    melted = sv_all %>% dplyr::select(Tier, Type)
+    unmelted = sv$map %>% dplyr::select("Top Tier", Type),
+    melted = sv$map_melted %>% dplyr::select("Top Tier", Type)
   ) %>%
   dplyr::bind_rows(.id = "group") %>%
   dplyr::mutate(group = factor(group, levels = c("unmelted", "melted"))) %>%
   dplyr::group_by(group) %>%
-  dplyr::count(Tier, Type) %>%
+  dplyr::count(`Top Tier`, Type) %>%
   tidyr::pivot_wider(names_from = Type, values_from = n) %>%
   dplyr::ungroup() %>%
   dplyr::rowwise() %>%
-  dplyr::mutate(tot = sum(dplyr::c_across(!(c(group, Tier))), na.rm = TRUE))
+  dplyr::mutate(tot = sum(dplyr::c_across(!(c(group, `Top Tier`))), na.rm = TRUE))
 
 d %>%
   gt::gt(
@@ -943,213 +961,180 @@ d %>%
 blank_lines(2)
 ```
 
-### __Breakend Annotations__ {.tabset .tabset-fade #breakend-annotations}
+### __SV Map__ {.tabset .tabset-fade}
 
-```{r svtab_BND, eval=!no_sv_found}
-sv_BND <- sv_all %>%
-  dplyr::mutate(
-    nrow = dplyr::row_number(),
-    nrow = sprintf(glue::glue("%0{nchar(nrow(.))}d"), nrow)
-  ) %>%
-  dplyr::select(nrow, dplyr::everything())
-
-
-sv_BND_main <- sv_BND %>%
-  dplyr::select(
-    nrow, vcfnum, Type, `Tier (Top)`, Start, End,
-    BND_ID, BND_mate,
-    Genes, Effect, Detail, SR_alt, PR_alt, SR_PR_sum, AF_PURPLE
-  )
-
-sv_BND_other <- sv_BND %>%
-  dplyr::select(nrow, CNC, CN, SR_PR_ref, Quality, ntrx, Transcript)
-
-sv_BND_purple <- sv_all %>%
-  dplyr::filter(Type %in% c("PURPLE_inf")) %>%
-  dplyr::select(`Tier (Top)`, Start, Effect, Detail, CN, CNC)
-
-gpgr::write_tsvjsongz(
-  dplyr::bind_cols(sv_BND_main, sv_BND_other %>% dplyr::select(-nrow)),
-  glue("sv/{bnm}-03_sv_BND_main"), result_outdir
-)
-gpgr::write_tsvjsongz(sv_BND_purple, glue("sv/{bnm}-04_sv_BND_purpleinf"), result_outdir)
-
-sv_BND_maindt <- sv_BND_main %>%
-  DT::datatable(
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
-    class = "cell-border display compact",
-    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-    options = list(
-      scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
-      buttons = c("csv", "excel"), dom = "Blfrtip"
-    )
-  )
-
-sv_BND_otherdt <- sv_BND_other %>%
-  DT::datatable(
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
-    class = "cell-border display compact",
-    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-    options = list(
-      scroller = TRUE, scrollY = 400, scrollX = TRUE, keys = TRUE, autoWidth = FALSE,
-      buttons = c("csv", "excel"), dom = "Blfrtip"
-    )
-  )
-
-sv_BND_purpledt <- sv_BND_purple %>%
-  DT::datatable(
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
-    class = "cell-border display compact",
-    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-    options = list(
-      scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = TRUE,
-      buttons = c("csv", "excel"),
-      dom = "Blfrtip"
-    )
-  )
-```
-
-#### Main Columns
-
-```{r sv_BND_main, eval=!no_sv_found}
-details::details(sv_detail_table(sv_BND_main), lang = "none", summary = "Column Description")
-sv_BND_maindt
+```{r}
+sv.dt$map
 ```
 
 ```{r, results='asis'}
 blank_lines(2)
 ```
 
-#### Other Columns
+### __Breakpoints and Breakends__ {.tabset .tabset-fade}
 
-```{r sv_BND_otherdt, eval=!no_sv_found}
-details::details(sv_detail_table(sv_BND_other), lang = "none", summary = "Column Description")
-sv_BND_otherdt
-```
+#### Main {.tabset}
 
-#### PURPLE Inferred
+##### Prioritised
 
-```{r sv_BND_purple, eval=!no_sv_found}
-details::details(sv_detail_table(sv_BND_purple), lang = "none", summary = "Column Description")
-sv_BND_purpledt
-```
-
-### __CNV annotations__ {.tabset .tabset-fade #cnv-annotations}
-
-```{r svtab_cnv}
-cnv <- gpgr::purple_cnv_som_ann_process(params$purple_som_cnv_ann)
-
-cnv_temp <- cnv$tab %>%
-  dplyr::mutate(
-    nrow = dplyr::row_number(),
-    Genes_original = Genes,
-    Transcript_original = Transcript
-  )
-
-max_genes <- 2
-max_transcripts <- 2
-
-cnv_main <- cnv_temp %>%
-  dplyr::mutate(
-    Genes = ifelse(ngen > max_genes,
-      glue::glue("Many Genes ({ngen})"),
-      Genes
-    ),
-    Transcript = ifelse(ntrx > max_transcripts,
-      glue::glue("Many Transcripts ({ntrx})"),
-      Transcript
-    )
-  ) %>%
-  dplyr::select(
-    nrow, `Tier (Top)`, Type, Chr, Start, End, Effect,
-    Genes, Transcript, Detail, CN, `CN Min+Maj`, `Start/End SegSupport`, Method,
-    `BAF (count)`, `GC (windowCount)`
-  )
-
-gpgr::write_tsvjsongz(cnv_main, glue("sv/{bnm}-01_cnv_main"), result_outdir)
-
-cnv_main_manygenes <- cnv_temp %>%
-  dplyr::filter(ngen > max_genes) %>%
-  dplyr::select(nrow, `Tier (Top)`, Type, Start, End,
-    Effect, ngen,
-    Genes = Genes_original
-  )
-
-gpgr::write_tsvjsongz(cnv_main_manygenes, glue("sv/{bnm}-02_cnv_main_manygenes"), result_outdir)
-
-cnv_main_manytx <- cnv_temp %>%
-  dplyr::filter(ntrx > max_transcripts) %>%
-  dplyr::select(nrow, `Tier (Top)`, Type, Start, End,
-    Effect, ntrx,
-    Transcript = Transcript_original
-  )
-
-gpgr::write_tsvjsongz(cnv_main_manytx, glue("sv/{bnm}-03_cnv_main_manytx"), result_outdir)
-
-cnv_maindt <- cnv_main %>%
-  DT::datatable(
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
-    class = "cell-border display compact",
-    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-    options = list(
-      scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
-      buttons = c("csv", "excel"), dom = "Blfrtip"
-    )
-  ) |>
-  DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
-
-cnv_main_manygenesdt <- cnv_main_manygenes %>%
-  DT::datatable(
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
-    class = "cell-border display compact",
-    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-    options = list(
-      scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
-      buttons = c("csv", "excel"), dom = "Blfrtip"
-    )
-  ) |>
-  DT::formatCurrency(~ Start + End + ngen, currency = "", interval = 3, mark = ",", digits = 0)
-
-cnv_main_manytxdt <- cnv_main_manytx %>%
-  DT::datatable(
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
-    class = "cell-border display compact",
-    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-    options = list(
-      scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
-      buttons = c("csv", "excel"), dom = "Blfrtip"
-    )
-  ) |>
-  DT::formatCurrency(~ Start + End, currency = "", interval = 3, mark = ",", digits = 0)
-```
-
-#### Main Columns
-
-```{r cnv_main}
-details::details(sv_detail_table(cnv_main), lang = "none", summary = "Column Description")
-cnv_maindt
+```{r}
+sv.dt$prioritised
 ```
 
 ```{r, results='asis'}
 blank_lines(2)
 ```
 
-#### Many Genes
+##### Many transcripts
 
-```{r cnv_main_manygenes}
-details::details(sv_detail_table(cnv_main_manygenes), lang = "none", summary = "Column Description")
-cnv_main_manygenesdt
+```{r}
+sv.dt$many_transcripts_prioritised
 ```
 
 ```{r, results='asis'}
 blank_lines(2)
 ```
 
-#### Many Transcripts
+#### Other {.tabset}
 
-```{r cnv_main_manytx}
-details::details(sv_detail_table(cnv_main_manytx), lang = "none", summary = "Column Description")
-cnv_main_manytxdt
+##### Unprioritised
+
+```{r}
+sv.dt$unprioritised
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+##### Many transcripts
+
+```{r}
+sv.dt$many_transcripts_unprioritised
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+##### PURPLE inferred
+
+```{r}
+sv.dt$purple_inferred
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+### __Copy number variants__ {.tabset .tabset-fade}
+
+```{r}
+cnv <- gpgr::process_cnv_tsv(params$purple_som_cnv_ann)
+```
+
+```{r}
+cnv.dt <- cnv |> purrr::map(function(x) {
+  x |> DT::datatable(
+    filter = list(position = "top", clear = FALSE, plain = TRUE),
+    class = "cell-border display compact",
+    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+    options = list(
+      scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+      buttons = c("csv", "excel"), dom = "Blfrtip"
+    )
+  )
+})
+```
+
+#### Main {.tabset}
+
+##### Small
+
+```{r}
+cnv.dt$small
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+##### Medium
+
+```{r}
+cnv.dt$medium
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+##### Large
+
+```{r}
+cnv.dt$large
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+##### Many genes
+
+```{r}
+cnv.dt$many_genes_prioritised
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+##### Many transcripts
+
+```{r}
+cnv.dt$many_transcripts
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+#### Other {.tabset}
+
+##### Unprioritised
+
+```{r}
+cnv.dt$unprioritised
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+##### Many genes
+
+```{r}
+cnv.dt$many_genes_unprioritised
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+##### Fusions
+
+```{r}
+cnv.dt$fusion
+```
+
+```{r, results='asis'}
+blank_lines(2)
+```
+
+##### Chromosome
+
+```{r}
+cnv.dt$chromsome
 ```
 
 ```{r, results='asis'}

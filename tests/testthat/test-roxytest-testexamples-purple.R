@@ -19,7 +19,7 @@ test_that("Function purple_cnv_som_gene_process() @ L60", {
 })
 
 
-test_that("Function purple_cnv_som_read() @ L143", {
+test_that("Function purple_cnv_som_read() @ L577", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (p <- purple_cnv_som_read(x))
@@ -27,7 +27,7 @@ test_that("Function purple_cnv_som_read() @ L143", {
 })
 
 
-test_that("Function purple_cnv_som_process() @ L176", {
+test_that("Function purple_cnv_som_process() @ L610", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (pp <- purple_cnv_som_process(x))
@@ -35,33 +35,7 @@ test_that("Function purple_cnv_som_process() @ L176", {
 })
 
 
-test_that("Function purple_cnv_som_ann_process() @ L245", {
-  
-  x <- system.file("extdata/sash/purple.cnv.gene.annotated.tsv", package = "gpgr")
-  (p <- purple_cnv_som_ann_process(x))
-  expect_equal(colnames(p)[ncol(p)], "annotation")
-})
-
-
-test_that("Function purple_cnv_som_ann_read() @ L339", {
-  
-  x <- system.file("extdata/sash/purple.cnv.gene.annotated.tsv", package = "gpgr")
-  (p <- purple_cnv_som_ann_read(x))
-  expect_equal(colnames(p)[ncol(p)], "simple_ann")
-})
-
-
-test_that("Function purple_version_read() @ L385", {
-  
-  x <- system.file("extdata/purple/purple.version", package = "gpgr")
-  (v <- purple_version_read(x))
-  expect_equal(length(v), 2)
-  expect_equal(names(v), c("version", "build_date"))
-  expect_equal(v$version, "2.51")
-})
-
-
-test_that("Function purple_qc_read() @ L411", {
+test_that("Function purple_qc_read() @ L678", {
   
   x <- system.file("extdata/purple/purple.qc", package = "gpgr")
   (q <- purple_qc_read(x))
@@ -69,7 +43,7 @@ test_that("Function purple_qc_read() @ L411", {
 })
 
 
-test_that("Function purple_purity_read() @ L469", {
+test_that("Function purple_purity_read() @ L736", {
   
   x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
   (p <- purple_purity_read(x))

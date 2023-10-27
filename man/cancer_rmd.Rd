@@ -20,6 +20,7 @@ cancer_rmd(
   purple_som_gene_cnv,
   purple_som_snv_vcf,
   somatic_snv_vcf,
+  somatic_snv_summary,
   somatic_sv_tsv,
   somatic_sv_vcf,
   result_outdir,
@@ -58,6 +59,8 @@ cancer_rmd(
 \item{purple_som_snv_vcf}{Path to \code{purple.somatic.vcf.gz}.}
 
 \item{somatic_snv_vcf}{Path to \code{somatic-PASS.vcf.gz} SNV VCF.}
+
+\item{somatic_snv_summary}{Path to \code{somatic_snv_summary.json} JSON.}
 
 \item{somatic_sv_tsv}{Path to \code{manta.tsv} TSV file.}
 

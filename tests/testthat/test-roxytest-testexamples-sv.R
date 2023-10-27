@@ -46,21 +46,3 @@ test_that("Function abbreviate_effect() @ L112", {
   expect_equal(e4, "badaboom, bar, foo, StopGain")
 })
 
-
-test_that("Function umccrise_read_sv_tsv() @ L143", {
-  
-  x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-  (sv <- umccrise_read_sv_tsv(x)$data)
-  expect_equal(colnames(sv)[ncol(sv)], "ALT")
-})
-
-
-test_that("Function process_sv() @ L195", {
-  
-  x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-  (sv <- process_sv(x))
-  expect_true(inherits(sv, "list"))
-  expect_equal(length(sv), 4)
-  expect_equal(names(sv), c("unmelted", "melted", "tsv_descr", "col_descr"))
-})
-

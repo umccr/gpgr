@@ -77,6 +77,7 @@ linx_rmd <- function(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE
 #' @param purple_som_snv_vcf Path to `purple.somatic.vcf.gz`.
 #' @param result_outdir Path to directory to write tidy JSON/TSV results.
 #' @param somatic_snv_vcf Path to `somatic-PASS.vcf.gz` SNV VCF.
+#' @param somatic_snv_summary Path to `somatic_snv_summary.json` JSON.
 #' @param somatic_sv_tsv Path to `manta.tsv` TSV file.
 #' @param somatic_sv_vcf Path to `manta.vcf.gz` VCF file.
 #' @param tumor_name Name of tumor sample.
@@ -88,8 +89,8 @@ linx_rmd <- function(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE
 cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, img_dir, key_genes,
                        virusbreakend_tsv, virusbreakend_vcf, purple_purity, purple_qc,
                        purple_som_cnv_ann, purple_som_cnv, purple_som_gene_cnv, purple_som_snv_vcf,
-                       somatic_snv_vcf, somatic_sv_tsv, somatic_sv_vcf, result_outdir, tumor_name,
-                       out_file = NULL, quiet = FALSE) {
+                       somatic_snv_vcf, somatic_snv_summary, somatic_sv_tsv, somatic_sv_vcf,
+                       result_outdir, tumor_name, out_file = NULL, quiet = FALSE) {
   assertthat::assert_that(
     dir.exists(img_dir),
     quiet %in% c(FALSE, TRUE)
@@ -120,6 +121,7 @@ cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, img_dir, 
     img_dir = img_dir_b,
     key_genes = key_genes,
     somatic_snv_vcf = somatic_snv_vcf,
+    somatic_snv_summary = somatic_snv_summary,
     somatic_sv_tsv = somatic_sv_tsv,
     somatic_sv_vcf = somatic_sv_vcf,
     purple_som_gene_cnv = purple_som_gene_cnv,
