@@ -11,6 +11,7 @@ cancer_rmd(
   conda_list,
   img_dir,
   key_genes,
+  oncokb_genes,
   virusbreakend_tsv,
   virusbreakend_vcf,
   purple_purity,
@@ -41,6 +42,8 @@ cancer_rmd(
 \item{img_dir}{Path to directory containing PURPLE plots.}
 
 \item{key_genes}{Path to UMCCR cancer gene file.}
+
+\item{oncokb_genes}{Path to OncoKB database file.}
 
 \item{virusbreakend_tsv}{Path to VIRUSBreakend summary file.}
 

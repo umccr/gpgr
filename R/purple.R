@@ -151,105 +151,128 @@ sash_read_cnv_tsv <- function(x) {
   d
 }
 
-split_chromosome_annotations <- function(x) {
+filter_and_split_annotations_cnv <- function(x) {
+
+  filter_conditions <- list(
+    # Chromosome effects
+    stringr::str_starts(x$Detail, "chrom_"),
+    # Fusion effects
+    x$Effect %in% c("BidFusG", "FusG")
+  )
+
   x.grouped <- x |>
     dplyr::group_by(
-      record_type=ifelse(grepl('chrom_[0-9XY]+', Detail), 'chromosome', 'other')
+      filter=ifelse(purrr::reduce(filter_conditions, `|`), "filter", "retain")
     )
 
   keys <- x.grouped |>
     dplyr::group_keys() |>
-    dplyr::pull(record_type)
+    dplyr::pull(filter)
 
   x.split <- x.grouped |>
     dplyr::group_split(.keep=FALSE) |>
     purrr::set_names(keys)
 
-  chromosome <- purrr::pluck(x.split, 'chromosome') |>
-    dplyr::select(
-      "Event ID" = "event_id",
-      "Tier (top)",
-      "Start" = "start",
-      "End" = "end",
-      "SV Type" = "svtype",
-      "Effect",
-      "Chromosome" = "Detail",
-      "PURPLE CN" = "copyNumber",
-      "PURPLE CN Min+Maj",
-    )
-
   list(
-    chromosome=chromosome,
-    other=purrr::pluck(x.split, 'other')
+    retained = purrr::pluck(x.split, "retain"),
+    filtered = purrr::pluck(x.split, "filter") |> dplyr::arrange(Tier, `Event ID`)
   )
 }
 
-split_fusion_annotations <- function(x) {
+collapse_effect_group <- function(x) {
+  x.tmp <- dplyr::first(x)
+  genes <- x.tmp |>
+    dplyr::pull(Genes.unique) |>
+    unlist()
 
-  fusion_annotations <- c(
-    'BidFusG',
-    'FusG',
-    'bidirectional_gene_fusion',
-    'gene_fusion'
-  )
-
-  x.grouped <- x |>
-    dplyr::group_by(
-      record_type=ifelse(Effect %in% fusion_annotations, 'fusion', 'other')
-    )
-
-  keys <- x.grouped |>
-    dplyr::group_keys() |>
-    dplyr::pull(record_type)
-
-  x.split <- x.grouped |>
-    dplyr::group_split(.keep=FALSE) |>
-    purrr::set_names(keys)
-
-  fusions <- purrr::pluck(x.split, 'fusion') |>
-    dplyr::select(
-      "Event ID" = "event_id",
-      "Annotation ID" = "annotation_id",
-      "Tier (top)",
-      "Start" = "start",
-      "End" = "end",
-      "SV Type" = "svtype",
-      "Effect",
-      "Genes",
-      "Transcripts" = "Transcript",
-      "Detail",
-      "PURPLE CN" = "copyNumber",
-      "PURPLE CN Min+Maj",
-    )
-
-  list(
-    fusions=fusions,
-    other=purrr::pluck(x.split, 'other')
-  )
-}
-
-count_event_genes <- function(.data) {
-  .data |>
-    dplyr::pull(Genes) |>
-    strsplit('&') |>
-    unlist() |>
-    unique() |>
-    length()
-}
-
-set_event_type <- function(x) {
-  x |>
-    dplyr::group_by(event_id) |>
+  x.tmp |>
     dplyr::mutate(
-      `Gene count (event)` = count_event_genes(dplyr::pick(Genes)),
-      event_category = dplyr::case_when(
-        `Gene count (event)` == 0 ~ 'none',
-        `Gene count (event)` == 1 ~ 'small',
-        `Gene count (event)` >= 2 & `Gene count (event)` <= 3 ~ 'medium',
-        .default = 'large',
-      )
+      Genes = paste0(genes, collapse=", "),
+      Transcripts = "",
+      Detail = paste0(unique(x$Detail) |> sort(), collapse=", "),
+      Tier = min(x$Tier),
+      `Annotation ID` = NA,
+    )
+}
+
+set_many_genes_cnv <- function(x) {
+  # Count genes and set eligibility for collapsing
+  collapse_effects <- c("DelG", "Dup", "DelTx", "UpstreamGV", "DnstreamGV", "IntergenReg")
+  x.counts <- x |>
+    dplyr::group_by(`Event ID`, Effect) |>
+    dplyr::mutate(
+      Genes.unique = Genes |> stringr::str_split(", ") |> unlist() |> unique() |> list(),
+      `Gene count (effect group)` = Genes.unique |> dplyr::first() |> length(),
+      collapse = `Gene count (effect group)` > 2 & Effect %in% collapse_effects,
     ) |>
-    dplyr::ungroup()
+    dplyr::select(-`Gene count (effect group)`)
+
+  # Collapse target groups
+  x.collapsed <- x.counts |>
+    dplyr::filter(collapse) |>
+    dplyr::select(-collapse) |>
+    dplyr::group_modify(~ collapse_effect_group(.x)) |>
+    # Update top tier, referring to complete data set within each group
+    dplyr::mutate(
+      `Tier (top)` = paste0(Tier, " (", min(x$Tier[x$`Event ID` == `Event ID`]), ")"),
+    ) |>
+    # Create new annotation ID
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      `Annotation ID` = paste0(dplyr::row_number(), ".merged"),
+    )
+
+  # Bind collapsed rows with uncollapsed rows, then count genes per entry
+  x.tmp <- x.counts |>
+    dplyr::filter(!collapse) |>
+    dplyr::bind_rows(x.collapsed) |>
+    dplyr::select(-c(collapse, Genes.unique, Tier)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      `Gene count` = Genes |> stringr::str_split(", ") |> unlist() |> unique() |> length(),
+    ) |>
+    dplyr::ungroup() |>
+    # Sort rows
+    dplyr::arrange(`Tier (top)`, `Event ID`)
+
+  # Set many genes
+  x.tmp <- x.tmp |>
+    dplyr::mutate(
+      many_genes = ifelse(`Gene count` > 2, "many_genes", "few_genes"),
+    )
+
+  # Build the many genes table
+  x.many_genes <- x.tmp |>
+    dplyr::filter(many_genes == "many_genes") |>
+    # Remove unneeded columns and rename others
+    dplyr::select(
+      "Event ID",
+      "Annotation ID",
+      "Tier (top)",
+      "Start",
+      "End",
+      "SV Type",
+      "Effect",
+      "Gene count",
+      "Genes",
+    )
+
+  # Clear genes and transcripts where appropriate
+  x.ready <- x.tmp |>
+    dplyr::mutate(
+      Genes = ifelse(
+        many_genes == "few_genes" | is.na(many_genes),
+        Genes,
+        paste0("Many genes (", `Gene count`, ")")
+      ),
+      Transcripts = ifelse(many_genes == "few_genes" | is.na(many_genes), Transcripts, ""),
+    ) |>
+    dplyr::select(-c(many_genes, `Gene count`))
+
+  list(
+    ready = x.ready,
+    many_genes = x.many_genes
+  )
 }
 
 set_many_transcripts_cnv <- function(x) {
@@ -257,144 +280,45 @@ set_many_transcripts_cnv <- function(x) {
   x.tmp <- x |>
     dplyr::rowwise() |>
     dplyr::mutate(
-      transcript_count = strsplit(Transcript, '&') |> unlist() |> unique() |> length()
+      `Transcript count` = stringr::str_split(Transcripts, ", ") |> unlist() |> unique() |> length()
     ) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-      many_transcripts = ifelse(transcript_count > 2, 'many_transcripts', 'few_transcripts'),
-      many_transcripts = ifelse(event_category %in% c('small', 'medium'), many_transcripts, NA),
+      many_transcripts = ifelse(`Transcript count` > 2, "many_transcripts", "few_transcripts"),
     ) |>
     # Sort rows
-    dplyr::arrange(`Tier (top)`, Genes, Effect)
+    dplyr::arrange(`Tier (top)`, `Event ID`)
 
   # Build the many transcripts table
-  mt <- x.tmp |>
-    dplyr::filter(many_transcripts == 'many_transcripts') |>
+  x.many_transcripts <- x.tmp |>
+    dplyr::filter(many_transcripts == "many_transcripts") |>
     # Remove unneeded columns and rename others
     dplyr::select(
-      "Event ID" = "event_id",
-      "Annotation ID" = "annotation_id",
+      "Event ID",
+      "Annotation ID",
       "Tier (top)",
-      "Start" = "start",
-      "End" = "end",
-      "Transcript count" = "transcript_count",
-      "Transcripts" = "Transcript",
-    )
-
-  # Clear transcript where appropriate
-  x.ready <- x.tmp |>
-    dplyr::mutate(
-      Transcript = ifelse(
-        many_transcripts == 'few_transcripts' | is.na(many_transcripts),
-        Transcript,
-        paste0('Many transcripts (', transcript_count, ')')
-      )
-    ) |>
-    dplyr::select(c(-many_transcripts, -transcript_count))
-
-  list(
-    many_transcripts=mt,
-    cnv=x.ready
-  )
-}
-
-split_priority <- function(x) {
-  x.grouped <- x |>
-    dplyr::group_by(
-      prioritised = ifelse(Tier < 4, 'prioritised', 'unprioritised')
-    )
-
-  keys <- x.grouped |>
-    dplyr::group_keys() |>
-    dplyr::pull(prioritised)
-
-  x.split <- x.grouped |>
-    dplyr::group_split(.keep=FALSE) |>
-    purrr::set_names(keys)
-
-  list(
-    prioritised = purrr::pluck(x.split, 'prioritised'),
-    unprioritised = purrr::pluck(x.split, 'unprioritised', .default=x[NULL, ]) |> dplyr::select(-Transcript)
-  )
-}
-
-split_event_type <- function(x) {
-
-  x.grouped <- x |>
-    dplyr::group_by(event_category)
-
-  keys <- x.grouped |>
-    dplyr::group_keys() |>
-    dplyr::pull(event_category)
-
-  x.split <- x.grouped |>
-    dplyr::group_split(.keep=FALSE) |>
-    purrr::set_names(keys)
-
-  list(
-    none = purrr::pluck(x.split, 'none'),
-    small = purrr::pluck(x.split, 'small'),
-    medium = purrr::pluck(x.split, 'medium'),
-    large = purrr::pluck(x.split, 'large')
-  )
-}
-
-collapse_annotations <- function(x) {
-  x |>
-    dplyr::summarise(
-      `Gene count (effect)` = length(unique(unlist(strsplit(Genes, '&')))),
-      Genes = paste0(sort(unique(unlist(strsplit(Genes, '&')))), collapse=','),
-      Detail = paste0(sort(unique(Detail)), collapse=','),
-      `Tier (highest)` = min(Tier),
-      `Tier (lowest)` = max(Tier),
-    ) |>
-    dplyr::ungroup()
-}
-
-set_many_genes <- function(x) {
-  # Set many genes
-  x.tmp <- x |>
-    dplyr::rowwise() |>
-    dplyr::mutate(
-      gene_count = strsplit(Genes, c(',|&')) |> unlist() |> unique() |> length()
-    ) |>
-    dplyr::ungroup() |>
-    dplyr::mutate(
-      many_genes = ifelse(gene_count > 2, 'many_genes', 'few_genes'),
-    ) |>
-    # Sort rows
-    dplyr::arrange(`Tier (top)`, Genes, Effect)
-
-  # Build the many genes table
-  mt <- x.tmp |>
-    dplyr::filter(many_genes == 'many_genes') |>
-    # Remove unneeded columns and rename others
-    dplyr::select(
-      "Event ID" = "event_id",
-      "Tier (top)",
-      "Start" = "start",
-      "End" = "end",
-      "SV Type" = "svtype",
+      "Start",
+      "End",
+      "SV Type",
       "Effect",
-      "Gene count (event)",
-      "Gene count (effect)",
-      "Genes",
+      "Transcript count",
+      "Transcripts",
     )
 
-  # Clear genes where appropriate
+  # Clear transcripts where appropriate
   x.ready <- x.tmp |>
     dplyr::mutate(
-      Genes = ifelse(
-        many_genes == 'few_genes' | is.na(many_genes),
-        Genes,
-        paste0('Many genes (', gene_count, ')')
+      Transcripts = ifelse(
+        many_transcripts == "few_transcripts" | is.na(many_transcripts),
+        Transcripts,
+        paste0("Many transcripts (", `Transcript count`, ")")
       )
     ) |>
-    dplyr::select(c(-many_genes, -gene_count))
+    dplyr::select(-c(many_transcripts, `Transcript count`))
 
   list(
-    many_genes=mt,
-    cnv=x.ready
+    ready = x.ready,
+    many_transcripts = x.many_transcripts
   )
 }
 
@@ -406,7 +330,7 @@ process_cnv_tsv <- function(x) {
   # Prepare input
   cnv.ready <- cnv.input |>
     dplyr::mutate(
-      chrom_simple = stringr::str_remove(chromosome, 'chr'),
+      chrom_simple = stringr::str_remove(chromosome, "chr"),
       start = paste(chrom_simple, base::format(start, big.mark = ",", trim = TRUE), sep=":"),
       end = paste(chrom_simple, base::format(end, big.mark = ",", trim = TRUE), sep=":"),
     ) |>
@@ -417,13 +341,13 @@ process_cnv_tsv <- function(x) {
 
   # Melt annotations
   cnv.tmp <- cnv.ready |>
-    dplyr::mutate(event_id = dplyr::row_number()) |>
+    dplyr::mutate(`Event ID` = dplyr::row_number()) |>
     # Split into individual annotations
     dplyr::mutate(annotation = strsplit(simple_ann, ",")) |>
     # Convert annotation fields into columns
     tidyr::unnest(annotation) |>
     tidyr::separate(
-      annotation, c("Event", "Effect", "Genes", "Transcript", "Detail", "Tier"),
+      annotation, c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier"),
       sep = "\\|", convert = FALSE
     ) |>
     # Create new columns and modify existing ones
@@ -431,11 +355,10 @@ process_cnv_tsv <- function(x) {
       copyNumber = as.numeric(copyNumber) |> round(2) %>% sprintf("%.2f", .),
       minorAlleleCopyNumber = as.numeric(minorAlleleCopyNumber) |> round(2) %>% sprintf("%.2f", .),
       majorAlleleCopyNumber = as.numeric(majorAlleleCopyNumber) |> round(2) %>% sprintf("%.2f", .),
-      'PURPLE CN Min+Maj' = paste0(minorAlleleCopyNumber, "+", majorAlleleCopyNumber),
-      "Tier (top)" = paste0(Tier, " (", sv_top_tier, ")"),
+      "PURPLE CN Min+Maj" = paste0(minorAlleleCopyNumber, "+", majorAlleleCopyNumber),
+      "Genes" = stringr::str_replace_all(Genes, "&", ", "),
+      "Transcripts" = stringr::str_replace_all(Transcripts, "&", ", "),
     ) |>
-    # Set unique annotation ID
-    dplyr::mutate(annotation_id = dplyr::row_number()) |>
     # Remove unused columns
     dplyr::select(-c(
       baf,
@@ -448,112 +371,61 @@ process_cnv_tsv <- function(x) {
       minorAlleleCopyNumber,
       segmentEndSupport,
       segmentStartSupport,
-      simple_ann,
       sv_top_tier,
-    )) |>
-    # Sort rows
-    dplyr::arrange(`Tier (top)`, Genes, Effect)
-
-  # Drop specific annotations
-  cnv.tmp <- cnv.tmp |>
-    dplyr::filter(Effect != 'intergenic_region')
+      simple_ann,
+    ))
 
   # Abbreviate effects
-  abbreviate_effectv <- Vectorize(gpgr::abbreviate_effect)
+  abbreviate_effectv <- Vectorize(abbreviate_effect)
   cnv.tmp$Effect <- abbreviate_effectv(cnv.tmp$Effect)
 
-  # Split chromosome annotations
-  cnv.chromosome_split <- split_chromosome_annotations(cnv.tmp)
-  cnv.chromosome <- cnv.chromosome_split$chromosome
-  cnv.tmp <- cnv.chromosome_split$other
+  # Filter unwanted annotations
+  cnv.annotations.split <- filter_and_split_annotations_cnv(cnv.tmp)
 
-  # Split fusion annotations
-  cnv.fusion_split <- split_fusion_annotations(cnv.tmp)
-  cnv.fusion <- cnv.fusion_split$fusion
-  cnv.tmp <- cnv.fusion_split$other
-
-  # Set event type based on the number of genes impacted
-  cnv.tmp <- set_event_type(cnv.tmp)
-
-  # Set and create many transcripts table
-  cnv.many_transcripts_data <- set_many_transcripts_cnv(cnv.tmp)
-  cnv.many_transcripts <- purrr::pluck(cnv.many_transcripts_data, 'many_transcripts')
-  cnv.tmp <- purrr::pluck(cnv.many_transcripts_data, 'cnv')
-
-  # Split into prioritised and unprioritised
-  cnv.priority_split <- split_priority(cnv.tmp)
-  cnv.unprioritised.tmp <- cnv.priority_split$unprioritised
-  cnv.prioritised.tmp <- cnv.priority_split$prioritised
-
-  # Split into event type assigned above
-  cnv.event_type_split <- split_event_type(cnv.prioritised.tmp)
-  cnv.small.tmp <- cnv.event_type_split$small
-  cnv.medium.tmp <- cnv.event_type_split$medium
-  cnv.large.tmp <- cnv.event_type_split$large
-
-  # Temporary set dplyr summarise warning off
-  summarise_info_opt <- getOption('dplyr.summarise.inform')
-  options(dplyr.summarise.inform = FALSE)
-
-  # Collapse large event type annotations into single records, drop transcripts
-  cnv.large.tmp <- cnv.large.tmp |>
-    dplyr::group_by(dplyr::across(c(-Genes, -Transcript, -Tier, -Detail, -annotation_id))) |>
-    collapse_annotations()
-
-  cnv.large.many_genes_data <- set_many_genes(cnv.large.tmp)
-  cnv.large.many_genes <- cnv.large.many_genes_data$many_genes
-  cnv.large.tmp <- cnv.large.many_genes_data$cnv
-
-  # Select then collapse only large event type annotations into single records
-  cnv.unprioritised.tmp <- cnv.unprioritised.tmp |>
-    dplyr::filter(event_category == 'large') |>
-    dplyr::group_by(dplyr::across(c(-Genes, -Tier, -Detail, -annotation_id))) |>
-    collapse_annotations() |>
+  # Complete processing
+  cnv.tmp <- cnv.annotations.split$retained |>
+    # Reset sv_top_tier after removing annotations
+    dplyr::group_by(`Event ID`) |>
+    dplyr::mutate(
+      sv_top_tier = min(Tier),
+      "Tier (top)" = paste0(Tier, " (", sv_top_tier, ")"),
+    ) |>
     dplyr::ungroup() |>
-    dplyr::bind_rows(
-      cnv.unprioritised.tmp |> dplyr::filter(event_category != 'large')
-    )
-  cnv.unprioritised.many_genes_data <- set_many_genes(cnv.unprioritised.tmp)
-  cnv.unprioritised.many_genes <- cnv.unprioritised.many_genes_data$many_genes
-  cnv.unprioritised.tmp <- cnv.unprioritised.many_genes_data$cnv
+    # Set unique annotation ID
+    dplyr::mutate(`Annotation ID` = as.character(dplyr::row_number())) |>
+    # Sort rows
+    dplyr::arrange(`Tier (top)`, `Event ID`)
 
-  # Restore dplyr summarise warning setting
-  options(dplyr.summarise.inform = summarise_info_opt)
-
-  # Select columns for remaining tables
-  columns <- c(
-      "Event ID" = "event_id",
-      "Tier (top)",
-      "Tier lowest (effect)",
-      "Tier lowest (effect)",
-      "Start" = "start",
-      "End" = "end",
-      "SV Type" = "svtype",
-      "Effect",
-      "Gene count (event)",
-      "Gene count (effect)",
-      "Genes",
-      "Transcripts" = "Transcript",
-      "Detail",
-      "PURPLE CN" = "copyNumber",
-      "PURPLE CN Min+Maj"
+  # Set column names
+  column_selector <- c(
+    "Event ID",
+    "Annotation ID",
+    "Tier (top)",
+    "Start" = "start",
+    "End" = "end",
+    "SV Type" = "svtype",
+    "Effect",
+    "Genes",
+    "Transcripts",
+    "Detail",
+    "PURPLE CN" = "copyNumber",
+    "PURPLE CN Min+Maj"
   )
+  cnv.tmp <- dplyr::select(cnv.tmp, tidyselect::all_of(c(column_selector, "Tier")))
+  cnv.filtered <- dplyr::select(cnv.annotations.split$filtered, tidyselect::any_of(column_selector))
 
-  cnv.small <- cnv.small.tmp |> dplyr::select(tidyselect::any_of(columns))
-  cnv.medium <- cnv.medium.tmp |> dplyr::select(tidyselect::any_of(columns))
-  cnv.large <- cnv.large.tmp |> dplyr::select(tidyselect::any_of(columns))
-  cnv.unprioritised <- cnv.unprioritised.tmp |> dplyr::select(tidyselect::any_of(columns))
+  # Collapse selected annotations and set many genes
+  cnv.many_genes_data <- set_many_genes_cnv(cnv.tmp)
+  cnv.tmp <- cnv.many_genes_data$ready
+
+  # Set many transcripts
+  cnv.many_transcripts_data <- set_many_transcripts_cnv(cnv.tmp)
 
   list(
-    small = cnv.small,
-    medium = cnv.medium,
-    large = cnv.large,
-    many_genes_prioritised = cnv.large.many_genes,
-    many_transcripts = cnv.many_transcripts,
-    unprioritised = cnv.unprioritised,
-    many_genes_unprioritised = cnv.unprioritised.many_genes,
-    fusion = cnv.fusion,
-    chromsome = cnv.chromosome
+    annotations = cnv.many_transcripts_data$ready,
+    filtered = cnv.filtered,
+    many_genes = cnv.many_genes_data$many_genes,
+    many_transcripts = cnv.many_transcripts_data$many_transcripts
   )
 }
 

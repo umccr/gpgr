@@ -67,6 +67,7 @@ linx_rmd <- function(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE
 #' @param conda_list Path to `conda_pkg_list.txt` file.
 #' @param img_dir Path to directory containing PURPLE plots.
 #' @param key_genes Path to UMCCR cancer gene file.
+#' @param oncokb_genes Path to OncoKB database file.
 #' @param virusbreakend_tsv Path to VIRUSBreakend summary file.
 #' @param virusbreakend_vcf Path to VIRUSBreakend VCF file.
 #' @param purple_purity Path to `purple.purity.tsv`.
@@ -87,7 +88,7 @@ linx_rmd <- function(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE
 #' @return Path to rendered HTML report.
 #' @export
 cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, img_dir, key_genes,
-                       virusbreakend_tsv, virusbreakend_vcf, purple_purity, purple_qc,
+                       oncokb_genes, virusbreakend_tsv, virusbreakend_vcf, purple_purity, purple_qc,
                        purple_som_cnv_ann, purple_som_cnv, purple_som_gene_cnv, purple_som_snv_vcf,
                        somatic_snv_vcf, somatic_snv_summary, somatic_sv_tsv, somatic_sv_vcf,
                        result_outdir, tumor_name, out_file = NULL, quiet = FALSE) {
@@ -120,6 +121,7 @@ cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, img_dir, 
     conda_list = conda_list,
     img_dir = img_dir_b,
     key_genes = key_genes,
+    oncokb_genes = oncokb_genes,
     somatic_snv_vcf = somatic_snv_vcf,
     somatic_snv_summary = somatic_snv_summary,
     somatic_sv_tsv = somatic_sv_tsv,

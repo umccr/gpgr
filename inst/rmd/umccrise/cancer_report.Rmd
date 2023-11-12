@@ -16,6 +16,7 @@ params:
   conda_list: NULL
   img_dir: NULL
   key_genes: NULL
+  oncokb_genes: NULL
   virusbreakend_tsv: NULL
   virusbreakend_vcf: NULL
   purple_purity: NULL
@@ -110,7 +111,6 @@ sv_detail_table <- function(tab) {
 }
 ```
 
-
 ```{r hrd_prep, results='hide'}
 #---- Homologous Recombination Deficiency ----#
 chord_res <- sigrap::chord_run(
@@ -182,13 +182,54 @@ gpgr::write_tsvjsongz(sigs_indel, glue("sigs/{bnm}-indel"), result_outdir)
 ```
 
 ```{r sv_prep}
+#---- Misc ----#
+oncokb_genes <- gpgr::read_oncokb(params$oncokb_genes)
+
 #---- Structural Variants ----#
 sv_path <- params$somatic_sv_tsv
 sv <- NULL
 no_sv_found <- gpgr::tsv_is_empty(sv_path)
 if (!no_sv_found) {
   sv <- gpgr::process_sv(sv_path)
+
+  # Set OncoKB genes
+  sv$annotations <- sv$annotations |>
+    dplyr::mutate(
+      "Genes (OncoKB)" = gpgr::get_oncokb_genes(Genes, oncokb_genes),
+      .after = "Genes",
+    )
 }
+
+#---- Copy Number Variants ----#
+cnv <- gpgr::process_cnv_tsv(params$purple_som_cnv_ann)
+
+# Set OncoKB genes
+cnv$annotations <- cnv$annotations |>
+  dplyr::mutate(
+    "Genes (OncoKB)" = get_oncokb_genes(Genes, oncokb_genes),
+    .after = "Genes",
+  )
+
+# Set OncoKB genes for Many Genes table and transfer to the main table where appropriate
+cnv$many_genes <- cnv$many_genes |>
+  dplyr::mutate(
+    `Genes (OncoKB)` = get_oncokb_genes(Genes, oncokb_genes),
+    .before = "Genes",
+  ) |>
+  # Create transfer column, set entries with more than n genes as 'Many genes (m)'
+  dplyr::rowwise() |>
+  dplyr::mutate(
+    gene.oncokb.count = strsplit(`Genes (OncoKB)`, ", ") |> unlist() |> unique() |> length(),
+    gene.oncokb.tx = ifelse(gene.oncokb.count > 2, paste0("Many genes (", gene.oncokb.count, ")"), `Genes (OncoKB)`),
+  )
+
+# Transfer selected OncoKB gene entries
+v.selector <- match(cnv$many_genes$`Annotation ID`, cnv$annotations$`Annotation ID`)
+cnv$annotations$`Genes (OncoKB)`[v.selector] <- cnv$many_genes$gene.oncokb.tx
+
+# Clean up columns
+cnv$many_genes <- cnv$many_genes |>
+  dplyr::select(-c(gene.oncokb.count, gene.oncokb.tx))
 ```
 
 ```{r purple_prep}
@@ -292,8 +333,7 @@ cnv_summary <-
 if (no_sv_found) {
   sv_summary <- tibble(unmelted = c(0), melted = c(0))
 } else {
-  sv_summary <-
-    list(
+  sv_summary <- list(
       unmelted = sv$map %>% dplyr::select(Type),
       melted = sv$map_melted %>% dplyr::select(Type)
     ) %>%
@@ -891,17 +931,18 @@ DEL    | intergenic_region       | TXNIP-HFE2 | ENSG00000265972-ENSG00000168509 
 </details>
 
 ```{r}
-sv.dt <- sv |> purrr::map(function(x) {
-  x |> DT::datatable(
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
-    class = "cell-border display compact",
-    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-    options = list(
-      scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
-      buttons = c("csv", "excel"), dom = "Blfrtip"
+sv.dt <- sv |>
+  purrr::map(function(x) {
+    x |> DT::datatable(
+      filter = list(position = "top", clear = FALSE, plain = TRUE),
+      class = "cell-border display compact",
+      rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
+      options = list(
+        scroller = TRUE, scrollY = 400, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
+        buttons = c("csv", "excel"), dom = "Blfrtip"
+      )
     )
-  )
-})
+  })
 ```
 
 ### Summary {.tabset .tabset-fade #sv-summary}
@@ -973,54 +1014,30 @@ blank_lines(2)
 
 ### __Breakpoints and Breakends__ {.tabset .tabset-fade}
 
-#### Main {.tabset}
-
-##### Prioritised
+#### Prioritised
 
 ```{r}
-sv.dt$prioritised
+sv.dt$annotations
 ```
 
 ```{r, results='asis'}
 blank_lines(2)
 ```
 
-##### Many transcripts
+#### Filtered
 
 ```{r}
-sv.dt$many_transcripts_prioritised
+sv.dt$annotations_filtered
 ```
 
 ```{r, results='asis'}
 blank_lines(2)
 ```
 
-#### Other {.tabset}
-
-##### Unprioritised
+#### Many Transcripts
 
 ```{r}
-sv.dt$unprioritised
-```
-
-```{r, results='asis'}
-blank_lines(2)
-```
-
-##### Many transcripts
-
-```{r}
-sv.dt$many_transcripts_unprioritised
-```
-
-```{r, results='asis'}
-blank_lines(2)
-```
-
-##### PURPLE inferred
-
-```{r}
-sv.dt$purple_inferred
+sv.dt$many_transcripts
 ```
 
 ```{r, results='asis'}
@@ -1028,10 +1045,6 @@ blank_lines(2)
 ```
 
 ### __Copy number variants__ {.tabset .tabset-fade}
-
-```{r}
-cnv <- gpgr::process_cnv_tsv(params$purple_som_cnv_ann)
-```
 
 ```{r}
 cnv.dt <- cnv |> purrr::map(function(x) {
@@ -1047,94 +1060,40 @@ cnv.dt <- cnv |> purrr::map(function(x) {
 })
 ```
 
-#### Main {.tabset}
-
-##### Small
+#### Prioritised
 
 ```{r}
-cnv.dt$small
+cnv.dt$annotations
 ```
 
 ```{r, results='asis'}
 blank_lines(2)
 ```
 
-##### Medium
+#### Filtered
 
 ```{r}
-cnv.dt$medium
+cnv.dt$filtered
 ```
 
 ```{r, results='asis'}
 blank_lines(2)
 ```
 
-##### Large
+#### Many Genes
 
 ```{r}
-cnv.dt$large
+cnv.dt$many_genes
 ```
 
 ```{r, results='asis'}
 blank_lines(2)
 ```
 
-##### Many genes
-
-```{r}
-cnv.dt$many_genes_prioritised
-```
-
-```{r, results='asis'}
-blank_lines(2)
-```
-
-##### Many transcripts
+#### Many Transcripts
 
 ```{r}
 cnv.dt$many_transcripts
-```
-
-```{r, results='asis'}
-blank_lines(2)
-```
-
-#### Other {.tabset}
-
-##### Unprioritised
-
-```{r}
-cnv.dt$unprioritised
-```
-
-```{r, results='asis'}
-blank_lines(2)
-```
-
-##### Many genes
-
-```{r}
-cnv.dt$many_genes_unprioritised
-```
-
-```{r, results='asis'}
-blank_lines(2)
-```
-
-##### Fusions
-
-```{r}
-cnv.dt$fusion
-```
-
-```{r, results='asis'}
-blank_lines(2)
-```
-
-##### Chromosome
-
-```{r}
-cnv.dt$chromsome
 ```
 
 ```{r, results='asis'}
