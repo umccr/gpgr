@@ -755,6 +755,15 @@ blank_lines(1)
 <details>
 <summary>Description</summary>
 
+__DRAGEN__
+
+Following scores are shown:
+
+- HRD: homologous recombination deficiency
+- LOH: loss of heterozygosity
+- TAI: telomeric allelic imbalance
+- LST: large-scale state transitions
+
 __CHORD__
 
 For more details see <https://github.com/UMCUGenetics/CHORD>.
