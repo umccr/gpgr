@@ -9,6 +9,7 @@ cancer_rmd(
   af_keygenes,
   batch_name,
   conda_list,
+  dragen_hrd,
   img_dir,
   key_genes,
   oncokb_genes,
