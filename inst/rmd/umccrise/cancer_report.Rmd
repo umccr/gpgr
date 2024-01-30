@@ -14,6 +14,7 @@ params:
   af_keygenes: NULL
   batch_name: NULL
   conda_list: NULL
+  dragen_hrd: NULL
   img_dir: NULL
   key_genes: NULL
   oncokb_genes: NULL
@@ -113,6 +114,7 @@ sv_detail_table <- function(tab) {
 
 ```{r hrd_prep, results='hide'}
 #---- Homologous Recombination Deficiency ----#
+dragen_hrd_res <- gpgr::dragen_hrd(params$dragen_hrd)
 chord_res <- sigrap::chord_run(
   vcf.snv = params$somatic_snv_vcf,
   vcf.sv = params$somatic_sv_vcf,
@@ -317,6 +319,7 @@ snv_summary <- snv_summary_counts |>
   paste(collapse = "; ")
 
 hrd_summary <- list(
+  dragen = dragen_hrd_res[, "HRD", drop = TRUE],
   chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
   hrdetect = hrdetect_res[, "Probability", drop = TRUE]
 )
@@ -334,9 +337,9 @@ if (no_sv_found) {
   sv_summary <- tibble(unmelted = c(0), melted = c(0))
 } else {
   sv_summary <- list(
-      unmelted = sv$map %>% dplyr::select(Type),
-      melted = sv$map_melted %>% dplyr::select(Type)
-    ) %>%
+    unmelted = sv$map %>% dplyr::select(Type),
+    melted = sv$map_melted %>% dplyr::select(Type)
+  ) %>%
     purrr::map(function(x) addmargins(table(x, useNA = "ifany"))) %>%
     do.call("rbind", .) %>%
     as.data.frame() %>%
@@ -358,8 +361,8 @@ qc_summary_all <- dplyr::tribble(
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
   "2020 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)",
-  6, "HRD", glue::glue("CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"),
-  "Homologous recombination deficiency probability.",
+  6, "HRD", glue::glue("DRAGEN: {hrd_summary$dragen}; CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"),
+  "Homologous recombination deficiency score (DRAGEN) / probability (CHORD/HRDetect).",
   20, "CNVs (Somatic)", glue::glue(
     "Min: {cnv_summary[['som']]$Min}; ",
     "Max: {cnv_summary[['som']]$Max}; ",
@@ -796,10 +799,11 @@ that includes HRDetect.
 
 </details>
 
-```{r chord_hrdetect_res}
-hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, chord_res)
+```{r chord_hrdetect_dragen_res}
+hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, chord_res, dragen_hrd_res)
 gpgr::write_tsvjsongz(chord_res[["prediction"]], glue("hrd/{bnm}-chord"), result_outdir)
 gpgr::write_tsvjsongz(hrdetect_res, glue("hrd/{bnm}-hrdetect"), result_outdir)
+gpgr::write_tsvjsongz(dragen_hrd_res, glue("hrd/{bnm}-dragen"), result_outdir)
 hrd_results$hrd_results_gt
 ```
 
@@ -1268,7 +1272,7 @@ if (nrow(vb_summary$tab) > 0) {
       buttons = c("csv", "excel"), dom = "Blfrtip"
     )
   ) |>
-  DT::formatCurrency(~ Length + Reads, currency = "", interval = 3, mark = ",", digits = 0)
+    DT::formatCurrency(~ Length + Reads, currency = "", interval = 3, mark = ",", digits = 0)
 } else {
   cat("No oncoviral content detected.")
 }
@@ -1286,7 +1290,6 @@ vb_integrations <- gpgr::virusbreakend_vcf_read(params$virusbreakend_vcf)
 details::details(knitr::kable(vb_integrations$descr), lang = "none", summary = "Column Description")
 
 if (nrow(vb_integrations$tab) > 0) {
-
   format_common_cols <- c(
     "Position",
     "Fragment support",
@@ -1303,8 +1306,7 @@ if (nrow(vb_integrations$tab) > 0) {
       buttons = c("csv", "excel"), dom = "Blfrtip"
     )
   ) |>
-  DT::formatCurrency(format_common_cols, currency = "", interval = 3, mark = ",", digits = 0)
-
+    DT::formatCurrency(format_common_cols, currency = "", interval = 3, mark = ",", digits = 0)
 } else {
   cat("No oncoviral integrations detected.")
 }
