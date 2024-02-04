@@ -1,3 +1,48 @@
+#' Parse bcftools stats File
+#'
+#' Parses bcftools stats `bcftools_stats.txt` file.
+#'
+#' @param x Path to bcftools stats `bcftools_stats.txt` file.
+#' @return A ggplot2 object.
+#' @export
+bcftools_stats_plot <- function(x = NULL) {
+  if (is.null(x)) {
+    return(NULL)
+  }
+  cnames <- c("QUAL_dummy", "id", "qual", "snps", "transi", "transv", "indels")
+  ln <- readr::read_lines(x)
+  d1 <- ln[grepl("QUAL", ln)]
+  # line1 ignore, line2 is colnames, just clean those up
+  d <- d1[3:length(d1)] |>
+    I() |>
+    readr::read_tsv(
+      col_names = cnames, col_types = readr::cols(.default = "d", "QUAL_dummy" = "c")
+    ) |>
+    dplyr::select(-"QUAL_dummy")
+  if (nrow(d) == 0) {
+    return(NULL)
+  }
+  d <- d |>
+    dplyr::select("qual", "snps") |>
+    tidyr::uncount(.data$snps) |>
+    dplyr::select("qual")
+  med <- median(d$qual, na.rm = TRUE)
+  tot <- nrow(d)
+  p <- d |>
+    ggplot2::ggplot(ggplot2::aes(x = .data$qual)) +
+    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), binwidth = 4, fill = "lightblue") +
+    ggplot2::geom_density(alpha = 0.6) +
+    ggplot2::geom_vline(xintercept = med, colour = "blue", linetype = "dashed") +
+    ggplot2::annotate(
+      geom = "label", x = med + 1, y = +Inf, vjust = 2,
+      label = paste0("Median: ", med),
+    ) +
+    ggplot2::theme_bw() +
+    ggplot2::ggtitle(glue::glue("Somatic variant quality score distribution (tot: {tot})"))
+  p
+}
+
+
 #' Parse DRAGEN HRD File
 #'
 #' Parses DRAGEN `hrdscore.csv` file.
