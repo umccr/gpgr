@@ -2,6 +2,7 @@
 
 export(abbreviate_effect)
 export(af_summary)
+export(bcftools_stats_plot)
 export(cancer_rmd)
 export(count_pieces)
 export(date_log)

@@ -87,7 +87,7 @@ linx_rmd <- function(sample, table_dir, plot_dir, out_file = NULL, quiet = FALSE
 #'
 #' @return Path to rendered HTML report.
 #' @export
-cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, dragen_hrd, img_dir, key_genes,
+cancer_rmd <- function(af_global, af_keygenes, batch_name, bcftools_stats, conda_list, dragen_hrd, img_dir, key_genes,
                        oncokb_genes, virusbreakend_tsv, virusbreakend_vcf, purple_purity, purple_qc,
                        purple_som_cnv_ann, purple_som_cnv, purple_som_gene_cnv, purple_som_snv_vcf,
                        somatic_snv_vcf, somatic_snv_summary, somatic_sv_tsv, somatic_sv_vcf,
@@ -118,6 +118,7 @@ cancer_rmd <- function(af_global, af_keygenes, batch_name, conda_list, dragen_hr
     af_global = af_global,
     af_keygenes = af_keygenes,
     batch_name = batch_name,
+    bcftools_stats = bcftools_stats,
     conda_list = conda_list,
     dragen_hrd = dragen_hrd,
     img_dir = img_dir_b,

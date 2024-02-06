@@ -13,6 +13,7 @@ params:
   af_global: NULL
   af_keygenes: NULL
   batch_name: NULL
+  bcftools_stats: NULL
   conda_list: NULL
   dragen_hrd: NULL
   img_dir: NULL
@@ -491,6 +492,14 @@ af_summary_results$af_plot
 ```{r, results='asis'}
 blank_lines(1)
 ```
+
+### __Variant Quality Scores__ {#var-qual}
+
+```{r bcftools_stats_plot, fig.width=8, fig.height=4}
+params$bcftools_stats |>
+  gpgr::bcftools_stats_plot()
+```
+
 
 ### __SNV__ Signatures {.tabset .tabset-fade #sig-snv}
 
