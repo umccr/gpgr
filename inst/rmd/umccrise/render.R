@@ -13,6 +13,7 @@ params <- list(
   af_global = glue("{umccrised_dir}/sample_data/af_tumor.txt"),
   af_keygenes = glue("{umccrised_dir}/sample_data/af_tumor_keygenes.txt"),
   batch_name = batch_name,
+  bcftools_stats = glue("{umccrised_dir}/sample_data/{tumor_name}.somatic.bcftools_stats.txt"),
   conda_list = NULL,
   dragen_hrd = glue("{umccrised_dir}/sample_data/{tumor_name}.hrdscore.csv"),
   img_dir = glue("{umccrised_dir}/output/img"),
