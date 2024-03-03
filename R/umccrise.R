@@ -23,8 +23,8 @@ bcftools_stats_plot <- function(x = NULL) {
     return(NULL)
   }
   d <- d |>
-    dplyr::select("qual", "snps") |>
-    tidyr::uncount(.data$snps) |>
+    dplyr::select("qual", "snps", "indels") |>
+    tidyr::uncount(.data$snps + .data$indels) |>
     dplyr::select("qual")
   med <- median(d$qual, na.rm = TRUE)
   tot <- nrow(d)
