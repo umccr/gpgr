@@ -41,8 +41,8 @@ purple_cnv_som_gene_read <- function(x) {
 #'
 #' @param x Path to `purple.cnv.gene.tsv` file.
 #' @param g Path to gene file containing at least three columns:
-#' * `symbol`: gene name (character).
-#' * `tumorsuppressor`: is this gene a tumor suppressor (TRUE/FALSE).
+#' * `ensembl_gene_symbol`: gene name (character).
+#' * `tsgene`: is this gene a tumor suppressor (TRUE/FALSE).
 #' * `oncogene`: is this gene an oncogene (TRUE/FALSE).
 #'
 #' @return List with two elements:
@@ -64,18 +64,18 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
   }
   genes <-
     readr::read_tsv(g, col_types = readr::cols(
-      symbol = "c", oncogene = "l", tumorsuppressor = "l"
+      ensembl_gene_symbol = "c", oncogene = "l", tsgene = "l"
     )) |>
-    dplyr::select("symbol", "oncogene", "tumorsuppressor")
+    dplyr::select("ensembl_gene_symbol", "oncogene", "tsgene")
   oncogenes <- genes |>
     dplyr::filter(.data$oncogene) |>
-    dplyr::pull(.data$symbol)
+    dplyr::pull(.data$ensembl_gene_symbol)
   tsgenes <- genes |>
-    dplyr::filter(.data$tumorsuppressor) |>
-    dplyr::pull(.data$symbol)
+    dplyr::filter(.data$tsgene) |>
+    dplyr::pull(.data$ensembl_gene_symbol)
 
   purple_cnv_gene <- purple_cnv_gene |>
-    dplyr::filter(.data$gene %in% genes$symbol) |>
+    dplyr::filter(.data$gene %in% genes$ensembl_gene_symbol) |>
     dplyr::mutate(
       chromosome = as.factor(.data$chromosome),
       transcriptID = paste0(.data$transcriptId),
