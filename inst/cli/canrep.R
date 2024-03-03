@@ -19,6 +19,7 @@ canrep_add_args <- function(subp) {
   canrep$add_argument("--purple_som_snv_vcf", help = "Path to `purple.somatic.vcf.gz`.", required = TRUE)
   canrep$add_argument("--virusbreakend_tsv", help = "Path to VIRUSBreakend summary file.", required = TRUE)
   canrep$add_argument("--virusbreakend_vcf", help = "Path to VIRUSBreakend VCF file.", required = TRUE)
+  canrep$add_argument("--dragen_hrd", help = "Path to DRAGEN HRD file", required = TRUE)
   canrep$add_argument("--out_file", help = "Path to output HTML file (needs '.html' suffix) [def: {tumor_name}_cancer_report.html].")
   canrep$add_argument("--quiet", help = "Suppress log printing during rendering.", action = "store_true")
   canrep$add_argument("--result_outdir", help = "Path to directory to write tidy JSON/TSV results.", required = TRUE)
@@ -47,6 +48,7 @@ canrep_parse_args <- function(args) {
     purple_som_snv_vcf = args$purple_som_snv_vcf,
     virusbreakend_tsv = args$virusbreakend_tsv,
     virusbreakend_vcf = args$virusbreakend_vcf,
+    dragen_hrd = args$dragen_hrd,
     out_file = args$out_file,
     quiet = args$quiet,
     result_outdir = args$result_outdir,
