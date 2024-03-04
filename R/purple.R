@@ -556,7 +556,7 @@ purple_qc_read <- function(x) {
     "QCStatus", "Method", "CopyNumberSegments",
     "UnsupportedCopyNumberSegments", "Purity", "AmberGender",
     "CobaltGender", "DeletedGenes", "Contamination", "GermlineAberrations",
-    "AmberMeanDepth"
+    "AmberMeanDepth", "LohPercent"
   )
 
   assertthat::assert_that(all(purple_qc$key == nm))
@@ -622,7 +622,6 @@ purple_purity_read <- function(x) {
     "maxPloidy", "d",
     "minDiploidProportion", "d",
     "maxDiploidProportion", "d",
-    "version", "c",
     "somaticPenalty", "d",
     "wholeGenomeDuplication", "c",
     "msIndelsPerMb", "d",
