@@ -17,8 +17,7 @@ List with two elements:
 }
 }
 \description{
-Processes the \code{purple.cnv.somatic.tsv} file.
-and selects columns of interest.
+Processes the \code{purple.cnv.somatic.tsv} file and selects columns of interest.
 }
 \examples{
 x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")

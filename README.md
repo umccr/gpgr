@@ -120,13 +120,12 @@ export PATH="${gpgr_cli}:${PATH}"
                          SOMATIC_SNV_SUMMARY --somatic_snv_vcf SOMATIC_SNV_VCF
                          --somatic_sv_tsv SOMATIC_SV_TSV --somatic_sv_vcf
                          SOMATIC_SV_VCF --purple_som_gene_cnv PURPLE_SOM_GENE_CNV
-                         --purple_som_cnv PURPLE_SOM_CNV --purple_germ_cnv
-                         PURPLE_GERM_CNV --purple_purity PURPLE_PURITY --purple_qc
-                         PURPLE_QC --purple_som_snv_vcf PURPLE_SOM_SNV_VCF
-                         --oncoviral_present_viruses ONCOVIRAL_PRESENT_VIRUSES
-                         --oncoviral_breakpoints_tsv ONCOVIRAL_BREAKPOINTS_TSV
-                         [--out_file OUT_FILE] [--quiet] --result_outdir
-                         RESULT_OUTDIR --tumor_name TUMOR_NAME
+                         --purple_som_cnv PURPLE_SOM_CNV --purple_purity
+                         PURPLE_PURITY --purple_qc PURPLE_QC --purple_som_snv_vcf
+                         PURPLE_SOM_SNV_VCF --oncoviral_present_viruses
+                         ONCOVIRAL_PRESENT_VIRUSES --oncoviral_breakpoints_tsv
+                         ONCOVIRAL_BREAKPOINTS_TSV [--out_file OUT_FILE] [--quiet]
+                         --result_outdir RESULT_OUTDIR --tumor_name TUMOR_NAME
 
     options:
       -h, --help            show this help message and exit
@@ -153,8 +152,6 @@ export PATH="${gpgr_cli}:${PATH}"
                             Path to `purple.cnv.gene.tsv`.
       --purple_som_cnv PURPLE_SOM_CNV
                             Path to `purple.cnv.somatic.tsv`.
-      --purple_germ_cnv PURPLE_GERM_CNV
-                            Path to `purple.cnv.germline.tsv`.
       --purple_purity PURPLE_PURITY
                             Path to `purple.purity.tsv`.
       --purple_qc PURPLE_QC

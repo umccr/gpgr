@@ -24,7 +24,6 @@ $gpgr_cli canrep \
   --somatic_sv_vcf "${umccrised_dir}/${batch_name}/structural/${batch_name}-manta.vcf.gz" \
   --purple_som_gene_cnv "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.cnv.gene.tsv" \
   --purple_som_cnv "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.cnv.somatic.tsv" \
-  --purple_germ_cnv "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.cnv.germline.tsv" \
   --purple_purity "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.purity.tsv" \
   --purple_qc "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.qc" \
   --purple_som_snv_vcf "${umccrised_dir}/work/${batch_name}/purple/${batch_name}.purple.somatic.vcf.gz" \

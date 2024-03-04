@@ -10,7 +10,7 @@ test_that("Function purple_cnv_som_gene_read() @ L18", {
 })
 
 
-test_that("Function purple_cnv_som_gene_process() @ L62", {
+test_that("Function purple_cnv_som_gene_process() @ L60", {
   
   x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
   g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
@@ -19,7 +19,7 @@ test_that("Function purple_cnv_som_gene_process() @ L62", {
 })
 
 
-test_that("Function purple_cnv_som_read() @ L147", {
+test_that("Function purple_cnv_som_read() @ L449", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (p <- purple_cnv_som_read(x))
@@ -27,7 +27,7 @@ test_that("Function purple_cnv_som_read() @ L147", {
 })
 
 
-test_that("Function purple_cnv_som_process() @ L181", {
+test_that("Function purple_cnv_som_process() @ L482", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (pp <- purple_cnv_som_process(x))
@@ -35,33 +35,7 @@ test_that("Function purple_cnv_som_process() @ L181", {
 })
 
 
-test_that("Function purple_cnv_germ_read() @ L248", {
-  
-  x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
-  (p <- purple_cnv_germ_read(x))
-  expect_equal(colnames(p)[ncol(p)], "majorAlleleCopyNumber")
-})
-
-
-test_that("Function purple_cnv_germ_process() @ L272", {
-  
-  x <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr")
-  (pp <- purple_cnv_germ_process(x))
-  expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
-})
-
-
-test_that("Function purple_version_read() @ L297", {
-  
-  x <- system.file("extdata/purple/purple.version", package = "gpgr")
-  (v <- purple_version_read(x))
-  expect_equal(length(v), 2)
-  expect_equal(names(v), c("version", "build_date"))
-  expect_equal(v$version, "2.51")
-})
-
-
-test_that("Function purple_qc_read() @ L323", {
+test_that("Function purple_qc_read() @ L550", {
   
   x <- system.file("extdata/purple/purple.qc", package = "gpgr")
   (q <- purple_qc_read(x))
@@ -69,7 +43,7 @@ test_that("Function purple_qc_read() @ L323", {
 })
 
 
-test_that("Function purple_purity_read() @ L378", {
+test_that("Function purple_purity_read() @ L608", {
   
   x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
   (p <- purple_purity_read(x))

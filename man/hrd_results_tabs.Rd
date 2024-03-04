@@ -4,12 +4,14 @@
 \alias{hrd_results_tabs}
 \title{HRDetect and CHORD Summary Table}
 \usage{
-hrd_results_tabs(hrdetect_res, chord_res)
+hrd_results_tabs(hrdetect_res, chord_res, dragen_res)
 }
 \arguments{
 \item{hrdetect_res}{Result from running \code{\link[sigrap:hrdetect_run]{sigrap::hrdetect_run()}}.}
 
 \item{chord_res}{Result from running \code{\link[sigrap:chord_run]{sigrap::chord_run()}}.}
+
+\item{dragen_res}{Result from running \code{\link[=dragen_hrd]{dragen_hrd()}}.}
 }
 \value{
 A list with a tibble and a gt_tbl object (see \code{\link[gt:gt]{gt::gt()}}).
@@ -30,7 +32,8 @@ chord_res <- sigrap::chord_run(
   vcf.snv = snv, sample.name = nm,
   df.sv = gpgr:::chord_mantavcf2df(sv)
 )
-hrd_results_tabs(hrdetect_res = hrdetect_res, chord_res = chord_res)
+dragen_res <- gpgr::dragen_hrd("path/to/sample.hrdscore.csv")
+hrd_results_tabs(hrdetect_res = hrdetect_res, chord_res = chord_res, dragen_res = dragen_res)
 }
 
 }
