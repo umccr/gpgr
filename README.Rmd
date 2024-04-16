@@ -40,15 +40,6 @@ conda install r-gpgr -c umccr -c conda-forge -c bioconda
 
 ## Main modules
 
-### 🕸 LINX {#id_-linx}
-
-- Generate a HTML report with results from the `LINX` structural variant
-  visualisation tool from the Hartwig Medical Foundation
-  (<https://github.com/hartwigmedical/hmftools/tree/master/linx>).
-  See the [CLI](#cli) section below for options.
-- For useful functions for reading/processing `LINX` results, see the vignette at
-  <https://umccr.github.io/gpgr/articles/linx.html>.
-
 ### 🔮 PURPLE {#id_-purple}
 
 - Read and process output files from the `PURPLE` purity/copy number estimator
@@ -87,10 +78,6 @@ echo "gpgr.R --version" & gpgr.R --version
 echo ""
 echo "#-----------------------------------#"
 echo "gpgr.R --help" & gpgr.R --help
-echo ""
-echo "#-----------------------------------#"
-echo "#------- LINX Report -------#"
-echo "gpgr.R linx --help" & gpgr.R linx --help
 echo ""
 echo "#-----------------------------------#"
 echo "#------- Cancer Report -------#"
