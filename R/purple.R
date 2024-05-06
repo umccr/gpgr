@@ -36,12 +36,12 @@ purple_cnv_som_gene_read <- function(x) {
 #' Process PURPLE CNV Gene File for UMCCRISE
 #'
 #' Processes the `purple.cnv.gene.tsv` file. Keeps genes that are in the
-#' [UMCCR cancer gene list](https://github.com/umccr/genes/blob/893a655801ce92715f05517b5052e4e81904e870/panels/umccr_2019-03-20.tsv)
-#' and selects columns of interest.
+#' UMCCR cancer gene list
+#' ([v24.03.0](https://raw.githubusercontent.com/umccr/gene_panels/v24.03.0/somatic_panel/3_final_panel/final_panel.tsv)) and selects columns of interest.
 #'
 #' @param x Path to `purple.cnv.gene.tsv` file.
 #' @param g Path to gene file containing at least three columns:
-#' * `ensembl_gene_symbol`: gene name (character).
+#' * `symbol`: gene name (character).
 #' * `tsgene`: is this gene a tumor suppressor (TRUE/FALSE).
 #' * `oncogene`: is this gene an oncogene (TRUE/FALSE).
 #'
@@ -51,7 +51,7 @@ purple_cnv_som_gene_read <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
-#' g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
+#' g <- system.file("extdata/ref/umccr_cancer_genes_v24.03.0.tsv", package = "gpgr")
 #' (pp <- purple_cnv_som_gene_process(x, g))
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "minRegSupportStartEndMethod")
@@ -60,22 +60,21 @@ purple_cnv_som_gene_read <- function(x) {
 purple_cnv_som_gene_process <- function(x, g = NULL) {
   purple_cnv_gene <- purple_cnv_som_gene_read(x)
   if (is.null(g)) {
-    g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
+    g <- system.file("extdata/ref/umccr_cancer_genes_v24.03.0.tsv", package = "gpgr")
   }
   genes <-
     readr::read_tsv(g, col_types = readr::cols(
-      ensembl_gene_symbol = "c", oncogene = "l", tsgene = "l"
+      symbol = "c", oncogene = "l", tumorsuppressor = "l"
     )) |>
-    dplyr::select("ensembl_gene_symbol", "oncogene", "tsgene")
+    dplyr::select("symbol", "oncogene", tsgene = "tumorsuppressor")
   oncogenes <- genes |>
     dplyr::filter(.data$oncogene) |>
-    dplyr::pull(.data$ensembl_gene_symbol)
+    dplyr::pull(.data$symbol)
   tsgenes <- genes |>
     dplyr::filter(.data$tsgene) |>
-    dplyr::pull(.data$ensembl_gene_symbol)
-
+    dplyr::pull(.data$symbol)
   purple_cnv_gene <- purple_cnv_gene |>
-    dplyr::filter(.data$gene %in% genes$ensembl_gene_symbol) |>
+    dplyr::filter(.data$gene %in% genes$symbol) |>
     dplyr::mutate(
       chromosome = as.factor(.data$chromosome),
       transcriptID = paste0(.data$transcriptId),

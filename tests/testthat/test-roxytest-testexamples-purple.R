@@ -13,13 +13,13 @@ test_that("Function purple_cnv_som_gene_read() @ L18", {
 test_that("Function purple_cnv_som_gene_process() @ L60", {
   
   x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
-  g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
+  g <- system.file("extdata/ref/umccr_cancer_genes_v24.03.0.tsv", package = "gpgr")
   (pp <- purple_cnv_som_gene_process(x, g))
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "minRegSupportStartEndMethod")
 })
 
 
-test_that("Function purple_cnv_som_read() @ L445", {
+test_that("Function purple_cnv_som_read() @ L444", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (p <- purple_cnv_som_read(x))
@@ -27,7 +27,7 @@ test_that("Function purple_cnv_som_read() @ L445", {
 })
 
 
-test_that("Function purple_cnv_som_process() @ L478", {
+test_that("Function purple_cnv_som_process() @ L477", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (pp <- purple_cnv_som_process(x))
@@ -35,7 +35,7 @@ test_that("Function purple_cnv_som_process() @ L478", {
 })
 
 
-test_that("Function purple_qc_read() @ L546", {
+test_that("Function purple_qc_read() @ L545", {
   
   x <- system.file("extdata/purple/purple.qc", package = "gpgr")
   (q <- purple_qc_read(x))
@@ -43,7 +43,7 @@ test_that("Function purple_qc_read() @ L546", {
 })
 
 
-test_that("Function purple_purity_read() @ L604", {
+test_that("Function purple_purity_read() @ L603", {
   
   x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
   (p <- purple_purity_read(x))
