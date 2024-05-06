@@ -29,9 +29,9 @@ split_double_col <- function(d, nms) {
   assertthat::assert_that(is.character(nms))
 
   outd <- d |>
-    dplyr::select(tidyselect::all_of(nms)) |>
+    dplyr::select(dplyr::all_of(nms)) |>
     dplyr::mutate(num = dplyr::row_number()) |>
-    tidyr::pivot_longer(cols = tidyselect::all_of(nms), names_to = "col_nm", values_to = "x1_x2") |>
+    tidyr::pivot_longer(cols = dplyr::all_of(nms), names_to = "col_nm", values_to = "x1_x2") |>
     tidyr::separate(.data$x1_x2, into = c("x1", "x2"), sep = ",", fill = "right") |>
     dplyr::mutate(
       x1 = round(as.double(.data$x1), 2),

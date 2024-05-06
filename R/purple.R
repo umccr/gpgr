@@ -643,7 +643,7 @@ purple_purity_read <- function(x) {
 
   purple_purity <- purple_purity |>
     dplyr::mutate(
-      dplyr::across(tidyselect::where(is.numeric), \(x) round(x, 2)),
+      dplyr::across(dplyr::where(is.numeric), \(x) round(x, 2)),
       dplyr::across(dplyr::everything(), as.character)
     ) |>
     tidyr::pivot_longer(dplyr::everything(), names_to = "column", values_to = "value") |>
@@ -745,7 +745,7 @@ purple_kataegis <- function(x) {
 
   data <- d$data |>
     dplyr::filter(!is.na(.data$KT)) |>
-    dplyr::select(c("CHROM", "POS", tidyselect::all_of(info_cols)))
+    dplyr::select(c("CHROM", "POS", dplyr::all_of(info_cols)))
 
   description <- d$description |>
     dplyr::filter(.data$ID %in% info_cols) |>
