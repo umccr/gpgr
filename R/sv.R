@@ -297,7 +297,10 @@ set_many_transcripts_sv <- function(x) {
   )
 }
 
-#' @param x Path to something.
+#' Process SV TSV
+#'
+#' @param x Path to SV TSV.
+#' @return List of many things.
 #'
 #' @export
 process_sv <- function(x) {
@@ -329,13 +332,13 @@ process_sv <- function(x) {
       ),
       start = paste(.data$chrom, base::format(.data$start, big.mark = ",", trim = TRUE), sep = ":"),
       Type = ifelse(is.na(.data$PURPLE_status), .data$svtype, "PURPLE_inf"),
-      "Record ID" = dplyr::row_number(),
+      "Record ID" = dplyr::row_number()
     ) |>
     dplyr::select(-c(
       "chrom",
       "PURPLE_status",
       "tier",
-      "svtype",
+      "svtype"
     ))
 
   # Split out breakpoints for merging
@@ -349,7 +352,7 @@ process_sv <- function(x) {
   cols_to_split <- c("AF_PURPLE", "CN_PURPLE")
   double_cols <- split_double_col(sv.tmp, cols_to_split)
   sv.tmp <- sv.tmp |>
-    dplyr::select(-c("cols_to_split")) |>
+    dplyr::select(-c(dplyr::all_of(cols_to_split))) |>
     dplyr::bind_cols(double_cols)
 
   # Format a table for to be used as the SV Map
@@ -372,7 +375,7 @@ process_sv <- function(x) {
       "IC_alt",
       "SR_PR_ref",
       "PURPLE AF" = "AF_PURPLE",
-      "PURPLE CN" = "CN_PURPLE",
+      "PURPLE CN" = "CN_PURPLE"
     ) |>
     dplyr::arrange(.data$`Record ID`)
 
@@ -381,17 +384,17 @@ process_sv <- function(x) {
     # Split into individual annotations
     dplyr::mutate(annotation = strsplit(.data$annotation, ",")) |>
     # Convert annotation fields into columns
-    tidyr::unnest(.data$annotation) |>
-    tidyr::separate(
-      .data$annotation, c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier"),
-      sep = "\\|", convert = FALSE
+    tidyr::unnest("annotation") |>
+    tidyr::separate_wider_delim(
+      cols = "annotation", delim = "|",
+      names = c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier")
     ) |>
     # Remove gene_fusion annotations for variants where frameshift_variant&gene_fusion already exist
-    dplyr::group_by(dplyr::across(-.data$Effect)) |>
+    dplyr::group_by(dplyr::across(-"Effect")) |>
     dplyr::group_modify(remove_gene_fusion_dups) |>
     dplyr::ungroup() |>
     # Remove unused columns
-    dplyr::select(c(-.data$Event, -.data$ALT)) |>
+    dplyr::select(-c("Event", "ALT")) |>
     # Create columns, modify others
     dplyr::mutate(
       "Annotation ID" = dplyr::row_number(),
@@ -432,7 +435,7 @@ process_sv <- function(x) {
       "PURPLE CN" = "CN_PURPLE",
       # Dropped after ops for non-map outputs
       "Top Tier",
-      "Type",
+      "Type"
     )
 
   # Create and set many transcript values
@@ -464,8 +467,8 @@ process_sv <- function(x) {
 #' @return A ggplot2 plot object.
 #'
 #' @examples
-#' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-#' d <- process_sv(x)$unmelted
+#' x <- system.file("extdata/sash/sv.prioritised.tsv", package = "gpgr")
+#' d <- process_sv(x)$map
 #' plot_bnd_sr_pr_tot_lines(d)
 #' @export
 plot_bnd_sr_pr_tot_lines <- function(d,
@@ -527,8 +530,8 @@ plot_bnd_sr_pr_tot_lines <- function(d,
 #' @return A ggplot2 plot object.
 #'
 #' @examples
-#' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-#' d <- process_sv(x)$unmelted
+#' x <- system.file("extdata/sash/sv.prioritised.tsv", package = "gpgr")
+#' d <- process_sv(x)$map
 #' plot_bnd_sr_pr_tot_hist(d, "a title")
 #' @export
 plot_bnd_sr_pr_tot_hist <- function(d,

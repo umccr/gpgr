@@ -71,9 +71,9 @@ cancer_rmd(
 
 \item{somatic_snv_summary}{Path to \code{somatic_snv_summary.json} JSON.}
 
-\item{somatic_sv_tsv}{Path to \code{manta.tsv} TSV file.}
+\item{somatic_sv_tsv}{Path to SV TSV file.}
 
-\item{somatic_sv_vcf}{Path to \code{manta.vcf.gz} VCF file.}
+\item{somatic_sv_vcf}{Path to SV VCF file.}
 
 \item{result_outdir}{Path to directory to write tidy JSON/TSV results.}
 

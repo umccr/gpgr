@@ -25,7 +25,7 @@ Plots histograms for the number of split reads (\code{SR}), paired end reads (\c
 sum (\code{tot}) across all BNDs. Observations where the SR or PR value is 0 (NA) are not shown.
 }
 \examples{
-x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-d <- process_sv(x)$unmelted
+x <- system.file("extdata/sash/sv.prioritised.tsv", package = "gpgr")
+d <- process_sv(x)$map
 plot_bnd_sr_pr_tot_hist(d, "a title")
 }

@@ -1,5 +1,8 @@
+#' Read OncoKB
+#'
 #' @param x Path to something.
 #'
+#' @return Vector of genes.
 #' @export
 read_oncokb <- function(x) {
   readr::read_tsv(x) |>
@@ -9,8 +12,11 @@ read_oncokb <- function(x) {
     dplyr::pull("Hugo Symbol")
 }
 
+#' Get OncoKB Genes From Somewhere
+#'
 #' @param x Path to something.
-#' @param oncokb_genes Tibble of something.
+#' @param oncokb_genes A tibble of something.
+#' @return A vector I think.
 #'
 #' @export
 get_oncokb_genes <- function(x, oncokb_genes) {

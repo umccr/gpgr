@@ -319,7 +319,11 @@ set_many_transcripts_cnv <- function(x) {
   )
 }
 
+#' Process CNV TSV
+#'
 #' @param x Path to something.
+#'
+#' @return List of many things.
 #'
 #' @export
 process_cnv_tsv <- function(x) {
@@ -342,19 +346,18 @@ process_cnv_tsv <- function(x) {
     dplyr::mutate(annotation = strsplit(.data$simple_ann, ",")) |>
     # Convert annotation fields into columns
     tidyr::unnest("annotation") |>
-    tidyr::separate(
-      "annotation",
-      c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier"),
-      sep = "\\|", convert = FALSE
+    tidyr::separate_wider_delim(
+      cols = "annotation", delim = "|",
+      names = c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier")
     ) |>
     # Create new columns and modify existing ones
     dplyr::mutate(
-      copyNumber = as.numeric(.data$copyNumber) |> round(2) %>% sprintf("%.2f", .),
-      minorAlleleCopyNumber = as.numeric(minorAlleleCopyNumber) |> round(2) %>% sprintf("%.2f", .),
-      majorAlleleCopyNumber = as.numeric(majorAlleleCopyNumber) |> round(2) %>% sprintf("%.2f", .),
-      "PURPLE CN Min+Maj" = paste0(minorAlleleCopyNumber, "+", majorAlleleCopyNumber),
-      "Genes" = stringr::str_replace_all(Genes, "&", ", "),
-      "Transcripts" = stringr::str_replace_all(Transcripts, "&", ", "),
+      copyNumber = sprintf("%.2f", round(as.numeric(.data$copyNumber), 2)),
+      minorAlleleCopyNumber = sprintf("%.2f", round(as.numeric(.data$minorAlleleCopyNumber), 2)),
+      majorAlleleCopyNumber = sprintf("%.2f", round(as.numeric(.data$majorAlleleCopyNumber), 2)),
+      "PURPLE CN Min+Maj" = paste0(.data$minorAlleleCopyNumber, "+", .data$majorAlleleCopyNumber),
+      "Genes" = stringr::str_replace_all(.data$Genes, "&", ", "),
+      "Transcripts" = stringr::str_replace_all(.data$Transcripts, "&", ", ")
     ) |>
     # Remove unused columns
     dplyr::select(-c(
@@ -369,7 +372,7 @@ process_cnv_tsv <- function(x) {
       "segmentEndSupport",
       "segmentStartSupport",
       "sv_top_tier",
-      "simple_ann",
+      "simple_ann"
     ))
 
   # Abbreviate effects
@@ -382,10 +385,10 @@ process_cnv_tsv <- function(x) {
   # Complete processing
   cnv.tmp <- cnv.annotations.split$retained |>
     # Reset sv_top_tier after removing annotations
-    dplyr::group_by(`Event ID`) |>
+    dplyr::group_by(.data$`Event ID`) |>
     dplyr::mutate(
       sv_top_tier = min(.data$Tier),
-      "Tier (top)" = paste0(.data$Tier, " (", .data$sv_top_tier, ")"),
+      "Tier (top)" = paste0(.data$Tier, " (", .data$sv_top_tier, ")")
     ) |>
     dplyr::ungroup() |>
     # Set unique annotation ID
@@ -408,8 +411,8 @@ process_cnv_tsv <- function(x) {
     "PURPLE CN" = "copyNumber",
     "PURPLE CN Min+Maj"
   )
-  cnv.tmp <- dplyr::select("cnv.tmp", tidyselect::all_of(c(column_selector, "Tier")))
-  cnv.filtered <- dplyr::select(cnv.annotations.split$filtered, tidyselect::any_of(column_selector))
+  cnv.tmp <- dplyr::select(cnv.tmp, dplyr::all_of(c(column_selector, "Tier")))
+  cnv.filtered <- dplyr::select(cnv.annotations.split$filtered, dplyr::any_of(column_selector))
 
   # Collapse selected annotations and set many genes
   cnv.many_genes_data <- set_many_genes_cnv(cnv.tmp)
