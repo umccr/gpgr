@@ -12,11 +12,10 @@
 #' x <- system.file("extdata/virusbreakend/virusbreakend.vcf.summary.tsv", package = "gpgr")
 #' (vb <- virusbreakend_summary_read(x))
 #' @testexamples
-#' expect_equal(colnames(vb)[ncol(vb)], "QCStatus")
+#' expect_equal(colnames(vb$tab)[ncol(vb$tab)], "QC")
 #'
 #' @export
 virusbreakend_summary_read <- function(x) {
-
   nm <- c(
     "taxid_genus" = "c",
     "name_genus" = "c",
@@ -44,7 +43,6 @@ virusbreakend_summary_read <- function(x) {
     "integrations" = "i",
     "QCStatus" = "c"
   )
-
   ctypes <- paste(nm, collapse = "")
   virusbreakend_summary <- readr::read_tsv(x, col_types = ctypes)
 
@@ -54,13 +52,13 @@ virusbreakend_summary_read <- function(x) {
 
     virusbreakend_summary <- virusbreakend_summary |>
       dplyr::select(
-        Virus="name_assigned",
-        Length="endpos",
-        Reads="numreads",
-        Coverage="coverage",
-        `Mean depth`="meandepth",
-        Intergrations="integrations",
-        QC="QCStatus",
+        Virus = "name_assigned",
+        Length = "endpos",
+        Reads = "numreads",
+        Coverage = "coverage",
+        `Mean depth` = "meandepth",
+        Intergrations = "integrations",
+        QC = "QCStatus",
       )
   }
 
@@ -71,7 +69,7 @@ virusbreakend_summary_read <- function(x) {
     "Reads", "Number of reads mapped to adjusted viral reference",
     "Coverage", "Percentage of viral positions with at least one read mapped",
     "Mean depth", "Mean alignment depth",
-    "Intergrations", "Number of detected integration breakpoints",
+    "Integrations", "Number of detected integration breakpoints",
     "QC", "QC status of viral intergrations",
   )
 
@@ -95,29 +93,28 @@ virusbreakend_summary_read <- function(x) {
 #' x <- system.file("extdata/virusbreakend/virusbreakend.vcf", package = "gpgr")
 #' (vb <- virusbreakend_vcf_read(x))
 #' @testexamples
-#' expect_equal(colnames(vb)[ncol(vb)], "QC")
+#' expect_equal(colnames(vb$tab)[ncol(vb$tab)], "QC")
 #'
 #' @export
 virusbreakend_vcf_read <- function(x) {
-
   d <- bedr::read.vcf(x, split.info = TRUE, verbose = FALSE)
 
   if (nrow(d$vcf) > 0) {
     virusbreakend_integrations <- tibble::as_tibble(d$vcf) |>
       dplyr::select(
-          Contig="CHROM",
-          Position="POS",
-          "Fragment support"="BVF",
-          "Fragment support (unmapped)"="BUM",
-          "Softclip read support"="BSC",
-          Reference="REF",
-          Alt="ALT",
-          `Breakend ID`="ID",
-          `Mate ID`="MATEID",
-          QC="FILTER",
+        Contig = "CHROM",
+        Position = "POS",
+        "Fragment support" = "BVF",
+        "Fragment support (unmapped)" = "BUM",
+        "Softclip read support" = "BSC",
+        Reference = "REF",
+        Alt = "ALT",
+        `Breakend ID` = "ID",
+        `Mate ID` = "MATEID",
+        QC = "FILTER",
       )
   } else {
-      virusbreakend_integrations <- tibble::tibble()
+    virusbreakend_integrations <- tibble::tibble()
   }
 
   descr <- dplyr::tribble(

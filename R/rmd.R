@@ -29,6 +29,8 @@
 #' @param tumor_name Name of tumor sample.
 #' @param out_file Path to output HTML file (needs '.html' suffix) (def: `{tumor_name}_cancer_report.html`).
 #' @param quiet Suppress log printing during rendering.
+#' @param bcftools_stats Path to `bcftools_stats.txt` file.
+#' @param dragen_hrd Path to DRAGEN `hrdscore.csv` file.
 #'
 #' @return Path to rendered HTML report.
 #' @export

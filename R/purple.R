@@ -12,7 +12,7 @@
 #' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 #' (p <- purple_cnv_som_gene_read(x))
 #' @testexamples
-#' expect_equal(colnames(p)[ncol(p)], "minMinorAlleleCopyNumber")
+#' expect_equal(colnames(p)[ncol(p)], "depthWindowCount")
 #'
 #' @export
 purple_cnv_som_gene_read <- function(x) {

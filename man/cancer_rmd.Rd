@@ -39,7 +39,11 @@ cancer_rmd(
 
 \item{batch_name}{Name of batch sample.}
 
+\item{bcftools_stats}{Path to \code{bcftools_stats.txt} file.}
+
 \item{conda_list}{Path to \code{conda_pkg_list.txt} file.}
+
+\item{dragen_hrd}{Path to DRAGEN \code{hrdscore.csv} file.}
 
 \item{img_dir}{Path to directory containing PURPLE plots.}
 
