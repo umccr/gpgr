@@ -1,3 +1,5 @@
+#' @param x Path to something.
+#'
 #' @export
 read_oncokb <- function(x) {
   readr::read_tsv(x) |>
@@ -7,6 +9,9 @@ read_oncokb <- function(x) {
     dplyr::pull("Hugo Symbol")
 }
 
+#' @param x Path to something.
+#' @param oncokb_genes Tibble of something.
+#'
 #' @export
 get_oncokb_genes <- function(x, oncokb_genes) {
   delimiters <- " ,&-"

@@ -297,6 +297,8 @@ set_many_transcripts_sv <- function(x) {
   )
 }
 
+#' @param x Path to something.
+#'
 #' @export
 process_sv <- function(x) {
   # Read input and set column information

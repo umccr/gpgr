@@ -319,6 +319,8 @@ set_many_transcripts_cnv <- function(x) {
   )
 }
 
+#' @param x Path to something.
+#'
 #' @export
 process_cnv_tsv <- function(x) {
   # Read input
@@ -539,7 +541,7 @@ purple_cnv_som_process <- function(x) {
 #' x <- system.file("extdata/purple/purple.qc", package = "gpgr")
 #' (q <- purple_qc_read(x))
 #' @testexamples
-#' expect_true(q$raw[1, "value", drop = TRUE] == "WARN_DELETED_GENES")
+#' expect_true(q$raw[1, "value", drop = TRUE] == "FAIL_CONTAMINATION")
 #'
 #' @export
 purple_qc_read <- function(x) {
@@ -551,7 +553,7 @@ purple_qc_read <- function(x) {
     "QCStatus", "Method", "CopyNumberSegments",
     "UnsupportedCopyNumberSegments", "Purity", "AmberGender",
     "CobaltGender", "DeletedGenes", "Contamination", "GermlineAberrations",
-    "AmberMeanDepth", "LohPercent"
+    "AmberMeanDepth"
   )
 
   assertthat::assert_that(all(purple_qc$key == nm))
@@ -597,7 +599,7 @@ purple_qc_read <- function(x) {
 #' (p <- purple_purity_read(x))
 #' @testexamples
 #' expect_equal(p$raw[1, "column", drop = TRUE], "purity")
-#' expect_equal(p$raw[nrow(p$raw), "column", drop = TRUE], "svTumorMutationalBurden")
+#' expect_equal(p$raw[nrow(p$raw), "column", drop = TRUE], "targeted")
 #'
 #' @export
 purple_purity_read <- function(x) {
@@ -617,6 +619,7 @@ purple_purity_read <- function(x) {
     "maxPloidy", "d",
     "minDiploidProportion", "d",
     "maxDiploidProportion", "d",
+    "version", "c",
     "somaticPenalty", "d",
     "wholeGenomeDuplication", "c",
     "msIndelsPerMb", "d",
@@ -637,7 +640,7 @@ purple_purity_read <- function(x) {
 
   purple_purity <- purple_purity |>
     dplyr::mutate(
-      dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 2),
+      dplyr::across(tidyselect::where(is.numeric), \(x) round(x, 2)),
       dplyr::across(dplyr::everything(), as.character)
     ) |>
     tidyr::pivot_longer(dplyr::everything(), names_to = "column", values_to = "value") |>
