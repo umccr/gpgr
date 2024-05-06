@@ -165,12 +165,12 @@ split_svs <- function(x) {
 
   x.grouped <- x |>
     dplyr::group_by(
-      record_type = ifelse(Type %in% bps_types, "bps", "other")
+      record_type = ifelse(.data$Type %in% bps_types, "bps", "other")
     )
 
   keys <- x.grouped |>
     dplyr::group_keys() |>
-    dplyr::pull(record_type)
+    dplyr::pull("record_type")
 
   x.split <- x.grouped |>
     dplyr::group_split(.keep = FALSE) |>
@@ -211,12 +211,12 @@ remove_gene_fusion_dups <- function(.data, columns) {
   # Order elements of multi-entry effect values for reliable comparison
   v.groups <- c("frameshift_variant&gene_fusion", "gene_fusion")
   v.effects_ordered <- sapply(.data$Effect, function(s) {
-    c <- stringr::str_split(s, "&") |> unlist()
-    paste0(sort(c), collapse = "&")
+    c1 <- stringr::str_split(s, "&") |> unlist()
+    paste0(sort(c1), collapse = "&")
   })
 
   if (all(v.groups %in% v.effects_ordered)) {
-    .data |> dplyr::filter(Effect != "gene_fusion")
+    .data |> dplyr::filter(.data$Effect != "gene_fusion")
   } else {
     .data
   }
@@ -259,16 +259,16 @@ set_many_transcripts_sv <- function(x) {
   x.tmp <- x |>
     dplyr::rowwise() |>
     dplyr::mutate(
-      `Transcript count` = stringr::str_split(Transcripts, ", ") |> unlist() |> unique() |> length()
+      `Transcript count` = stringr::str_split(.data$Transcripts, ", ") |> unlist() |> unique() |> length()
     ) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-      many_transcripts = ifelse(`Transcript count` > 2, "many_transcripts", "few_transcripts")
+      many_transcripts = ifelse(.data$`Transcript count` > 2, "many_transcripts", "few_transcripts")
     )
 
   # Build the many transcripts table
   mt <- x.tmp |>
-    dplyr::filter(many_transcripts == "many_transcripts") |>
+    dplyr::filter(.data$many_transcripts == "many_transcripts") |>
     # Remove unneeded columns and rename others
     dplyr::select(
       "Record ID",
@@ -284,12 +284,12 @@ set_many_transcripts_sv <- function(x) {
   x.ready <- x.tmp |>
     dplyr::mutate(
       Transcripts = ifelse(
-        many_transcripts == "few_transcripts" | is.na(many_transcripts),
-        Transcripts,
-        paste0("Many transcripts (", `Transcript count`, ")")
+        .data$many_transcripts == "few_transcripts" | is.na(.data$many_transcripts),
+        .data$Transcripts,
+        paste0("Many transcripts (", .data$`Transcript count`, ")")
       )
     ) |>
-    dplyr::select(-c(many_transcripts, `Transcript count`))
+    dplyr::select(-c("many_transcripts", "Transcript count"))
 
   list(
     many_transcripts = mt,
@@ -310,30 +310,30 @@ process_sv <- function(x) {
   # Prepare input
   sv.ready <- sv.input$data |>
     dplyr::mutate(
-      "annotation_count" = count_pieces(annotation, ","),
-      "Top Tier" = tier,
-      "SR_PR_ref" = paste0(SR_ref, ",", PR_ref),
+      "annotation_count" = count_pieces(.data$annotation, ","),
+      "Top Tier" = .data$tier,
+      "SR_PR_ref" = paste0(.data$SR_ref, ",", .data$PR_ref),
       "SR_PR_sum" = dplyr::case_when(
-        is.na(SR_alt) & is.na(PR_alt) ~ NA,
-        is.na(SR_alt) ~ PR_alt,
-        is.na(PR_alt) ~ SR_alt,
-        .default = SR_alt + PR_alt,
+        is.na(.data$SR_alt) & is.na(.data$PR_alt) ~ NA,
+        is.na(.data$SR_alt) ~ .data$PR_alt,
+        is.na(.data$PR_alt) ~ .data$SR_alt,
+        .default = .data$SR_alt + .data$PR_alt,
       ),
       "SR_PR_asm_sum" = dplyr::case_when(
-        is.na(SR_asm_alt) & is.na(PR_asm_alt) ~ NA,
-        is.na(SR_asm_alt) ~ PR_asm_alt,
-        is.na(PR_asm_alt) ~ SR_asm_alt,
-        .default = SR_asm_alt + PR_asm_alt,
+        is.na(.data$SR_asm_alt) & is.na(.data$PR_asm_alt) ~ NA,
+        is.na(.data$SR_asm_alt) ~ .data$PR_asm_alt,
+        is.na(.data$PR_asm_alt) ~ .data$SR_asm_alt,
+        .default = .data$SR_asm_alt + .data$PR_asm_alt,
       ),
-      start = paste(chrom, base::format(start, big.mark = ",", trim = TRUE), sep = ":"),
-      Type = ifelse(is.na(PURPLE_status), svtype, "PURPLE_inf"),
+      start = paste(.data$chrom, base::format(.data$start, big.mark = ",", trim = TRUE), sep = ":"),
+      Type = ifelse(is.na(.data$PURPLE_status), .data$svtype, "PURPLE_inf"),
       "Record ID" = dplyr::row_number(),
     ) |>
     dplyr::select(-c(
-      chrom,
-      PURPLE_status,
-      tier,
-      svtype,
+      "chrom",
+      "PURPLE_status",
+      "tier",
+      "svtype",
     ))
 
   # Split out breakpoints for merging
@@ -347,7 +347,7 @@ process_sv <- function(x) {
   cols_to_split <- c("AF_PURPLE", "CN_PURPLE")
   double_cols <- split_double_col(sv.tmp, cols_to_split)
   sv.tmp <- sv.tmp |>
-    dplyr::select(-c(cols_to_split)) |>
+    dplyr::select(-c("cols_to_split")) |>
     dplyr::bind_cols(double_cols)
 
   # Format a table for to be used as the SV Map
@@ -372,33 +372,33 @@ process_sv <- function(x) {
       "PURPLE AF" = "AF_PURPLE",
       "PURPLE CN" = "CN_PURPLE",
     ) |>
-    dplyr::arrange(`Record ID`)
+    dplyr::arrange(.data$`Record ID`)
 
   # Melt annotations
   sv.melted_all <- sv.tmp |>
     # Split into individual annotations
-    dplyr::mutate(annotation = strsplit(annotation, ",")) |>
+    dplyr::mutate(annotation = strsplit(.data$annotation, ",")) |>
     # Convert annotation fields into columns
-    tidyr::unnest(annotation) |>
+    tidyr::unnest(.data$annotation) |>
     tidyr::separate(
-      annotation, c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier"),
+      .data$annotation, c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier"),
       sep = "\\|", convert = FALSE
     ) |>
     # Remove gene_fusion annotations for variants where frameshift_variant&gene_fusion already exist
-    dplyr::group_by(across(-Effect)) |>
+    dplyr::group_by(dplyr::across(-.data$Effect)) |>
     dplyr::group_modify(remove_gene_fusion_dups) |>
     dplyr::ungroup() |>
     # Remove unused columns
-    dplyr::select(c(-Event, -ALT)) |>
+    dplyr::select(c(-.data$Event, -.data$ALT)) |>
     # Create columns, modify others
     dplyr::mutate(
       "Annotation ID" = dplyr::row_number(),
-      "Tier (top)" = paste0(Tier, " (", `Top Tier`, ")"),
-      "Genes" = stringr::str_replace_all(Genes, "&", ", "),
-      "Transcripts" = stringr::str_replace_all(Transcripts, "&", ", "),
+      "Tier (top)" = paste0(.data$Tier, " (", .data$`Top Tier`, ")"),
+      "Genes" = stringr::str_replace_all(.data$Genes, "&", ", "),
+      "Transcripts" = stringr::str_replace_all(.data$Transcripts, "&", ", "),
     ) |>
     # Sort rows
-    dplyr::arrange(`Tier (top)`, `Record ID`, Genes, Effect)
+    dplyr::arrange(.data$`Tier (top)`, .data$`Record ID`, .data$Genes, .data$Effect)
 
   # Abbreviate effects
   abbreviate_effectv <- Vectorize(abbreviate_effect)
