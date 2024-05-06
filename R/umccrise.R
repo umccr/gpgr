@@ -26,7 +26,7 @@ bcftools_stats_plot <- function(x = NULL) {
     dplyr::select("qual", "snps", "indels") |>
     tidyr::uncount(.data$snps + .data$indels) |>
     dplyr::select("qual")
-  med <- median(d$qual, na.rm = TRUE)
+  med <- stats::median(d$qual, na.rm = TRUE)
   tot <- nrow(d)
   p <- d |>
     ggplot2::ggplot(ggplot2::aes(x = .data$qual)) +

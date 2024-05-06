@@ -126,7 +126,6 @@ abbreviate_effect <- function(effects) {
 }
 
 sash_read_sv_tsv <- function(x) {
-
   tab <- dplyr::tribble(
     ~Column, ~Description, ~Type,
     "chrom", "CHROM column in VCF", "c",
@@ -162,11 +161,11 @@ sash_read_sv_tsv <- function(x) {
 }
 
 split_svs <- function(x) {
-  bps_types <-  c("BND", "DEL", "DUP"," INS", "INV")
+  bps_types <- c("BND", "DEL", "DUP", " INS", "INV")
 
   x.grouped <- x |>
     dplyr::group_by(
-      record_type=ifelse(Type %in% bps_types, "bps", "other")
+      record_type = ifelse(Type %in% bps_types, "bps", "other")
     )
 
   keys <- x.grouped |>
@@ -174,7 +173,7 @@ split_svs <- function(x) {
     dplyr::pull(record_type)
 
   x.split <- x.grouped |>
-    dplyr::group_split(.keep=FALSE) |>
+    dplyr::group_split(.keep = FALSE) |>
     purrr::set_names(keys)
 
   list(
@@ -186,8 +185,8 @@ split_svs <- function(x) {
 join_breakpoint_entries <- function(x) {
   # Group by GRIDSS identifier (clipping trailing h/o [h: High, o: lOwer])
   bps <- x |>
-    tidyr::separate(ID, into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE)|>
-    dplyr::group_by(BND_group)
+    tidyr::separate("ID", into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) |>
+    dplyr::group_by("BND_group")
 
   # Set a sequential breakpoint identifier
   bps_groups <- bps |> dplyr::n_groups()
@@ -195,15 +194,17 @@ join_breakpoint_entries <- function(x) {
     dplyr::mutate(
       # Assign a unique ID based on current group
       BND_ID = sprintf(paste0("%0", nchar(bps_groups), "d"), dplyr::cur_group_id()),
-      BND_mate = ifelse(BND_mate == "o", "A", "B"),
+      BND_mate = ifelse(.data$BND_mate == "o", "A", "B"),
     ) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-      end_position = sub("^.*:(\\d+).*$", "\\1", ALT) |> as.numeric() |> base::format(big.mark = ",", trim = TRUE),
-      end_chrom = sub("^.*chr(.*):.*$", "\\1", ALT),
-      end = paste0(end_chrom, ":", end_position),
+      end_position = sub("^.*:(\\d+).*$", "\\1", .data$ALT) |>
+        as.numeric() |>
+        base::format(big.mark = ",", trim = TRUE),
+      end_chrom = sub("^.*chr(.*):.*$", "\\1", .data$ALT),
+      end = paste0(.data$end_chrom, ":", .data$end_position),
     ) |>
-    dplyr::select(-c(end_position, end_chrom))
+    dplyr::select(-c("end_position", "end_chrom"))
 }
 
 remove_gene_fusion_dups <- function(.data, columns) {
@@ -211,7 +212,7 @@ remove_gene_fusion_dups <- function(.data, columns) {
   v.groups <- c("frameshift_variant&gene_fusion", "gene_fusion")
   v.effects_ordered <- sapply(.data$Effect, function(s) {
     c <- stringr::str_split(s, "&") |> unlist()
-    paste0(sort(c), collapse="&")
+    paste0(sort(c), collapse = "&")
   })
 
   if (all(v.groups %in% v.effects_ordered)) {
@@ -222,7 +223,6 @@ remove_gene_fusion_dups <- function(.data, columns) {
 }
 
 filter_and_split_annotations_sv <- function(x) {
-
   filter_conditions <- list(
     # Empty Gene field
     x$Genes == "",
@@ -236,16 +236,16 @@ filter_and_split_annotations_sv <- function(x) {
 
   x.grouped <- x |>
     dplyr::group_by(
-      filter=ifelse(purrr::reduce(filter_conditions, `|`), "filter", "retain")
+      filter = ifelse(purrr::reduce(filter_conditions, `|`), "filter", "retain")
     ) |>
-    dplyr::select(-c(Type, `Top Tier`))
+    dplyr::select(-c("Type", "Top Tier"))
 
   keys <- x.grouped |>
     dplyr::group_keys() |>
-    dplyr::pull(filter)
+    dplyr::pull("filter")
 
   x.split <- x.grouped |>
-    dplyr::group_split(.keep=FALSE) |>
+    dplyr::group_split(.keep = FALSE) |>
     purrr::set_names(keys)
 
   list(
@@ -325,7 +325,7 @@ process_sv <- function(x) {
         is.na(PR_asm_alt) ~ SR_asm_alt,
         .default = SR_asm_alt + PR_asm_alt,
       ),
-      start = paste(chrom, base::format(start, big.mark = ",", trim = TRUE), sep=":"),
+      start = paste(chrom, base::format(start, big.mark = ",", trim = TRUE), sep = ":"),
       Type = ifelse(is.na(PURPLE_status), svtype, "PURPLE_inf"),
       "Record ID" = dplyr::row_number(),
     ) |>

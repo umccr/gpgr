@@ -19,7 +19,7 @@ test_that("Function purple_cnv_som_gene_process() @ L60", {
 })
 
 
-test_that("Function purple_cnv_som_read() @ L449", {
+test_that("Function purple_cnv_som_read() @ L447", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (p <- purple_cnv_som_read(x))
@@ -27,7 +27,7 @@ test_that("Function purple_cnv_som_read() @ L449", {
 })
 
 
-test_that("Function purple_cnv_som_process() @ L482", {
+test_that("Function purple_cnv_som_process() @ L480", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (pp <- purple_cnv_som_process(x))
@@ -35,7 +35,7 @@ test_that("Function purple_cnv_som_process() @ L482", {
 })
 
 
-test_that("Function purple_qc_read() @ L550", {
+test_that("Function purple_qc_read() @ L548", {
   
   x <- system.file("extdata/purple/purple.qc", package = "gpgr")
   (q <- purple_qc_read(x))
@@ -43,7 +43,7 @@ test_that("Function purple_qc_read() @ L550", {
 })
 
 
-test_that("Function purple_purity_read() @ L608", {
+test_that("Function purple_purity_read() @ L606", {
   
   x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
   (p <- purple_purity_read(x))

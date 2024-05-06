@@ -124,7 +124,6 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
 }
 
 sash_read_cnv_tsv <- function(x) {
-
   nm <- c(
     "chromosome" = "c",
     "start" = "i",
@@ -152,7 +151,6 @@ sash_read_cnv_tsv <- function(x) {
 }
 
 filter_and_split_annotations_cnv <- function(x) {
-
   filter_conditions <- list(
     # Chromosome effects
     stringr::str_starts(x$Detail, "chrom_"),
@@ -162,34 +160,34 @@ filter_and_split_annotations_cnv <- function(x) {
 
   x.grouped <- x |>
     dplyr::group_by(
-      filter=ifelse(purrr::reduce(filter_conditions, `|`), "filter", "retain")
+      filter = ifelse(purrr::reduce(filter_conditions, `|`), "filter", "retain")
     )
 
   keys <- x.grouped |>
     dplyr::group_keys() |>
-    dplyr::pull(filter)
+    dplyr::pull("filter")
 
   x.split <- x.grouped |>
-    dplyr::group_split(.keep=FALSE) |>
+    dplyr::group_split(.keep = FALSE) |>
     purrr::set_names(keys)
 
   list(
     retained = purrr::pluck(x.split, "retain"),
-    filtered = purrr::pluck(x.split, "filter") |> dplyr::arrange(Tier, `Event ID`)
+    filtered = purrr::pluck(x.split, "filter") |> dplyr::arrange("Tier", "Event ID")
   )
 }
 
 collapse_effect_group <- function(x) {
   x.tmp <- dplyr::first(x)
   genes <- x.tmp |>
-    dplyr::pull(Genes.unique) |>
+    dplyr::pull("Genes.unique") |>
     unlist()
 
   x.tmp |>
     dplyr::mutate(
-      Genes = paste0(genes, collapse=", "),
+      Genes = paste0(genes, collapse = ", "),
       Transcripts = "",
-      Detail = paste0(unique(x$Detail) |> sort(), collapse=", "),
+      Detail = paste0(unique(x$Detail) |> sort(), collapse = ", "),
       Tier = min(x$Tier),
       `Annotation ID` = NA,
     )
@@ -201,16 +199,16 @@ set_many_genes_cnv <- function(x) {
   x.counts <- x |>
     dplyr::group_by(`Event ID`, Effect) |>
     dplyr::mutate(
-      Genes.unique = Genes |> stringr::str_split(", ") |> unlist() |> unique() |> list(),
-      `Gene count (effect group)` = Genes.unique |> dplyr::first() |> length(),
-      collapse = `Gene count (effect group)` > 2 & Effect %in% collapse_effects,
+      Genes.unique = .data$Genes |> stringr::str_split(", ") |> unlist() |> unique() |> list(),
+      `Gene count (effect group)` = .data$Genes.unique |> dplyr::first() |> length(),
+      collapse = .data$`Gene count (effect group)` > 2 & .data$Effect %in% collapse_effects,
     ) |>
-    dplyr::select(-`Gene count (effect group)`)
+    dplyr::select(-"Gene count (effect group)")
 
   # Collapse target groups
   x.collapsed <- x.counts |>
     dplyr::filter(collapse) |>
-    dplyr::select(-collapse) |>
+    dplyr::select(-"collapse") |>
     dplyr::group_modify(~ collapse_effect_group(.x)) |>
     # Update top tier, referring to complete data set within each group
     dplyr::mutate(
@@ -226,7 +224,7 @@ set_many_genes_cnv <- function(x) {
   x.tmp <- x.counts |>
     dplyr::filter(!collapse) |>
     dplyr::bind_rows(x.collapsed) |>
-    dplyr::select(-c(collapse, Genes.unique, Tier)) |>
+    dplyr::select(-c("collapse", "Genes.unique", "Tier")) |>
     dplyr::rowwise() |>
     dplyr::mutate(
       `Gene count` = Genes |> stringr::str_split(", ") |> unlist() |> unique() |> length(),
@@ -267,7 +265,7 @@ set_many_genes_cnv <- function(x) {
       ),
       Transcripts = ifelse(many_genes == "few_genes" | is.na(many_genes), Transcripts, ""),
     ) |>
-    dplyr::select(-c(many_genes, `Gene count`))
+    dplyr::select(-c("many_genes", "Gene count"))
 
   list(
     ready = x.ready,
@@ -314,7 +312,7 @@ set_many_transcripts_cnv <- function(x) {
         paste0("Many transcripts (", `Transcript count`, ")")
       )
     ) |>
-    dplyr::select(-c(many_transcripts, `Transcript count`))
+    dplyr::select(-c("many_transcripts", "Transcript count"))
 
   list(
     ready = x.ready,
@@ -330,29 +328,27 @@ process_cnv_tsv <- function(x) {
   # Prepare input
   cnv.ready <- cnv.input |>
     dplyr::mutate(
-      chrom_simple = stringr::str_remove(chromosome, "chr"),
-      start = paste(chrom_simple, base::format(start, big.mark = ",", trim = TRUE), sep=":"),
-      end = paste(chrom_simple, base::format(end, big.mark = ",", trim = TRUE), sep=":"),
+      chrom_simple = stringr::str_remove(.data$chromosome, "chr"),
+      start = paste(.data$chrom_simple, base::format(.data$start, big.mark = ",", trim = TRUE), sep = ":"),
+      end = paste(.data$chrom_simple, base::format(.data$end, big.mark = ",", trim = TRUE), sep = ":"),
     ) |>
-    dplyr::select(-c(
-      chromosome,
-      chrom_simple,
-    ))
+    dplyr::select(-c("chromosome", "chrom_simple"))
 
   # Melt annotations
   cnv.tmp <- cnv.ready |>
     dplyr::mutate(`Event ID` = dplyr::row_number()) |>
     # Split into individual annotations
-    dplyr::mutate(annotation = strsplit(simple_ann, ",")) |>
+    dplyr::mutate(annotation = strsplit(.data$simple_ann, ",")) |>
     # Convert annotation fields into columns
-    tidyr::unnest(annotation) |>
+    tidyr::unnest("annotation") |>
     tidyr::separate(
-      annotation, c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier"),
+      "annotation",
+      c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier"),
       sep = "\\|", convert = FALSE
     ) |>
     # Create new columns and modify existing ones
     dplyr::mutate(
-      copyNumber = as.numeric(copyNumber) |> round(2) %>% sprintf("%.2f", .),
+      copyNumber = as.numeric(.data$copyNumber) |> round(2) %>% sprintf("%.2f", .),
       minorAlleleCopyNumber = as.numeric(minorAlleleCopyNumber) |> round(2) %>% sprintf("%.2f", .),
       majorAlleleCopyNumber = as.numeric(majorAlleleCopyNumber) |> round(2) %>% sprintf("%.2f", .),
       "PURPLE CN Min+Maj" = paste0(minorAlleleCopyNumber, "+", majorAlleleCopyNumber),
@@ -361,18 +357,18 @@ process_cnv_tsv <- function(x) {
     ) |>
     # Remove unused columns
     dplyr::select(-c(
-      baf,
-      bafCount,
-      depthWindowCount,
-      Event,
-      gcContent,
-      majorAlleleCopyNumber,
-      method,
-      minorAlleleCopyNumber,
-      segmentEndSupport,
-      segmentStartSupport,
-      sv_top_tier,
-      simple_ann,
+      "baf",
+      "bafCount",
+      "depthWindowCount",
+      "Event",
+      "gcContent",
+      "majorAlleleCopyNumber",
+      "method",
+      "minorAlleleCopyNumber",
+      "segmentEndSupport",
+      "segmentStartSupport",
+      "sv_top_tier",
+      "simple_ann",
     ))
 
   # Abbreviate effects
@@ -411,7 +407,7 @@ process_cnv_tsv <- function(x) {
     "PURPLE CN" = "copyNumber",
     "PURPLE CN Min+Maj"
   )
-  cnv.tmp <- dplyr::select(cnv.tmp, tidyselect::all_of(c(column_selector, "Tier")))
+  cnv.tmp <- dplyr::select("cnv.tmp", tidyselect::all_of(c(column_selector, "Tier")))
   cnv.filtered <- dplyr::select(cnv.annotations.split$filtered, tidyselect::any_of(column_selector))
 
   # Collapse selected annotations and set many genes
@@ -744,7 +740,7 @@ purple_kataegis <- function(x) {
 
   data <- d$data |>
     dplyr::filter(!is.na(.data$KT)) |>
-    dplyr::select(c("CHROM", "POS", info_cols))
+    dplyr::select(c("CHROM", "POS", tidyselect::all_of(info_cols)))
 
   description <- d$description |>
     dplyr::filter(.data$ID %in% info_cols) |>

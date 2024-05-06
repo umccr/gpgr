@@ -8,6 +8,7 @@ cancer_rmd(
   af_global,
   af_keygenes,
   batch_name,
+  bcftools_stats,
   conda_list,
   dragen_hrd,
   img_dir,

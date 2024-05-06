@@ -11,8 +11,8 @@ purple_cnv_som_gene_process(x, g = NULL)
 
 \item{g}{Path to gene file containing at least three columns:
 \itemize{
-\item \code{symbol}: gene name (character).
-\item \code{tumorsuppressor}: is this gene a tumor suppressor (TRUE/FALSE).
+\item \code{ensembl_gene_symbol}: gene name (character).
+\item \code{tsgene}: is this gene a tumor suppressor (TRUE/FALSE).
 \item \code{oncogene}: is this gene an oncogene (TRUE/FALSE).
 }}
 }
