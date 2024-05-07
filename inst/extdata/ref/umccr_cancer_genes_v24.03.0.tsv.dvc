@@ -1,0 +1,5 @@
+outs:
+- md5: 28424e4e24fa8da80a431c832b3dd011
+  size: 13441
+  hash: md5
+  path: umccr_cancer_genes_v24.03.0.tsv
