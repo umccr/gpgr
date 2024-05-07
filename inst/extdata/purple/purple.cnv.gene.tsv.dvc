@@ -1,4 +1,5 @@
 outs:
-- md5: b9ad0a338ab1cfbcf5f77f2923f5a923
-  size: 30990
+- md5: da76078daae06437450548aae81bc20e
+  size: 28325
   path: purple.cnv.gene.tsv
+  hash: md5

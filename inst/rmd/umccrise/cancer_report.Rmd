@@ -48,30 +48,30 @@ knitr::opts_chunk$set(
 
 ```{r load_pkgs}
 # Bioconductor
-library(BSgenome)
-library(MutationalPatterns)
+library(BSgenome, include.only = "BSgenome")
+library(MutationalPatterns, include.only = "read_vcfs_as_granges")
 ref_genome <- "BSgenome.Hsapiens.UCSC.hg38"
-library(ref_genome, character.only = TRUE)
+library(ref_genome, character.only = TRUE, include.only = ref_genome)
 tx_ref_genome <- "TxDb.Hsapiens.UCSC.hg38.knownGene"
-library(tx_ref_genome, character.only = TRUE)
+library(tx_ref_genome, character.only = TRUE, include.only = tx_ref_genome)
 # CRAN
-library(devtools)
-library(details)
-library(DT)
+library(details, include.only = "details")
+library(DT, include.only = "datatable")
 library(dplyr)
-library(glue)
-library(gt)
-library(ggplot2)
-library(htmltools)
-library(jsonlite)
+library(GenomeInfoDb, include.only = "seqlevelsStyle")
+library(GenomicFeatures, include.only = "genes")
+library(GenomicRanges, include.only = "GRanges")
+library(glue, include.only = "glue")
+library(gt, include.only = "gt")
+library(ggplot2, include.only = "ggtitle")
+library(IRanges, include.only = "IRanges")
 library(knitr)
-library(kableExtra)
+library(kableExtra, include.only = "kable_styling")
 library(patchwork)
-library(purrr)
-library(readr)
-library(rmarkdown)
-library(stringr)
-library(tidyr)
+library(purrr, include.only = "map")
+library(readr, include.only = "read_tsv")
+library(rmarkdown, include.only = "render")
+library(tidyr, include.only = "pivot_longer")
 # umccr
 library(gpgr)
 library(sigrap)
@@ -388,50 +388,50 @@ qc_summary_all %>%
   gt::gt(rowname_col = "variable") %>%
   gt::tab_style(
     style = list(
-      cell_fill(color = red),
-      cell_text(weight = "bold")
+      gt::cell_fill(color = red),
+      gt::cell_text(weight = "bold")
     ),
-    locations = cells_body(
+    locations = gt::cells_body(
       columns = value,
       rows = grepl("FAIL", value) & variable == "QC_Status"
     )
   ) %>%
   gt::tab_style(
     style = list(
-      cell_fill(color = orange),
-      cell_text(weight = "bold")
+      gt::cell_fill(color = orange),
+      gt::cell_text(weight = "bold")
     ),
-    locations = cells_body(
+    locations = gt::cells_body(
       columns = value,
       rows = grepl("WARN_", value) & variable == "QC_Status"
     )
   ) %>%
   gt::tab_style(
     style = list(
-      cell_fill(color = orange),
-      cell_text(weight = "bold")
+      gt::cell_fill(color = orange),
+      gt::cell_text(weight = "bold")
     ),
-    locations = cells_body(
+    locations = gt::cells_body(
       columns = value,
       rows = grepl("TRUE", value) & variable == "Hypermutated"
     )
   ) %>%
   gt::tab_style(
     style = list(
-      cell_text(weight = "bold")
+      gt::cell_text(weight = "bold")
     ),
     locations = list(
-      cells_stub(rows = TRUE),
-      cells_body(columns = value)
+      gt::cells_stub(rows = TRUE),
+      gt::cells_body(columns = value)
     )
   ) %>%
   gt::cols_align("left") %>%
   # align rowname_col
   gt::tab_style(
     style = list(
-      cell_text(align = "left")
+      gt::cell_text(align = "left")
     ),
-    locations = cells_stub(rows = TRUE)
+    locations = gt::cells_stub(rows = TRUE)
   ) %>%
   gt::opt_row_striping() %>%
   gt::tab_options(table.align = "left")
@@ -560,7 +560,6 @@ mp_plot_bias2 <- MutationalPatterns::plot_strand_bias(strand_bias)
 
 
 ## ---- Replicative ---- ##
-
 repli_file <- system.file("extdata/ReplicationDirectionRegions.bed",
   package = "MutationalPatterns"
 )
@@ -1012,9 +1011,9 @@ d %>%
   gt::sub_missing(columns = dplyr::everything()) %>%
   gt::tab_style(
     style = list(
-      cell_text(weight = "bold")
+      gt::cell_text(weight = "bold")
     ),
-    locations = cells_stub(rows = TRUE)
+    locations = gt::cells_stub(rows = TRUE)
   ) %>%
   gt::cols_align("right") %>%
   gt::tab_options(table.align = "left")
@@ -1135,7 +1134,7 @@ purple_cnv_som_gene$descr %>%
   dplyr::mutate(
     Column = kableExtra::cell_spec(Column, bold = TRUE)
   ) %>%
-  knitr::kable(escape = FALSE) %>%
+  kableExtra::kbl(escape = FALSE) %>%
   kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "left") %>%
   kableExtra::scroll_box(height = "200px")
 ```
@@ -1178,7 +1177,7 @@ purple_cnv_som$descr %>%
   dplyr::mutate(
     Column = kableExtra::cell_spec(Column, bold = TRUE)
   ) %>%
-  knitr::kable(escape = FALSE) %>%
+  kableExtra::kbl(escape = FALSE) %>%
   kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "left") %>%
   kableExtra::scroll_box(height = "200px")
 ```
@@ -1371,7 +1370,7 @@ if (is.null(params$conda_list)) {
     )
   ) %>%
     dplyr::left_join(conda_pkgs, by = "name") %>%
-    knitr::kable(format = "html") %>%
+    kableExtra::kbl() %>%
     kableExtra::kable_paper(c("hover", "striped"), full_width = TRUE, position = "left") %>%
     kableExtra::column_spec(1, bold = TRUE) %>%
     kableExtra::scroll_box(height = "300px")
@@ -1383,9 +1382,8 @@ if (is.null(params$conda_list)) {
 ```{r report_inputs}
 report_inputs <- dplyr::tibble(key = names(params), value = params)
 gpgr::write_tsvjsongz(report_inputs, glue("{bnm}-report_inputs"), result_outdir)
-
 report_inputs %>%
-  knitr::kable(format = "html") %>%
+  kableExtra::kbl() %>%
   kableExtra::kable_paper(c("hover", "striped"), full_width = FALSE, position = "left") %>%
   kableExtra::column_spec(1, bold = TRUE) %>%
   kableExtra::scroll_box(height = "200px")
