@@ -5,7 +5,7 @@
 #' @return Vector of genes.
 #' @export
 read_oncokb <- function(x) {
-  readr::read_tsv(x) |>
+  readr::read_tsv(x, col_types = readr::cols(.default = "c")) |>
     dplyr::filter(
       .data$`OncoKB Annotated` == "Yes"
     ) |>
