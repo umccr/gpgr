@@ -1,0 +1,5 @@
+outs:
+- md5: d965ed90d5b1757549ed4b5682b586b3
+  size: 189585
+  hash: md5
+  path: virusbreakend.vcf

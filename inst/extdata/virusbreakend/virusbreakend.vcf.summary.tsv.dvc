@@ -1,0 +1,5 @@
+outs:
+- md5: 01057e3ee3a1cd0f0a162d221cb0afb3
+  size: 573
+  hash: md5
+  path: virusbreakend.vcf.summary.tsv
