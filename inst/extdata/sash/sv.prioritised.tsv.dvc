@@ -1,0 +1,5 @@
+outs:
+- md5: 4f5c6f721a2d4edb7dc3d30d0ce9054a
+  size: 476080
+  hash: md5
+  path: sv.prioritised.tsv
