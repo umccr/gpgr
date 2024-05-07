@@ -18,7 +18,7 @@ then work with `devtools`. You'll also need to install
 | `devtools::load_all()` | load the pkg (`Cmd+Shift+L`) |
 | `devtools::check()` | check the pkg (`Cmd+Shift+E`) |
 | `devtools::install()` | install the pkg (`Cmd+Shift+B`) |
-| `R CMD INSTALL --no-multiarch --with-keep.source pcgr.git/pcgrr` | install the pkg into the first library of `.libPaths()` (useful when using in conda env) |
+| `R CMD INSTALL --no-multiarch --with-keep.source git/gpgr` | install the pkg into the first library of `.libPaths()` (useful when using in conda env) |
 
 ### Data Version Control
 

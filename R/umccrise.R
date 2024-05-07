@@ -26,11 +26,11 @@ bcftools_stats_plot <- function(x = NULL) {
     dplyr::select("qual", "snps", "indels") |>
     tidyr::uncount(.data$snps + .data$indels) |>
     dplyr::select("qual")
-  med <- median(d$qual, na.rm = TRUE)
+  med <- stats::median(d$qual, na.rm = TRUE)
   tot <- nrow(d)
   p <- d |>
     ggplot2::ggplot(ggplot2::aes(x = .data$qual)) +
-    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), binwidth = 4, fill = "lightblue") +
+    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(stats::density)), binwidth = 4, fill = "lightblue") +
     ggplot2::geom_density(alpha = 0.6) +
     ggplot2::geom_vline(xintercept = med, colour = "blue", linetype = "dashed") +
     ggplot2::scale_x_continuous(n.breaks = 10) +

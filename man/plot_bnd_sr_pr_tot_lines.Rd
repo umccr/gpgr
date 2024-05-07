@@ -25,7 +25,7 @@ Plots the number of split reads (\code{SR}), paired end reads (\code{PR}), and t
 sum (\code{tot}) across all BNDs, sorted by \code{tot}.
 }
 \examples{
-x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-d <- process_sv(x)$unmelted
+x <- system.file("extdata/sash/sv.prioritised.tsv", package = "gpgr")
+d <- process_sv(x)$map
 plot_bnd_sr_pr_tot_lines(d)
 }

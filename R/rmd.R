@@ -24,11 +24,13 @@
 #' @param result_outdir Path to directory to write tidy JSON/TSV results.
 #' @param somatic_snv_vcf Path to `somatic-PASS.vcf.gz` SNV VCF.
 #' @param somatic_snv_summary Path to `somatic_snv_summary.json` JSON.
-#' @param somatic_sv_tsv Path to `manta.tsv` TSV file.
-#' @param somatic_sv_vcf Path to `manta.vcf.gz` VCF file.
+#' @param somatic_sv_tsv Path to SV TSV file.
+#' @param somatic_sv_vcf Path to SV VCF file.
 #' @param tumor_name Name of tumor sample.
 #' @param out_file Path to output HTML file (needs '.html' suffix) (def: `{tumor_name}_cancer_report.html`).
 #' @param quiet Suppress log printing during rendering.
+#' @param bcftools_stats Path to `bcftools_stats.txt` file.
+#' @param dragen_hrd Path to DRAGEN `hrdscore.csv` file.
 #'
 #' @return Path to rendered HTML report.
 #' @export

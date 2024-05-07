@@ -8,6 +8,7 @@ cancer_rmd(
   af_global,
   af_keygenes,
   batch_name,
+  bcftools_stats,
   conda_list,
   dragen_hrd,
   img_dir,
@@ -38,7 +39,11 @@ cancer_rmd(
 
 \item{batch_name}{Name of batch sample.}
 
+\item{bcftools_stats}{Path to \code{bcftools_stats.txt} file.}
+
 \item{conda_list}{Path to \code{conda_pkg_list.txt} file.}
+
+\item{dragen_hrd}{Path to DRAGEN \code{hrdscore.csv} file.}
 
 \item{img_dir}{Path to directory containing PURPLE plots.}
 
@@ -66,9 +71,9 @@ cancer_rmd(
 
 \item{somatic_snv_summary}{Path to \code{somatic_snv_summary.json} JSON.}
 
-\item{somatic_sv_tsv}{Path to \code{manta.tsv} TSV file.}
+\item{somatic_sv_tsv}{Path to SV TSV file.}
 
-\item{somatic_sv_vcf}{Path to \code{manta.vcf.gz} VCF file.}
+\item{somatic_sv_vcf}{Path to SV VCF file.}
 
 \item{result_outdir}{Path to directory to write tidy JSON/TSV results.}
 

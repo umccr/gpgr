@@ -29,9 +29,9 @@ split_double_col <- function(d, nms) {
   assertthat::assert_that(is.character(nms))
 
   outd <- d |>
-    dplyr::select(tidyselect::all_of(nms)) |>
+    dplyr::select(dplyr::all_of(nms)) |>
     dplyr::mutate(num = dplyr::row_number()) |>
-    tidyr::pivot_longer(cols = tidyselect::all_of(nms), names_to = "col_nm", values_to = "x1_x2") |>
+    tidyr::pivot_longer(cols = dplyr::all_of(nms), names_to = "col_nm", values_to = "x1_x2") |>
     tidyr::separate(.data$x1_x2, into = c("x1", "x2"), sep = ",", fill = "right") |>
     dplyr::mutate(
       x1 = round(as.double(.data$x1), 2),
@@ -126,7 +126,6 @@ abbreviate_effect <- function(effects) {
 }
 
 sash_read_sv_tsv <- function(x) {
-
   tab <- dplyr::tribble(
     ~Column, ~Description, ~Type,
     "chrom", "CHROM column in VCF", "c",
@@ -162,19 +161,19 @@ sash_read_sv_tsv <- function(x) {
 }
 
 split_svs <- function(x) {
-  bps_types <-  c("BND", "DEL", "DUP"," INS", "INV")
+  bps_types <- c("BND", "DEL", "DUP", " INS", "INV")
 
   x.grouped <- x |>
     dplyr::group_by(
-      record_type=ifelse(Type %in% bps_types, "bps", "other")
+      record_type = ifelse(.data$Type %in% bps_types, "bps", "other")
     )
 
   keys <- x.grouped |>
     dplyr::group_keys() |>
-    dplyr::pull(record_type)
+    dplyr::pull("record_type")
 
   x.split <- x.grouped |>
-    dplyr::group_split(.keep=FALSE) |>
+    dplyr::group_split(.keep = FALSE) |>
     purrr::set_names(keys)
 
   list(
@@ -186,8 +185,8 @@ split_svs <- function(x) {
 join_breakpoint_entries <- function(x) {
   # Group by GRIDSS identifier (clipping trailing h/o [h: High, o: lOwer])
   bps <- x |>
-    tidyr::separate(ID, into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE)|>
-    dplyr::group_by(BND_group)
+    tidyr::separate("ID", into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) |>
+    dplyr::group_by("BND_group")
 
   # Set a sequential breakpoint identifier
   bps_groups <- bps |> dplyr::n_groups()
@@ -195,34 +194,35 @@ join_breakpoint_entries <- function(x) {
     dplyr::mutate(
       # Assign a unique ID based on current group
       BND_ID = sprintf(paste0("%0", nchar(bps_groups), "d"), dplyr::cur_group_id()),
-      BND_mate = ifelse(BND_mate == "o", "A", "B"),
+      BND_mate = ifelse(.data$BND_mate == "o", "A", "B"),
     ) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-      end_position = sub("^.*:(\\d+).*$", "\\1", ALT) |> as.numeric() |> base::format(big.mark = ",", trim = TRUE),
-      end_chrom = sub("^.*chr(.*):.*$", "\\1", ALT),
-      end = paste0(end_chrom, ":", end_position),
+      end_position = sub("^.*:(\\d+).*$", "\\1", .data$ALT) |>
+        as.numeric() |>
+        base::format(big.mark = ",", trim = TRUE),
+      end_chrom = sub("^.*chr(.*):.*$", "\\1", .data$ALT),
+      end = paste0(.data$end_chrom, ":", .data$end_position),
     ) |>
-    dplyr::select(-c(end_position, end_chrom))
+    dplyr::select(-c("end_position", "end_chrom"))
 }
 
 remove_gene_fusion_dups <- function(.data, columns) {
   # Order elements of multi-entry effect values for reliable comparison
   v.groups <- c("frameshift_variant&gene_fusion", "gene_fusion")
   v.effects_ordered <- sapply(.data$Effect, function(s) {
-    c <- stringr::str_split(s, "&") |> unlist()
-    paste0(sort(c), collapse="&")
+    c1 <- stringr::str_split(s, "&") |> unlist()
+    paste0(sort(c1), collapse = "&")
   })
 
   if (all(v.groups %in% v.effects_ordered)) {
-    .data |> dplyr::filter(Effect != "gene_fusion")
+    .data |> dplyr::filter(.data$Effect != "gene_fusion")
   } else {
     .data
   }
 }
 
 filter_and_split_annotations_sv <- function(x) {
-
   filter_conditions <- list(
     # Empty Gene field
     x$Genes == "",
@@ -236,16 +236,16 @@ filter_and_split_annotations_sv <- function(x) {
 
   x.grouped <- x |>
     dplyr::group_by(
-      filter=ifelse(purrr::reduce(filter_conditions, `|`), "filter", "retain")
+      filter = ifelse(purrr::reduce(filter_conditions, `|`), "filter", "retain")
     ) |>
-    dplyr::select(-c(Type, `Top Tier`))
+    dplyr::select(-c("Type", "Top Tier"))
 
   keys <- x.grouped |>
     dplyr::group_keys() |>
-    dplyr::pull(filter)
+    dplyr::pull("filter")
 
   x.split <- x.grouped |>
-    dplyr::group_split(.keep=FALSE) |>
+    dplyr::group_split(.keep = FALSE) |>
     purrr::set_names(keys)
 
   list(
@@ -259,16 +259,16 @@ set_many_transcripts_sv <- function(x) {
   x.tmp <- x |>
     dplyr::rowwise() |>
     dplyr::mutate(
-      `Transcript count` = stringr::str_split(Transcripts, ", ") |> unlist() |> unique() |> length()
+      `Transcript count` = stringr::str_split(.data$Transcripts, ", ") |> unlist() |> unique() |> length()
     ) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-      many_transcripts = ifelse(`Transcript count` > 2, "many_transcripts", "few_transcripts")
+      many_transcripts = ifelse(.data$`Transcript count` > 2, "many_transcripts", "few_transcripts")
     )
 
   # Build the many transcripts table
   mt <- x.tmp |>
-    dplyr::filter(many_transcripts == "many_transcripts") |>
+    dplyr::filter(.data$many_transcripts == "many_transcripts") |>
     # Remove unneeded columns and rename others
     dplyr::select(
       "Record ID",
@@ -284,12 +284,12 @@ set_many_transcripts_sv <- function(x) {
   x.ready <- x.tmp |>
     dplyr::mutate(
       Transcripts = ifelse(
-        many_transcripts == "few_transcripts" | is.na(many_transcripts),
-        Transcripts,
-        paste0("Many transcripts (", `Transcript count`, ")")
+        .data$many_transcripts == "few_transcripts" | is.na(.data$many_transcripts),
+        .data$Transcripts,
+        paste0("Many transcripts (", .data$`Transcript count`, ")")
       )
     ) |>
-    dplyr::select(-c(many_transcripts, `Transcript count`))
+    dplyr::select(-c("many_transcripts", "Transcript count"))
 
   list(
     many_transcripts = mt,
@@ -297,6 +297,11 @@ set_many_transcripts_sv <- function(x) {
   )
 }
 
+#' Process SV TSV
+#'
+#' @param x Path to SV TSV.
+#' @return List of many things.
+#'
 #' @export
 process_sv <- function(x) {
   # Read input and set column information
@@ -310,30 +315,30 @@ process_sv <- function(x) {
   # Prepare input
   sv.ready <- sv.input$data |>
     dplyr::mutate(
-      "annotation_count" = count_pieces(annotation, ","),
-      "Top Tier" = tier,
-      "SR_PR_ref" = paste0(SR_ref, ",", PR_ref),
+      "annotation_count" = count_pieces(.data$annotation, ","),
+      "Top Tier" = .data$tier,
+      "SR_PR_ref" = paste0(.data$SR_ref, ",", .data$PR_ref),
       "SR_PR_sum" = dplyr::case_when(
-        is.na(SR_alt) & is.na(PR_alt) ~ NA,
-        is.na(SR_alt) ~ PR_alt,
-        is.na(PR_alt) ~ SR_alt,
-        .default = SR_alt + PR_alt,
+        is.na(.data$SR_alt) & is.na(.data$PR_alt) ~ NA,
+        is.na(.data$SR_alt) ~ .data$PR_alt,
+        is.na(.data$PR_alt) ~ .data$SR_alt,
+        .default = .data$SR_alt + .data$PR_alt,
       ),
       "SR_PR_asm_sum" = dplyr::case_when(
-        is.na(SR_asm_alt) & is.na(PR_asm_alt) ~ NA,
-        is.na(SR_asm_alt) ~ PR_asm_alt,
-        is.na(PR_asm_alt) ~ SR_asm_alt,
-        .default = SR_asm_alt + PR_asm_alt,
+        is.na(.data$SR_asm_alt) & is.na(.data$PR_asm_alt) ~ NA,
+        is.na(.data$SR_asm_alt) ~ .data$PR_asm_alt,
+        is.na(.data$PR_asm_alt) ~ .data$SR_asm_alt,
+        .default = .data$SR_asm_alt + .data$PR_asm_alt,
       ),
-      start = paste(chrom, base::format(start, big.mark = ",", trim = TRUE), sep=":"),
-      Type = ifelse(is.na(PURPLE_status), svtype, "PURPLE_inf"),
-      "Record ID" = dplyr::row_number(),
+      start = paste(.data$chrom, base::format(.data$start, big.mark = ",", trim = TRUE), sep = ":"),
+      Type = ifelse(is.na(.data$PURPLE_status), .data$svtype, "PURPLE_inf"),
+      "Record ID" = dplyr::row_number()
     ) |>
     dplyr::select(-c(
-      chrom,
-      PURPLE_status,
-      tier,
-      svtype,
+      "chrom",
+      "PURPLE_status",
+      "tier",
+      "svtype"
     ))
 
   # Split out breakpoints for merging
@@ -347,7 +352,7 @@ process_sv <- function(x) {
   cols_to_split <- c("AF_PURPLE", "CN_PURPLE")
   double_cols <- split_double_col(sv.tmp, cols_to_split)
   sv.tmp <- sv.tmp |>
-    dplyr::select(-c(cols_to_split)) |>
+    dplyr::select(-c(dplyr::all_of(cols_to_split))) |>
     dplyr::bind_cols(double_cols)
 
   # Format a table for to be used as the SV Map
@@ -370,35 +375,35 @@ process_sv <- function(x) {
       "IC_alt",
       "SR_PR_ref",
       "PURPLE AF" = "AF_PURPLE",
-      "PURPLE CN" = "CN_PURPLE",
+      "PURPLE CN" = "CN_PURPLE"
     ) |>
-    dplyr::arrange(`Record ID`)
+    dplyr::arrange(.data$`Record ID`)
 
   # Melt annotations
   sv.melted_all <- sv.tmp |>
     # Split into individual annotations
-    dplyr::mutate(annotation = strsplit(annotation, ",")) |>
+    dplyr::mutate(annotation = strsplit(.data$annotation, ",")) |>
     # Convert annotation fields into columns
-    tidyr::unnest(annotation) |>
-    tidyr::separate(
-      annotation, c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier"),
-      sep = "\\|", convert = FALSE
+    tidyr::unnest("annotation") |>
+    tidyr::separate_wider_delim(
+      cols = "annotation", delim = "|",
+      names = c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier")
     ) |>
     # Remove gene_fusion annotations for variants where frameshift_variant&gene_fusion already exist
-    dplyr::group_by(across(-Effect)) |>
+    dplyr::group_by(dplyr::across(-"Effect")) |>
     dplyr::group_modify(remove_gene_fusion_dups) |>
     dplyr::ungroup() |>
     # Remove unused columns
-    dplyr::select(c(-Event, -ALT)) |>
+    dplyr::select(-c("Event", "ALT")) |>
     # Create columns, modify others
     dplyr::mutate(
       "Annotation ID" = dplyr::row_number(),
-      "Tier (top)" = paste0(Tier, " (", `Top Tier`, ")"),
-      "Genes" = stringr::str_replace_all(Genes, "&", ", "),
-      "Transcripts" = stringr::str_replace_all(Transcripts, "&", ", "),
+      "Tier (top)" = paste0(.data$Tier, " (", .data$`Top Tier`, ")"),
+      "Genes" = stringr::str_replace_all(.data$Genes, "&", ", "),
+      "Transcripts" = stringr::str_replace_all(.data$Transcripts, "&", ", "),
     ) |>
     # Sort rows
-    dplyr::arrange(`Tier (top)`, `Record ID`, Genes, Effect)
+    dplyr::arrange(.data$`Tier (top)`, .data$`Record ID`, .data$Genes, .data$Effect)
 
   # Abbreviate effects
   abbreviate_effectv <- Vectorize(abbreviate_effect)
@@ -430,7 +435,7 @@ process_sv <- function(x) {
       "PURPLE CN" = "CN_PURPLE",
       # Dropped after ops for non-map outputs
       "Top Tier",
-      "Type",
+      "Type"
     )
 
   # Create and set many transcript values
@@ -462,8 +467,8 @@ process_sv <- function(x) {
 #' @return A ggplot2 plot object.
 #'
 #' @examples
-#' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-#' d <- process_sv(x)$unmelted
+#' x <- system.file("extdata/sash/sv.prioritised.tsv", package = "gpgr")
+#' d <- process_sv(x)$map
 #' plot_bnd_sr_pr_tot_lines(d)
 #' @export
 plot_bnd_sr_pr_tot_lines <- function(d,
@@ -525,8 +530,8 @@ plot_bnd_sr_pr_tot_lines <- function(d,
 #' @return A ggplot2 plot object.
 #'
 #' @examples
-#' x <- system.file("extdata/umccrise/sv/manta.tsv", package = "gpgr")
-#' d <- process_sv(x)$unmelted
+#' x <- system.file("extdata/sash/sv.prioritised.tsv", package = "gpgr")
+#' d <- process_sv(x)$map
 #' plot_bnd_sr_pr_tot_hist(d, "a title")
 #' @export
 plot_bnd_sr_pr_tot_hist <- function(d,

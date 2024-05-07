@@ -43,7 +43,6 @@ requirements:
     - r-scales
     - r-testthat
     - r-tibble
-    - r-tidyselect
 
   run:
     - r-base
@@ -73,7 +72,6 @@ requirements:
     - r-scales
     - r-testthat
     - r-tibble
-    - r-tidyselect
 
 test:
   commands:

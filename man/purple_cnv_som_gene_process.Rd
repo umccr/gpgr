@@ -12,7 +12,7 @@ purple_cnv_som_gene_process(x, g = NULL)
 \item{g}{Path to gene file containing at least three columns:
 \itemize{
 \item \code{symbol}: gene name (character).
-\item \code{tumorsuppressor}: is this gene a tumor suppressor (TRUE/FALSE).
+\item \code{tsgene}: is this gene a tumor suppressor (TRUE/FALSE).
 \item \code{oncogene}: is this gene an oncogene (TRUE/FALSE).
 }}
 }
@@ -25,11 +25,11 @@ List with two elements:
 }
 \description{
 Processes the \code{purple.cnv.gene.tsv} file. Keeps genes that are in the
-\href{https://github.com/umccr/genes/blob/893a655801ce92715f05517b5052e4e81904e870/panels/umccr_2019-03-20.tsv}{UMCCR cancer gene list}
-and selects columns of interest.
+UMCCR cancer gene list
+(\href{https://raw.githubusercontent.com/umccr/gene_panels/v24.03.0/somatic_panel/3_final_panel/final_panel.tsv}{v24.03.0}) and selects columns of interest.
 }
 \examples{
 x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
-g <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
+g <- system.file("extdata/ref/umccr_cancer_genes_v24.03.0.tsv", package = "gpgr")
 (pp <- purple_cnv_som_gene_process(x, g))
 }

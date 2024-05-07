@@ -1,23 +1,16 @@
 # UMCCR Cancer Genes
-require(here)
-require(readr)
+require(here, include.only = "here")
+require(readr, include.only = "read_tsv")
 require(dplyr)
+require(glue, include.only = "glue")
 
-tmp <- tempfile()
-download.file(
-  url = "https://raw.githubusercontent.com/umccr/genes/893a655801ce92715f05517b5052e4e81904e870/panels/umccr_2019-03-20.tsv",
-  destfile = tmp
-)
-
-readr::read_tsv(tmp) |>
-  dplyr::select(symbol, tumorsuppressor, oncogene) |>
-  readr::write_tsv(here("inst/extdata/ref/umccr_cancer_genes_2019-03-20.tsv"))
-
-tmp2 <- tempfile()
-download.file(
-  "https://raw.githubusercontent.com/umccr/workflows/8d06a16a0199ccf94b666f9ec027efce8af1110b/genes/cancer_genes/umccr_cancer_genes.hg38.coding.bed",
-  destfile = tmp2
-)
-
-readr::read_tsv(tmp2, col_names = c("chr", "start", "end", "symbol"), col_types = "ciic") |>
-  readr::write_tsv(here("inst/extdata/ref/umccr_cancer_genes_hg38_coding.bed"))
+version <- "24.03.0"
+read_umccr_genes_final_panel <- function(version) {
+  repo <- "https://raw.githubusercontent.com/umccr/gene_panels"
+  tsv_url <- glue::glue("{repo}/v{version}/somatic_panel/3_final_panel/final_panel.tsv")
+  d <- readr::read_tsv(tsv_url, col_types = readr::cols(.default = "c", "tsgene" = "l", "oncogene" = "l")) |>
+    dplyr::select(symbol = "hgnc_symbol", tumorsuppressor = "tsgene", "oncogene")
+  d
+}
+read_umccr_genes_final_panel(version) |>
+  readr::write_tsv(here(glue("inst/extdata/ref/umccr_cancer_genes_v{version}.tsv")))

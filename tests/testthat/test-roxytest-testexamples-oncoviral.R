@@ -6,14 +6,14 @@ test_that("Function virusbreakend_summary_read() @ L18", {
   
   x <- system.file("extdata/virusbreakend/virusbreakend.vcf.summary.tsv", package = "gpgr")
   (vb <- virusbreakend_summary_read(x))
-  expect_equal(colnames(vb)[ncol(vb)], "QCStatus")
+  expect_equal(colnames(vb$tab)[ncol(vb$tab)], "QC")
 })
 
 
-test_that("Function virusbreakend_vcf_read() @ L101", {
+test_that("Function virusbreakend_vcf_read() @ L99", {
   
   x <- system.file("extdata/virusbreakend/virusbreakend.vcf", package = "gpgr")
   (vb <- virusbreakend_vcf_read(x))
-  expect_equal(colnames(vb)[ncol(vb)], "QC")
+  expect_equal(colnames(vb$tab)[ncol(vb$tab)], "QC")
 })
 
