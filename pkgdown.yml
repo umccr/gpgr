@@ -1,11 +1,10 @@
-pandoc: 3.1.3
-pkgdown: 2.0.7
+pandoc: 3.1.13
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   devnotes: devnotes.html
-  linx: linx.html
   purple: purple.html
-last_built: 2023-08-22T08:40Z
+last_built: 2024-05-08T07:17Z
 urls:
   reference: https://umccr.github.io/gpgr/reference
   article: https://umccr.github.io/gpgr/articles

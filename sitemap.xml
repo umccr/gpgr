@@ -16,9 +16,6 @@
     <loc>https://umccr.github.io/gpgr/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://umccr.github.io/gpgr/articles/linx.html</loc>
-  </url>
-  <url>
     <loc>https://umccr.github.io/gpgr/articles/purple.html</loc>
   </url>
   <url>
@@ -40,6 +37,9 @@
     <loc>https://umccr.github.io/gpgr/reference/af_summary.html</loc>
   </url>
   <url>
+    <loc>https://umccr.github.io/gpgr/reference/bcftools_stats_plot.html</loc>
+  </url>
+  <url>
     <loc>https://umccr.github.io/gpgr/reference/cancer_rmd.html</loc>
   </url>
   <url>
@@ -47,6 +47,12 @@
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/date_log.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/dragen_hrd.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/get_oncokb_genes.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/gpgr-package.html</loc>
@@ -61,72 +67,6 @@
     <loc>https://umccr.github.io/gpgr/reference/is_vcf.html</loc>
   </url>
   <url>
-    <loc>https://umccr.github.io/gpgr/reference/is_vcf_bpi.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_breakend_process.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_breakend_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_clusters_process.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_clusters_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_drivercatalog_process.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_drivercatalog_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_drivers_process.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_drivers_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_fusion_process.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_fusion_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_links_process.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_links_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_rmd.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_svs_process.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_svs_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_viscopynumber_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_visfusion_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_visgeneexon_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_visproteindomain_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_vissegments_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/linx_vissvdata_read.html</loc>
-  </url>
-  <url>
     <loc>https://umccr.github.io/gpgr/reference/mkdir.html</loc>
   </url>
   <url>
@@ -139,13 +79,10 @@
     <loc>https://umccr.github.io/gpgr/reference/plot_bnd_sr_pr_tot_lines.html</loc>
   </url>
   <url>
+    <loc>https://umccr.github.io/gpgr/reference/process_cnv_tsv.html</loc>
+  </url>
+  <url>
     <loc>https://umccr.github.io/gpgr/reference/process_sv.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/purple_cnv_germ_process.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/purple_cnv_germ_read.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/purple_cnv_som_gene_process.html</loc>
@@ -172,7 +109,7 @@
     <loc>https://umccr.github.io/gpgr/reference/purple_snv_vcf_read.html</loc>
   </url>
   <url>
-    <loc>https://umccr.github.io/gpgr/reference/purple_version_read.html</loc>
+    <loc>https://umccr.github.io/gpgr/reference/read_oncokb.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/session_info_kable.html</loc>
@@ -187,10 +124,13 @@
     <loc>https://umccr.github.io/gpgr/reference/tsv_is_empty.html</loc>
   </url>
   <url>
-    <loc>https://umccr.github.io/gpgr/reference/umccrise_read_sv_tsv.html</loc>
+    <loc>https://umccr.github.io/gpgr/reference/vcf_is_empty.html</loc>
   </url>
   <url>
-    <loc>https://umccr.github.io/gpgr/reference/vcf_is_empty.html</loc>
+    <loc>https://umccr.github.io/gpgr/reference/virusbreakend_summary_read.html</loc>
+  </url>
+  <url>
+    <loc>https://umccr.github.io/gpgr/reference/virusbreakend_vcf_read.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/write_jsongz.html</loc>
