@@ -77,29 +77,6 @@ cnv_som_gene$tab |>
   knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per gene) Summary Table.")
 ```
 
-### Germline CNVs (per chromosome)
-
-```{r cnv_germ}
-cnv_germ <- system.file("extdata/purple/purple.cnv.germline.tsv", package = "gpgr") |>
-  gpgr::purple_cnv_germ_process()
-```
-
-<details>
-<summary>Description</summary>
-
-```{r cnv_germ_descr}
-cnv_germ$descr |>
-  knitr::kable(format = "html", caption = "PURPLE Germline CNVs (per chromosome) Columns.")
-```
-
-</details>
-
-```{r cnv_germ_tab}
-cnv_germ$tab |>
-  dplyr::slice(1:10) |>
-  knitr::kable(format = "html", caption = "PURPLE Germline CNVs (per chromosome) Summary Table.")
-```
-
 ### Purity
 
 ```{r purity}
