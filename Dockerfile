@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 LABEL maintainer="https://github.com/pdiakumis"
 
-ARG MINI_VERSION=4.12.0-0
+ARG MINI_VERSION=24.3.0-0
 ARG MINI_URL=https://github.com/conda-forge/miniforge/releases/download/${MINI_VERSION}/Mambaforge-${MINI_VERSION}-Linux-x86_64.sh
 ARG MAMBA_PREFIX="/opt/mambaforge"
 
@@ -22,8 +22,8 @@ ARG ENV_DIR=/home/gpgr_conda_env
 ARG ENV_NAME="gpgr_env"
 COPY ./conda/env/lock ${ENV_DIR}
 RUN conda config --set always_yes yes && \
-    mamba install -c conda-forge conda-lock==1.0.5
-RUN conda-lock install --name ${ENV_NAME} ${ENV_DIR}/conda-lock.yml && \
+    mamba install -c conda-forge conda-lock
+RUN conda-lock install --name ${ENV_NAME} ${ENV_DIR}/gpgr-linux-64.lock && \
     mamba clean --all --force-pkgs-dirs
 
 ENV PATH="${MAMBA_PREFIX}/envs/${ENV_NAME}/bin:${PATH}"
