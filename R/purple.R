@@ -41,7 +41,7 @@ purple_cnv_som_gene_read <- function(x) {
 #'
 #' @param x Path to `purple.cnv.gene.tsv` file.
 #' @param g Path to gene file containing at least three columns:
-#' * `symbol`: gene name (character).
+#' * `ensembl_gene_symbol`: gene name (character).
 #' * `tsgene`: is this gene a tumor suppressor (TRUE/FALSE).
 #' * `oncogene`: is this gene an oncogene (TRUE/FALSE).
 #'
@@ -64,9 +64,9 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
   }
   genes <-
     readr::read_tsv(g, col_types = readr::cols(
-      symbol = "c", oncogene = "l", tumorsuppressor = "l"
+      ensembl_gene_symbol = "c", oncogene = "l", tumorsuppressor = "l"
     )) |>
-    dplyr::select("symbol", "oncogene", tsgene = "tumorsuppressor")
+    dplyr::select(symbol = "ensembl_gene_symbol", "oncogene", "tsgene")
   oncogenes <- genes |>
     dplyr::filter(.data$oncogene) |>
     dplyr::pull(.data$symbol)
@@ -556,7 +556,7 @@ purple_qc_read <- function(x) {
     "QCStatus", "Method", "CopyNumberSegments",
     "UnsupportedCopyNumberSegments", "Purity", "AmberGender",
     "CobaltGender", "DeletedGenes", "Contamination", "GermlineAberrations",
-    "AmberMeanDepth"
+    "AmberMeanDepth", "LohPercent"
   )
 
   assertthat::assert_that(all(purple_qc$key == nm))
@@ -622,7 +622,6 @@ purple_purity_read <- function(x) {
     "maxPloidy", "d",
     "minDiploidProportion", "d",
     "maxDiploidProportion", "d",
-    "version", "c",
     "somaticPenalty", "d",
     "wholeGenomeDuplication", "c",
     "msIndelsPerMb", "d",

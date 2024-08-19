@@ -161,7 +161,7 @@ sash_read_sv_tsv <- function(x) {
 }
 
 split_svs <- function(x) {
-  bps_types <- c("BND", "DEL", "DUP", " INS", "INV")
+  bps_types <- c("BND", "DEL", "DUP", "INS", "INV")
 
   x.grouped <- x |>
     dplyr::group_by(
@@ -186,7 +186,7 @@ join_breakpoint_entries <- function(x) {
   # Group by GRIDSS identifier (clipping trailing h/o [h: High, o: lOwer])
   bps <- x |>
     tidyr::separate("ID", into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) |>
-    dplyr::group_by("BND_group")
+    dplyr::group_by(BND_group)
 
   # Set a sequential breakpoint identifier
   bps_groups <- bps |> dplyr::n_groups()
