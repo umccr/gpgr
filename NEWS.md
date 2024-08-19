@@ -1,3 +1,14 @@
+# gpgr 2.1.0
+
+- :bug: minor fixes for canrep ([pr81](https://github.com/umccr/gpgr/pull/81))>
+
+# gpgr 2.0.0
+
+- :star: add DRAGEN HRD in canrep ([issue71](https://github.com/umccr/gpgr/pull/71) and [pr72](https://github.com/umccr/gpgr/pull/72)).
+- :star: add BCFtools stats QUAL plot for somatic small variants (([issue70](https://github.com/umccr/gpgr/issues/70), [pr73](https://github.com/umccr/gpgr/pull/73)).
+- :wrench: remove LINX support ([pr74](https://github.com/umccr/gpgr/pull/74)).
+- :star: switch from Umccrise to sash inputs for canrep ([pr68](https://github.com/umccr/gpgr/pull/68)).
+
 # gpgr 1.5.0
 
 - add bpi status in canrep summary table
