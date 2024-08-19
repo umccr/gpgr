@@ -1,6 +1,6 @@
 # gpgr 2.1.0
 
-- :bug: minor fixes for canrep ([pr81](https://github.com/umccr/gpgr/pull/81))>
+- :bug: minor fixes for canrep ([pr81](https://github.com/umccr/gpgr/pull/81)).
 
 # gpgr 2.0.0
 
