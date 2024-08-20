@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,15 +69,14 @@
 <div class="row">
   <main id="main" class="col-md-9"><ul>
 <li>
-<a href="#id_-gpgr---genomics-platform-group-reporting">📚 gpgr - Genomics Platform Group Reporting</a>
+<a href="#books-gpgr---genomics-platform-group-reporting">📚 gpgr - Genomics Platform Group Reporting</a>
 <ul>
 <li><a href="#installation">Installation</a></li>
 <li>
 <a href="#main-modules">Main modules</a>
 <ul>
-<li><a href="#id_-linx">🕸 LINX</a></li>
 <li><a href="#id_-purple">🔮 PURPLE</a></li>
-<li><a href="#id_-umccrise">🐍 umccrise</a></li>
+<li><a href="#id_-sash">sash</a></li>
 </ul>
 </li>
 <li><a href="#id_-developers">🥳 Developers</a></li>
@@ -86,7 +85,7 @@
 </li>
 </ul>
 <!-- README.md is generated from README.Rmd. Please edit that file --><div class="section level1">
-<div class="page-header"><h1 id="id_-gpgr---genomics-platform-group-reporting">📚 gpgr - Genomics Platform Group Reporting<a class="anchor" aria-label="anchor" href="#id_-gpgr---genomics-platform-group-reporting"></a>
+<div class="page-header"><h1 id="books-gpgr---genomics-platform-group-reporting">📚 gpgr - Genomics Platform Group Reporting<a class="anchor" aria-label="anchor" href="#books-gpgr---genomics-platform-group-reporting"></a>
 </h1></div>
 <p>Contains reports and functions used in the Genomics Platform Group at the University of Melbourne Centre for Cancer Research.</p>
 <ul>
@@ -108,35 +107,32 @@
 <h2 id="main-modules">Main modules<a class="anchor" aria-label="anchor" href="#main-modules"></a>
 </h2>
 <div class="section level3">
-<h3 id="id_-linx">🕸 LINX<a class="anchor" aria-label="anchor" href="#id_-linx"></a>
-</h3>
-<ul>
-<li>Generate a HTML report with results from the <code>LINX</code> structural variant visualisation tool from the Hartwig Medical Foundation (<a href="https://github.com/hartwigmedical/hmftools/tree/master/linx" class="external-link uri">https://github.com/hartwigmedical/hmftools/tree/master/linx</a>). See the <a href="#cli">CLI</a> section below for options.</li>
-<li>For useful functions for reading/processing <code>LINX</code> results, see the vignette at <a href="https://umccr.github.io/gpgr/articles/linx.html" class="uri">https://umccr.github.io/gpgr/articles/linx.html</a>.</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="id_-purple">🔮 PURPLE<a class="anchor" aria-label="anchor" href="#id_-purple"></a>
+<h3 id="crystal_ball-purple">🔮 PURPLE<a class="anchor" aria-label="anchor" href="#crystal_ball-purple"></a>
 </h3>
 <ul>
 <li>Read and process output files from the <code>PURPLE</code> purity/copy number estimator tool from the Hartwig Medical Foundation (<a href="https://github.com/hartwigmedical/hmftools/tree/master/purple" class="external-link uri">https://github.com/hartwigmedical/hmftools/tree/master/purple</a>). See vignette at <a href="https://umccr.github.io/gpgr/articles/purple.html" class="uri">https://umccr.github.io/gpgr/articles/purple.html</a>.</li>
 </ul>
 </div>
 <div class="section level3">
-<h3 id="id_-umccrise">🐍 umccrise<a class="anchor" aria-label="anchor" href="#id_-umccrise"></a>
+<h3 id="sash">sash<a class="anchor" aria-label="anchor" href="#sash"></a>
 </h3>
 <ul>
-<li>Generate a HTML report with results from the <code>umccrise</code> DRAGEN tumor/normal post-processing workflow from UMCCR - <a href="https://github.com/umccr/umccrise" class="external-link uri">https://github.com/umccr/umccrise</a>. See the <a href="#cli">CLI</a> section below for options.</li>
+<li>Generate a HTML report with results from the <code>sash</code> WGS post-processing workflow
+<ul>
+<li>
+<a href="https://github.com/scwatts/sash" class="external-link uri">https://github.com/scwatts/sash</a>. See the <a href="#cli">CLI</a> section below for options.</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div class="section level2">
-<h2 id="id_-developers">🥳 Developers<a class="anchor" aria-label="anchor" href="#id_-developers"></a>
+<h2 id="partying_face-developers">🥳 Developers<a class="anchor" aria-label="anchor" href="#partying_face-developers"></a>
 </h2>
 <p>See <a href="https://umccr.github.io/gpgr/articles/devnotes.html" class="uri">https://umccr.github.io/gpgr/articles/devnotes.html</a> for developer notes.</p>
 </div>
 <div class="section level2">
-<h2 id="id_-cli">💻 CLI<a class="anchor" aria-label="anchor" href="#id_-cli"></a>
+<h2 id="computer-cli">💻 CLI<a class="anchor" aria-label="anchor" href="#computer-cli"></a>
 </h2>
 <p>A <code>gpgr</code> command line interface is available for convenience.</p>
 <ul>
@@ -146,97 +142,94 @@
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="va">gpgr_cli</span><span class="op">=</span><span class="va">$(</span><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'x = system.file("cli", package = "gpgr"); cat(x, "\n")'</span> <span class="kw">|</span> <span class="fu">xargs</span><span class="va">)</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">${gpgr_cli}</span><span class="st">:</span><span class="va">${PATH}</span><span class="st">"</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>gpgr.R <span class="sc">--</span>version</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>gpgr.R <span class="dv">1</span>.<span class="fl">4.3</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>gpgr.R <span class="dv">2</span>.<span class="fl">1.0</span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#-----------------------------------#</span></span>
 <span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>gpgr.R <span class="sc">--</span>help</span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>usage<span class="sc">:</span> gpgr.R [<span class="sc">-</span>h] [<span class="sc">-</span>v] {linx,canrep} ...</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>usage<span class="sc">:</span> gpgr.R [<span class="sc">-</span>h] [<span class="sc">-</span>v] {canrep} ...</span>
 <span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a></span>
 <span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>UMCCR Genomics Platform Group Reporting</span>
 <span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a></span>
 <span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>positional arguments<span class="sc">:</span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  {linx,canrep}  sub<span class="sc">-</span>command help</span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    linx         UMCCR LINX Report.</span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    canrep       UMCCR Cancer Report.</span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>options<span class="sc">:</span></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>  <span class="sc">-</span>h, <span class="sc">--</span>help     show this help message and exit</span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>  <span class="sc">-</span>v, <span class="sc">--</span>version  show program<span class="st">'s version number and exit</span></span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="st">#-----------------------------------#</span></span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="st">#------- LINX Report -------#</span></span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="st">gpgr.R linx --help</span></span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="st">usage: gpgr.R linx [-h] --sample SAMPLE --plot PLOT --table TABLE [--out OUT]</span></span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="st">                   [--quiet]</span></span>
-<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a></span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="st">options:</span></span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="st">  -h, --help       show this help message and exit</span></span>
-<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="st">  --sample SAMPLE  Sample name.</span></span>
-<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="st">  --plot PLOT      Path to LINX plot directory.</span></span>
-<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="st">  --table TABLE    Path to LINX table directory.</span></span>
-<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="st">  --out OUT        HTML output file name [def: linx_{sample}.html].</span></span>
-<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="st">  --quiet          Suppress log printing during rendering.</span></span>
-<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a></span>
-<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="st">#-----------------------------------#</span></span>
-<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="st">#------- Cancer Report -------#</span></span>
-<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="st">gpgr.R canrep --help</span></span>
-<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="st">usage: gpgr.R canrep [-h] --af_global AF_GLOBAL --af_keygenes AF_KEYGENES</span></span>
-<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="st">                     --batch_name BATCH_NAME --conda_list CONDA_LIST --img_dir</span></span>
-<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="st">                     IMG_DIR --key_genes KEY_GENES --somatic_snv_summary</span></span>
-<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="st">                     SOMATIC_SNV_SUMMARY --somatic_snv_vcf SOMATIC_SNV_VCF</span></span>
-<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="st">                     --somatic_sv_tsv SOMATIC_SV_TSV --somatic_sv_vcf</span></span>
-<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="st">                     SOMATIC_SV_VCF --purple_som_gene_cnv PURPLE_SOM_GENE_CNV</span></span>
-<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="st">                     --purple_som_cnv PURPLE_SOM_CNV --purple_purity</span></span>
-<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="st">                     PURPLE_PURITY --purple_qc PURPLE_QC --purple_som_snv_vcf</span></span>
-<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="st">                     PURPLE_SOM_SNV_VCF --oncoviral_present_viruses</span></span>
-<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="st">                     ONCOVIRAL_PRESENT_VIRUSES --oncoviral_breakpoints_tsv</span></span>
-<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a><span class="st">                     ONCOVIRAL_BREAKPOINTS_TSV [--out_file OUT_FILE] [--quiet]</span></span>
-<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a><span class="st">                     --result_outdir RESULT_OUTDIR --tumor_name TUMOR_NAME</span></span>
-<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a></span>
-<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a><span class="st">options:</span></span>
-<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a><span class="st">  -h, --help            show this help message and exit</span></span>
-<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a><span class="st">  --af_global AF_GLOBAL</span></span>
-<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a><span class="st">                        Path to `af_tumor.txt` file.</span></span>
-<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a><span class="st">  --af_keygenes AF_KEYGENES</span></span>
-<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a><span class="st">                        Path to `af_tumor_keygenes.txt` file.</span></span>
-<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a><span class="st">  --batch_name BATCH_NAME</span></span>
-<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a><span class="st">                        Name of batch sample.</span></span>
-<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a><span class="st">  --conda_list CONDA_LIST</span></span>
-<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a><span class="st">                        Path to `conda_pkg_list.txt` file.</span></span>
-<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a><span class="st">  --img_dir IMG_DIR     Path to directory containing PURPLE plots.</span></span>
-<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a><span class="st">  --key_genes KEY_GENES</span></span>
-<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a><span class="st">                        Path to UMCCR cancer gene file.</span></span>
-<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a><span class="st">  --somatic_snv_summary SOMATIC_SNV_SUMMARY</span></span>
-<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a><span class="st">                        Path to `somatic_snv_summary.json`.</span></span>
-<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a><span class="st">  --somatic_snv_vcf SOMATIC_SNV_VCF</span></span>
-<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a><span class="st">                        Path to `somatic-PASS.vcf.gz` SNV VCF.</span></span>
-<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a><span class="st">  --somatic_sv_tsv SOMATIC_SV_TSV</span></span>
-<span id="cb4-67"><a href="#cb4-67" tabindex="-1"></a><span class="st">                        Path to `manta.tsv` TSV file.</span></span>
-<span id="cb4-68"><a href="#cb4-68" tabindex="-1"></a><span class="st">  --somatic_sv_vcf SOMATIC_SV_VCF</span></span>
-<span id="cb4-69"><a href="#cb4-69" tabindex="-1"></a><span class="st">                        Path to `manta.vcf.gz` VCF file.</span></span>
-<span id="cb4-70"><a href="#cb4-70" tabindex="-1"></a><span class="st">  --purple_som_gene_cnv PURPLE_SOM_GENE_CNV</span></span>
-<span id="cb4-71"><a href="#cb4-71" tabindex="-1"></a><span class="st">                        Path to `purple.cnv.gene.tsv`.</span></span>
-<span id="cb4-72"><a href="#cb4-72" tabindex="-1"></a><span class="st">  --purple_som_cnv PURPLE_SOM_CNV</span></span>
-<span id="cb4-73"><a href="#cb4-73" tabindex="-1"></a><span class="st">                        Path to `purple.cnv.somatic.tsv`.</span></span>
-<span id="cb4-74"><a href="#cb4-74" tabindex="-1"></a><span class="st">  --purple_purity PURPLE_PURITY</span></span>
-<span id="cb4-75"><a href="#cb4-75" tabindex="-1"></a><span class="st">                        Path to `purple.purity.tsv`.</span></span>
-<span id="cb4-76"><a href="#cb4-76" tabindex="-1"></a><span class="st">  --purple_qc PURPLE_QC</span></span>
-<span id="cb4-77"><a href="#cb4-77" tabindex="-1"></a><span class="st">                        Path to `purple.qc`.</span></span>
-<span id="cb4-78"><a href="#cb4-78" tabindex="-1"></a><span class="st">  --purple_som_snv_vcf PURPLE_SOM_SNV_VCF</span></span>
-<span id="cb4-79"><a href="#cb4-79" tabindex="-1"></a><span class="st">                        Path to `purple.somatic.vcf.gz`.</span></span>
-<span id="cb4-80"><a href="#cb4-80" tabindex="-1"></a><span class="st">  --oncoviral_present_viruses ONCOVIRAL_PRESENT_VIRUSES</span></span>
-<span id="cb4-81"><a href="#cb4-81" tabindex="-1"></a><span class="st">                        Path to `oncoviruses/present_viruses.txt`.</span></span>
-<span id="cb4-82"><a href="#cb4-82" tabindex="-1"></a><span class="st">  --oncoviral_breakpoints_tsv ONCOVIRAL_BREAKPOINTS_TSV</span></span>
-<span id="cb4-83"><a href="#cb4-83" tabindex="-1"></a><span class="st">                        Path to `oncoviruses/oncoviral_breakpoints.tsv`.</span></span>
-<span id="cb4-84"><a href="#cb4-84" tabindex="-1"></a><span class="st">  --out_file OUT_FILE   Path to output HTML file (needs '</span>.html<span class="st">' suffix) [def:</span></span>
-<span id="cb4-85"><a href="#cb4-85" tabindex="-1"></a><span class="st">                        {tumor_name}_cancer_report.html].</span></span>
-<span id="cb4-86"><a href="#cb4-86" tabindex="-1"></a><span class="st">  --quiet               Suppress log printing during rendering.</span></span>
-<span id="cb4-87"><a href="#cb4-87" tabindex="-1"></a><span class="st">  --result_outdir RESULT_OUTDIR</span></span>
-<span id="cb4-88"><a href="#cb4-88" tabindex="-1"></a><span class="st">                        Path to directory to write tidy JSON/TSV results.</span></span>
-<span id="cb4-89"><a href="#cb4-89" tabindex="-1"></a><span class="st">  --tumor_name TUMOR_NAME</span></span>
-<span id="cb4-90"><a href="#cb4-90" tabindex="-1"></a><span class="st">                        Name of tumor sample.</span></span>
-<span id="cb4-91"><a href="#cb4-91" tabindex="-1"></a></span>
-<span id="cb4-92"><a href="#cb4-92" tabindex="-1"></a><span class="st">#-----------------------------------#</span></span></code></pre></div>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  {canrep}       sub<span class="sc">-</span>command help</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    canrep       UMCCR Cancer Report.</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>options<span class="sc">:</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>  <span class="sc">-</span>h, <span class="sc">--</span>help     show this help message and exit</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>  <span class="sc">-</span>v, <span class="sc">--</span>version  show program<span class="st">'s version number and exit</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="st">#-----------------------------------#</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="st">#------- Cancer Report -------#</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="st">gpgr.R canrep --help</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="st">usage: gpgr.R canrep [-h] --af_global AF_GLOBAL --af_keygenes AF_KEYGENES</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="st">                     --batch_name BATCH_NAME [--conda_list CONDA_LIST]</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="st">                     --img_dir IMG_DIR --key_genes KEY_GENES --oncokb_genes</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="st">                     ONCOKB_GENES --somatic_snv_vcf SOMATIC_SNV_VCF</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="st">                     --somatic_snv_summary SOMATIC_SNV_SUMMARY</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="st">                     --somatic_sv_tsv SOMATIC_SV_TSV --somatic_sv_vcf</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="st">                     SOMATIC_SV_VCF --purple_som_gene_cnv PURPLE_SOM_GENE_CNV</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="st">                     --purple_som_cnv_ann PURPLE_SOM_CNV_ANN --purple_som_cnv</span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="st">                     PURPLE_SOM_CNV --purple_purity PURPLE_PURITY --purple_qc</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="st">                     PURPLE_QC --purple_som_snv_vcf PURPLE_SOM_SNV_VCF</span></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="st">                     --virusbreakend_tsv VIRUSBREAKEND_TSV --virusbreakend_vcf</span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="st">                     VIRUSBREAKEND_VCF --dragen_hrd DRAGEN_HRD</span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="st">                     --bcftools_stats BCFTOOLS_STATS [--out_file OUT_FILE]</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="st">                     [--quiet] --result_outdir RESULT_OUTDIR --tumor_name</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="st">                     TUMOR_NAME</span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="st">options:</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="st">  -h, --help            show this help message and exit</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="st">  --af_global AF_GLOBAL</span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="st">                        Path to `af_tumor.txt` file.</span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="st">  --af_keygenes AF_KEYGENES</span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="st">                        Path to `af_tumor_keygenes.txt` file.</span></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="st">  --batch_name BATCH_NAME</span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="st">                        Name of batch sample.</span></span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="st">  --conda_list CONDA_LIST</span></span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a><span class="st">                        Path to `conda_pkg_list.txt` file.</span></span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a><span class="st">  --img_dir IMG_DIR     Path to directory containing PURPLE plots.</span></span>
+<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a><span class="st">  --key_genes KEY_GENES</span></span>
+<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a><span class="st">                        Path to UMCCR cancer gene file.</span></span>
+<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a><span class="st">  --oncokb_genes ONCOKB_GENES</span></span>
+<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a><span class="st">                        Path to OncoKB database file.</span></span>
+<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a><span class="st">  --somatic_snv_vcf SOMATIC_SNV_VCF</span></span>
+<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a><span class="st">                        Path to `somatic-PASS.vcf.gz` SNV VCF.</span></span>
+<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a><span class="st">  --somatic_snv_summary SOMATIC_SNV_SUMMARY</span></span>
+<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a><span class="st">                        Path to `somatic_snv_summary.json` JSON.</span></span>
+<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a><span class="st">  --somatic_sv_tsv SOMATIC_SV_TSV</span></span>
+<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a><span class="st">                        Path to `manta.tsv` TSV file.</span></span>
+<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a><span class="st">  --somatic_sv_vcf SOMATIC_SV_VCF</span></span>
+<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a><span class="st">                        Path to `manta.vcf.gz` VCF file.</span></span>
+<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a><span class="st">  --purple_som_gene_cnv PURPLE_SOM_GENE_CNV</span></span>
+<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a><span class="st">                        Path to `purple.cnv.gene.tsv`.</span></span>
+<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a><span class="st">  --purple_som_cnv_ann PURPLE_SOM_CNV_ANN</span></span>
+<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a><span class="st">                        Path to annotated and prioritised</span></span>
+<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a><span class="st">                        `purple.cnv.somatic.tsv`.</span></span>
+<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a><span class="st">  --purple_som_cnv PURPLE_SOM_CNV</span></span>
+<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a><span class="st">                        Path to `purple.cnv.somatic.tsv`.</span></span>
+<span id="cb4-67"><a href="#cb4-67" tabindex="-1"></a><span class="st">  --purple_purity PURPLE_PURITY</span></span>
+<span id="cb4-68"><a href="#cb4-68" tabindex="-1"></a><span class="st">                        Path to `purple.purity.tsv`.</span></span>
+<span id="cb4-69"><a href="#cb4-69" tabindex="-1"></a><span class="st">  --purple_qc PURPLE_QC</span></span>
+<span id="cb4-70"><a href="#cb4-70" tabindex="-1"></a><span class="st">                        Path to `purple.qc`.</span></span>
+<span id="cb4-71"><a href="#cb4-71" tabindex="-1"></a><span class="st">  --purple_som_snv_vcf PURPLE_SOM_SNV_VCF</span></span>
+<span id="cb4-72"><a href="#cb4-72" tabindex="-1"></a><span class="st">                        Path to `purple.somatic.vcf.gz`.</span></span>
+<span id="cb4-73"><a href="#cb4-73" tabindex="-1"></a><span class="st">  --virusbreakend_tsv VIRUSBREAKEND_TSV</span></span>
+<span id="cb4-74"><a href="#cb4-74" tabindex="-1"></a><span class="st">                        Path to VIRUSBreakend summary file.</span></span>
+<span id="cb4-75"><a href="#cb4-75" tabindex="-1"></a><span class="st">  --virusbreakend_vcf VIRUSBREAKEND_VCF</span></span>
+<span id="cb4-76"><a href="#cb4-76" tabindex="-1"></a><span class="st">                        Path to VIRUSBreakend VCF file.</span></span>
+<span id="cb4-77"><a href="#cb4-77" tabindex="-1"></a><span class="st">  --dragen_hrd DRAGEN_HRD</span></span>
+<span id="cb4-78"><a href="#cb4-78" tabindex="-1"></a><span class="st">                        Path to DRAGEN HRD file</span></span>
+<span id="cb4-79"><a href="#cb4-79" tabindex="-1"></a><span class="st">  --bcftools_stats BCFTOOLS_STATS</span></span>
+<span id="cb4-80"><a href="#cb4-80" tabindex="-1"></a><span class="st">                        Path to bcftools stats file</span></span>
+<span id="cb4-81"><a href="#cb4-81" tabindex="-1"></a><span class="st">  --out_file OUT_FILE   Path to output HTML file (needs '</span>.html<span class="st">' suffix) [def:</span></span>
+<span id="cb4-82"><a href="#cb4-82" tabindex="-1"></a><span class="st">                        {tumor_name}_cancer_report.html].</span></span>
+<span id="cb4-83"><a href="#cb4-83" tabindex="-1"></a><span class="st">  --quiet               Suppress log printing during rendering.</span></span>
+<span id="cb4-84"><a href="#cb4-84" tabindex="-1"></a><span class="st">  --result_outdir RESULT_OUTDIR</span></span>
+<span id="cb4-85"><a href="#cb4-85" tabindex="-1"></a><span class="st">                        Path to directory to write tidy JSON/TSV results.</span></span>
+<span id="cb4-86"><a href="#cb4-86" tabindex="-1"></a><span class="st">  --tumor_name TUMOR_NAME</span></span>
+<span id="cb4-87"><a href="#cb4-87" tabindex="-1"></a><span class="st">                        Name of tumor sample.</span></span>
+<span id="cb4-88"><a href="#cb4-88" tabindex="-1"></a></span>
+<span id="cb4-89"><a href="#cb4-89" tabindex="-1"></a><span class="st">#-----------------------------------#</span></span></code></pre></div>
 </div>
 </div>
 

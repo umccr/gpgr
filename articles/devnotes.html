@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Developers</h1>
             
-            <h4 data-toc-skip class="date">2024-05-08</h4>
+            <h4 data-toc-skip class="date">2024-08-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/vignettes/devnotes.Rmd" class="external-link"><code>vignettes/devnotes.Rmd</code></a></small>
       <div class="d-none name"><code>devnotes.Rmd</code></div>
@@ -97,29 +97,29 @@ and documentation working.</p>
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th>Command</th>
 <th>Comment</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code></td>
 <td>document the pkg (<code>Cmd+Shift+D</code> (needs shortcut
 change))</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">devtools::load_all()</a></code></td>
 <td>load the pkg (<code>Cmd+Shift+L</code>)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code></td>
 <td>check the pkg (<code>Cmd+Shift+E</code>)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="https://devtools.r-lib.org/reference/install.html" class="external-link">devtools::install()</a></code></td>
 <td>install the pkg (<code>Cmd+Shift+B</code>)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>R CMD INSTALL --no-multiarch --with-keep.source git/gpgr</code></td>
 <td>install the pkg into the first library of <code><a href="https://rdrr.io/r/base/libPaths.html" class="external-link">.libPaths()</a></code>
 (useful when using in conda env)</td>
@@ -142,40 +142,40 @@ take place.</p>
 <col width="47%">
 <col width="52%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th>Command</th>
 <th>Comments</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>dvc init</code></td>
 <td>initialise dvc</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>dvc remote add -d storage gdrive://&lt;...&gt;</code></td>
 <td>add GDrive remote</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>dvc check-ignore *</code></td>
 <td>check what is dvc-ignored</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>dvc list https://github.com/umccr/gpgr inst/extdata</code></td>
 <td>list dvc’ed data</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>dvc add path/to/folder</code></td>
 <td>adds <code>folder</code> (and its contents) to dvc</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>dvc add path/to/file.txt</code></td>
 <td>adds <code>file.txt</code> to dvc</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>dvc push</code></td>
 <td>pushes dvc data to remote</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>dvc pull</code></td>
 <td>pulls dvc data from remote</td>
 </tr>

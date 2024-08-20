@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>PURPLE</h1>
             
-            <h4 data-toc-skip class="date">2024-05-08</h4>
+            <h4 data-toc-skip class="date">2024-08-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/vignettes/purple.Rmd" class="external-link"><code>vignettes/purple.Rmd</code></a></small>
       <div class="d-none name"><code>purple.Rmd</code></div>
@@ -109,413 +109,196 @@ of a tumor sample.</p>
 Description
 </summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cnv_som</span><span class="op">$</span><span class="va">descr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Columns."</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Columns."</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>
-PURPLE Somatic CNVs (per chromosome) Columns.
-</caption>
+<caption>PURPLE Somatic CNVs (per chromosome) Columns.</caption>
+<colgroup>
+<col width="6%">
+<col width="93%">
+</colgroup>
 <thead><tr>
-<th style="text-align:left;">
-Column
-</th>
-<th style="text-align:left;">
-Description
-</th>
+<th align="left">Column</th>
+<th align="left">Description</th>
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-Chr/Start/End
-</td>
-<td style="text-align:left;">
-Coordinates of copy number segment
-</td>
+<td align="left">Chr/Start/End</td>
+<td align="left">Coordinates of copy number segment</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-CN
-</td>
-<td style="text-align:left;">
-Fitted absolute copy number of segment adjusted for purity and ploidy
-</td>
+<td align="left">CN</td>
+<td align="left">Fitted absolute copy number of segment adjusted for
+purity and ploidy</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-CN Min+Maj
-</td>
-<td style="text-align:left;">
-CopyNumber of minor + major allele adjusted for purity
-</td>
+<td align="left">CN Min+Maj</td>
+<td align="left">CopyNumber of minor + major allele adjusted for
+purity</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Start/End SegSupport
-</td>
-<td style="text-align:left;">
-Type of SV support for the CN breakpoint at start/end of region. Allowed
-values: CENTROMERE, TELOMERE, INV, DEL, DUP, BND (translocation), SGL
-(single breakend SV support), NONE (no SV support for CN breakpoint),
-MULT (multiple SV support at exact breakpoint)
-</td>
+<td align="left">Start/End SegSupport</td>
+<td align="left">Type of SV support for the CN breakpoint at start/end
+of region. Allowed values: CENTROMERE, TELOMERE, INV, DEL, DUP, BND
+(translocation), SGL (single breakend SV support), NONE (no SV support
+for CN breakpoint), MULT (multiple SV support at exact breakpoint)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Method
-</td>
-<td style="text-align:left;">
-Method used to determine the CN of the region. Allowed values:
-BAF_WEIGHTED (avg of all depth windows for the region),
+<td align="left">Method</td>
+<td align="left">Method used to determine the CN of the region. Allowed
+values: BAF_WEIGHTED (avg of all depth windows for the region),
 STRUCTURAL_VARIANT (inferred using ploidy of flanking SVs), LONG_ARM
 (inferred from the long arm), GERMLINE_AMPLIFICATION (inferred using
-special logic to handle regions of germline amplification)
-</td>
+special logic to handle regions of germline amplification)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-BAF (count)
-</td>
-<td style="text-align:left;">
-Tumor BAF after adjusted for purity and ploidy (Count of AMBER baf
-points covered by this segment)
-</td>
+<td align="left">BAF (count)</td>
+<td align="left">Tumor BAF after adjusted for purity and ploidy (Count
+of AMBER baf points covered by this segment)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-GC (windowCount)
-</td>
-<td style="text-align:left;">
-Proportion of segment that is G or C (Count of COBALT windows covered by
-this segment)
-</td>
+<td align="left">GC (windowCount)</td>
+<td align="left">Proportion of segment that is G or C (Count of COBALT
+windows covered by this segment)</td>
 </tr>
 </tbody>
 </table></details><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cnv_som</span><span class="op">$</span><span class="va">tab</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Summary Table."</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per chromosome) Summary Table."</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>
-PURPLE Somatic CNVs (per chromosome) Summary Table.
-</caption>
+<caption>PURPLE Somatic CNVs (per chromosome) Summary Table.</caption>
+<colgroup>
+<col width="4%">
+<col width="9%">
+<col width="9%">
+<col width="3%">
+<col width="10%">
+<col width="19%">
+<col width="17%">
+<col width="11%">
+<col width="15%">
+</colgroup>
 <thead><tr>
-<th style="text-align:left;">
-Chr
-</th>
-<th style="text-align:right;">
-Start
-</th>
-<th style="text-align:right;">
-End
-</th>
-<th style="text-align:right;">
-CN
-</th>
-<th style="text-align:left;">
-CN Min+Maj
-</th>
-<th style="text-align:left;">
-Start/End SegSupport
-</th>
-<th style="text-align:left;">
-Method
-</th>
-<th style="text-align:left;">
-BAF (count)
-</th>
-<th style="text-align:left;">
-GC (windowCount)
-</th>
+<th align="left">Chr</th>
+<th align="right">Start</th>
+<th align="right">End</th>
+<th align="right">CN</th>
+<th align="left">CN Min+Maj</th>
+<th align="left">Start/End SegSupport</th>
+<th align="left">Method</th>
+<th align="left">BAF (count)</th>
+<th align="left">GC (windowCount)</th>
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-chr1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-123605522
-</td>
-<td style="text-align:right;">
-1.0
-</td>
-<td style="text-align:left;">
-0+1
-</td>
-<td style="text-align:left;">
-TELOMERE-CENTROMERE
-</td>
-<td style="text-align:left;">
-BAF_WEIGHTED
-</td>
-<td style="text-align:left;">
-0.98 (20830)
-</td>
-<td style="text-align:left;">
-0.42 (107822)
-</td>
+<td align="left">chr1</td>
+<td align="right">1</td>
+<td align="right">123605522</td>
+<td align="right">1.0</td>
+<td align="left">0+1</td>
+<td align="left">TELOMERE-CENTROMERE</td>
+<td align="left">BAF_WEIGHTED</td>
+<td align="left">0.98 (20830)</td>
+<td align="left">0.42 (107822)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr1
-</td>
-<td style="text-align:right;">
-123605523
-</td>
-<td style="text-align:right;">
-200044314
-</td>
-<td style="text-align:right;">
-2.0
-</td>
-<td style="text-align:left;">
-1+1
-</td>
-<td style="text-align:left;">
-CENTROMERE-DUP
-</td>
-<td style="text-align:left;">
-BAF_WEIGHTED
-</td>
-<td style="text-align:left;">
-0.5 (10239)
-</td>
-<td style="text-align:left;">
-0.4 (47332)
-</td>
+<td align="left">chr1</td>
+<td align="right">123605523</td>
+<td align="right">200044314</td>
+<td align="right">2.0</td>
+<td align="left">1+1</td>
+<td align="left">CENTROMERE-DUP</td>
+<td align="left">BAF_WEIGHTED</td>
+<td align="left">0.5 (10239)</td>
+<td align="left">0.4 (47332)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr1
-</td>
-<td style="text-align:right;">
-200044315
-</td>
-<td style="text-align:right;">
-200044570
-</td>
-<td style="text-align:right;">
-2.8
-</td>
-<td style="text-align:left;">
-1+1.8
-</td>
-<td style="text-align:left;">
-DUP-DUP
-</td>
-<td style="text-align:left;">
-STRUCTURAL_VARIANT
-</td>
-<td style="text-align:left;">
-0.65 (0)
-</td>
-<td style="text-align:left;">
-0 (0)
-</td>
+<td align="left">chr1</td>
+<td align="right">200044315</td>
+<td align="right">200044570</td>
+<td align="right">2.8</td>
+<td align="left">1+1.8</td>
+<td align="left">DUP-DUP</td>
+<td align="left">STRUCTURAL_VARIANT</td>
+<td align="left">0.65 (0)</td>
+<td align="left">0 (0)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr1
-</td>
-<td style="text-align:right;">
-200044571
-</td>
-<td style="text-align:right;">
-248956422
-</td>
-<td style="text-align:right;">
-2.0
-</td>
-<td style="text-align:left;">
-1+1
-</td>
-<td style="text-align:left;">
-DUP-TELOMERE
-</td>
-<td style="text-align:left;">
-BAF_WEIGHTED
-</td>
-<td style="text-align:left;">
-0.5 (10341)
-</td>
-<td style="text-align:left;">
-0.42 (43373)
-</td>
+<td align="left">chr1</td>
+<td align="right">200044571</td>
+<td align="right">248956422</td>
+<td align="right">2.0</td>
+<td align="left">1+1</td>
+<td align="left">DUP-TELOMERE</td>
+<td align="left">BAF_WEIGHTED</td>
+<td align="left">0.5 (10341)</td>
+<td align="left">0.42 (43373)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-93139350
-</td>
-<td style="text-align:right;">
-2.0
-</td>
-<td style="text-align:left;">
-1+1
-</td>
-<td style="text-align:left;">
-TELOMERE-CENTROMERE
-</td>
-<td style="text-align:left;">
-BAF_WEIGHTED
-</td>
-<td style="text-align:left;">
-0.51 (19339)
-</td>
-<td style="text-align:left;">
-0.41 (81949)
-</td>
+<td align="left">chr2</td>
+<td align="right">1</td>
+<td align="right">93139350</td>
+<td align="right">2.0</td>
+<td align="left">1+1</td>
+<td align="left">TELOMERE-CENTROMERE</td>
+<td align="left">BAF_WEIGHTED</td>
+<td align="left">0.51 (19339)</td>
+<td align="left">0.41 (81949)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr2
-</td>
-<td style="text-align:right;">
-93139351
-</td>
-<td style="text-align:right;">
-219955359
-</td>
-<td style="text-align:right;">
-2.0
-</td>
-<td style="text-align:left;">
-1+1
-</td>
-<td style="text-align:left;">
-CENTROMERE-BND
-</td>
-<td style="text-align:left;">
-BAF_WEIGHTED
-</td>
-<td style="text-align:left;">
-0.5 (19047)
-</td>
-<td style="text-align:left;">
-0.39 (112493)
-</td>
+<td align="left">chr2</td>
+<td align="right">93139351</td>
+<td align="right">219955359</td>
+<td align="right">2.0</td>
+<td align="left">1+1</td>
+<td align="left">CENTROMERE-BND</td>
+<td align="left">BAF_WEIGHTED</td>
+<td align="left">0.5 (19047)</td>
+<td align="left">0.39 (112493)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr2
-</td>
-<td style="text-align:right;">
-219955360
-</td>
-<td style="text-align:right;">
-225225069
-</td>
-<td style="text-align:right;">
-1.0
-</td>
-<td style="text-align:left;">
-0+1
-</td>
-<td style="text-align:left;">
-BND-BND
-</td>
-<td style="text-align:left;">
-BAF_WEIGHTED
-</td>
-<td style="text-align:left;">
-0.98 (1284)
-</td>
-<td style="text-align:left;">
-0.4 (5069)
-</td>
+<td align="left">chr2</td>
+<td align="right">219955360</td>
+<td align="right">225225069</td>
+<td align="right">1.0</td>
+<td align="left">0+1</td>
+<td align="left">BND-BND</td>
+<td align="left">BAF_WEIGHTED</td>
+<td align="left">0.98 (1284)</td>
+<td align="left">0.4 (5069)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr2
-</td>
-<td style="text-align:right;">
-225225070
-</td>
-<td style="text-align:right;">
-242193529
-</td>
-<td style="text-align:right;">
-2.0
-</td>
-<td style="text-align:left;">
-1+1
-</td>
-<td style="text-align:left;">
-BND-TELOMERE
-</td>
-<td style="text-align:left;">
-BAF_WEIGHTED
-</td>
-<td style="text-align:left;">
-0.51 (4236)
-</td>
-<td style="text-align:left;">
-0.44 (15099)
-</td>
+<td align="left">chr2</td>
+<td align="right">225225070</td>
+<td align="right">242193529</td>
+<td align="right">2.0</td>
+<td align="left">1+1</td>
+<td align="left">BND-TELOMERE</td>
+<td align="left">BAF_WEIGHTED</td>
+<td align="left">0.51 (4236)</td>
+<td align="left">0.44 (15099)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-92214015
-</td>
-<td style="text-align:right;">
-1.0
-</td>
-<td style="text-align:left;">
-0+1
-</td>
-<td style="text-align:left;">
-TELOMERE-CENTROMERE
-</td>
-<td style="text-align:left;">
-BAF_WEIGHTED
-</td>
-<td style="text-align:left;">
-0.98 (18629)
-</td>
-<td style="text-align:left;">
-0.4 (83984)
-</td>
+<td align="left">chr3</td>
+<td align="right">1</td>
+<td align="right">92214015</td>
+<td align="right">1.0</td>
+<td align="left">0+1</td>
+<td align="left">TELOMERE-CENTROMERE</td>
+<td align="left">BAF_WEIGHTED</td>
+<td align="left">0.98 (18629)</td>
+<td align="left">0.4 (83984)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-92214016
-</td>
-<td style="text-align:right;">
-198295559
-</td>
-<td style="text-align:right;">
-2.0
-</td>
-<td style="text-align:left;">
-1+1
-</td>
-<td style="text-align:left;">
-CENTROMERE-TELOMERE
-</td>
-<td style="text-align:left;">
-BAF_WEIGHTED
-</td>
-<td style="text-align:left;">
-0.5 (21114)
-</td>
-<td style="text-align:left;">
-0.39 (95873)
-</td>
+<td align="left">chr3</td>
+<td align="right">92214016</td>
+<td align="right">198295559</td>
+<td align="right">2.0</td>
+<td align="left">1+1</td>
+<td align="left">CENTROMERE-TELOMERE</td>
+<td align="left">BAF_WEIGHTED</td>
+<td align="left">0.5 (21114)</td>
+<td align="left">0.39 (95873)</td>
 </tr>
 </tbody>
 </table>
@@ -524,478 +307,195 @@ BAF_WEIGHTED
 <h3 id="somatic-cnvs-per-gene">Somatic CNVs (per gene)<a class="anchor" aria-label="anchor" href="#somatic-cnvs-per-gene"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">umccr_key_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/ref/umccr_cancer_genes_2019-03-20.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">umccr_key_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/ref/somatic_panel-v24.03.0.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span></span>
 <span><span class="va">cnv_som_gene</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.cnv.gene.tsv"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_cnv_som_gene_process.html">purple_cnv_som_gene_process</a></span><span class="op">(</span>g <span class="op">=</span> <span class="va">umccr_key_genes</span><span class="op">)</span></span></code></pre></div>
 <details><summary>
 Description
 </summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cnv_som_gene</span><span class="op">$</span><span class="va">descr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Columns."</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Columns."</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>
-PURPLE Somatic CNVs (per gene) Columns.
-</caption>
+<caption>PURPLE Somatic CNVs (per gene) Columns.</caption>
+<colgroup>
+<col width="21%">
+<col width="78%">
+</colgroup>
 <thead><tr>
-<th style="text-align:left;">
-Column
-</th>
-<th style="text-align:left;">
-Description
-</th>
+<th align="left">Column</th>
+<th align="left">Description</th>
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-gene
-</td>
-<td style="text-align:left;">
-Name of gene
+<td align="left">gene</td>
+<td align="left">Name of gene</td>
+</tr>
+<tr>
+<td align="left">minCN/maxCN</td>
+<td align="left">Min/Max copy number found in gene exons</td>
+</tr>
+<tr>
+<td align="left">chrom/start/end</td>
+<td align="left">Chromosome/start/end location of gene transcript</td>
+</tr>
+<tr>
+<td align="left">chrBand</td>
+<td align="left">Chromosome band of the gene</td>
+</tr>
+<tr>
+<td align="left">onco_or_ts</td>
+<td align="left">oncogene (‘oncogene’), tumor suppressor (‘tsgene’), or
+both (‘onco+ts’), as reported by <a href="https://github.com/jakelever/cancermine" class="external-link">Cancermine</a>
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-minCN/maxCN
-</td>
-<td style="text-align:left;">
-Min/Max copy number found in gene exons
-</td>
+<td align="left">transcriptID</td>
+<td align="left">Ensembl transcript ID (dot version)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chrom/start/end
-</td>
-<td style="text-align:left;">
-Chromosome/start/end location of gene transcript
-</td>
+<td align="left">minMinorAlleleCN</td>
+<td align="left">Minimum allele ploidy found over the gene exons -
+useful for identifying LOH events</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chrBand
-</td>
-<td style="text-align:left;">
-Chromosome band of the gene
-</td>
+<td align="left">somReg (somaticRegions)</td>
+<td align="left">Count of somatic copy number regions this gene
+spans</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-onco_or_ts
-</td>
-<td style="text-align:left;">
-oncogene (‘oncogene’), tumor suppressor (‘tsgene’), or both (‘onco+ts’),
-as reported by <a href="https://github.com/jakelever/cancermine" class="external-link">Cancermine</a>
-</td>
+<td align="left">minReg (minRegions)</td>
+<td align="left">Number of somatic regions inside the gene that share
+the min copy number</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-transcriptID
-</td>
-<td style="text-align:left;">
-Ensembl transcript ID (dot version)
-</td>
+<td align="left">minRegStartEnd</td>
+<td align="left">Start/End base of the copy number region overlapping
+the gene with the minimum copy number</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-minMinorAlleleCN
-</td>
-<td style="text-align:left;">
-Minimum allele ploidy found over the gene exons - useful for identifying
-LOH events
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-somReg (somaticRegions)
-</td>
-<td style="text-align:left;">
-Count of somatic copy number regions this gene spans
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-minReg (minRegions)
-</td>
-<td style="text-align:left;">
-Number of somatic regions inside the gene that share the min copy number
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-minRegStartEnd
-</td>
-<td style="text-align:left;">
-Start/End base of the copy number region overlapping the gene with the
-minimum copy number
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-minRegSupportStartEndMethod
-</td>
-<td style="text-align:left;">
-Start/end support of the CN region overlapping the gene with the min CN
-(plus determination method)
-</td>
+<td align="left">minRegSupportStartEndMethod</td>
+<td align="left">Start/end support of the CN region overlapping the gene
+with the min CN (plus determination method)</td>
 </tr>
 </tbody>
 </table></details><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cnv_som_gene</span><span class="op">$</span><span class="va">tab</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Summary Table."</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<caption>
-PURPLE Somatic CNVs (per gene) Summary Table.
-</caption>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"PURPLE Somatic CNVs (per gene) Summary Table."</span><span class="op">)</span></span></code></pre></div>
+<table style="width:100%;" class="table">
+<caption>PURPLE Somatic CNVs (per gene) Summary Table.</caption>
+<colgroup>
+<col width="4%">
+<col width="4%">
+<col width="4%">
+<col width="3%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="7%">
+<col width="10%">
+<col width="11%">
+<col width="4%">
+<col width="4%">
+<col width="9%">
+<col width="18%">
+</colgroup>
 <thead><tr>
-<th style="text-align:left;">
-gene
-</th>
-<th style="text-align:right;">
-minCN
-</th>
-<th style="text-align:right;">
-maxCN
-</th>
-<th style="text-align:left;">
-chrom
-</th>
-<th style="text-align:right;">
-start
-</th>
-<th style="text-align:right;">
-end
-</th>
-<th style="text-align:left;">
-chrBand
-</th>
-<th style="text-align:left;">
-onco_or_ts
-</th>
-<th style="text-align:left;">
-transcriptID
-</th>
-<th style="text-align:right;">
-minMinorAlleleCN
-</th>
-<th style="text-align:right;">
-somReg
-</th>
-<th style="text-align:right;">
-minReg
-</th>
-<th style="text-align:left;">
-minRegStartEnd
-</th>
-<th style="text-align:left;">
-minRegSupportStartEndMethod
-</th>
+<th align="left">gene</th>
+<th align="right">minCN</th>
+<th align="right">maxCN</th>
+<th align="left">chrom</th>
+<th align="right">start</th>
+<th align="right">end</th>
+<th align="left">chrBand</th>
+<th align="left">onco_or_ts</th>
+<th align="left">transcriptID</th>
+<th align="right">minMinorAlleleCN</th>
+<th align="right">somReg</th>
+<th align="right">minReg</th>
+<th align="left">minRegStartEnd</th>
+<th align="left">minRegSupportStartEndMethod</th>
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-SDHA
-</td>
-<td style="text-align:right;">
-5.6640
-</td>
-<td style="text-align:right;">
-5.6640
-</td>
-<td style="text-align:left;">
-chr5
-</td>
-<td style="text-align:right;">
-218303
-</td>
-<td style="text-align:right;">
-257082
-</td>
-<td style="text-align:left;">
-p15.33
-</td>
-<td style="text-align:left;">
-tsgene
-</td>
-<td style="text-align:left;">
-ENST00000264932
-</td>
-<td style="text-align:right;">
-1.8901
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-89179-297781
-</td>
-<td style="text-align:left;">
-DEL-DEL (BAF_WEIGHTED)
-</td>
+<td align="left">SDHA</td>
+<td align="right">5.6640</td>
+<td align="right">5.6640</td>
+<td align="left">chr5</td>
+<td align="right">218303</td>
+<td align="right">257082</td>
+<td align="left">p15.33</td>
+<td align="left">tsgene</td>
+<td align="left">ENST00000264932</td>
+<td align="right">1.8901</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">89179-297781</td>
+<td align="left">DEL-DEL (BAF_WEIGHTED)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-DUSP22
-</td>
-<td style="text-align:right;">
-4.6638
-</td>
-<td style="text-align:right;">
-4.6638
-</td>
-<td style="text-align:left;">
-chr6
-</td>
-<td style="text-align:right;">
-291630
-</td>
-<td style="text-align:right;">
-351355
-</td>
-<td style="text-align:left;">
-p25.3
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-ENST00000419235
-</td>
-<td style="text-align:right;">
-1.6754
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-1-834611
-</td>
-<td style="text-align:left;">
-TELOMERE-DEL (BAF_WEIGHTED)
-</td>
+<td align="left">DUSP22</td>
+<td align="right">4.6638</td>
+<td align="right">4.6638</td>
+<td align="left">chr6</td>
+<td align="right">291630</td>
+<td align="right">351355</td>
+<td align="left">p25.3</td>
+<td align="left">tsgene</td>
+<td align="left">ENST00000419235</td>
+<td align="right">1.6754</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">1-834611</td>
+<td align="left">TELOMERE-DEL (BAF_WEIGHTED)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-IRF4
-</td>
-<td style="text-align:right;">
-4.6638
-</td>
-<td style="text-align:right;">
-4.6638
-</td>
-<td style="text-align:left;">
-chr6
-</td>
-<td style="text-align:right;">
-391752
-</td>
-<td style="text-align:right;">
-411443
-</td>
-<td style="text-align:left;">
-p25.3
-</td>
-<td style="text-align:left;">
-oncogene
-</td>
-<td style="text-align:left;">
-ENST00000380956
-</td>
-<td style="text-align:right;">
-1.6754
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-1-834611
-</td>
-<td style="text-align:left;">
-TELOMERE-DEL (BAF_WEIGHTED)
-</td>
+<td align="left">IRF4</td>
+<td align="right">4.6638</td>
+<td align="right">4.6638</td>
+<td align="left">chr6</td>
+<td align="right">391752</td>
+<td align="right">411443</td>
+<td align="left">p25.3</td>
+<td align="left">oncogene</td>
+<td align="left">ENST00000380956</td>
+<td align="right">1.6754</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">1-834611</td>
+<td align="left">TELOMERE-DEL (BAF_WEIGHTED)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-FOXQ1
-</td>
-<td style="text-align:right;">
-4.6384
-</td>
-<td style="text-align:right;">
-4.6384
-</td>
-<td style="text-align:left;">
-chr6
-</td>
-<td style="text-align:right;">
-1312098
-</td>
-<td style="text-align:right;">
-1314758
-</td>
-<td style="text-align:left;">
-p25.3
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-ENST00000296839
-</td>
-<td style="text-align:right;">
-1.6500
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-1132797-1336737
-</td>
-<td style="text-align:left;">
-INF-SGL (BAF_WEIGHTED)
-</td>
+<td align="left">KDM5A</td>
+<td align="right">4.2953</td>
+<td align="right">4.2953</td>
+<td align="left">chr12</td>
+<td align="right">280057</td>
+<td align="right">389320</td>
+<td align="left">p13.33</td>
+<td align="left">oncogene</td>
+<td align="left">ENST00000399788</td>
+<td align="right">0.0000</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">1-1210023</td>
+<td align="left">TELOMERE-DEL (BAF_WEIGHTED)</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-LARP4B
-</td>
-<td style="text-align:right;">
-1.9788
-</td>
-<td style="text-align:right;">
-1.9788
-</td>
-<td style="text-align:left;">
-chr10
-</td>
-<td style="text-align:right;">
-806933
-</td>
-<td style="text-align:right;">
-931821
-</td>
-<td style="text-align:left;">
-p15.3
-</td>
-<td style="text-align:left;">
-tsgene
-</td>
-<td style="text-align:left;">
-ENST00000316157
-</td>
-<td style="text-align:right;">
-0.0000
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-1-1715181
-</td>
-<td style="text-align:left;">
-TELOMERE-BND (BAF_WEIGHTED)
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KDM5A
-</td>
-<td style="text-align:right;">
-4.2953
-</td>
-<td style="text-align:right;">
-4.2953
-</td>
-<td style="text-align:left;">
-chr12
-</td>
-<td style="text-align:right;">
-280057
-</td>
-<td style="text-align:right;">
-389320
-</td>
-<td style="text-align:left;">
-p13.33
-</td>
-<td style="text-align:left;">
-oncogene
-</td>
-<td style="text-align:left;">
-ENST00000399788
-</td>
-<td style="text-align:right;">
-0.0000
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-1-1210023
-</td>
-<td style="text-align:left;">
-TELOMERE-DEL (BAF_WEIGHTED)
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CRLF2
-</td>
-<td style="text-align:right;">
-3.7271
-</td>
-<td style="text-align:right;">
-3.7271
-</td>
-<td style="text-align:left;">
-chrX
-</td>
-<td style="text-align:right;">
-1187549
-</td>
-<td style="text-align:right;">
-1212723
-</td>
-<td style="text-align:left;">
-p22.33
-</td>
-<td style="text-align:left;">
-oncogene
-</td>
-<td style="text-align:left;">
-ENST00000400841
-</td>
-<td style="text-align:right;">
-0.0000
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-924013-2677577
-</td>
-<td style="text-align:left;">
-DUP-DUP (BAF_WEIGHTED)
-</td>
+<td align="left">CRLF2</td>
+<td align="right">3.7271</td>
+<td align="right">3.7271</td>
+<td align="left">chrX</td>
+<td align="right">1187549</td>
+<td align="right">1212723</td>
+<td align="left">p22.33</td>
+<td align="left">oncogene</td>
+<td align="left">ENST00000400841</td>
+<td align="right">0.0000</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">924013-2677577</td>
+<td align="left">DUP-DUP (BAF_WEIGHTED)</td>
 </tr>
 </tbody>
 </table>
@@ -1008,171 +508,89 @@ DUP-DUP (BAF_WEIGHTED)
 <span>  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_purity_read.html">purple_purity_read</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">purity</span><span class="op">$</span><span class="va">summary</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Purity Summary Table."</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"PURPLE Purity Summary Table."</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>
-PURPLE Purity Summary Table.
-</caption>
+<caption>PURPLE Purity Summary Table.</caption>
+<colgroup>
+<col width="2%">
+<col width="10%">
+<col width="11%">
+<col width="75%">
+</colgroup>
 <thead><tr>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:left;">
-variable
-</th>
-<th style="text-align:left;">
-value
-</th>
-<th style="text-align:left;">
-details
-</th>
+<th align="right">n</th>
+<th align="left">variable</th>
+<th align="left">value</th>
+<th align="left">details</th>
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Purity
-</td>
-<td style="text-align:left;">
-0.99 (0.98-1)
-</td>
-<td style="text-align:left;">
-Purity of tumor in the sample (and min-max with score within 10% of
-best).
-</td>
+<td align="right">2</td>
+<td align="left">Purity</td>
+<td align="left">0.99 (0.98-1)</td>
+<td align="left">Purity of tumor in the sample (and min-max with score
+within 10% of best).</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-Ploidy
-</td>
-<td style="text-align:left;">
-2.86 (2.78-2.94)
-</td>
-<td style="text-align:left;">
-Average ploidy of tumor sample after adjusting for purity (and min-max
-with score within 10% of best).
-</td>
+<td align="right">3</td>
+<td align="left">Ploidy</td>
+<td align="left">2.86 (2.78-2.94)</td>
+<td align="left">Average ploidy of tumor sample after adjusting for
+purity (and min-max with score within 10% of best).</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:left;">
-Gender
-</td>
-<td style="text-align:left;">
-MALE
-</td>
-<td style="text-align:left;">
-Gender as inferred by AMBER/COBALT.
-</td>
+<td align="right">4</td>
+<td align="left">Gender</td>
+<td align="left">MALE</td>
+<td align="left">Gender as inferred by AMBER/COBALT.</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:left;">
-WGD
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-Whole genome duplication (more than 10 autosomes have average major
-allele ploidy &gt; 1.5).
-</td>
+<td align="right">7</td>
+<td align="left">WGD</td>
+<td align="left">TRUE</td>
+<td align="left">Whole genome duplication (more than 10 autosomes have
+average major allele ploidy &gt; 1.5).</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:left;">
-MSI (indels/Mb)
-</td>
-<td style="text-align:left;">
-MSS (0.19)
-</td>
-<td style="text-align:left;">
-MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) &amp;
-MS Indels per Mb.
-</td>
+<td align="right">8</td>
+<td align="left">MSI (indels/Mb)</td>
+<td align="left">MSS (0.19)</td>
+<td align="left">MSI status (MSI, MSS or UNKNOWN if somatic variants not
+supplied) &amp; MS Indels per Mb.</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:left;">
-PolyclonalProp
-</td>
-<td style="text-align:left;">
-0.13
-</td>
-<td style="text-align:left;">
-Proportion of CN regions that are more than 0.25 from a whole CN
-</td>
+<td align="right">9</td>
+<td align="left">PolyclonalProp</td>
+<td align="left">0.13</td>
+<td align="left">Proportion of CN regions that are more than 0.25 from a
+whole CN</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:left;">
-DiploidyProp
-</td>
-<td style="text-align:left;">
-0.03 (0.02-0.04)
-</td>
-<td style="text-align:left;">
-Proportion of CN regions that have 1 (+- 0.2) minor and major allele.
-</td>
+<td align="right">10</td>
+<td align="left">DiploidyProp</td>
+<td align="left">0.03 (0.02-0.04)</td>
+<td align="left">Proportion of CN regions that have 1 (+- 0.2) minor and
+major allele.</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:left;">
-TMB
-</td>
-<td style="text-align:left;">
-15.13 (HIGH)
-</td>
-<td style="text-align:left;">
-Tumor mutational burden (# PASS variants per Megabase) (Status: ‘HIGH’
-(&gt;10 PASS per Mb), ‘LOW’ or ‘UNKNOWN’).
-</td>
+<td align="right">11</td>
+<td align="left">TMB</td>
+<td align="left">15.13 (HIGH)</td>
+<td align="left">Tumor mutational burden (# PASS variants per Megabase)
+(Status: ‘HIGH’ (&gt;10 PASS per Mb), ‘LOW’ or ‘UNKNOWN’).</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:left;">
-TML
-</td>
-<td style="text-align:left;">
-349 (HIGH)
-</td>
-<td style="text-align:left;">
-Tumor mutational load (# of missense variants) (Status: ‘HIGH’, ‘LOW’ or
-‘UNKNOWN’).
-</td>
+<td align="right">12</td>
+<td align="left">TML</td>
+<td align="left">349 (HIGH)</td>
+<td align="left">Tumor mutational load (# of missense variants) (Status:
+‘HIGH’, ‘LOW’ or ‘UNKNOWN’).</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:left;">
-TMB-SV
-</td>
-<td style="text-align:left;">
-1267
-</td>
-<td style="text-align:left;">
-# of non inferred, non single passing SVs.
-</td>
+<td align="right">13</td>
+<td align="left">TMB-SV</td>
+<td align="left">1267</td>
+<td align="left"># of non inferred, non single passing SVs.</td>
 </tr>
 </tbody>
 </table>
@@ -1184,958 +602,205 @@ TMB-SV
 <code class="sourceCode R"><span><span class="va">kat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.somatic.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/purple_kataegis.html">purple_kataegis</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">kat</span><span class="op">$</span><span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE Kataegis Table."</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<caption>
-PURPLE Kataegis Table.
-</caption>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"PURPLE Kataegis Table."</span><span class="op">)</span></span></code></pre></div>
+<table style="width:100%;" class="table">
+<caption>PURPLE Kataegis Table.</caption>
+<colgroup>
+<col width="7%">
+<col width="11%">
+<col width="7%">
+<col width="12%">
+<col width="12%">
+<col width="15%">
+<col width="14%">
+<col width="7%">
+<col width="3%">
+<col width="5%">
+</colgroup>
 <thead><tr>
-<th style="text-align:left;">
-CHROM
-</th>
-<th style="text-align:right;">
-POS
-</th>
-<th style="text-align:left;">
-KT
-</th>
-<th style="text-align:right;">
-PURPLE_AF
-</th>
-<th style="text-align:right;">
-PURPLE_CN
-</th>
-<th style="text-align:right;">
-PURPLE_MACN
-</th>
-<th style="text-align:right;">
-PURPLE_VCN
-</th>
-<th style="text-align:right;">
-SUBCL
-</th>
-<th style="text-align:left;">
-MH
-</th>
-<th style="text-align:left;">
-TNC
-</th>
+<th align="left">CHROM</th>
+<th align="right">POS</th>
+<th align="left">KT</th>
+<th align="right">PURPLE_AF</th>
+<th align="right">PURPLE_CN</th>
+<th align="right">PURPLE_MACN</th>
+<th align="right">PURPLE_VCN</th>
+<th align="right">SUBCL</th>
+<th align="left">MH</th>
+<th align="left">TNC</th>
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-chr2
-</td>
-<td style="text-align:right;">
-45006212
-</td>
-<td style="text-align:left;">
-REV_1
-</td>
-<td style="text-align:right;">
-0.2601
-</td>
-<td style="text-align:right;">
-1.52
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.396
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-GGA
-</td>
+<td align="left">chr2</td>
+<td align="right">45006212</td>
+<td align="left">REV_1</td>
+<td align="right">0.2601</td>
+<td align="right">1.52</td>
+<td align="right">0.000</td>
+<td align="right">0.396</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">GGA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr2
-</td>
-<td style="text-align:right;">
-45007103
-</td>
-<td style="text-align:left;">
-REV_1
-</td>
-<td style="text-align:right;">
-0.2399
-</td>
-<td style="text-align:right;">
-1.52
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.365
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
+<td align="left">chr2</td>
+<td align="right">45007103</td>
+<td align="left">REV_1</td>
+<td align="right">0.2399</td>
+<td align="right">1.52</td>
+<td align="right">0.000</td>
+<td align="right">0.365</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">AGA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr2
-</td>
-<td style="text-align:right;">
-45007598
-</td>
-<td style="text-align:left;">
-REV_1
-</td>
-<td style="text-align:right;">
-0.2913
-</td>
-<td style="text-align:right;">
-1.52
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.444
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TGA
-</td>
+<td align="left">chr2</td>
+<td align="right">45007598</td>
+<td align="left">REV_1</td>
+<td align="right">0.2913</td>
+<td align="right">1.52</td>
+<td align="right">0.000</td>
+<td align="right">0.444</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">TGA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr2
-</td>
-<td style="text-align:right;">
-45007709
-</td>
-<td style="text-align:left;">
-REV_1
-</td>
-<td style="text-align:right;">
-0.2759
-</td>
-<td style="text-align:right;">
-1.52
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.420
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TGA
-</td>
+<td align="left">chr2</td>
+<td align="right">45007709</td>
+<td align="left">REV_1</td>
+<td align="right">0.2759</td>
+<td align="right">1.52</td>
+<td align="right">0.000</td>
+<td align="right">0.420</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">TGA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71010245
-</td>
-<td style="text-align:left;">
-REV_2
-</td>
-<td style="text-align:right;">
-0.4054
-</td>
-<td style="text-align:right;">
-1.16
-</td>
-<td style="text-align:right;">
-0.461
-</td>
-<td style="text-align:right;">
-0.469
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
+<td align="left">chr3</td>
+<td align="right">71010245</td>
+<td align="left">REV_2</td>
+<td align="right">0.4054</td>
+<td align="right">1.16</td>
+<td align="right">0.461</td>
+<td align="right">0.469</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">AGA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71010553
-</td>
-<td style="text-align:left;">
-REV_2
-</td>
-<td style="text-align:right;">
-0.2387
-</td>
-<td style="text-align:right;">
-1.16
-</td>
-<td style="text-align:right;">
-0.461
-</td>
-<td style="text-align:right;">
-0.276
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
+<td align="left">chr3</td>
+<td align="right">71010553</td>
+<td align="left">REV_2</td>
+<td align="right">0.2387</td>
+<td align="right">1.16</td>
+<td align="right">0.461</td>
+<td align="right">0.276</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">AGA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71011404
-</td>
-<td style="text-align:left;">
-REV_2
-</td>
-<td style="text-align:right;">
-0.3640
-</td>
-<td style="text-align:right;">
-1.16
-</td>
-<td style="text-align:right;">
-0.461
-</td>
-<td style="text-align:right;">
-0.421
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-GGA
-</td>
+<td align="left">chr3</td>
+<td align="right">71011404</td>
+<td align="left">REV_2</td>
+<td align="right">0.3640</td>
+<td align="right">1.16</td>
+<td align="right">0.461</td>
+<td align="right">0.421</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">GGA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71011410
-</td>
-<td style="text-align:left;">
-REV_2
-</td>
-<td style="text-align:right;">
-0.3494
-</td>
-<td style="text-align:right;">
-1.16
-</td>
-<td style="text-align:right;">
-0.461
-</td>
-<td style="text-align:right;">
-0.405
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
+<td align="left">chr3</td>
+<td align="right">71011410</td>
+<td align="left">REV_2</td>
+<td align="right">0.3494</td>
+<td align="right">1.16</td>
+<td align="right">0.461</td>
+<td align="right">0.405</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">AGA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71011474
-</td>
-<td style="text-align:left;">
-REV_2
-</td>
-<td style="text-align:right;">
-0.3302
-</td>
-<td style="text-align:right;">
-1.16
-</td>
-<td style="text-align:right;">
-0.461
-</td>
-<td style="text-align:right;">
-0.382
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
+<td align="left">chr3</td>
+<td align="right">71011474</td>
+<td align="left">REV_2</td>
+<td align="right">0.3302</td>
+<td align="right">1.16</td>
+<td align="right">0.461</td>
+<td align="right">0.382</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">AGA</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71327944
-</td>
-<td style="text-align:left;">
-FWD_1
-</td>
-<td style="text-align:right;">
-0.2494
-</td>
-<td style="text-align:right;">
-1.26
-</td>
-<td style="text-align:right;">
-0.438
-</td>
-<td style="text-align:right;">
-0.314
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TCC
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71327987
-</td>
-<td style="text-align:left;">
-FWD_1
-</td>
-<td style="text-align:right;">
-0.2450
-</td>
-<td style="text-align:right;">
-1.26
-</td>
-<td style="text-align:right;">
-0.438
-</td>
-<td style="text-align:right;">
-0.309
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TCA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71327997
-</td>
-<td style="text-align:left;">
-FWD_1
-</td>
-<td style="text-align:right;">
-0.2517
-</td>
-<td style="text-align:right;">
-1.26
-</td>
-<td style="text-align:right;">
-0.438
-</td>
-<td style="text-align:right;">
-0.317
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TCA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71328028
-</td>
-<td style="text-align:left;">
-FWD_1
-</td>
-<td style="text-align:right;">
-0.1888
-</td>
-<td style="text-align:right;">
-1.26
-</td>
-<td style="text-align:right;">
-0.438
-</td>
-<td style="text-align:right;">
-0.238
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TCA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71328321
-</td>
-<td style="text-align:left;">
-FWD_1
-</td>
-<td style="text-align:right;">
-0.2455
-</td>
-<td style="text-align:right;">
-1.26
-</td>
-<td style="text-align:right;">
-0.438
-</td>
-<td style="text-align:right;">
-0.309
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TCA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71328545
-</td>
-<td style="text-align:left;">
-FWD_1
-</td>
-<td style="text-align:right;">
-0.2862
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.302
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TCC
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71329130
-</td>
-<td style="text-align:left;">
-FWD_1
-</td>
-<td style="text-align:right;">
-0.4311
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.455
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TCA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-71329696
-</td>
-<td style="text-align:left;">
-FWD_1
-</td>
-<td style="text-align:right;">
-0.4803
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.507
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TCA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-78940888
-</td>
-<td style="text-align:left;">
-REV_3
-</td>
-<td style="text-align:right;">
-0.3301
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.392
-</td>
-<td style="text-align:right;">
-0.350
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-78941023
-</td>
-<td style="text-align:left;">
-REV_3
-</td>
-<td style="text-align:right;">
-0.3385
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.392
-</td>
-<td style="text-align:right;">
-0.359
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-78941779
-</td>
-<td style="text-align:left;">
-REV_3
-</td>
-<td style="text-align:right;">
-0.4403
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.392
-</td>
-<td style="text-align:right;">
-0.467
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-TGA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-78941859
-</td>
-<td style="text-align:left;">
-REV_3
-</td>
-<td style="text-align:right;">
-0.4560
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.392
-</td>
-<td style="text-align:right;">
-0.483
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-GGA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-78942061
-</td>
-<td style="text-align:left;">
-REV_3
-</td>
-<td style="text-align:right;">
-0.3907
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.392
-</td>
-<td style="text-align:right;">
-0.414
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-GGA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-78942101
-</td>
-<td style="text-align:left;">
-REV_3
-</td>
-<td style="text-align:right;">
-0.4022
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.392
-</td>
-<td style="text-align:right;">
-0.426
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-78942282
-</td>
-<td style="text-align:left;">
-REV_3
-</td>
-<td style="text-align:right;">
-0.4212
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.392
-</td>
-<td style="text-align:right;">
-0.446
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-78942348
-</td>
-<td style="text-align:left;">
-REV_3
-</td>
-<td style="text-align:right;">
-0.3780
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.392
-</td>
-<td style="text-align:right;">
-0.401
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chr3
-</td>
-<td style="text-align:right;">
-78942562
-</td>
-<td style="text-align:left;">
-REV_3
-</td>
-<td style="text-align:right;">
-0.2765
-</td>
-<td style="text-align:right;">
-1.06
-</td>
-<td style="text-align:right;">
-0.392
-</td>
-<td style="text-align:right;">
-0.293
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-AGA
-</td>
+<td align="left">chr3</td>
+<td align="right">71327944</td>
+<td align="left">FWD_1</td>
+<td align="right">0.2494</td>
+<td align="right">1.26</td>
+<td align="right">0.438</td>
+<td align="right">0.314</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">TCC</td>
 </tr>
 </tbody>
 </table>
 <details><summary>
 Description
 </summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">kat</span><span class="op">$</span><span class="va">description</span>, format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Kataegis column description."</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">kat</span><span class="op">$</span><span class="va">description</span>, caption <span class="op">=</span> <span class="st">"Kataegis column description."</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>
-Kataegis column description.
-</caption>
+<caption>Kataegis column description.</caption>
+<colgroup>
+<col width="15%">
+<col width="84%">
+</colgroup>
 <thead><tr>
-<th style="text-align:left;">
-ID
-</th>
-<th style="text-align:left;">
-Description
-</th>
+<th align="left">ID</th>
+<th align="left">Description</th>
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-KT
-</td>
-<td style="text-align:left;">
-Forward/reverse kataegis id
-</td>
+<td align="left">KT</td>
+<td align="left">Forward/reverse kataegis id</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-MH
-</td>
-<td style="text-align:left;">
-Microhomology
-</td>
+<td align="left">MH</td>
+<td align="left">Microhomology</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-PURPLE_AF
-</td>
-<td style="text-align:left;">
-Purity adjusted allelic frequency of variant
-</td>
+<td align="left">PURPLE_AF</td>
+<td align="left">Purity adjusted allelic frequency of variant</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-PURPLE_CN
-</td>
-<td style="text-align:left;">
-Purity adjusted copy number surrounding variant location
-</td>
+<td align="left">PURPLE_CN</td>
+<td align="left">Purity adjusted copy number surrounding variant
+location</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-PURPLE_MACN
-</td>
-<td style="text-align:left;">
-Purity adjusted minor allele ploidy surrounding variant location
-</td>
+<td align="left">PURPLE_MACN</td>
+<td align="left">Purity adjusted minor allele ploidy surrounding variant
+location</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-PURPLE_VCN
-</td>
-<td style="text-align:left;">
-Purity adjusted ploidy of variant
-</td>
+<td align="left">PURPLE_VCN</td>
+<td align="left">Purity adjusted ploidy of variant</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-SUBCL
-</td>
-<td style="text-align:left;">
-Non-zero subclonal likelihood
-</td>
+<td align="left">SUBCL</td>
+<td align="left">Non-zero subclonal likelihood</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-TNC
-</td>
-<td style="text-align:left;">
-Tri-nucleotide context
-</td>
+<td align="left">TNC</td>
+<td align="left">Tri-nucleotide context</td>
 </tr>
 </tbody>
 </table></details>
@@ -2148,150 +813,78 @@ Tri-nucleotide context
 <span>  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_qc_read.html">purple_qc_read</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">qc</span><span class="op">$</span><span class="va">summary</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"PURPLE QC Summary Table."</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"PURPLE QC Summary Table."</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>
-PURPLE QC Summary Table.
-</caption>
+<caption>PURPLE QC Summary Table.</caption>
+<colgroup>
+<col width="2%">
+<col width="16%">
+<col width="21%">
+<col width="60%">
+</colgroup>
 <thead><tr>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:left;">
-variable
-</th>
-<th style="text-align:left;">
-value
-</th>
-<th style="text-align:left;">
-details
-</th>
+<th align="right">n</th>
+<th align="left">variable</th>
+<th align="left">value</th>
+<th align="left">details</th>
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-QC_Status
-</td>
-<td style="text-align:left;">
-FAIL_CONTAMINATION
-</td>
-<td style="text-align:left;">
-See ‘Description’.
-</td>
+<td align="right">1</td>
+<td align="left">QC_Status</td>
+<td align="left">FAIL_CONTAMINATION</td>
+<td align="left">See ‘Description’.</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:left;">
-Method
-</td>
-<td style="text-align:left;">
-NORMAL
-</td>
-<td style="text-align:left;">
-Fit method (NORMAL, HIGHLY_DIPLOID, SOMATIC or NO_TUMOR).
-</td>
+<td align="right">13</td>
+<td align="left">Method</td>
+<td align="left">NORMAL</td>
+<td align="left">Fit method (NORMAL, HIGHLY_DIPLOID, SOMATIC or
+NO_TUMOR).</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:left;">
-CopyNumberSegments
-</td>
-<td style="text-align:left;">
-1428 (Unsupported: 2)
-</td>
-<td style="text-align:left;">
-# of CN segments.
-</td>
+<td align="right">14</td>
+<td align="left">CopyNumberSegments</td>
+<td align="left">1428 (Unsupported: 2)</td>
+<td align="left"># of CN segments.</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Purity
-</td>
-<td style="text-align:left;">
-0.8600
-</td>
-<td style="text-align:left;">
-</td>
+<td align="right">2</td>
+<td align="left">Purity</td>
+<td align="left">0.8600</td>
+<td align="left"></td>
 </tr>
 <tr>
-<td style="text-align:right;">
-17
-</td>
-<td style="text-align:left;">
-Gender
-</td>
-<td style="text-align:left;">
-Amber: MALE; Cobalt: MALE
-</td>
-<td style="text-align:left;">
-</td>
+<td align="right">17</td>
+<td align="left">Gender</td>
+<td align="left">Amber: MALE; Cobalt: MALE</td>
+<td align="left"></td>
 </tr>
 <tr>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:left;">
-DeletedGenes
-</td>
-<td style="text-align:left;">
-150
-</td>
-<td style="text-align:left;">
-# of homozygously deleted genes.
-</td>
+<td align="right">14</td>
+<td align="left">DeletedGenes</td>
+<td align="left">150</td>
+<td align="left"># of homozygously deleted genes.</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:left;">
-Contamination
-</td>
-<td style="text-align:left;">
-0.807
-</td>
-<td style="text-align:left;">
-Rate of contamination in tumor sample as determined by AMBER.
-</td>
+<td align="right">15</td>
+<td align="left">Contamination</td>
+<td align="left">0.807</td>
+<td align="left">Rate of contamination in tumor sample as determined by
+AMBER.</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-16
-</td>
-<td style="text-align:left;">
-GermlineAberrations
-</td>
-<td style="text-align:left;">
-NONE
-</td>
-<td style="text-align:left;">
-Can be one or more of: KLINEFELTER, TRISOMY_X/21/13/18/15, XYY,
-MOSAIC_X.
-</td>
+<td align="right">16</td>
+<td align="left">GermlineAberrations</td>
+<td align="left">NONE</td>
+<td align="left">Can be one or more of: KLINEFELTER,
+TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.</td>
 </tr>
 <tr>
-<td style="text-align:right;">
-18
-</td>
-<td style="text-align:left;">
-AmberMeanDepth
-</td>
-<td style="text-align:left;">
-128
-</td>
-<td style="text-align:left;">
-Mean depth as determined by AMBER.
-</td>
+<td align="right">18</td>
+<td align="left">AmberMeanDepth</td>
+<td align="left">128</td>
+<td align="left">Mean depth as determined by AMBER.</td>
 </tr>
 </tbody>
 </table>
@@ -2302,23 +895,23 @@ Mean depth as determined by AMBER.
 </h2>
 <table class="table">
 <caption>Main packages used in this vignette.</caption>
-<thead><tr class="header">
+<thead><tr>
 <th align="left">package</th>
 <th align="left">version</th>
 <th align="left">datestamp</th>
 <th align="left">source</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">base</td>
 <td align="left">4.2.3</td>
-<td align="left">2024-03-12</td>
+<td align="left">2024-06-16</td>
 <td align="left">local</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">gpgr</td>
-<td align="left">2.0.0</td>
-<td align="left">2024-05-08</td>
+<td align="left">2.1.1</td>
+<td align="left">2024-08-20</td>
 <td align="left">local</td>
 </tr>
 </tbody>
@@ -2329,51 +922,51 @@ Mean depth as determined by AMBER.
 <col width="11%">
 <col width="88%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th align="left">name</th>
 <th align="left">value</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">version</td>
 <td align="left">R version 4.2.3 (2023-03-15)</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">os</td>
 <td align="left">Ubuntu 22.04.4 LTS</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">system</td>
 <td align="left">x86_64, linux-gnu</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">ui</td>
 <td align="left">X11</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">language</td>
 <td align="left">en</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">collate</td>
 <td align="left">C.UTF-8</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">ctype</td>
 <td align="left">C.UTF-8</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">tz</td>
 <td align="left">Etc/UTC</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">date</td>
-<td align="left">2024-05-08</td>
+<td align="left">2024-08-20</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">pandoc</td>
-<td align="left">3.1.13 @ /home/runner/micromamba/envs/pkgdownenv/bin/
-(via rmarkdown)</td>
+<td align="left">3.3 @ /home/runner/micromamba/envs/pkgdownenv/bin/ (via
+rmarkdown)</td>
 </tr>
 </tbody>
 </table>
