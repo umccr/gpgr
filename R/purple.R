@@ -64,7 +64,7 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
   }
   genes <-
     readr::read_tsv(g, col_types = readr::cols(
-      ensembl_gene_symbol = "c", oncogene = "l", tumorsuppressor = "l"
+      ensembl_gene_symbol = "c", oncogene = "l", tsgene = "l"
     )) |>
     dplyr::select(symbol = "ensembl_gene_symbol", "oncogene", "tsgene")
   oncogenes <- genes |>
