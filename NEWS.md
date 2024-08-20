@@ -1,3 +1,7 @@
+# gpgr 2.1.1
+
+- :bug: updating gene panel, fixes to pass devtools checks and pkgdown ([pr82](https://github.com/umccr/gpgr/pull/82))
+
 # gpgr 2.1.0
 
 - :bug: minor fixes for canrep ([pr81](https://github.com/umccr/gpgr/pull/81)).
