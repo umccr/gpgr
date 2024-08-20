@@ -47,10 +47,10 @@ conda install r-gpgr -c umccr -c conda-forge -c bioconda
   (<https://github.com/hartwigmedical/hmftools/tree/master/purple>).
   See vignette at <https://umccr.github.io/gpgr/articles/purple.html>.
 
-### 🐍 umccrise {#id_-umccrise}
+### sash {#id_-sash}
 
-- Generate a HTML report with results from the `umccrise` DRAGEN tumor/normal
-  post-processing workflow from UMCCR - <https://github.com/umccr/umccrise>.
+- Generate a HTML report with results from the `sash` WGS post-processing workflow
+   - <https://github.com/scwatts/sash>.
   See the [CLI](#cli) section below for options.
 
 ## 🥳 Developers {#id_-developers}
