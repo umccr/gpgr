@@ -1,6 +1,6 @@
 package:
   name: r-gpgr
-  version: 2.1.0 # bump2version
+  version: 2.1.1 # bump2version
 
 source:
   path: ../..
