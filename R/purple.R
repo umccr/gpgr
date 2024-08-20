@@ -51,7 +51,7 @@ purple_cnv_som_gene_read <- function(x) {
 #'
 #' @examples
 #' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
-#' g <- system.file("extdata/ref/umccr_cancer_genes_v24.03.0.tsv", package = "gpgr")
+#' g <- system.file("extdata/ref/somatic_panel-v24.03.0.tsv", package = "gpgr")
 #' (pp <- purple_cnv_som_gene_process(x, g))
 #' @testexamples
 #' expect_equal(colnames(pp$tab)[ncol(pp$tab)], "minRegSupportStartEndMethod")
@@ -60,11 +60,11 @@ purple_cnv_som_gene_read <- function(x) {
 purple_cnv_som_gene_process <- function(x, g = NULL) {
   purple_cnv_gene <- purple_cnv_som_gene_read(x)
   if (is.null(g)) {
-    g <- system.file("extdata/ref/umccr_cancer_genes_v24.03.0.tsv", package = "gpgr")
+    g <- system.file("extdata/ref/somatic_panel-v24.03.0.tsv", package = "gpgr")
   }
   genes <-
     readr::read_tsv(g, col_types = readr::cols(
-      ensembl_gene_symbol = "c", oncogene = "l", tumorsuppressor = "l"
+      ensembl_gene_symbol = "c", oncogene = "l", tsgene = "l"
     )) |>
     dplyr::select(symbol = "ensembl_gene_symbol", "oncogene", "tsgene")
   oncogenes <- genes |>

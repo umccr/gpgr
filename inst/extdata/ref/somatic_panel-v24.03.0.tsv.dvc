@@ -1,0 +1,5 @@
+outs:
+- md5: 5ada82f5b399519a6ed34d5449a343f4
+  size: 50539
+  hash: md5
+  path: somatic_panel-v24.03.0.tsv

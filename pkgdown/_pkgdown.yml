@@ -2,8 +2,11 @@ template:
   bootstrap: 5
   #bootswatch: sketchy
 url: https://umccr.github.io/gpgr/
+title: gpgr
 authors:
   Peter Diakumis:
     href: https://github.com/pdiakumis
+  Stephen Watts:
+    href: https://github.com/scwatts
 news:
   one_page: true

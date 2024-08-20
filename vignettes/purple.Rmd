@@ -42,7 +42,7 @@ cnv_som <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr"
 
 ```{r cnv_som_descr}
 cnv_som$descr |>
-  knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per chromosome) Columns.")
+  knitr::kable(caption = "PURPLE Somatic CNVs (per chromosome) Columns.")
 ```
 
 </details>
@@ -50,13 +50,13 @@ cnv_som$descr |>
 ```{r cnv_som_tab}
 cnv_som$tab |>
   dplyr::slice(1:10) |>
-  knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per chromosome) Summary Table.")
+  knitr::kable(caption = "PURPLE Somatic CNVs (per chromosome) Summary Table.")
 ```
 
 ### Somatic CNVs (per gene)
 
 ```{r cnv_som_gene}
-umccr_key_genes <- system.file("extdata/ref/umccr_cancer_genes_2019-03-20.tsv", package = "gpgr")
+umccr_key_genes <- system.file("extdata/ref/somatic_panel-v24.03.0.tsv", package = "gpgr")
 cnv_som_gene <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr") |>
   gpgr::purple_cnv_som_gene_process(g = umccr_key_genes)
 ```
@@ -66,7 +66,7 @@ cnv_som_gene <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpg
 
 ```{r cnv_som_gene_descr}
 cnv_som_gene$descr |>
-  knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per gene) Columns.")
+  knitr::kable(caption = "PURPLE Somatic CNVs (per gene) Columns.")
 ```
 
 </details>
@@ -74,7 +74,7 @@ cnv_som_gene$descr |>
 ```{r cnv_som_gene_tab}
 cnv_som_gene$tab |>
   dplyr::slice(1:10) |>
-  knitr::kable(format = "html", caption = "PURPLE Somatic CNVs (per gene) Summary Table.")
+  knitr::kable(caption = "PURPLE Somatic CNVs (per gene) Summary Table.")
 ```
 
 ### Purity
@@ -84,7 +84,7 @@ purity <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr") |>
   gpgr::purple_purity_read()
 
 purity$summary |>
-  knitr::kable(format = "html", caption = "PURPLE Purity Summary Table.")
+  knitr::kable(caption = "PURPLE Purity Summary Table.")
 ```
 
 ### Kataegis
@@ -93,14 +93,15 @@ purity$summary |>
 kat <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr") |>
   purple_kataegis()
 kat$data |>
-  knitr::kable(format = "html", caption = "PURPLE Kataegis Table.")
+  dplyr::slice(1:10) |>
+  knitr::kable(caption = "PURPLE Kataegis Table.")
 ```
 
 <details>
 <summary>Description</summary>
 
 ```{r kataegis_descr}
-knitr::kable(kat$description, format = "html", caption = "Kataegis column description.")
+knitr::kable(kat$description, caption = "Kataegis column description.")
 ```
 
 </details>
@@ -112,7 +113,7 @@ qc <- system.file("extdata/purple/purple.qc", package = "gpgr") |>
   gpgr::purple_qc_read()
 
 qc$summary |>
-  knitr::kable(format = "html", caption = "PURPLE QC Summary Table.")
+  knitr::kable(caption = "PURPLE QC Summary Table.")
 ```
 
 ## Session Info

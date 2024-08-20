@@ -13,7 +13,7 @@ test_that("Function purple_cnv_som_gene_read() @ L18", {
 test_that("Function purple_cnv_som_gene_process() @ L60", {
   
   x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
-  g <- system.file("extdata/ref/umccr_cancer_genes_v24.03.0.tsv", package = "gpgr")
+  g <- system.file("extdata/ref/somatic_panel-v24.03.0.tsv", package = "gpgr")
   (pp <- purple_cnv_som_gene_process(x, g))
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "minRegSupportStartEndMethod")
 })
