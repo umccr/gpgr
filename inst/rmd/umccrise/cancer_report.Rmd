@@ -307,7 +307,7 @@ snv_summary_counts <- params$somatic_snv_summary |>
 # 'annotated' since this indicates that the bolt hypermutated logic evaluated as true and applied
 # variant selection
 
-hypermutated <- snv_summary_counts$sage != snv_summary_counts$annotated
+hypermutated <- snv_summary_counts$sage > 500000
 
 snv_summary <- snv_summary_counts |>
   unlist() |>
