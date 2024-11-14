@@ -303,11 +303,8 @@ summarise_sigs <- function(mut_sig_contr) {
 snv_summary_counts <- params$somatic_snv_summary |>
   jsonlite::read_json()
 
-# NOTE(SW): hypermutated status is determine indirectly by different counts between 'sage' and
-# 'annotated' since this indicates that the bolt hypermutated logic evaluated as true and applied
-# variant selection
-
-hypermutated <- snv_summary_counts$sage > 500000
+# NOTE(QC): samples are considered hypermutated if they have more than 500k variant
+hypermutated <- snv_summary_counts$annotated > 500000
 
 snv_summary <- snv_summary_counts |>
   unlist() |>
@@ -355,8 +352,7 @@ qc_summary_all <- dplyr::tribble(
   ~n, ~variable, ~value, ~details,
   4, "Hypermutated", ifelse(hypermutated, "TRUE", "FALSE"),
   ifelse(hypermutated, glue::glue(
-    "More than 500K SNVs detected (including non-PASS), priority regions and/or variants ",
-    "selected for processing.",
+    "More than 500K SNVs detected (including non-PASS)",
   ), ""),
   5, "MutSigs (Old)", glue::glue("{summarise_sigs(sigs_snv_2015)}"),
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
