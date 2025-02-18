@@ -31,7 +31,10 @@ params <- list(
   somatic_snv_summary = glue("{umccrised_dir}/sample_data/{tumor_name}.somatic.variant_counts_process.json"),
   somatic_sv_tsv = here::here("inst/extdata/sash/sv.prioritised.tsv"),
   somatic_sv_vcf = here::here("inst/extdata/sash/sv.prioritised.vcf.gz"),
-  tumor_name = tumor_name
+  tumor_name = tumor_name,
+  mutpat_dir = NULL,
+  hrdetect_file = NULL,
+  chord_file = NULL
 )
 
 # awesomeness

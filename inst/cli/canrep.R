@@ -25,6 +25,9 @@ canrep_add_args <- function(subp) {
   canrep$add_argument("--quiet", help = "Suppress log printing during rendering.", action = "store_true")
   canrep$add_argument("--result_outdir", help = "Path to directory to write tidy JSON/TSV results.", required = TRUE)
   canrep$add_argument("--tumor_name", help = "Name of tumor sample.", required = TRUE)
+  canrep$add_argument("--mutpat_dir", help = "Path to mutational patterns directory.", required = FALSE)
+  canrep$add_argument("--hrdetect_file", help = "Path to HRDetect file.", required = FALSE)
+  canrep$add_argument("--chord_file", help = "Path to CHORD file.", required = FALSE)
 }
 
 canrep_parse_args <- function(args) {
@@ -54,7 +57,10 @@ canrep_parse_args <- function(args) {
     out_file = args$out_file,
     quiet = args$quiet,
     result_outdir = args$result_outdir,
-    tumor_name = args$tumor_name
+    tumor_name = args$tumor_name,
+    mutpat_dir = args$mutpat_dir,
+    hrdetect_file = args$hrdetect_file,
+    chord_file = args$chord_file
   )
   cli::cli_h1("Finished rendering UMCCR Cancer Report!")
   cli::cli_alert_info("Path to HTML output:\n{res}")
