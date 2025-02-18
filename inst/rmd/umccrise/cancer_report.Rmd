@@ -119,7 +119,7 @@ sv_detail_table <- function(tab) {
 ```{r hrd_prep, results='hide'}
 #---- Homologous Recombination Deficiency ----#
 dragen_hrd_res <- gpgr::dragen_hrd(params$dragen_hrd)
-if (!is.null(params$chord_file)) {
+if (is.null(params$chord_file)) {
   chord_res <- sigrap::chord_run(
     vcf.snv = params$somatic_snv_vcf,
     vcf.sv = params$somatic_sv_vcf,
@@ -131,11 +131,11 @@ if (!is.null(params$chord_file)) {
 } else{
   chord_res <- list(
   context    = tibble::tibble(),  # or set to NULL/NA if no context is available
-  prediction = convert_json_gz_to_tibble(args$chord_file)
+  prediction = convert_json_gz_to_tibble(params$chord_file)
     )
 }
 
-if (!is.null(params$hrdetect_file)) {
+if (is.null(params$hrdetect_file)) {
   hrdetect_res <- NULL
   # HRDetect doesn't handle empty files
   if (gpgr::vcf_is_empty(params$somatic_sv_vcf) |
@@ -159,7 +159,7 @@ if (!is.null(params$hrdetect_file)) {
 ```
 
 ```{r mutational_sigs_prep}
-if (!is.null(params$mutpat_dir)) {
+if (is.null(params$mutpat_dir)) {
   mutpat_gr <- MutationalPatterns::read_vcfs_as_granges(
     vcf_files = params$somatic_snv_vcf,
     sample_names = params$tumor_name,
@@ -167,11 +167,11 @@ if (!is.null(params$mutpat_dir)) {
     group = "auto+sex",
     type = "all"
   )
-  
+
   mp_snv <- sigrap::sig_count_snv(vcf_gr = mutpat_gr, ref_genome = ref_genome)
   mp_dbs <- sigrap::sig_count_dbs(vcf_gr = mutpat_gr)
   mp_indel <- sigrap::sig_count_indel(vcf_gr = mutpat_gr, ref_genome = ref_genome)
-  
+
   mp_snv_plots <- sigrap::sig_plot_snv(
     gr_snv = mp_snv$gr_snv,
     snv_counts = mp_snv$snv_counts,
@@ -179,7 +179,7 @@ if (!is.null(params$mutpat_dir)) {
   )
   mp_dbs_plots <- sigrap::sig_plot_dbs(dbs_counts = mp_dbs)
   mp_indel_plots <- sigrap::sig_plot_indel(indel_counts = mp_indel)
-  
+
   sigs_snv_2015 <-
     sigrap::cosmic_signatures_2015 %>%
     sigrap::sig_contribution(mut_mat = mp_snv$snv_counts, signatures = .)
@@ -192,16 +192,16 @@ if (!is.null(params$mutpat_dir)) {
   sigs_indel <-
     MutationalPatterns::get_known_signatures(muttype = "indel") %>%
     sigrap::sig_contribution(mut_mat = mp_indel, signatures = .)
-  
+
   gpgr::write_tsvjsongz(sigs_snv_2015, glue("sigs/{bnm}-snv_2015"), result_outdir)
   gpgr::write_tsvjsongz(sigs_snv_2020, glue("sigs/{bnm}-snv_2020"), result_outdir)
   gpgr::write_tsvjsongz(sigs_dbs, glue("sigs/{bnm}-dbs"), result_outdir)
   gpgr::write_tsvjsongz(sigs_indel, glue("sigs/{bnm}-indel"), result_outdir)
 }else{
-  sigs_snv_2015_tsv <- gpgr::read_jsongz(file.path(params$mutpat_dir, glue::glue("snv_2015.json.gz")))
-  sigs_snv_2020_tsv <- gpgr::read_jsongz(file.path(params$mutpat_dir, glue::glue("snv_2020.tjsonsv.gz")))
-  sigs_dbs_tsv     <- gpgr::read_jsongz(file.path(params$mutpat_dir, glue::glue("dbs.json.gz")))
-  sigs_indel_tsv    <- gpgr::read_jsongz(file.path(params$mutpat_dir, glue::glue("indel.json.gz")))
+  sigs_snv_2015 <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("snv2015.json.gz")))
+  sigs_snv_2020 <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("snv2020.json.gz")))
+  sigs_dbs     <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("dbs.json.gz")))
+  sigs_indel    <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("indel.json.gz")))
 
 }
 ```
