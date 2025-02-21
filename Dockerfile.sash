@@ -1,0 +1,37 @@
+FROM ghcr.io/scwatts/bolt:0.2.13
+
+# Define installer variables
+ARG MINI_VERSION=24.5.0-0
+ARG MINI_URL=https://github.com/conda-forge/miniforge/releases/download/${MINI_VERSION}/Miniforge3-${MINI_VERSION}-Linux-x86_64.sh
+ARG MINIFORGE_PREFIX="/opt/miniforge3"
+
+# Install Miniforge (Miniconda) on top of the bolt image
+RUN wget -O Miniforge3.sh "${MINI_URL}" && \
+    bash Miniforge3.sh -b -p "${MINIFORGE_PREFIX}" && \
+    rm Miniforge3.sh
+
+# Add Miniforge to PATH
+ENV PATH="${MINIFORGE_PREFIX}/bin:${PATH}"
+
+RUN conda update -n base -c defaults conda -y && \
+    conda config --add channels conda-forge && \
+    conda config --add channels bioconda && \
+    conda config --add channels umccr
+
+
+# Install additional R packages (including r-devtools) using conda
+RUN conda install -n base -y \
+    r-sigrap \
+    bioconductor-bsgenome.hsapiens.ucsc.hg38 \
+    bioconductor-txdb.hsapiens.ucsc.hg38.knowngene \
+    r-gt \
+    r-v8 \
+    r-devtools && \
+    conda clean --all --force-pkgs-dirs
+
+# Copy your repository into the image
+COPY . /opt/gpgr
+
+RUN Rscript -e "devtools::install_deps('/opt/gpgr', dependencies = TRUE)"
+
+ENV PATH="/opt/gpgr/inst/cli/:${PATH}"
