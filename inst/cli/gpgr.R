@@ -2,8 +2,8 @@
 
 suppressPackageStartupMessages(require(argparse))
 suppressPackageStartupMessages(require(cli))
-suppressPackageStartupMessages(require(gpgr))
 suppressPackageStartupMessages(require(glue))
+devtools::load_all('/opt/gpgr')
 
 prog_nm <- "gpgr.R"
 gpgr_version <- as.character(packageVersion("gpgr"))

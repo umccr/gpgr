@@ -159,26 +159,26 @@ if (is.null(params$hrdetect_file)) {
 ```
 
 ```{r mutational_sigs_prep}
+mutpat_gr <- MutationalPatterns::read_vcfs_as_granges(
+  vcf_files = params$somatic_snv_vcf,
+  sample_names = params$tumor_name,
+  genome = ref_genome,
+  group = "auto+sex",
+  type = "all"
+)
+
+mp_snv <- sigrap::sig_count_snv(vcf_gr = mutpat_gr, ref_genome = ref_genome)
+mp_dbs <- sigrap::sig_count_dbs(vcf_gr = mutpat_gr)
+mp_indel <- sigrap::sig_count_indel(vcf_gr = mutpat_gr, ref_genome = ref_genome)
+
+mp_snv_plots <- sigrap::sig_plot_snv(
+  gr_snv = mp_snv$gr_snv,
+  snv_counts = mp_snv$snv_counts,
+  ref_genome = ref_genome
+)
+mp_dbs_plots <- sigrap::sig_plot_dbs(dbs_counts = mp_dbs)
+mp_indel_plots <- sigrap::sig_plot_indel(indel_counts = mp_indel)
 if (is.null(params$mutpat_dir)) {
-  mutpat_gr <- MutationalPatterns::read_vcfs_as_granges(
-    vcf_files = params$somatic_snv_vcf,
-    sample_names = params$tumor_name,
-    genome = ref_genome,
-    group = "auto+sex",
-    type = "all"
-  )
-
-  mp_snv <- sigrap::sig_count_snv(vcf_gr = mutpat_gr, ref_genome = ref_genome)
-  mp_dbs <- sigrap::sig_count_dbs(vcf_gr = mutpat_gr)
-  mp_indel <- sigrap::sig_count_indel(vcf_gr = mutpat_gr, ref_genome = ref_genome)
-
-  mp_snv_plots <- sigrap::sig_plot_snv(
-    gr_snv = mp_snv$gr_snv,
-    snv_counts = mp_snv$snv_counts,
-    ref_genome = ref_genome
-  )
-  mp_dbs_plots <- sigrap::sig_plot_dbs(dbs_counts = mp_dbs)
-  mp_indel_plots <- sigrap::sig_plot_indel(indel_counts = mp_indel)
 
   sigs_snv_2015 <-
     sigrap::cosmic_signatures_2015 %>%
@@ -198,9 +198,14 @@ if (is.null(params$mutpat_dir)) {
   gpgr::write_tsvjsongz(sigs_dbs, glue("sigs/{bnm}-dbs"), result_outdir)
   gpgr::write_tsvjsongz(sigs_indel, glue("sigs/{bnm}-indel"), result_outdir)
 }else{
-  sigs_snv_2015 <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("snv2015.json.gz")))
-  sigs_snv_2020 <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("snv2020.json.gz")))
+  sigs_snv_2015 <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("snv2015.json.gz")))%>%
+  dplyr::select(Rank, Signature, Contribution, RelFreq)
+
+  sigs_snv_2020 <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("snv2020.json.gz")))%>%
+  dplyr::select(Rank, Signature, Contribution, RelFreq)
+
   sigs_dbs     <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("dbs.json.gz")))
+
   sigs_indel    <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("indel.json.gz")))
 
 }
