@@ -737,28 +737,21 @@ purple_snv_vcf_read <- function(x) {
 #' (k <- purple_kataegis(x))
 #' @export
 purple_kataegis <- function(x) {
-  parsed <- purple_snv_vcf_read(x)
+  # Define the INFO fields we want to extract
   info_cols <- c(
     "KT", "PURPLE_AF", "PURPLE_CN",
     "PURPLE_MACN", "PURPLE_VCN", "SUBCL",
     "MH", "TNC"
   )
-
-  # Create vector of INFO_ prefixed column names
-  info_cols_prefixed <- paste0("INFO_", info_cols)
   
-  # Filter for rows with KT data and select relevant columns
-  kata_data <- parsed$data |>
-    dplyr::filter(!is.na(.data$INFO_KT)) |>
-    dplyr::select(c("CHROM", "POS", dplyr::all_of(info_cols_prefixed)))
-
-  # Get descriptions for these columns
-  kata_desc <- parsed$description |>
-    dplyr::filter(.data$ID %in% info_cols) |>
-    dplyr::arrange(.data$ID)
-
+  # Use the optimized extraction for all files
+  parsed <- bcftools_extract_kataegis(
+    vcf = x,
+    info_cols = info_cols
+  )
+  
   list(
-    data = kata_data,
-    description = kata_desc
+    data = parsed$vcf,
+    description = parsed$header$INFO
   )
 }
