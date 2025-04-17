@@ -700,9 +700,9 @@ purple_purity_read <- function(x) {
 #' @export
 purple_snv_vcf_read <- function(x) {
   assertthat::assert_that(file.exists(x), is_vcf(x))
-  d <- bedr::read.vcf(x, split.info = TRUE, verbose = FALSE)
+  parsed    <- bcftools_parse_vcf(x)
   info <-
-    tibble::as_tibble(d$header[["INFO"]]) |>
+    tibble::as_tibble(parsed$header[["INFO"]]) |>
     dplyr::select("ID", "Description")
 
   info_cols <- c(
@@ -712,9 +712,11 @@ purple_snv_vcf_read <- function(x) {
   )
   description <- dplyr::filter(info, .data$ID %in% info_cols)
 
-  d <- tibble::as_tibble(d$vcf[c("CHROM", "POS", info_cols)])
+  data <- parsed$vcf %>%
+    select(CHROM, POS, all_of(paste0("INFO_", info_cols)))
+
   list(
-    data = d,
+    data = data,
     description = description
   )
 }
@@ -735,23 +737,28 @@ purple_snv_vcf_read <- function(x) {
 #' (k <- purple_kataegis(x))
 #' @export
 purple_kataegis <- function(x) {
-  d <- purple_snv_vcf_read(x)
+  parsed <- purple_snv_vcf_read(x)
   info_cols <- c(
     "KT", "PURPLE_AF", "PURPLE_CN",
     "PURPLE_MACN", "PURPLE_VCN", "SUBCL",
     "MH", "TNC"
   )
 
-  data <- d$data |>
-    dplyr::filter(!is.na(.data$KT)) |>
-    dplyr::select(c("CHROM", "POS", dplyr::all_of(info_cols)))
+  # Create vector of INFO_ prefixed column names
+  info_cols_prefixed <- paste0("INFO_", info_cols)
+  
+  # Filter for rows with KT data and select relevant columns
+  kata_data <- parsed$data |>
+    dplyr::filter(!is.na(.data$INFO_KT)) |>
+    dplyr::select(c("CHROM", "POS", dplyr::all_of(info_cols_prefixed)))
 
-  description <- d$description |>
+  # Get descriptions for these columns
+  kata_desc <- parsed$description |>
     dplyr::filter(.data$ID %in% info_cols) |>
     dplyr::arrange(.data$ID)
 
   list(
-    data = data,
-    description = description
+    data = kata_data,
+    description = kata_desc
   )
 }

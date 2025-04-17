@@ -244,3 +244,129 @@ mixedrank <- function(x) {
   }
   order(gtools::mixedorder(x))
 }
+
+is_url <- function(x) {
+  grepl("(http|https)://[a-zA-Z0-9./?=_%:-]*", x)
+}
+
+bcftools_installed <- function() {
+  system("bcftools -v", ignore.stdout = TRUE) == 0
+}
+
+#' Parse VCF with bcftools
+#'
+#' Parse VCF with bcftools.
+#' Uses bcftools under the hood to do the heavy lifting with field splitting,
+#' then converts the parsed character vector to a tibble.
+#'
+#' For VCFs with 0 variants, returns a tibble with 0 rows and proper number of
+#' columns.
+#'
+#' @param vcf VCF with one or more samples.
+#' @param only_pass Keep PASS variants only (def: TRUE).
+#' @param alias Substitute sample names with S1/S2/... alias (def: TRUE).
+#'
+#' @return A tibble with all the main, FORMAT, and INFO fields detected in
+#' the VCF header as columns.
+#' @export
+bcftools_parse_vcf <- function(vcf, only_pass = TRUE, alias = TRUE) {
+  assertthat::assert_that(is.logical(only_pass), length(only_pass) == 1)
+  assertthat::assert_that(
+    bcftools_installed(),
+    msg = "bcftools needs to be on the PATH."
+  )
+
+  if (is_url(vcf)) {
+    vcf <- glue::glue("'{vcf}'")
+  }
+
+  # 1) grab the header
+  cmd_header <- glue::glue("bcftools view -h {vcf}")
+  h <- system(cmd_header, intern = TRUE)
+
+  # 2) main fields + sample aliases
+  main <- c("CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER")
+  get_samples <- function() {
+    hdr_last <- strsplit(h[length(h)], "\t")[[1]]
+    # drop CHROM–FILTER + INFO + FORMAT
+    samples <- hdr_last[-seq_len(length(main) + 2)]
+    aliases <- if (alias) paste0("S", seq_along(samples)) else samples
+    list(samples = samples, n = length(samples), aliases = aliases)
+  }
+  samp <- get_samples()
+
+  # 3) function to split INFO or FORMAT lines
+  split_hdr <- function(pat) {
+    h[grepl(pat, h, fixed = TRUE)] |>
+      sub(paste0("^", pat), "", _)          |>  # strip the prefix
+      tibble::as_tibble_col(column_name = "x") |>
+      tidyr::separate_wider_delim(
+        "x",
+        delim = ",",
+        names = c("ID", "Number", "Type", "Description"),
+        too_many = "merge"
+      ) |>
+      dplyr::mutate(
+        ID          = sub("^ID=",          "", .data$ID),
+        Number      = sub("^Number=",      "", .data$Number),
+        Type        = sub("^Type=",        "", .data$Type),
+        Description = sub('^Description="(.*)">?$', "\\1", .data$Description)
+      )
+  }
+
+  fmt <- split_hdr("##FORMAT=<") |> dplyr::pull(.data$ID)
+  info <- split_hdr("##INFO=<")   |> dplyr::pull(.data$ID)
+
+  # 4) build the bcftools query string
+  main_cols  <- paste0("%", main, collapse = "\\t")
+  info_cols  <- if (length(info) == 0) "" else paste0("%INFO/", info, collapse = "\\t")
+  fmt_cols   <- paste0("[\\t", paste0("%", fmt, collapse = "\\t"), "]\\n")
+  q          <- paste0(main_cols, "\\t", info_cols, fmt_cols)
+  include_pass <- if (only_pass) "-i 'FILTER=\"PASS\" || FILTER=\".\"'" else ""
+  cmd_body     <- glue::glue("bcftools query -f \"{q}\" {vcf} {include_pass}")
+
+  # 5) build the vector of desired names
+  desired_names <- c(
+    main,
+    if (length(info) > 0) paste0("INFO_", info),
+    paste0(rep(samp$aliases, each = length(fmt)), "_", fmt)
+  )
+
+  # 6) preview to get actual column count
+  suppressWarnings({
+    preview <- data.table::fread(
+      cmd        = cmd_body,
+      sep        = "\t",
+      na.strings = ".",
+      nrows      = 1,
+      header     = FALSE
+    )
+  })
+  actual_ncol <- ncol(preview)
+
+  # handle empty VCF
+  if (nrow(preview) == 0) {
+    return(empty_tbl(cnames = desired_names))
+  }
+
+  # ensure we have at least actual_ncol names
+  if (length(desired_names) < actual_ncol) {
+    stop(
+      sprintf(
+        "Expected at least %d column names, but only have %d. Check your header fields.",
+        actual_ncol, length(desired_names)
+      )
+    )
+  }
+
+  # 7) read full table and assign exactly the right number of names
+  df <- data.table::fread(
+    cmd        = cmd_body,
+    sep        = "\t",
+    header     = FALSE,
+    na.strings = ".",
+    data.table = FALSE
+  )
+  colnames(df) <- desired_names[seq_len(actual_ncol)]
+  df |> tibble::as_tibble()
+}
