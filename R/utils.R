@@ -276,9 +276,8 @@ bcftools_parse_vcf <- function(vcf, only_pass = TRUE, alias = TRUE) {
     msg = "bcftools needs to be on the PATH."
   )
 
-  if (is_url(vcf)) {
-    vcf <- glue::glue("'{vcf}'")
-  }
+  vcf <- glue::glue("'{vcf}'")
+
 
   # 1) grab the header
   cmd_header <- glue::glue("bcftools view -h {vcf}")
@@ -286,176 +285,108 @@ bcftools_parse_vcf <- function(vcf, only_pass = TRUE, alias = TRUE) {
 
   # 2) main fields + sample aliases
   main <- c("CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER")
+
   get_samples <- function() {
-    hdr_last <- strsplit(h[length(h)], "\t")[[1]]
-    # drop CHROM–FILTER + INFO + FORMAT
-    samples <- hdr_last[-seq_len(length(main) + 2)]
-    aliases <- if (alias) paste0("S", seq_along(samples)) else samples
-    list(samples = samples, n = length(samples), aliases = aliases)
+    final_header_row <- length(h)
+    x <- strsplit(h[final_header_row], "\t")[[1]]
+    main_len <- length(main) + length(c("INFO", "FORMAT"))
+    if (length(x) <= main_len) {
+      msg <- paste(c(main, "INFO", "FORMAT"), collapse = ", ")
+      stop(
+        "Check the following VCF columns, followed by sample columns:\n",
+        msg,
+        "\nCall me if everything seems fine on 1800-OMG-LOL."
+      )
+    }
+    samples <- x[-(1:main_len)]
+    nsamples <- length(samples)
+    aliases <- paste0("S", seq_len(nsamples))
+    # in case you want the full sample name instead
+    if (!alias) {
+      aliases <- samples
+    }
+    list(
+      samples = samples,
+      n = nsamples,
+      aliases = aliases
+    )
   }
   samp <- get_samples()
 
-  # 3) function to split INFO or FORMAT lines
+  # 3) helper to parse ##FORMAT and ##INFO lines
   split_hdr <- function(pat) {
     h[grepl(pat, h, fixed = TRUE)] |>
-      sub(paste0("^", pat), "", _)          |>  # strip the prefix
       tibble::as_tibble_col(column_name = "x") |>
+      dplyr::mutate(x = sub(pat, "", .data$x)) |>
       tidyr::separate_wider_delim(
-        "x",
-        delim = ",",
+        "x", delim = ",",
         names = c("ID", "Number", "Type", "Description"),
         too_many = "merge"
       ) |>
       dplyr::mutate(
-        ID          = sub("^ID=",          "", .data$ID),
-        Number      = sub("^Number=",      "", .data$Number),
-        Type        = sub("^Type=",        "", .data$Type),
-        Description = sub('^Description="(.*)">?$', "\\1", .data$Description)
+        ID          = sub("^ID=",      "", .data$ID),
+        Number      = sub("^Number=",  "", .data$Number),
+        Type        = sub("^Type=",    "", .data$Type),
+        Description = sub('^Description=\\"(.*)\\">?$', "\\1", .data$Description)
       )
   }
 
-  fmt <- split_hdr("##FORMAT=<") |> dplyr::pull(.data$ID)
-  info <- split_hdr("##INFO=<")   |> dplyr::pull(.data$ID)
+  fmt_df <- split_hdr("##FORMAT=<")
+  info_df <- split_hdr("##INFO=<")
 
-  # 4) build the bcftools query string
-  main_cols  <- paste0("%", main, collapse = "\\t")
-  info_cols  <- if (length(info) == 0) "" else paste0("%INFO/", info, collapse = "\\t")
-  fmt_cols   <- paste0("[\\t", paste0("%", fmt, collapse = "\\t"), "]\\n")
-  q          <- paste0(main_cols, "\\t", info_cols, fmt_cols)
-  include_pass <- if (only_pass) "-i 'FILTER=\"PASS\" || FILTER=\".\"'" else ""
-  cmd_body     <- glue::glue("bcftools query -f \"{q}\" {vcf} {include_pass}")
+  fmt  <- fmt_df$ID
+  info <- info_df$ID
 
-  # 5) build the vector of desired names
-  desired_names <- c(
+  main_cols <- paste0("%", main) |>
+    paste(collapse = "\\t")
+  info_cols <- dplyr::if_else(
+    length(info) == 0,
+    "",
+    paste0("%INFO/", info, collapse = "\\t")
+  )
+  fmt_cols <- paste0("[\\t", paste0(paste0("%", fmt), collapse = "\\t"), "]\\n")
+  q <- paste0(main_cols, "\\t", info_cols, fmt_cols)
+  include_pass <- ""
+  if (only_pass) {
+    include_pass <- "-i 'FILTER=\"PASS\" || FILTER=\".\"'"
+  }
+  cmd_body <- glue("bcftools query -f \"{q}\" {vcf} {include_pass}")
+  # create column names using the main columns, an INFO prefix for the INFO
+  # columns, and a S1/2/.._X prefix for the sample columns.
+  cnames <- c(
     main,
-    if (length(info) > 0) paste0("INFO_", info),
+    paste0("INFO", ifelse(length(info) == 0, "", "_"), info),
     paste0(rep(samp$aliases, each = length(fmt)), "_", fmt)
   )
-
-  # 6) preview to get actual column count
+  # handle empty VCF - fread warns about size 0
   suppressWarnings({
-    preview <- data.table::fread(
-      cmd        = cmd_body,
-      sep        = "\t",
-      na.strings = ".",
-      nrows      = 1,
-      header     = FALSE
-    )
-  })
-  actual_ncol <- ncol(preview)
-
-  # handle empty VCF
-  if (nrow(preview) == 0) {
-    return(empty_tbl(cnames = desired_names))
-  }
-
-  # ensure we have at least actual_ncol names
-  if (length(desired_names) < actual_ncol) {
-    stop(
-      sprintf(
-        "Expected at least %d column names, but only have %d. Check your header fields.",
-        actual_ncol, length(desired_names)
-      )
-    )
-  }
-
-  # 7) read full table and assign exactly the right number of names
-  df <- data.table::fread(
-    cmd        = cmd_body,
-    sep        = "\t",
-    header     = FALSE,
-    na.strings = ".",
-    data.table = FALSE
-  )
-  colnames(df) <- desired_names[seq_len(actual_ncol)]
-  df |> tibble::as_tibble()
-}
-
-#' Extract kataegis variants from VCF
-#'
-#' Efficiently extracts kataegis variants from a VCF file.
-#' Specialized function for processing large VCF files.
-#'
-#' @param vcf Path to the VCF file.
-#' @param info_cols List of INFO column names to extract (default: kataegis-related fields).
-#'
-#' @return List with vcf and header elements, similar to bcftools_parse_vcf.
-#' @keywords internal
-bcftools_extract_kataegis <- function(vcf, info_cols = NULL) {
-  # This is a specialized function to extract kataegis variants directly
-  # It avoids issues with pipe operators by using direct commands
-  
-  # Validate inputs
-  assertthat::assert_that(
-    bcftools_installed(),
-    msg = "bcftools needs to be on the PATH."
-  )
-  assertthat::assert_that(file.exists(vcf), msg = "VCF file not found")
-  
-  if (is.null(info_cols)) {
-    info_cols <- c("KT", "PURPLE_AF", "PURPLE_CN", "PURPLE_MACN", "PURPLE_VCN", "SUBCL", "MH", "TNC")
-  }
-  
-  # Build query string
-  query_fields <- paste0("%INFO/", info_cols, collapse = "\\t")
-  query_string <- paste0("%CHROM\\t%POS\\t", query_fields, "\\n")
-  
-  # Build command with grep to filter for non-empty KT field
-  cmd <- sprintf("bcftools query -f '%s' %s | grep -v '\\t\\.\\t\\|^\\t'", query_string, vcf)
-  
-  # Get header information for descriptions
-  cmd_header <- sprintf("bcftools view -h %s", vcf)
-  h <- system(cmd_header, intern = TRUE)
-  
-  # Process header to extract INFO descriptions
-  info_hdrs <- h[grep("##INFO=<", h, fixed = TRUE)]
-  info_desc <- tibble::tibble(
-    raw = sub("^##INFO=<", "", info_hdrs)
-  )
-  
-  # Split description fields
-  info_desc <- tidyr::separate_wider_delim(
-    info_desc, "raw", 
-    delim = ",", 
-    names = c("ID", "Number", "Type", "Description"),
-    too_many = "merge"
-  )
-  
-  # Clean up field names
-  info_desc$ID <- sub("^ID=", "", info_desc$ID)
-  info_desc$Number <- sub("^Number=", "", info_desc$Number)
-  info_desc$Type <- sub("^Type=", "", info_desc$Type)
-  info_desc$Description <- sub('^Description="(.*)">?$', "\\1", info_desc$Description)
-  
-  # Filter to columns of interest
-  info_desc <- dplyr::filter(info_desc, info_desc$ID %in% info_cols)
-  info_desc <- dplyr::arrange(info_desc, info_desc$ID)
-  
-  # Read the data
-  df <- suppressWarnings({
-    data.table::fread(
-      cmd = cmd,
+    first_row <- data.table::fread(
+      cmd = cmd_body,
       sep = "\t",
-      header = FALSE,
       na.strings = ".",
-      data.table = FALSE
+      nrows = 1
     )
   })
-  
-  # Set column names
-  if (nrow(df) > 0) {
-    colnames(df) <- c("CHROM", "POS", paste0("INFO_", info_cols))
-    return(list(
-      vcf = tibble::as_tibble(df),
-      header = list(INFO = info_desc)
-    ))
-  } else {
-    # Create empty tibble with correct columns
-    col_names <- c("CHROM", "POS", paste0("INFO_", info_cols))
-    return(list(
-      vcf = empty_tbl(col_names),
-      header = list(INFO = dplyr::select(info_desc, "ID", "Description"))
-    ))
+  if (nrow(first_row) == 0) {
+    return(empty_tbl(cnames = cnames))
   }
+  vcf_data <- data.table::fread(
+    cmd = cmd_body,
+    header = FALSE,
+    sep = "\t",
+    col.names = cnames,
+    data.table = FALSE,
+    na.strings = ".",
+    dec = "."
+  ) |>
+    tibble::as_tibble()
+
+  list(
+    vcf    = vcf_data,
+    header = list(
+      FORMAT = fmt_df,
+      INFO   = info_df
+    )
+  )
+
 }
-EOF < /dev/null

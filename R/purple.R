@@ -712,7 +712,7 @@ purple_snv_vcf_read <- function(x) {
   )
   description <- dplyr::filter(info, .data$ID %in% info_cols)
 
-  data <- parsed$vcf %>%
+  data <- parsed$vcf_data %>%
     select(CHROM, POS, all_of(paste0("INFO_", info_cols)))
 
   list(
@@ -743,15 +743,24 @@ purple_kataegis <- function(x) {
     "PURPLE_MACN", "PURPLE_VCN", "SUBCL",
     "MH", "TNC"
   )
-  
-  # Use the optimized extraction for all files
-  parsed <- bcftools_extract_kataegis(
-    vcf = x,
-    info_cols = info_cols
-  )
-  
+
+  # Parse the VCF using bcftools_parse_vcf
+  parsed <- bcftools_parse_vcf(vcf = x)
+
+  # Filter and select the required data
+  description <- parsed$header$INFO |>
+    dplyr::filter(.data$ID %in% info_cols)|>
+    dplyr::select(ID, Description)
+
+
+  data <- parsed$vcf |>
+    dplyr::select(
+      CHROM, POS,
+      dplyr::all_of(paste0("INFO_", info_cols))
+    )
+  # Return the data and description as a list
   list(
-    data = parsed$vcf,
-    description = parsed$header$INFO
+    data = data,
+    description = description
   )
 }
