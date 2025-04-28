@@ -714,46 +714,6 @@ if (will_work) {
 }
 ```
 
-### __Kataegis__
-
-Somatic variants of type C>T and C>G in a TpCpN context are annotated as
-showing Kataegis (Nik Zainal et al., 2012) if there are three or more
-mutations of that type, strand and context localised within a
-region with an average inter-mutation distance of <= 1kb.
-The annotation describes the strand it was found on
-along with an ID that is shared by grouped variants.
-
-```{r purple_kataegis_table}
-kat <- gpgr::purple_kataegis(params$purple_som_snv_vcf)
-details::details(knitr::kable(kat$description), lang = "none", summary = "Column Description")
-if (nrow(kat$data) > 0) {
-  DT::datatable(kat$data,
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
-    class = "cell-border display compact",
-    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-    options = list(
-      scroller = TRUE, scrollY = 200, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
-      buttons = c("csv", "excel"), dom = "Blfrtip"
-    )
-  )
-} else {
-  cat("No kataegis regions detected.")
-}
-```
-
-```{r purple_plot_somaticrainfall, out.width="70%"}
-purple_plot_somaticrainfall <- file.path(img_dir, paste0(params$tumor_name, ".somatic.rainfall.png"))
-if (file.exists(purple_plot_somaticrainfall)) {
-  knitr::include_graphics(purple_plot_somaticrainfall)
-} else {
-  cat("No PURPLE rainfall plot was output (probably because there are > 100,000 SNVs)")
-}
-```
-
-```{r, results='asis'}
-blank_lines(1)
-```
-
 ## __HRD (Homologous Recombination Deficiency) Detection__ {#hrd}
 
 <details>
