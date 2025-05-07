@@ -119,7 +119,7 @@ dragen_hrd_res <- gpgr::dragen_hrd(params$dragen_hrd)
 chord_res <- sigrap::chord_run(
   vcf.snv = params$somatic_snv_vcf,
   vcf.sv = params$somatic_sv_vcf,
-  sv.caller = "gridss",
+  sv.caller = "manta",
   sample.name = params$tumor_name,
   ref.genome = "hg38",
   verbose = TRUE
