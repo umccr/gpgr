@@ -87,25 +87,6 @@ purity$summary |>
   knitr::kable(caption = "PURPLE Purity Summary Table.")
 ```
 
-### Kataegis
-
-```{r kataegis}
-kat <- system.file("extdata/purple/purple.somatic.vcf.gz", package = "gpgr") |>
-  purple_kataegis()
-kat$data |>
-  dplyr::slice(1:10) |>
-  knitr::kable(caption = "PURPLE Kataegis Table.")
-```
-
-<details>
-<summary>Description</summary>
-
-```{r kataegis_descr}
-knitr::kable(kat$description, caption = "Kataegis column description.")
-```
-
-</details>
-
 ### QC
 
 ```{r qc}
