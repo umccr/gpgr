@@ -924,14 +924,6 @@ sv.dt <- sv |>
 
 ### Summary {.tabset .tabset-fade #sv-summary}
 
-#### Plots
-
-```{r plot_bnd_sr_pr_tot_lines, fig.width=12, fig.height=12, out.width="90%"}
-p1 <- gpgr:::plot_bnd_sr_pr_tot_lines(sv$map)
-p2 <- gpgr::plot_bnd_sr_pr_tot_hist(sv$map) + ggplot2::theme(legend.position = "none")
-((p1$p_all | p2) / p1$p_tier)
-```
-
 #### Counts
 
 ```{r sv_summary, eval=!no_sv_found}
