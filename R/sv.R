@@ -132,10 +132,10 @@ sash_read_sv_tsv <- function(x) {
     "start",         "POS column in VCF",                                                                                 "i",
     "svtype",        "INFO/SVTYPE: Type of structural variant",                                                           "c",
     "VF_alt",        "Alternate allele variant fraction (VF) from esvee",                                                 "f",
-    "SB_alt",        "Alternate allele strand bias (SB) from esvee",                                                      "f",
+    "DF_alt",        "Count of discordant fragments with reads either side BE from esvee",                                "f",
     "SF_alt",        "Alternate allele split-read support fraction (SF) from esvee",                                      "f",
-    "SR_ref",        "FORMAT/REF of tumor sample",                                                                       "i",
-    "PR_ref",        "FORMAT/REFPAIR of tumor sample",                                                                   "i",
+    "SR_ref",        "FORMAT/REF of tumor sample",                                                                        "i",
+    "PR_ref",        "FORMAT/REFPAIR of tumor sample",                                                                    "i",
     "QUAL",          "QUAL column in VCF",                                                                                "f",
     "tier",          "INFO/SV_TOP_TIER (or 4 if missing): Highest priority tier for the effects of a variant entry",      "c",
     "annotation",    "INFO/SIMPLE_ANN: Simplified structural variant annotation: 'SVTYPE | EFFECT | GENE(s) | TRANSCRIPT | PRIORITY (1-4)'", "c",
@@ -145,7 +145,8 @@ sash_read_sv_tsv <- function(x) {
     "PURPLE_status", "INFERRED if FILTER=INFERRED, or RECOVERED if has INFO/RECOVERED, else blank. INFERRED: Breakend inferred from copy number transition", "c",
     "ID",            "ID column in VCF",                                                                                  "c",
     "MATEID",        "INFO/MATEID: ID of mate breakend",                                                                  "c",
-    "ALT",           "ALT column from VCF used in split_svs",                                                              "c"
+    "ALT",           "ALT column from VCF used in split_svs",                                                             "c",
+    "DF_alt",        "Alternate allele strand bias (SB) from esvee",                                                      "f"
   )
 
   ctypes <- paste(tab$Type, collapse = "")
@@ -352,8 +353,8 @@ process_sv <- function(x) {
       "Breakend ID" = "BND_ID",
       "Breakend Mate" = "BND_mate",
       "VF_alt",
+      "DF_alt",
       "SF_alt",
-      "SB_alt",
       "PURPLE AF" = "AF_PURPLE",
       "PURPLE CN" = "CN_PURPLE"
     ) |>
@@ -405,8 +406,8 @@ process_sv <- function(x) {
       "Effect",
       "Detail",
       "VF_alt",
+      "DF_alt",
       "SF_alt",
-      "SB_alt",
       "PURPLE AF" = "AF_PURPLE",
       "PURPLE CN" = "CN_PURPLE",
       # Dropped after ops for non-map outputs
