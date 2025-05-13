@@ -146,7 +146,6 @@ sash_read_sv_tsv <- function(x) {
     "ID",            "ID column in VCF",                                                                                  "c",
     "MATEID",        "INFO/MATEID: ID of mate breakend",                                                                  "c",
     "ALT",           "ALT column from VCF used in split_svs",                                                             "c",
-    "DF_alt",        "Alternate allele strand bias (SB) from esvee",                                                      "f"
   )
 
   ctypes <- paste(tab$Type, collapse = "")
@@ -316,6 +315,13 @@ process_sv <- function(x) {
     dplyr::mutate(
       "annotation_count" = count_pieces(.data$annotation, ","),
       "Top Tier" = .data$tier,
+      "SF_DF_ref" = paste0(.data$SR_ref, ",", .data$PR_ref),
+      "SF_DF_sum" = dplyr::case_when(
+        is.na(.data$SF_alt) & is.na(.data$DF_alt) ~ NA,
+        is.na(.data$SF_alt) ~ .data$DF_alt,
+        is.na(.data$DF_alt) ~ .data$SF_alt,
+        .default = .data$SF_alt + .data$DF_alt
+      ),
       start = paste(.data$chrom, base::format(.data$start, big.mark = ",", trim = TRUE), sep = ":"),
       Type = ifelse(is.na(.data$PURPLE_status), .data$svtype, "PURPLE_inf"),
       "Record ID" = dplyr::row_number()
@@ -355,6 +361,8 @@ process_sv <- function(x) {
       "VF_alt",
       "DF_alt",
       "SF_alt",
+      "SF_DF_ref",
+      "SF_DF_sum",
       "PURPLE AF" = "AF_PURPLE",
       "PURPLE CN" = "CN_PURPLE"
     ) |>
@@ -432,12 +440,12 @@ process_sv <- function(x) {
   )
 }
 
-#' Line plot for SR, PR and SR + PR for BNDs
+#' Line plot for SF, DF and SF + DF for BNDs
 #'
-#' Plots the number of split reads (`SR`), paired end reads (`PR`), and their
-#' sum (`tot`) across all BNDs, sorted by `tot`.
+#' Plots the split fragments (`SF`), discordant fragments (`DF`), and 
+#' the total fragments (SF+DF) across all BNDs, sorted by total value.
 #'
-#' @param d A data.frame with an SR_PR_alt column.
+#' @param d A data.frame with SF_alt, DF_alt, and SF_DF_alt columns.
 #' @param title Main title of plot.
 #' @param subtitle Subtitle of plot.
 #'
@@ -446,27 +454,27 @@ process_sv <- function(x) {
 #' @examples
 #' x <- system.file("extdata/sash/sv.prioritised.tsv", package = "gpgr")
 #' d <- process_sv(x)$map
-#' plot_bnd_sr_pr_tot_lines(d)
+#' plot_bnd_sf_df_tot_lines(d)
 #' @export
-plot_bnd_sr_pr_tot_lines <- function(d,
-                                     title = "SR, PR and SR + PR line plot for BNDs",
-                                     subtitle = "Events are sorted by decreasing tot values.") {
-  assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
+plot_bnd_sf_df_tot_lines <- function(d,
+                                     title = "SF, DF and SF + DF  line plot for BNDs",
+                                     subtitle = "Events are sorted by decreasing total values.") {
+  assertthat::assert_that(all(c("Type", "SF_alt", "DF_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>
-    dplyr::select(SR = "SR_alt", PR = "PR_alt", Tier = "Top Tier", "Breakend ID") |>
+    dplyr::select(SF = "SF_alt", DF = "DF_alt", Tier = "Top Tier", "Breakend ID") |>
     dplyr::distinct() |>
     dplyr::mutate(
-      PR = ifelse(is.na(.data$PR), 0, .data$PR),
-      SR = ifelse(is.na(.data$SR), 0, .data$SR)
+      DF = ifelse(is.na(.data$DF), 0, .data$DF),
+      SF = ifelse(is.na(.data$SF), 0, .data$SF),
     ) |>
     dplyr::rowwise() |>
-    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = TRUE)) |>
+    dplyr::mutate(total = sum(.data$SF, .data$DF, na.rm = TRUE)) |>
     dplyr::ungroup() |>
-    dplyr::arrange(dplyr::desc(.data$tot)) |>
+    dplyr::arrange(dplyr::desc(.data$total)) |>
     dplyr::mutate(bnd_event = dplyr::row_number()) |>
     tidyr::pivot_longer(
-      cols = c(.data$SR, .data$PR, .data$tot),
+      cols = c(.data$SF, .data$DF, .data$total),
       names_to = "Metric", values_to = "Count"
     )
 
@@ -495,12 +503,12 @@ plot_bnd_sr_pr_tot_lines <- function(d,
   )
 }
 
-#' Histogram for SR, PR and SR + PR for BNDs
+#' Histogram for SF, DF and SF_DF_sum for BNDs
 #'
-#' Plots histograms for the number of split reads (`SR`), paired end reads (`PR`), and their
-#' sum (`tot`) across all BNDs. Observations where the SR or PR value is 0 (NA) are not shown.
+#' Plots histograms for split fragments (`SF`), discordant fragments (`DF`), and
+#' the total fragments (SF+DF) across all BNDs. Observations where values are 0 (NA) are not shown.
 #'
-#' @param d A data.frame with an SR_PR_alt column.
+#' @param d A data.frame with SF_alt, DF_alt, and SF_DF_sum columns.
 #' @param title Main title of plot.
 #' @param subtitle Subtitle of plot.
 #'
@@ -509,25 +517,25 @@ plot_bnd_sr_pr_tot_lines <- function(d,
 #' @examples
 #' x <- system.file("extdata/sash/sv.prioritised.tsv", package = "gpgr")
 #' d <- process_sv(x)$map
-#' plot_bnd_sr_pr_tot_hist(d, "a title")
+#' plot_bnd_sf_df_tot_hist(d, "a title")
 #' @export
-plot_bnd_sr_pr_tot_hist <- function(d,
-                                    title = "SR, PR and SR + PR histogram for BNDs",
+plot_bnd_sf_df_tot_hist <- function(d,
+                                    title = "SF, DF and SF + DF histogram for BNDs",
                                     subtitle = "Values of 0 (NA) are not shown.") {
-  assertthat::assert_that(all(c("Type", "SR_alt", "PR_alt") %in% colnames(d)))
+  assertthat::assert_that(all(c("Type", "SF_alt", "DF_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>
-    dplyr::select(SR = "SR_alt", PR = "PR_alt", "Breakend ID") |>
+    dplyr::select(SF = "SF_alt", DF = "DF_alt", "Breakend ID") |>
     dplyr::distinct() |>
     dplyr::mutate(
-      PR = ifelse(is.na(.data$PR), 0, .data$PR),
-      SR = ifelse(is.na(.data$SR), 0, .data$SR)
+      DF = ifelse(is.na(.data$DF), 0, .data$DF),
+      SF = ifelse(is.na(.data$SF), 0, .data$SF),
     ) |>
     dplyr::rowwise() |>
-    dplyr::mutate(tot = sum(.data$SR, .data$PR, na.rm = TRUE)) |>
+    dplyr::mutate(total = sum(.data$SF, .data$DF, na.rm = TRUE)) |>
     dplyr::ungroup() |>
     tidyr::pivot_longer(
-      cols = c(.data$SR, .data$PR, .data$tot),
+      cols = c(.data$SF, .data$DF, .data$total),
       names_to = "Metric", values_to = "Value"
     )
 

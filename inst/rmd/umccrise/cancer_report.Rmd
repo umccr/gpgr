@@ -804,6 +804,8 @@ The first BAF plot is based on PURPLE data and configuration files.
   <span style="color:red">Red</span> = Loss; <span style="color:#32CD32">Green</span> = Gain.
   Scaled from 0 (complete loss) to 6 (high level gains).
   If > 6, shown as 6 with a green dot on the outermost green gridline.
+  Minor allele copy numbers above 1 (<span style="color:#7EC0EE">Blue</span>) indicate gains
+  of both A and B alleles.
 * __Track4__: __Minor__ allele copy numbers. Range from 0 to 3.
   Expected normal minor allele copy number is 1, and anything below 1 is shown
   as a loss (<span style="color:#EE7600">Orange</span>), representing an LOH event.
@@ -923,6 +925,15 @@ sv.dt <- sv |>
 ```
 
 ### Summary {.tabset .tabset-fade #sv-summary}
+
+
+#### Plots
+
+```{r plot_bnd_sf_df_tot_lines, fig.width=12, fig.height=12, out.width="90%"}
+p1 <- gpgr:::plot_bnd_sf_df_tot_lines(sv$map)
+p2 <- gpgr::plot_bnd_sf_df_tot_hist(sv$map) + ggplot2::theme(legend.position = "none")
+((p1$p_all | p2) / p1$p_tier)
+```
 
 #### Counts
 
