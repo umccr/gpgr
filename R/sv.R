@@ -193,11 +193,13 @@ join_breakpoint_entries <- function(x) {
       )
     ) |>
     dplyr::group_by(.group_key)
-  ng <- dplyr::n_groups(bps)
+
+  # Set a sequential breakpoint identifier
+  bps_groups <- bps |> dplyr::n_groups()
   bps |>
     dplyr::arrange(as.numeric(ID), .by_group = TRUE) |>
     dplyr::mutate(
-      BND_ID = sprintf(paste0("%0", nchar(ng), "d"), dplyr::cur_group_id()),
+      BND_ID = sprintf(paste0("%0", nchar(bps_groups), "d"), dplyr::cur_group_id()),
       BND_mate = ifelse(dplyr::row_number() == 1, "A", "B")
     ) |>
     dplyr::ungroup() |>
