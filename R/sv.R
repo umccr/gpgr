@@ -181,18 +181,24 @@ split_svs <- function(x) {
 }
 
 join_breakpoint_entries <- function(x) {
-  # Group by GRIDSS identifier (clipping trailing h/o [h: High, o: lOwer])
+  stopifnot(all(c("ID","MATEID","ALT") %in% names(x)))
   bps <- x |>
-    tidyr::separate("ID", into = c("BND_group", "BND_mate"), sep = -1, convert = TRUE, remove = FALSE) |>
-    dplyr::group_by(.data$BND_group)
-
-  # Set a sequential breakpoint identifier
-  bps_groups <- bps |> dplyr::n_groups()
-  bps |>
     dplyr::mutate(
-      # Assign a unique ID based on current group
-      BND_ID = sprintf(paste0("%0", nchar(bps_groups), "d"), dplyr::cur_group_id()),
-      BND_mate = ifelse(.data$BND_mate == "o", "A", "B"),
+      ID = as.character(ID),
+      MATEID = dplyr::coalesce(as.character(MATEID),""),
+      .group_key = ifelse(
+        MATEID == "",
+        ID,
+        as.character(pmin(as.numeric(ID), as.numeric(MATEID)))
+      )
+    ) |>
+    dplyr::group_by(.group_key)
+  ng <- dplyr::n_groups(bps)
+  bps |>
+    dplyr::arrange(as.numeric(ID), .by_group = TRUE) |>
+    dplyr::mutate(
+      BND_ID = sprintf(paste0("%0", nchar(ng), "d"), dplyr::cur_group_id()),
+      BND_mate = ifelse(dplyr::row_number() == 1, "A", "B")
     ) |>
     dplyr::ungroup() |>
     dplyr::mutate(
@@ -457,8 +463,8 @@ process_sv <- function(x) {
 #' plot_bnd_sf_df_tot_lines(d)
 #' @export
 plot_bnd_sf_df_tot_lines <- function(d,
-                                     title = "SF, DF and SF + DF  line plot for BNDs",
-                                     subtitle = "Events are sorted by decreasing total values.") {
+                                      title = "SF, DF and SF + DF  line plot for BNDs",
+                                      subtitle = "Events are sorted by decreasing total values.") {
   assertthat::assert_that(all(c("Type", "SF_alt", "DF_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>
