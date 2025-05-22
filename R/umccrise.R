@@ -97,8 +97,9 @@ dragen_hrd <- function(x = NULL) {
 #'
 #' @export
 hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
-  sn <- chord_res$prediction[, "sample", drop = T]
-  assertthat::are_equal(hrdetect_res[, "sample", drop = T], sn)
+  # sn <- chord_res$prediction[, "sample", drop = T]
+  # assertthat::are_equal(hrdetect_res[, "sample", drop = T], sn)
+    sn <- hrdetect_res[, "sample", drop = TRUE]
 
   hrdetect_res_tab <-
     tibble::tibble(
@@ -107,12 +108,12 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
     ) |>
     dplyr::filter(.data$col != "sample")
 
-  chord_res_tab <-
-    tibble::tibble(
-      col = colnames(chord_res$prediction),
-      val = unlist(chord_res$prediction[1, ])
-    ) |>
-    dplyr::filter(col != "sample")
+  # chord_res_tab <-
+  #   tibble::tibble(
+  #     col = colnames(chord_res$prediction),
+  #     val = unlist(chord_res$prediction[1, ])
+  #   ) |>
+  #   dplyr::filter(col != "sample")
 
   dragen_res_tab <-
     dragen_res |>
@@ -122,9 +123,9 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
 
   colnames(dragen_res_tab) <- c("DRAGEN", "results_dragen")
   colnames(hrdetect_res_tab) <- c("HRDetect", "results_hrdetect")
-  colnames(chord_res_tab) <- c("CHORD", "results_chord")
+  #colnames(chord_res_tab) <- c("CHORD", "results_chord")
 
-  # idea is to make 9-row tibbles and cbind them
+  # idea is to make tibbles and cbind them
   tab1 <-
     dplyr::bind_rows(
       hrdetect_res_tab,
@@ -133,23 +134,23 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
         " ", " "
       )
     )
-  tab2a <-
-    dplyr::bind_rows(
-      chord_res_tab[1:7, ],
-      tibble::tribble(
-        ~CHORD, ~results_chord,
-        " ", " ",
-        " ", " "
-      )
-    )
-  tab2b <- chord_res_tab[8:16, ] |>
-    purrr::set_names(c("CHORD2", "results_chord2"))
+  # tab2a <-
+  #   dplyr::bind_rows(
+  #     chord_res_tab[1:7, ],
+  #     tibble::tribble(
+  #       ~CHORD, ~results_chord,
+  #       " ", " ",
+  #       " ", " "
+  #     )
+  #   )
+  # tab2b <- chord_res_tab[8:16, ] |>
+  #   purrr::set_names(c("CHORD2", "results_chord2"))
   tab3 <- dplyr::bind_rows(
     dragen_res_tab,
     tibble::tibble(DRAGEN = rep(" ", 5), results_dragen = rep(" ", 5))
   )
 
-  hrd_results_tab <- dplyr::bind_cols(tab3, tab1, tab2a, tab2b)
+  hrd_results_tab <- dplyr::bind_cols(tab3, tab1)
 
   hrd_results_gt <-
     hrd_results_tab |>
@@ -167,27 +168,28 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
       id = "id_hrdetect",
       columns = c("HRDetect", "results_hrdetect")
     ) |>
-    gt::tab_spanner(
-      label = "CHORD",
-      id = "id_chord",
-      columns = c("CHORD", "results_chord", "CHORD2", "results_chord2")
-    ) |>
+    # gt::tab_spanner(
+    #   label = "CHORD",
+    #   id = "id_chord",
+    #   columns = c("CHORD", "results_chord", "CHORD2", "results_chord2")
+    # ) |>
     gt::cols_label(
       DRAGEN = "",
       results_dragen = "",
       HRDetect = "",
       results_hrdetect = "",
-      CHORD = "",
-      results_chord = "",
-      CHORD2 = "",
-      results_chord2 = ""
+      # CHORD = "",
+      # results_chord = "",
+      # CHORD2 = "",
+      # results_chord2 = ""
     ) |>
     gt::tab_style(
       style = list(
         gt::cell_text(weight = "bold")
       ),
       locations = gt::cells_body(
-        columns = c("DRAGEN", "HRDetect", "CHORD", "CHORD2")
+        #columns = c("DRAGEN", "HRDetect", "CHORD", "CHORD2")
+        columns = c("DRAGEN", "HRDetect")
       )
     ) |>
     gt::cols_align(
@@ -202,7 +204,8 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
         style = "solid"
       ),
       locations = gt::cells_body(
-        columns = c("CHORD", "HRDetect"),
+        #columns = c("CHORD", "HRDetect"),
+        columns = c("HRDetect"),
         rows = dplyr::everything()
       )
     ) |>
