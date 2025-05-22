@@ -1,3 +1,7 @@
+# gpgr 2.1.3
+
+- :wrench: adapt to eSVee SV format from oncoanalyser v2, temporarily disable CHORD ([pr88](https://github.com/umccr/gpgr/pull/88))
+
 # gpgr 2.1.1
 
 - :bug: updating gene panel, fixes to pass devtools checks and pkgdown ([pr82](https://github.com/umccr/gpgr/pull/82))
