@@ -662,20 +662,18 @@ purple_purity_read <- function(x) {
     "Gender as inferred by AMBER/COBALT.",
     7, "WGD", glue::glue('{p["wholeGenomeDuplication"]}'),
     "Whole genome duplication (more than 10 autosomes have average major allele ploidy > 1.5).",
-    8, "MSI (indels/Mb)", glue::glue('{p["msStatus"]} ({p["msIndelsPerMb"]})'),
-    "MSI status (MSI, MSS or UNKNOWN if somatic variants not supplied) & MS Indels per Mb.",
-    9, "PolyclonalProp", glue::glue('{p["polyclonalProportion"]}'),
+    8, "PolyclonalProp", glue::glue('{p["polyclonalProportion"]}'),
     "Proportion of CN regions that are more than 0.25 from a whole CN",
-    10, "DiploidyProp", glue::glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'),
+    9, "DiploidyProp", glue::glue('{p["diploidProportion"]} ({p["minDiploidProportion"]}-{p["maxDiploidProportion"]})'),
     "Proportion of CN regions that have 1 (+- 0.2) minor and major allele.",
-    11, "TMB", glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
+    10, "TMB", glue::glue('{p["tmbPerMb"]} ({p["tmbStatus"]})'),
     paste(
       "Tumor mutational burden (# PASS variants per Megabase)",
       "(Status: 'HIGH' (>10 PASS per Mb), 'LOW' or 'UNKNOWN')."
     ),
-    12, "TML", glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
+    11, "TML", glue::glue('{p["tml"]} ({p["tmlStatus"]})'),
     "Tumor mutational load (# of missense variants) (Status: 'HIGH', 'LOW' or 'UNKNOWN').",
-    13, "TMB-SV", glue::glue('{p["svTumorMutationalBurden"]}'),
+    12, "TMB-SV", glue::glue('{p["svTumorMutationalBurden"]}'),
     "# of non inferred, non single passing SVs."
   )
 
