@@ -1,6 +1,12 @@
 # gpgr 2.1.3
 
 - :wrench: adapt to eSVee SV format from oncoanalyser v2, temporarily disable CHORD ([pr88](https://github.com/umccr/gpgr/pull/88))
+  - Replace GRIPSS-specific SR/PR metrics with eSVee VF/DF/SF metrics
+  - Remove SR and PR plots, update to use SF/DF plots for breakends
+  - Update SV processing to handle eSVee format with new breakpoint matching logic
+  - Temporarily disable CHORD functionality due to compatibility issues with eSVee calls
+  - Remove MSI fields from cancer report summary table - always 0 since PURPLE 4.1 ([sash#7](https://github.com/umccr/sash/issues/7))
+- :bug: fix incorrect Breakend ID assignment and mate matching in SV Map table ([issue89](https://github.com/umccr/gpgr/issues/89))
 
 # gpgr 2.1.1
 
