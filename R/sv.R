@@ -232,6 +232,8 @@ join_breakpoint_entries <- function(x) {
         dplyr::n() == 1 ~ "S",  # Singleton breakend
         dplyr::n() == 2 & dplyr::row_number() == 1 ~ "A",  # First of pair
         dplyr::n() == 2 & dplyr::row_number() == 2 ~ "B",  # Second of pair
+        dplyr::n() > 2 ~ paste0("M", dplyr::row_number()),  # Multiple breakends
+        TRUE ~ "U"  # Unknown/unexpected case
       )
     ) |>
     dplyr::ungroup() |>
