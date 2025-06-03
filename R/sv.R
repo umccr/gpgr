@@ -137,6 +137,7 @@ sash_read_sv_tsv <- function(x) {
     "SR_ref",        "FORMAT/REF of tumor sample",                                                                        "i",
     "PR_ref",        "FORMAT/REFPAIR of tumor sample",                                                                    "i",
     "QUAL",          "QUAL column in VCF",                                                                                "f",
+    "filter",        "FILTER column from VCF (e.g., PASS, PON)",                                                         "c",
     "tier",          "INFO/SV_TOP_TIER (or 4 if missing): Highest priority tier for the effects of a variant entry",      "c",
     "annotation",    "INFO/SIMPLE_ANN: Simplified structural variant annotation: 'SVTYPE | EFFECT | GENE(s) | TRANSCRIPT | PRIORITY (1-4)'", "c",
     "AF_PURPLE",     "INFO/PURPLE_AF: AF at each breakend (purity adjusted) (so AF_PURPLE1,AF_PURPLE2)",                  "c",
@@ -156,6 +157,33 @@ sash_read_sv_tsv <- function(x) {
     data = d,
     descr = tab
   )
+}
+
+filter_pon_breakend_pairs <- function(x) {
+  # For breakends with mates, filter out both if either has PON in filter
+  # For other variants (non-breakends or breakends without mates), filter individually
+  
+  # Identify breakend pairs that should be filtered
+  sv_with_pon_filter  <- x |>
+    dplyr::mutate(
+      has_pon = stringr::str_detect(.data$filter, "PON"),
+      ID_char = as.character(.data$ID),
+      MATEID_char = dplyr::coalesce(as.character(.data$MATEID), "")
+    )
+  
+  # Find all IDs that should be filtered (either they have PON or their mate has PON)
+  pon_ids <- sv_with_pon_filter |>
+    dplyr::filter(.data$has_pon) |>
+    dplyr::select(.data$ID_char, .data$MATEID_char) |>
+    tidyr::pivot_longer(everything(), values_to = "id_to_filter") |>
+    dplyr::filter(.data$id_to_filter != "") |>
+    dplyr::pull(.data$id_to_filter) |>
+    unique()
+  
+  # Filter out variants whose ID is in the PON list
+  sv_with_pon_filter |>
+    dplyr::filter(!.data$ID_char %in% pon_ids) |>
+    dplyr::select(-c("has_pon", "ID_char", "MATEID_char"))
 }
 
 split_svs <- function(x) {
@@ -181,26 +209,30 @@ split_svs <- function(x) {
 }
 
 join_breakpoint_entries <- function(x) {
-  stopifnot(all(c("ID","MATEID","ALT") %in% names(x)))
+  stopifnot(all(c("ID", "MATEID", "ALT") %in% names(x)))
   bps <- x |>
     dplyr::mutate(
-      ID = as.character(ID),
-      MATEID = dplyr::coalesce(as.character(MATEID),""),
+      ID = as.character(.data$ID),
+      MATEID = dplyr::coalesce(as.character(.data$MATEID), ""),
       .group_key = ifelse(
-        MATEID == "",
-        ID,
-        as.character(pmin(as.numeric(ID), as.numeric(MATEID)))
+        .data$MATEID == "",
+        .data$ID,
+        as.character(pmin(as.numeric(.data$ID), as.numeric(.data$MATEID)))
       )
     ) |>
-    dplyr::group_by(.group_key)
+    dplyr::group_by(.data$.group_key)
 
   # Set a sequential breakpoint identifier
   bps_groups <- bps |> dplyr::n_groups()
   bps |>
-    dplyr::arrange(as.numeric(ID), .by_group = TRUE) |>
+    dplyr::arrange(as.numeric(.data$ID), .by_group = TRUE) |>
     dplyr::mutate(
       BND_ID = sprintf(paste0("%0", nchar(bps_groups), "d"), dplyr::cur_group_id()),
-      BND_mate = ifelse(dplyr::row_number() == 1, "A", "B")
+      BND_mate = dplyr::case_when(
+        dplyr::n() == 1 ~ "S",  # Singleton breakend
+        dplyr::n() == 2 & dplyr::row_number() == 1 ~ "A",  # First of pair
+        dplyr::n() == 2 & dplyr::row_number() == 2 ~ "B",  # Second of pair
+      )
     ) |>
     dplyr::ungroup() |>
     dplyr::mutate(
@@ -318,8 +350,11 @@ process_sv <- function(x) {
     return()
   }
 
+  # Filter PON variants (including breakend pairs)
+  sv.data_filtered <- filter_pon_breakend_pairs(sv.input$data)
+
   # Prepare input
-  sv.ready <- sv.input$data |>
+  sv.ready <- sv.data_filtered |>
     dplyr::mutate(
       "annotation_count" = count_pieces(.data$annotation, ","),
       "Top Tier" = .data$tier,
