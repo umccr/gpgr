@@ -6,7 +6,8 @@
   - Update SV processing to handle eSVee format with new breakpoint matching logic
   - Temporarily disable CHORD functionality due to compatibility issues with eSVee calls
   - Remove MSI fields from cancer report summary table - always 0 since PURPLE 4.1 ([sash#7](https://github.com/umccr/sash/issues/7))
-- :bug: fix incorrect Breakend ID assignment and mate matching in SV Map table ([issue89](https://github.com/umccr/gpgr/issues/89))
+  - Adapt Breakend ID assignment and mate matching in SV Map table with eSVee ([issue89](https://github.com/umccr/gpgr/issues/89))
+- :wrench: filter PoN SV in cancer report tables ([sash#8](https://github.com/umccr/sash/issues/8))
 
 # gpgr 2.1.1
 
