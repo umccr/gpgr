@@ -175,7 +175,7 @@ filter_pon_breakend_pairs <- function(x) {
   pon_ids <- sv_with_pon_filter |>
     dplyr::filter(.data$has_pon) |>
     dplyr::select(.data$ID_char, .data$MATEID_char) |>
-    tidyr::pivot_longer(everything(), values_to = "id_to_filter") |>
+    tidyr::pivot_longer(tidyr::everything(), values_to = "id_to_filter") |>
     dplyr::filter(.data$id_to_filter != "") |>
     dplyr::pull(.data$id_to_filter) |>
     unique()
