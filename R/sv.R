@@ -131,7 +131,7 @@ sash_read_sv_tsv <- function(x) {
     "chrom",              "CHROM column in VCF",                                                                                                                                 "c",
     "start",              "POS column in VCF",                                                                                                                                   "i",
     "svtype",             "INFO/SVTYPE: Type of structural variant",                                                                                                             "c",
-    "VF_alt",             "FORMAT/VF: Alternate allele Variant Fraction (VF) from eSVee",                                                                                        "f",
+    "VF_alt",             "FORMAT/VF: Total Variant Fragments (VF) supporting the breakend from eSVee",                                                                                        "f",
     "DF_alt",             "FORMAT/DF: Count of Discordant Fragments (DF) with reads either side BE from eSVee",                                                                  "f",
     "SF_alt",             "FORMAT/SF: Alternate allele Split-read support Fraction (SF) from eSVee",                                                                             "f",
     "REF_frag",           "FORMAT/REF: Count of reads mapping across this breakend",                                                                                             "i",
