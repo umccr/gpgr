@@ -2,16 +2,16 @@
 % Please edit documentation in R/sv.R
 \name{plot_bnd_sf_df_tot_lines}
 \alias{plot_bnd_sf_df_tot_lines}
-\title{Line plot for SF, DF and SF_DF_sum for BNDs}
+\title{Line plot for SF, DF and SF + DF for BNDs}
 \usage{
 plot_bnd_sf_df_tot_lines(
   d,
-  title = "SF, DF and SF_DF_sum line plot for BNDs",
-  subtitle = "Events are sorted by decreasing SF_DF_sum values."
+  title = "SF, DF and SF + DF  line plot for BNDs",
+  subtitle = "Events are sorted by decreasing total values."
 )
 }
 \arguments{
-\item{d}{A data.frame with SF_alt, DF_alt, and SF_DF_sum columns.}
+\item{d}{A data.frame with SF_alt, DF_alt, and SF_DF_alt columns.}
 
 \item{title}{Main title of plot.}
 
@@ -21,7 +21,7 @@ plot_bnd_sf_df_tot_lines(
 A ggplot2 plot object.
 }
 \description{
-Plots the split fragments (`SF`), discordant fragments (`DF`), and
+Plots the split fragments (\code{SF}), discordant fragments (\code{DF}), and
 the total fragments (SF+DF) across all BNDs, sorted by total value.
 }
 \examples{
