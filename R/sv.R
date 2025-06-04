@@ -360,7 +360,7 @@ process_sv <- function(x) {
     dplyr::mutate(
       "annotation_count" = count_pieces(.data$annotation, ","),
       "Top Tier" = .data$tier,
-      "SF_DF_ref" = paste0(.data$SR_ref, ",", .data$PR_ref),
+      "SF_DF_ref" = paste0(.data$REF_frag, ",", .data$REF_pair),
       "SF_DF_sum" = dplyr::case_when(
         is.na(.data$SF_alt) & is.na(.data$DF_alt) ~ NA,
         is.na(.data$SF_alt) ~ .data$DF_alt,
@@ -519,7 +519,7 @@ plot_bnd_sf_df_tot_lines <- function(d,
     dplyr::arrange(dplyr::desc(.data$total)) |>
     dplyr::mutate(bnd_event = dplyr::row_number()) |>
     tidyr::pivot_longer(
-      cols = c(.data$SF, .data$DF, .data$total),
+      cols = c("SF", "DF", "total"),
       names_to = "Metric", values_to = "Count"
     )
 
@@ -580,7 +580,7 @@ plot_bnd_sf_df_tot_hist <- function(d,
     dplyr::mutate(total = sum(.data$SF, .data$DF, na.rm = TRUE)) |>
     dplyr::ungroup() |>
     tidyr::pivot_longer(
-      cols = c(.data$SF, .data$DF, .data$total),
+      cols = c("SF", "DF", "total"),
       names_to = "Metric", values_to = "Value"
     )
 
