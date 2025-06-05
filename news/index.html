@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,20 @@
       <small>Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.1.3" id="gpgr-213">gpgr 2.1.3<a class="anchor" aria-label="anchor" href="#gpgr-213"></a></h2>
+<ul><li>
+<span class="emoji" data-emoji="wrench">🔧</span> adapt to eSVee SV format from oncoanalyser v2, temporarily disable CHORD (<a href="https://github.com/umccr/gpgr/pull/88" class="external-link">pr88</a>)
+<ul><li>Replace GRIDSS-specific SR/PR metrics with eSVee VF/DF/SF metrics</li>
+<li>Remove SR and PR plots, update to use SF/DF plots for breakends</li>
+<li>Update SV processing to handle eSVee format with new breakpoint matching logic</li>
+<li>Temporarily disable CHORD functionality due to compatibility issues with eSVee calls</li>
+<li>Remove MSI fields from cancer report summary table - always 0 since PURPLE 4.1 (<a href="https://github.com/umccr/sash/issues/7" class="external-link">sash#7</a>)</li>
+<li>Adapt Breakend ID assignment and mate matching in SV Map table with eSVee (<a href="https://github.com/umccr/gpgr/issues/89" class="external-link">issue89</a>)</li>
+</ul></li>
+<li>
+<span class="emoji" data-emoji="wrench">🔧</span> filter PoN SV in cancer report tables (<a href="https://github.com/umccr/sash/issues/8" class="external-link">sash#8</a>)</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.1.1" id="gpgr-211">gpgr 2.1.1<a class="anchor" aria-label="anchor" href="#gpgr-211"></a></h2>
 <ul><li>

@@ -73,10 +73,10 @@
     <loc>https://umccr.github.io/gpgr/reference/pkg_exists.html</loc>
   </url>
   <url>
-    <loc>https://umccr.github.io/gpgr/reference/plot_bnd_sr_pr_tot_hist.html</loc>
+    <loc>https://umccr.github.io/gpgr/reference/plot_bnd_sf_df_tot_hist.html</loc>
   </url>
   <url>
-    <loc>https://umccr.github.io/gpgr/reference/plot_bnd_sr_pr_tot_lines.html</loc>
+    <loc>https://umccr.github.io/gpgr/reference/plot_bnd_sf_df_tot_lines.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/process_cnv_tsv.html</loc>
@@ -95,9 +95,6 @@
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/purple_cnv_som_read.html</loc>
-  </url>
-  <url>
-    <loc>https://umccr.github.io/gpgr/reference/purple_kataegis.html</loc>
   </url>
   <url>
     <loc>https://umccr.github.io/gpgr/reference/purple_purity_read.html</loc>

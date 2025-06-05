@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>PURPLE</h1>
             
-            <h4 data-toc-skip class="date">2024-11-26</h4>
+            <h4 data-toc-skip class="date">2025-06-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/vignettes/purple.Rmd" class="external-link"><code>vignettes/purple.Rmd</code></a></small>
       <div class="d-none name"><code>purple.Rmd</code></div>
@@ -515,7 +515,7 @@ with the min CN (plus determination method)</td>
 <col width="2%">
 <col width="10%">
 <col width="11%">
-<col width="75%">
+<col width="76%">
 </colgroup>
 <thead><tr>
 <th align="right">n</th>
@@ -553,41 +553,34 @@ average major allele ploidy &gt; 1.5).</td>
 </tr>
 <tr>
 <td align="right">8</td>
-<td align="left">MSI (indels/Mb)</td>
-<td align="left">MSS (0.19)</td>
-<td align="left">MSI status (MSI, MSS or UNKNOWN if somatic variants not
-supplied) &amp; MS Indels per Mb.</td>
-</tr>
-<tr>
-<td align="right">9</td>
 <td align="left">PolyclonalProp</td>
 <td align="left">0.13</td>
 <td align="left">Proportion of CN regions that are more than 0.25 from a
 whole CN</td>
 </tr>
 <tr>
-<td align="right">10</td>
+<td align="right">9</td>
 <td align="left">DiploidyProp</td>
 <td align="left">0.03 (0.02-0.04)</td>
 <td align="left">Proportion of CN regions that have 1 (+- 0.2) minor and
 major allele.</td>
 </tr>
 <tr>
-<td align="right">11</td>
+<td align="right">10</td>
 <td align="left">TMB</td>
 <td align="left">15.13 (HIGH)</td>
 <td align="left">Tumor mutational burden (# PASS variants per Megabase)
 (Status: ‘HIGH’ (&gt;10 PASS per Mb), ‘LOW’ or ‘UNKNOWN’).</td>
 </tr>
 <tr>
-<td align="right">12</td>
+<td align="right">11</td>
 <td align="left">TML</td>
 <td align="left">349 (HIGH)</td>
 <td align="left">Tumor mutational load (# of missense variants) (Status:
 ‘HIGH’, ‘LOW’ or ‘UNKNOWN’).</td>
 </tr>
 <tr>
-<td align="right">13</td>
+<td align="right">12</td>
 <td align="left">TMB-SV</td>
 <td align="left">1267</td>
 <td align="left"># of non inferred, non single passing SVs.</td>
@@ -596,219 +589,9 @@ major allele.</td>
 </table>
 </div>
 <div class="section level3">
-<h3 id="kataegis">Kataegis<a class="anchor" aria-label="anchor" href="#kataegis"></a>
-</h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">kat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.somatic.vcf.gz"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/purple_kataegis.html">purple_kataegis</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">kat</span><span class="op">$</span><span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"PURPLE Kataegis Table."</span><span class="op">)</span></span></code></pre></div>
-<table style="width:100%;" class="table">
-<caption>PURPLE Kataegis Table.</caption>
-<colgroup>
-<col width="7%">
-<col width="11%">
-<col width="7%">
-<col width="12%">
-<col width="12%">
-<col width="15%">
-<col width="14%">
-<col width="7%">
-<col width="3%">
-<col width="5%">
-</colgroup>
-<thead><tr>
-<th align="left">CHROM</th>
-<th align="right">POS</th>
-<th align="left">KT</th>
-<th align="right">PURPLE_AF</th>
-<th align="right">PURPLE_CN</th>
-<th align="right">PURPLE_MACN</th>
-<th align="right">PURPLE_VCN</th>
-<th align="right">SUBCL</th>
-<th align="left">MH</th>
-<th align="left">TNC</th>
-</tr></thead>
-<tbody>
-<tr>
-<td align="left">chr2</td>
-<td align="right">45006212</td>
-<td align="left">REV_1</td>
-<td align="right">0.2601</td>
-<td align="right">1.52</td>
-<td align="right">0.000</td>
-<td align="right">0.396</td>
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">GGA</td>
-</tr>
-<tr>
-<td align="left">chr2</td>
-<td align="right">45007103</td>
-<td align="left">REV_1</td>
-<td align="right">0.2399</td>
-<td align="right">1.52</td>
-<td align="right">0.000</td>
-<td align="right">0.365</td>
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">AGA</td>
-</tr>
-<tr>
-<td align="left">chr2</td>
-<td align="right">45007598</td>
-<td align="left">REV_1</td>
-<td align="right">0.2913</td>
-<td align="right">1.52</td>
-<td align="right">0.000</td>
-<td align="right">0.444</td>
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">TGA</td>
-</tr>
-<tr>
-<td align="left">chr2</td>
-<td align="right">45007709</td>
-<td align="left">REV_1</td>
-<td align="right">0.2759</td>
-<td align="right">1.52</td>
-<td align="right">0.000</td>
-<td align="right">0.420</td>
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">TGA</td>
-</tr>
-<tr>
-<td align="left">chr3</td>
-<td align="right">71010245</td>
-<td align="left">REV_2</td>
-<td align="right">0.4054</td>
-<td align="right">1.16</td>
-<td align="right">0.461</td>
-<td align="right">0.469</td>
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">AGA</td>
-</tr>
-<tr>
-<td align="left">chr3</td>
-<td align="right">71010553</td>
-<td align="left">REV_2</td>
-<td align="right">0.2387</td>
-<td align="right">1.16</td>
-<td align="right">0.461</td>
-<td align="right">0.276</td>
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">AGA</td>
-</tr>
-<tr>
-<td align="left">chr3</td>
-<td align="right">71011404</td>
-<td align="left">REV_2</td>
-<td align="right">0.3640</td>
-<td align="right">1.16</td>
-<td align="right">0.461</td>
-<td align="right">0.421</td>
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">GGA</td>
-</tr>
-<tr>
-<td align="left">chr3</td>
-<td align="right">71011410</td>
-<td align="left">REV_2</td>
-<td align="right">0.3494</td>
-<td align="right">1.16</td>
-<td align="right">0.461</td>
-<td align="right">0.405</td>
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">AGA</td>
-</tr>
-<tr>
-<td align="left">chr3</td>
-<td align="right">71011474</td>
-<td align="left">REV_2</td>
-<td align="right">0.3302</td>
-<td align="right">1.16</td>
-<td align="right">0.461</td>
-<td align="right">0.382</td>
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">AGA</td>
-</tr>
-<tr>
-<td align="left">chr3</td>
-<td align="right">71327944</td>
-<td align="left">FWD_1</td>
-<td align="right">0.2494</td>
-<td align="right">1.26</td>
-<td align="right">0.438</td>
-<td align="right">0.314</td>
-<td align="right">1</td>
-<td align="left">NA</td>
-<td align="left">TCC</td>
-</tr>
-</tbody>
-</table>
-<details><summary>
-Description
-</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">kat</span><span class="op">$</span><span class="va">description</span>, caption <span class="op">=</span> <span class="st">"Kataegis column description."</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<caption>Kataegis column description.</caption>
-<colgroup>
-<col width="15%">
-<col width="84%">
-</colgroup>
-<thead><tr>
-<th align="left">ID</th>
-<th align="left">Description</th>
-</tr></thead>
-<tbody>
-<tr>
-<td align="left">KT</td>
-<td align="left">Forward/reverse kataegis id</td>
-</tr>
-<tr>
-<td align="left">MH</td>
-<td align="left">Microhomology</td>
-</tr>
-<tr>
-<td align="left">PURPLE_AF</td>
-<td align="left">Purity adjusted allelic frequency of variant</td>
-</tr>
-<tr>
-<td align="left">PURPLE_CN</td>
-<td align="left">Purity adjusted copy number surrounding variant
-location</td>
-</tr>
-<tr>
-<td align="left">PURPLE_MACN</td>
-<td align="left">Purity adjusted minor allele ploidy surrounding variant
-location</td>
-</tr>
-<tr>
-<td align="left">PURPLE_VCN</td>
-<td align="left">Purity adjusted ploidy of variant</td>
-</tr>
-<tr>
-<td align="left">SUBCL</td>
-<td align="left">Non-zero subclonal likelihood</td>
-</tr>
-<tr>
-<td align="left">TNC</td>
-<td align="left">Tri-nucleotide context</td>
-</tr>
-</tbody>
-</table></details>
-</div>
-<div class="section level3">
 <h3 id="qc">QC<a class="anchor" aria-label="anchor" href="#qc"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/purple/purple.qc"</span>, package <span class="op">=</span> <span class="st">"gpgr"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">gpgr</span><span class="fu">::</span><span class="fu"><a href="../reference/purple_qc_read.html">purple_qc_read</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -910,8 +693,8 @@ TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.</td>
 </tr>
 <tr>
 <td align="left">gpgr</td>
-<td align="left">2.1.2</td>
-<td align="left">2024-11-26</td>
+<td align="left">2.1.3</td>
+<td align="left">2025-06-05</td>
 <td align="left">local</td>
 </tr>
 </tbody>
@@ -933,7 +716,7 @@ TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.</td>
 </tr>
 <tr>
 <td align="left">os</td>
-<td align="left">Ubuntu 22.04.5 LTS</td>
+<td align="left">Ubuntu 24.04.2 LTS</td>
 </tr>
 <tr>
 <td align="left">system</td>
@@ -961,12 +744,12 @@ TRISOMY_X/21/13/18/15, XYY, MOSAIC_X.</td>
 </tr>
 <tr>
 <td align="left">date</td>
-<td align="left">2024-11-26</td>
+<td align="left">2025-06-05</td>
 </tr>
 <tr>
 <td align="left">pandoc</td>
-<td align="left">3.5 @ /home/runner/micromamba/envs/pkgdownenv/bin/ (via
-rmarkdown)</td>
+<td align="left">3.7.0.2 @ /home/runner/micromamba/envs/pkgdownenv/bin/
+(via rmarkdown)</td>
 </tr>
 </tbody>
 </table>
