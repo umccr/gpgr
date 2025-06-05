@@ -1,7 +1,7 @@
 # gpgr 2.1.3
 
 - :wrench: adapt to eSVee SV format from oncoanalyser v2, temporarily disable CHORD ([pr88](https://github.com/umccr/gpgr/pull/88))
-  - Replace GRIPSS-specific SR/PR metrics with eSVee VF/DF/SF metrics
+  - Replace GRIDSS-specific SR/PR metrics with eSVee VF/DF/SF metrics
   - Remove SR and PR plots, update to use SF/DF plots for breakends
   - Update SV processing to handle eSVee format with new breakpoint matching logic
   - Temporarily disable CHORD functionality due to compatibility issues with eSVee calls
