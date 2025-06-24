@@ -345,7 +345,7 @@ snv_summary <- snv_summary_counts |>
 
 hrd_summary <- list(
   dragen = dragen_hrd_res[, "HRD", drop = TRUE],
-  chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
+  #chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
   hrdetect = hrdetect_res[, "Probability", drop = TRUE]
 )
 
@@ -385,8 +385,8 @@ qc_summary_all <- dplyr::tribble(
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
   "2020 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)",
-  6, "HRD", glue::glue("DRAGEN: {hrd_summary$dragen}; CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"),
-  "Homologous recombination deficiency score (DRAGEN) / probability (CHORD/HRDetect).",
+  6, "HRD", glue::glue("DRAGEN: {hrd_summary$dragen}; HRDetect: {hrd_summary$hrdetect}"),
+  "Homologous recombination deficiency score (DRAGEN) / probability (HRDetect).",
   20, "CNVs (Somatic)", glue::glue(
     "Min: {cnv_summary[['som']]$Min}; ",
     "Max: {cnv_summary[['som']]$Max}; ",
@@ -741,46 +741,6 @@ if (will_work) {
 }
 ```
 
-### __Kataegis__
-
-Somatic variants of type C>T and C>G in a TpCpN context are annotated as
-showing Kataegis (Nik Zainal et al., 2012) if there are three or more
-mutations of that type, strand and context localised within a
-region with an average inter-mutation distance of <= 1kb.
-The annotation describes the strand it was found on
-along with an ID that is shared by grouped variants.
-
-```{r purple_kataegis_table}
-kat <- gpgr::purple_kataegis(params$purple_som_snv_vcf)
-details::details(knitr::kable(kat$description), lang = "none", summary = "Column Description")
-if (nrow(kat$data) > 0) {
-  DT::datatable(kat$data,
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
-    class = "cell-border display compact",
-    rownames = FALSE, extensions = c("Scroller", "Buttons", "KeyTable"),
-    options = list(
-      scroller = TRUE, scrollY = 200, scrollX = TRUE, autoWidth = FALSE, keys = TRUE,
-      buttons = c("csv", "excel"), dom = "Blfrtip"
-    )
-  )
-} else {
-  cat("No kataegis regions detected.")
-}
-```
-
-```{r purple_plot_somaticrainfall, out.width="70%"}
-purple_plot_somaticrainfall <- file.path(img_dir, paste0(params$tumor_name, ".somatic.rainfall.png"))
-if (file.exists(purple_plot_somaticrainfall)) {
-  knitr::include_graphics(purple_plot_somaticrainfall)
-} else {
-  cat("No PURPLE rainfall plot was output (probably because there are > 100,000 SNVs)")
-}
-```
-
-```{r, results='asis'}
-blank_lines(1)
-```
-
 ## __HRD (Homologous Recombination Deficiency) Detection__ {#hrd}
 
 <details>
@@ -840,8 +800,8 @@ that includes HRDetect.
 </details>
 
 ```{r chord_hrdetect_dragen_res}
-hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, chord_res, dragen_hrd_res)
-gpgr::write_tsvjsongz(chord_res[["prediction"]], glue("hrd/{bnm}-chord"), result_outdir)
+hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, NULL, dragen_hrd_res)
+# gpgr::write_tsvjsongz(chord_res[["prediction"]], glue("hrd/{bnm}-chord"), result_outdir)
 gpgr::write_tsvjsongz(hrdetect_res, glue("hrd/{bnm}-hrdetect"), result_outdir)
 gpgr::write_tsvjsongz(dragen_hrd_res, glue("hrd/{bnm}-dragen"), result_outdir)
 hrd_results$hrd_results_gt
@@ -993,9 +953,9 @@ sv.dt <- sv |>
 
 #### Plots
 
-```{r plot_bnd_sr_pr_tot_lines, fig.width=12, fig.height=12, out.width="90%"}
-p1 <- gpgr:::plot_bnd_sr_pr_tot_lines(sv$map)
-p2 <- gpgr::plot_bnd_sr_pr_tot_hist(sv$map) + ggplot2::theme(legend.position = "none")
+```{r plot_bnd_sf_df_tot_lines, fig.width=12, fig.height=12, out.width="90%"}
+p1 <- gpgr:::plot_bnd_sf_df_tot_lines(sv$map)
+p2 <- gpgr::plot_bnd_sf_df_tot_hist(sv$map) + ggplot2::theme(legend.position = "none")
 ((p1$p_all | p2) / p1$p_tier)
 ```
 
