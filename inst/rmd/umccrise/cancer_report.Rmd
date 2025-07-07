@@ -130,9 +130,9 @@ if (is.null(params$chord_file)) {
   )
 } else{
   chord_res <- list(
-  context    = tibble::tibble(),  # or set to NULL/NA if no context is available
-  prediction = convert_json_gz_to_tibble(params$chord_file)
-    )
+    context = tibble::tibble(),  # or set to NULL/NA if no context is available
+    prediction = readr::read_tsv(params$chord_file, col_types = readr::cols())
+  )
 }
 
 if (is.null(params$hrdetect_file)) {
@@ -345,7 +345,7 @@ snv_summary <- snv_summary_counts |>
 
 hrd_summary <- list(
   dragen = dragen_hrd_res[, "HRD", drop = TRUE],
-  #chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
+  chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
   hrdetect = hrdetect_res[, "Probability", drop = TRUE]
 )
 
@@ -385,8 +385,8 @@ qc_summary_all <- dplyr::tribble(
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
   "2020 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)",
-  6, "HRD", glue::glue("DRAGEN: {hrd_summary$dragen}; HRDetect: {hrd_summary$hrdetect}"),
-  "Homologous recombination deficiency score (DRAGEN) / probability (HRDetect).",
+  6, "HRD", glue::glue("DRAGEN: {hrd_summary$dragen}; CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"),
+  "Homologous recombination deficiency score (DRAGEN) / probability (CHORD, HRDetect).",
   20, "CNVs (Somatic)", glue::glue(
     "Min: {cnv_summary[['som']]$Min}; ",
     "Max: {cnv_summary[['som']]$Max}; ",
@@ -800,8 +800,8 @@ that includes HRDetect.
 </details>
 
 ```{r chord_hrdetect_dragen_res}
-hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, NULL, dragen_hrd_res)
-# gpgr::write_tsvjsongz(chord_res[["prediction"]], glue("hrd/{bnm}-chord"), result_outdir)
+hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, chord_res, dragen_hrd_res)
+gpgr::write_tsvjsongz(chord_res[["prediction"]], glue("hrd/{bnm}-chord"), result_outdir)
 gpgr::write_tsvjsongz(hrdetect_res, glue("hrd/{bnm}-hrdetect"), result_outdir)
 gpgr::write_tsvjsongz(dragen_hrd_res, glue("hrd/{bnm}-dragen"), result_outdir)
 hrd_results$hrd_results_gt
