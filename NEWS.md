@@ -1,3 +1,11 @@
+# gpgr 2.1.4
+
+- :wrench: support for reading sigrap plots and data as inputs ([input-sigrap-data branch](https://github.com/umccr/gpgr/tree/input-sigrap-data))
+  - Add support for pre-generated sigrap mutational signature plots via PNG inputs
+  - Add new dependencies: `png` and `grid` packages for handling pre-generated plots
+  - Refactor mutational signatures section to support both live generation and pre-computed inputs
+  - Enable conditional logic to read from sigrap output directory when available
+
 # gpgr 2.1.3
 
 - :wrench: adapt to eSVee SV format from oncoanalyser v2, temporarily disable CHORD ([pr88](https://github.com/umccr/gpgr/pull/88))
