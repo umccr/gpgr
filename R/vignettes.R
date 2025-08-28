@@ -1,4 +1,3 @@
-
 #' Session Information Kable
 #'
 #' Session information kables for vignettes.
@@ -16,14 +15,19 @@ session_info_kable <- function(pkgs) {
     tibble::enframe(name = "name", value = "value")
   si_pkg <- unclass(si[["packages"]]) |>
     dplyr::as_tibble() |>
-    dplyr::select("package",
+    dplyr::select(
+      "package",
       version = "ondiskversion",
-      datestamp = "date", "source"
+      datestamp = "date",
+      "source"
     ) |>
     dplyr::filter(.data$package %in% pkgs)
 
   list(
     si_pl = knitr::kable(si_pl, caption = "Platform information."),
-    si_pkg = knitr::kable(si_pkg, caption = "Main packages used in this vignette.")
+    si_pkg = knitr::kable(
+      si_pkg,
+      caption = "Main packages used in this vignette."
+    )
   )
 }

@@ -28,6 +28,9 @@ cancer_rmd(
   somatic_sv_vcf,
   result_outdir,
   tumor_name,
+  mutpat_dir = NULL,
+  hrdetect_file = NULL,
+  chord_file = NULL,
   out_file = NULL,
   quiet = FALSE
 )
@@ -78,6 +81,12 @@ cancer_rmd(
 \item{result_outdir}{Path to directory to write tidy JSON/TSV results.}
 
 \item{tumor_name}{Name of tumor sample.}
+
+\item{mutpat_dir}{Path to mutational patterns directory.}
+
+\item{hrdetect_file}{Path to HRDetect file.}
+
+\item{chord_file}{Path to CHORD file.}
 
 \item{out_file}{Path to output HTML file (needs '.html' suffix) (def: \verb{\{tumor_name\}_cancer_report.html}).}
 
