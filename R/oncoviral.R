@@ -63,14 +63,22 @@ virusbreakend_summary_read <- function(x) {
   }
 
   descr <- dplyr::tribble(
-    ~Column, ~Description,
-    "Virus", "Assigned NCBI taxonomy name of viral reference",
-    "Length", "Length of viral contig",
-    "Reads", "Number of reads mapped to adjusted viral reference",
-    "Coverage", "Percentage of viral positions with at least one read mapped",
-    "Mean depth", "Mean alignment depth",
-    "Integrations", "Number of detected integration breakpoints",
-    "QC", "QC status of viral intergrations",
+    ~Column,
+    ~Description,
+    "Virus",
+    "Assigned NCBI taxonomy name of viral reference",
+    "Length",
+    "Length of viral contig",
+    "Reads",
+    "Number of reads mapped to adjusted viral reference",
+    "Coverage",
+    "Percentage of viral positions with at least one read mapped",
+    "Mean depth",
+    "Mean alignment depth",
+    "Integrations",
+    "Number of detected integration breakpoints",
+    "QC",
+    "QC status of viral intergrations",
   )
 
   list(
@@ -118,17 +126,28 @@ virusbreakend_vcf_read <- function(x) {
   }
 
   descr <- dplyr::tribble(
-    ~Column, ~Description,
-    "Contig", "Name of contig",
-    "Position", "Position of breakend in contig",
-    "Breakend ID", "ID of integration breakend",
-    "Mate ID", "ID of integration breakend mate",
-    "Reference", "Reference allele",
-    "Alt", "Alternative allele",
-    "QC", "VCF filter values",
-    "Fragment support", "Total number of fragments supporting breakend",
-    "Fragment support (unmapped)", "Number of fragments supporting breakend that have one read unmapped",
-    "Softclip read support", "Number of softclipped reads supporting breakend"
+    ~Column,
+    ~Description,
+    "Contig",
+    "Name of contig",
+    "Position",
+    "Position of breakend in contig",
+    "Breakend ID",
+    "ID of integration breakend",
+    "Mate ID",
+    "ID of integration breakend mate",
+    "Reference",
+    "Reference allele",
+    "Alt",
+    "Alternative allele",
+    "QC",
+    "VCF filter values",
+    "Fragment support",
+    "Total number of fragments supporting breakend",
+    "Fragment support (unmapped)",
+    "Number of fragments supporting breakend that have one read unmapped",
+    "Softclip read support",
+    "Number of softclipped reads supporting breakend"
   )
 
   list(

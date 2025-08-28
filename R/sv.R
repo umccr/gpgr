@@ -31,8 +31,17 @@ split_double_col <- function(d, nms) {
   outd <- d |>
     dplyr::select(dplyr::all_of(nms)) |>
     dplyr::mutate(num = dplyr::row_number()) |>
-    tidyr::pivot_longer(cols = dplyr::all_of(nms), names_to = "col_nm", values_to = "x1_x2") |>
-    tidyr::separate(.data$x1_x2, into = c("x1", "x2"), sep = ",", fill = "right") |>
+    tidyr::pivot_longer(
+      cols = dplyr::all_of(nms),
+      names_to = "col_nm",
+      values_to = "x1_x2"
+    ) |>
+    tidyr::separate(
+      .data$x1_x2,
+      into = c("x1", "x2"),
+      sep = ",",
+      fill = "right"
+    ) |>
     dplyr::mutate(
       x1 = round(as.double(.data$x1), 2),
       x2 = round(as.double(.data$x2), 2)
@@ -116,7 +125,11 @@ abbreviate_effect <- function(effects) {
   # split by &
   # abbreviate each piece and glue back with comma
   .abbreviate_effect <- function(effect) {
-    ifelse(effect %in% effect_abbrev_nms, gpgr::EFFECT_ABBREVIATIONS[effect], effect)
+    ifelse(
+      effect %in% effect_abbrev_nms,
+      gpgr::EFFECT_ABBREVIATIONS[effect],
+      effect
+    )
   }
 
   strsplit(effects, "&")[[1]] |>
@@ -127,26 +140,66 @@ abbreviate_effect <- function(effects) {
 
 sash_read_sv_tsv <- function(x) {
   tab <- dplyr::tribble(
-    ~Column,              ~Description,                                                                                                                                         ~Type,
-    "chrom",              "CHROM column in VCF",                                                                                                                                 "c",
-    "start",              "POS column in VCF",                                                                                                                                   "i",
-    "svtype",             "INFO/SVTYPE: Type of structural variant",                                                                                                             "c",
-    "VF_alt",             "FORMAT/VF: Total Variant Fragments (VF) supporting the breakend from eSVee",                                                                                        "f",
-    "DF_alt",             "FORMAT/DF: Count of Discordant Fragments (DF) with reads either side BE from eSVee",                                                                  "f",
-    "SF_alt",             "FORMAT/SF: Alternate allele Split-read support Fraction (SF) from eSVee",                                                                             "f",
-    "REF_frag",           "FORMAT/REF: Count of reads mapping across this breakend",                                                                                             "i",
-    "REF_pair",           "FORMAT/REFPAIR: Count of reference read pairs spanning this breakend supporting the reference allele",                                                "i",
-    "QUAL",               "QUAL column in VCF",                                                                                                                                  "f",
-    "filter",             "FILTER column from VCF (e.g., PASS, PON)",                                                                                                            "c",
-    "tier",               "INFO/SV_TOP_TIER (or 4 if missing): Highest priority tier for the effects of a variant entry",                                                        "c",
-    "annotation",         "INFO/SIMPLE_ANN: Simplified structural variant annotation: 'SVTYPE | EFFECT | GENE(s) | TRANSCRIPT | PRIORITY (1-4)'",                                "c",
-    "AF_PURPLE",          "INFO/PURPLE_AF: AF at each breakend (purity adjusted) (so AF_PURPLE1,AF_PURPLE2)",                                                                    "c",
-    "CN_PURPLE",          "INFO/PURPLE_CN: CN at each breakend (purity adjusted) (so CN_PURPLE1,CN_PURPLE2)",                                                                    "c",
-    "CN_change_PURPLE",   "INFO/PURPLE_CN_CHANGE: change in CN at each breakend (purity adjusted) (so CN_change_PURPLE1,CN_change_PURPLE2)",                                     "c",
-    "PURPLE_status",      "INFERRED if FILTER=INFERRED, or RECOVERED if has INFO/RECOVERED, else blank. INFERRED: Breakend inferred from copy number transition",                "c",
-    "ID",                 "ID column in VCF",                                                                                                                                    "c",
-    "MATEID",             "INFO/MATEID: ID of mate breakend",                                                                                                                    "c",
-    "ALT",                "ALT column from VCF used in split_svs",                                                                                                               "c",
+    ~Column,
+    ~Description,
+    ~Type,
+    "chrom",
+    "CHROM column in VCF",
+    "c",
+    "start",
+    "POS column in VCF",
+    "i",
+    "svtype",
+    "INFO/SVTYPE: Type of structural variant",
+    "c",
+    "VF_alt",
+    "FORMAT/VF: Total Variant Fragments (VF) supporting the breakend from eSVee",
+    "f",
+    "DF_alt",
+    "FORMAT/DF: Count of Discordant Fragments (DF) with reads either side BE from eSVee",
+    "f",
+    "SF_alt",
+    "FORMAT/SF: Alternate allele Split-read support Fraction (SF) from eSVee",
+    "f",
+    "REF_frag",
+    "FORMAT/REF: Count of reads mapping across this breakend",
+    "i",
+    "REF_pair",
+    "FORMAT/REFPAIR: Count of reference read pairs spanning this breakend supporting the reference allele",
+    "i",
+    "QUAL",
+    "QUAL column in VCF",
+    "f",
+    "filter",
+    "FILTER column from VCF (e.g., PASS, PON)",
+    "c",
+    "tier",
+    "INFO/SV_TOP_TIER (or 4 if missing): Highest priority tier for the effects of a variant entry",
+    "c",
+    "annotation",
+    "INFO/SIMPLE_ANN: Simplified structural variant annotation: 'SVTYPE | EFFECT | GENE(s) | TRANSCRIPT | PRIORITY (1-4)'",
+    "c",
+    "AF_PURPLE",
+    "INFO/PURPLE_AF: AF at each breakend (purity adjusted) (so AF_PURPLE1,AF_PURPLE2)",
+    "c",
+    "CN_PURPLE",
+    "INFO/PURPLE_CN: CN at each breakend (purity adjusted) (so CN_PURPLE1,CN_PURPLE2)",
+    "c",
+    "CN_change_PURPLE",
+    "INFO/PURPLE_CN_CHANGE: change in CN at each breakend (purity adjusted) (so CN_change_PURPLE1,CN_change_PURPLE2)",
+    "c",
+    "PURPLE_status",
+    "INFERRED if FILTER=INFERRED, or RECOVERED if has INFO/RECOVERED, else blank. INFERRED: Breakend inferred from copy number transition",
+    "c",
+    "ID",
+    "ID column in VCF",
+    "c",
+    "MATEID",
+    "INFO/MATEID: ID of mate breakend",
+    "c",
+    "ALT",
+    "ALT column from VCF used in split_svs",
+    "c",
   )
 
   ctypes <- paste(tab$Type, collapse = "")
@@ -162,15 +215,15 @@ sash_read_sv_tsv <- function(x) {
 filter_pon_breakend_pairs <- function(x) {
   # For breakends with mates, filter out both if either has PON in filter
   # For other variants (non-breakends or breakends without mates), filter individually
-  
+
   # Identify breakend pairs that should be filtered
-  sv_with_pon_filter  <- x |>
+  sv_with_pon_filter <- x |>
     dplyr::mutate(
       has_pon = stringr::str_detect(.data$filter, "PON"),
       ID_char = as.character(.data$ID),
       MATEID_char = dplyr::coalesce(as.character(.data$MATEID), "")
     )
-  
+
   # Find all IDs that should be filtered (either they have PON or their mate has PON)
   pon_ids <- sv_with_pon_filter |>
     dplyr::filter(.data$has_pon) |>
@@ -179,7 +232,7 @@ filter_pon_breakend_pairs <- function(x) {
     dplyr::filter(.data$id_to_filter != "") |>
     dplyr::pull(.data$id_to_filter) |>
     unique()
-  
+
   # Filter out variants whose ID is in the PON list
   sv_with_pon_filter |>
     dplyr::filter(!.data$ID_char %in% pon_ids) |>
@@ -227,13 +280,16 @@ join_breakpoint_entries <- function(x) {
   bps |>
     dplyr::arrange(as.numeric(.data$ID), .by_group = TRUE) |>
     dplyr::mutate(
-      BND_ID = sprintf(paste0("%0", nchar(bps_groups), "d"), dplyr::cur_group_id()),
+      BND_ID = sprintf(
+        paste0("%0", nchar(bps_groups), "d"),
+        dplyr::cur_group_id()
+      ),
       BND_mate = dplyr::case_when(
-        dplyr::n() == 1 ~ "S",  # Singleton breakend
-        dplyr::n() == 2 & dplyr::row_number() == 1 ~ "A",  # First of pair
-        dplyr::n() == 2 & dplyr::row_number() == 2 ~ "B",  # Second of pair
-        dplyr::n() > 2 ~ paste0("M", dplyr::row_number()),  # Multiple breakends
-        TRUE ~ "U"  # Unknown/unexpected case
+        dplyr::n() == 1 ~ "S", # Singleton breakend
+        dplyr::n() == 2 & dplyr::row_number() == 1 ~ "A", # First of pair
+        dplyr::n() == 2 & dplyr::row_number() == 2 ~ "B", # Second of pair
+        dplyr::n() > 2 ~ paste0("M", dplyr::row_number()), # Multiple breakends
+        TRUE ~ "U" # Unknown/unexpected case
       )
     ) |>
     dplyr::ungroup() |>
@@ -267,7 +323,8 @@ filter_and_split_annotations_sv <- function(x) {
     # Empty Gene field
     x$Genes == "",
     # Only Ensembl identifiers in the Gene field
-    stringr::str_split(x$Genes, "[&-]|, ") |> purrr::map_lgl(\(x) stringr::str_starts(x, "ENSG") |> all()),
+    stringr::str_split(x$Genes, "[&-]|, ") |>
+      purrr::map_lgl(\(x) stringr::str_starts(x, "ENSG") |> all()),
     # Fusions that do not involve genes
     x$Effect == "Fus",
     # PURPLE inferred SVs
@@ -299,11 +356,18 @@ set_many_transcripts_sv <- function(x) {
   x.tmp <- x |>
     dplyr::rowwise() |>
     dplyr::mutate(
-      `Transcript count` = stringr::str_split(.data$Transcripts, ", ") |> unlist() |> unique() |> length()
+      `Transcript count` = stringr::str_split(.data$Transcripts, ", ") |>
+        unlist() |>
+        unique() |>
+        length()
     ) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-      many_transcripts = ifelse(.data$`Transcript count` > 2, "many_transcripts", "few_transcripts")
+      many_transcripts = ifelse(
+        .data$`Transcript count` > 2,
+        "many_transcripts",
+        "few_transcripts"
+      )
     )
 
   # Build the many transcripts table
@@ -324,7 +388,8 @@ set_many_transcripts_sv <- function(x) {
   x.ready <- x.tmp |>
     dplyr::mutate(
       Transcripts = ifelse(
-        .data$many_transcripts == "few_transcripts" | is.na(.data$many_transcripts),
+        .data$many_transcripts == "few_transcripts" |
+          is.na(.data$many_transcripts),
         .data$Transcripts,
         paste0("Many transcripts (", .data$`Transcript count`, ")")
       )
@@ -367,16 +432,22 @@ process_sv <- function(x) {
         is.na(.data$DF_alt) ~ .data$SF_alt,
         .default = .data$SF_alt + .data$DF_alt
       ),
-      start = paste(.data$chrom, base::format(.data$start, big.mark = ",", trim = TRUE), sep = ":"),
+      start = paste(
+        .data$chrom,
+        base::format(.data$start, big.mark = ",", trim = TRUE),
+        sep = ":"
+      ),
       Type = ifelse(is.na(.data$PURPLE_status), .data$svtype, "PURPLE_inf"),
       "Record ID" = dplyr::row_number()
     ) |>
-    dplyr::select(-c(
-      "chrom",
-      "PURPLE_status",
-      "tier",
-      "svtype"
-    ))
+    dplyr::select(
+      -c(
+        "chrom",
+        "PURPLE_status",
+        "tier",
+        "svtype"
+      )
+    )
 
   # Split out breakpoints for merging
   sv.split <- split_svs(sv.ready)
@@ -420,7 +491,8 @@ process_sv <- function(x) {
     # Convert annotation fields into columns
     tidyr::unnest("annotation") |>
     tidyr::separate_wider_delim(
-      cols = "annotation", delim = "|",
+      cols = "annotation",
+      delim = "|",
       names = c("Event", "Effect", "Genes", "Transcripts", "Detail", "Tier")
     ) |>
     # Remove gene_fusion annotations for variants where frameshift_variant&gene_fusion already exist
@@ -437,7 +509,12 @@ process_sv <- function(x) {
       "Transcripts" = stringr::str_replace_all(.data$Transcripts, "&", ", "),
     ) |>
     # Sort rows
-    dplyr::arrange(.data$`Tier (top)`, .data$`Record ID`, .data$Genes, .data$Effect)
+    dplyr::arrange(
+      .data$`Tier (top)`,
+      .data$`Record ID`,
+      .data$Genes,
+      .data$Effect
+    )
 
   # Abbreviate effects
   abbreviate_effectv <- Vectorize(abbreviate_effect)
@@ -470,7 +547,10 @@ process_sv <- function(x) {
 
   # Create and set many transcript values
   sv.annotations.many_transcript_data <- set_many_transcripts_sv(sv.melted_all)
-  sv.annotations.many_transcripts <- purrr::pluck(sv.annotations.many_transcript_data, "many_transcripts")
+  sv.annotations.many_transcripts <- purrr::pluck(
+    sv.annotations.many_transcript_data,
+    "many_transcripts"
+  )
   sv.annotations <- purrr::pluck(sv.annotations.many_transcript_data, "sv")
 
   # Filter unwanted annotations
@@ -487,7 +567,7 @@ process_sv <- function(x) {
 
 #' Line plot for SF, DF and SF + DF for BNDs
 #'
-#' Plots the split fragments (`SF`), discordant fragments (`DF`), and 
+#' Plots the split fragments (`SF`), discordant fragments (`DF`), and
 #' the total fragments (SF+DF) across all BNDs, sorted by total value.
 #'
 #' @param d A data.frame with SF_alt, DF_alt, and SF_DF_alt columns.
@@ -501,13 +581,20 @@ process_sv <- function(x) {
 #' d <- process_sv(x)$map
 #' plot_bnd_sf_df_tot_lines(d)
 #' @export
-plot_bnd_sf_df_tot_lines <- function(d,
-                                      title = "SF, DF and SF + DF  line plot for BNDs",
-                                      subtitle = "Events are sorted by decreasing total values.") {
+plot_bnd_sf_df_tot_lines <- function(
+  d,
+  title = "SF, DF and SF + DF  line plot for BNDs",
+  subtitle = "Events are sorted by decreasing total values."
+) {
   assertthat::assert_that(all(c("Type", "SF_alt", "DF_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>
-    dplyr::select(SF = "SF_alt", DF = "DF_alt", Tier = "Top Tier", "Breakend ID") |>
+    dplyr::select(
+      SF = "SF_alt",
+      DF = "DF_alt",
+      Tier = "Top Tier",
+      "Breakend ID"
+    ) |>
     dplyr::distinct() |>
     dplyr::mutate(
       DF = ifelse(is.na(.data$DF), 0, .data$DF),
@@ -520,11 +607,16 @@ plot_bnd_sf_df_tot_lines <- function(d,
     dplyr::mutate(bnd_event = dplyr::row_number()) |>
     tidyr::pivot_longer(
       cols = c("SF", "DF", "total"),
-      names_to = "Metric", values_to = "Count"
+      names_to = "Metric",
+      values_to = "Count"
     )
 
   p_all <- dplot |>
-    ggplot2::ggplot(ggplot2::aes(x = .data$bnd_event, y = .data$Count, colour = .data$Metric)) +
+    ggplot2::ggplot(ggplot2::aes(
+      x = .data$bnd_event,
+      y = .data$Count,
+      colour = .data$Metric
+    )) +
     ggplot2::geom_line(alpha = 0.5) +
     ggplot2::geom_point(alpha = 0.5) +
     ggplot2::theme_bw() +
@@ -534,13 +626,20 @@ plot_bnd_sf_df_tot_lines <- function(d,
   # handle cases where no BNDs were detected
   p_tier <- ggplot2::ggplot() +
     ggplot2::theme_void() +
-    ggplot2::geom_text(ggplot2::aes(x = 0, y = 0, label = "No BNDs detected!")) +
+    ggplot2::geom_text(ggplot2::aes(
+      x = 0,
+      y = 0,
+      label = "No BNDs detected!"
+    )) +
     ggplot2::xlab(NULL)
 
   if (nrow(dplot) > 0) {
     p_tier <- p_all +
       ggplot2::facet_wrap(~Tier) +
-      ggplot2::labs(title = NULL, subtitle = paste(subtitle, "Faceted by Tier."))
+      ggplot2::labs(
+        title = NULL,
+        subtitle = paste(subtitle, "Faceted by Tier.")
+      )
   }
   list(
     p_all = p_all,
@@ -564,9 +663,11 @@ plot_bnd_sf_df_tot_lines <- function(d,
 #' d <- process_sv(x)$map
 #' plot_bnd_sf_df_tot_hist(d, "a title")
 #' @export
-plot_bnd_sf_df_tot_hist <- function(d,
-                                    title = "SF, DF and SF + DF histogram for BNDs",
-                                    subtitle = "Values of 0 (NA) are not shown.") {
+plot_bnd_sf_df_tot_hist <- function(
+  d,
+  title = "SF, DF and SF + DF histogram for BNDs",
+  subtitle = "Values of 0 (NA) are not shown."
+) {
   assertthat::assert_that(all(c("Type", "SF_alt", "DF_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>
@@ -581,7 +682,8 @@ plot_bnd_sf_df_tot_hist <- function(d,
     dplyr::ungroup() |>
     tidyr::pivot_longer(
       cols = c("SF", "DF", "total"),
-      names_to = "Metric", values_to = "Value"
+      names_to = "Metric",
+      values_to = "Value"
     )
 
   if (nrow(dplot) > 0) {
@@ -596,7 +698,11 @@ plot_bnd_sf_df_tot_hist <- function(d,
     # handle cases where no BNDs were detected
     ggplot2::ggplot() +
       ggplot2::theme_void() +
-      ggplot2::geom_text(ggplot2::aes(x = 0, y = 0, label = "No BNDs detected!")) +
+      ggplot2::geom_text(ggplot2::aes(
+        x = 0,
+        y = 0,
+        label = "No BNDs detected!"
+      )) +
       ggplot2::xlab(NULL)
   }
 }
