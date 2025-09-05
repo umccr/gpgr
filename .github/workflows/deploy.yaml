@@ -9,7 +9,7 @@ env:
   recipe_path: conda/recipe
   env_yaml_path: conda/env/yaml
   env_lock_path: conda/env/lock
-  VERSION: '2.1.3' # versioned by bump2version
+  VERSION: '2.2.0' # versioned by bump2version
   GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
 jobs:
