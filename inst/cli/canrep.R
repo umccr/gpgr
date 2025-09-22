@@ -19,7 +19,7 @@ canrep_add_args <- function(subp) {
   canrep$add_argument("--purple_som_snv_vcf", help = "Path to `purple.somatic.vcf.gz`.", required = TRUE)
   canrep$add_argument("--virusbreakend_tsv", help = "Path to VIRUSBreakend summary file.", required = TRUE)
   canrep$add_argument("--virusbreakend_vcf", help = "Path to VIRUSBreakend VCF file.", required = TRUE)
-  canrep$add_argument("--dragen_hrd", help = "Path to DRAGEN HRD file", required = TRUE)
+  canrep$add_argument("--dragen_hrd", help = "Path to DRAGEN HRD file")
   canrep$add_argument("--bcftools_stats", help = "Path to bcftools stats file", required = TRUE)
   canrep$add_argument("--out_file", help = "Path to output HTML file (needs '.html' suffix) [def: {tumor_name}_cancer_report.html].")
   canrep$add_argument("--quiet", help = "Suppress log printing during rendering.", action = "store_true")
@@ -29,6 +29,9 @@ canrep_add_args <- function(subp) {
 
 canrep_parse_args <- function(args) {
   cli::cli_h1("Start rendering UMCCR Cancer Report!")
+  if (is.null(args$dragen_hrd)) {
+    cli::cli_warn("No DRAGEN HRD file supplied; the report will show DRAGEN HRD scores as missing.")
+  }
   res <- gpgr::cancer_rmd(
     af_global = args$af_global,
     af_keygenes = args$af_keygenes,

@@ -317,9 +317,19 @@ snv_summary <- snv_summary_counts |>
   paste(collapse = "; ")
 
 hrd_summary <- list(
-  dragen = dragen_hrd_res[, "HRD", drop = TRUE],
+  dragen = {
+    val <- dragen_hrd_res[, "HRD", drop = TRUE]
+    out <- as.character(val)
+    out[is.na(val) | out == ""] <- "Missing"
+    out
+  },
   #chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
-  hrdetect = hrdetect_res[, "Probability", drop = TRUE]
+  hrdetect = {
+    val <- hrdetect_res[, "Probability", drop = TRUE]
+    out <- as.character(val)
+    out[is.na(val) | out == ""] <- "Missing"
+    out
+  }
 )
 
 cnv_summary <-
