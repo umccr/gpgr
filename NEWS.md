@@ -1,3 +1,4 @@
+
 # gpgr 2.2.1
 
 - :wrench: make DRAGEN HRD parameter optional ([pr94](https://github.com/umccr/gpgr/pull/94))
@@ -5,6 +6,13 @@
   - CLI `--dragen_hrd` argument is no longer required
   - Report handles missing DRAGEN HRD data by showing "Missing" in HRD summary
   - Added warning message when no DRAGEN HRD file is supplied via CLI
+
+# gpgr 2.2.0
+
+- :package: add support for PURPLE 4.2 output files ([pr92](https://github.com/umccr/gpgr/pull/92))
+  - Added `gcContent` column support in `purple_cnv_som_gene_read()` function for `{tumor_name}.purple.cnv.gene.tsv` files
+  - Added `TincLevel` and `ChimerismPercentage` columns support in `purple_qc_read()` function for `{tumor_name}.purple.qc.tsv` files
+
 
 # gpgr 2.1.3
 
