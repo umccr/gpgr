@@ -1,3 +1,9 @@
+# gpgr 2.2.0
+
+- :package: add support for PURPLE 4.2 output files ([pr92](https://github.com/umccr/gpgr/pull/92))
+  - Added `gcContent` column support in `purple_cnv_som_gene_read()` function for `{tumor_name}.purple.cnv.gene.tsv` files
+  - Added `TincLevel` and `ChimerismPercentage` columns support in `purple_qc_read()` function for `{tumor_name}.purple.qc.tsv` files
+
 # gpgr 2.1.3
 
 - :wrench: adapt to eSVee SV format from oncoanalyser v2, temporarily disable CHORD ([pr88](https://github.com/umccr/gpgr/pull/88))
