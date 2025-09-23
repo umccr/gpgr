@@ -1,3 +1,11 @@
+# gpgr 2.2.1
+
+- :wrench: make DRAGEN HRD parameter optional ([pr93](https://github.com/umccr/gpgr/pull/93))
+  - `dragen_hrd` parameter in `cancer_rmd()` function now defaults to `NULL`
+  - CLI `--dragen_hrd` argument is no longer required
+  - Report handles missing DRAGEN HRD data by showing "Missing" in HRD summary
+  - Added warning message when no DRAGEN HRD file is supplied via CLI
+
 # gpgr 2.1.3
 
 - :wrench: adapt to eSVee SV format from oncoanalyser v2, temporarily disable CHORD ([pr88](https://github.com/umccr/gpgr/pull/88))
