@@ -30,15 +30,15 @@
 #' @param out_file Path to output HTML file (needs '.html' suffix) (def: `{tumor_name}_cancer_report.html`).
 #' @param quiet Suppress log printing during rendering.
 #' @param bcftools_stats Path to `bcftools_stats.txt` file.
-#' @param dragen_hrd Path to DRAGEN `hrdscore.csv` file.
+#' @param dragen_hrd Path to DRAGEN `hrdscore.csv` file (optional).
 #'
 #' @return Path to rendered HTML report.
 #' @export
-cancer_rmd <- function(af_global, af_keygenes, batch_name, bcftools_stats, conda_list, dragen_hrd, img_dir, key_genes,
+cancer_rmd <- function(af_global, af_keygenes, batch_name, bcftools_stats, conda_list, img_dir, key_genes,
                        oncokb_genes, virusbreakend_tsv, virusbreakend_vcf, purple_purity, purple_qc,
                        purple_som_cnv_ann, purple_som_cnv, purple_som_gene_cnv, purple_som_snv_vcf,
                        somatic_snv_vcf, somatic_snv_summary, somatic_sv_tsv, somatic_sv_vcf,
-                       result_outdir, tumor_name, out_file = NULL, quiet = FALSE) {
+                       result_outdir, tumor_name, dragen_hrd = NULL, out_file = NULL, quiet = FALSE) {
   assertthat::assert_that(
     dir.exists(img_dir),
     quiet %in% c(FALSE, TRUE)
