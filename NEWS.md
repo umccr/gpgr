@@ -1,6 +1,6 @@
 # gpgr 2.2.1
 
-- :wrench: make DRAGEN HRD parameter optional ([pr93](https://github.com/umccr/gpgr/pull/93))
+- :wrench: make DRAGEN HRD parameter optional ([pr93](https://github.com/umccr/gpgr/pull/94))
   - `dragen_hrd` parameter in `cancer_rmd()` function now defaults to `NULL`
   - CLI `--dragen_hrd` argument is no longer required
   - Report handles missing DRAGEN HRD data by showing "Missing" in HRD summary
