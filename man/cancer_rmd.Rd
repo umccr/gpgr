@@ -10,7 +10,6 @@ cancer_rmd(
   batch_name,
   bcftools_stats,
   conda_list,
-  dragen_hrd,
   img_dir,
   key_genes,
   oncokb_genes,
@@ -28,6 +27,7 @@ cancer_rmd(
   somatic_sv_vcf,
   result_outdir,
   tumor_name,
+  dragen_hrd = NULL,
   out_file = NULL,
   quiet = FALSE
 )
@@ -42,8 +42,6 @@ cancer_rmd(
 \item{bcftools_stats}{Path to \code{bcftools_stats.txt} file.}
 
 \item{conda_list}{Path to \code{conda_pkg_list.txt} file.}
-
-\item{dragen_hrd}{Path to DRAGEN \code{hrdscore.csv} file.}
 
 \item{img_dir}{Path to directory containing PURPLE plots.}
 
@@ -78,6 +76,8 @@ cancer_rmd(
 \item{result_outdir}{Path to directory to write tidy JSON/TSV results.}
 
 \item{tumor_name}{Name of tumor sample.}
+
+\item{dragen_hrd}{Path to DRAGEN \code{hrdscore.csv} file (optional).}
 
 \item{out_file}{Path to output HTML file (needs '.html' suffix) (def: \verb{\{tumor_name\}_cancer_report.html}).}
 
