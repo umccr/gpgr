@@ -16,7 +16,7 @@ env:
 jobs:
   condarise-dockerise-document:
     # When merging to main and the commit message starts with 'Bump version:'
-    if: "startsWith(github.event.head_commit.message, 'Bump version:')"
+    if: ${{ startsWith(github.event.head_commit.message, 'Bump version:') }}
     name: Conda Docker Docs
     runs-on: ubuntu-latest
     defaults:
@@ -87,7 +87,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: v${{ env.VERSION }}
-      - name: 🏯 Buildx setup
+      - name: � QEMU setup
+        uses: docker/setup-qemu-action@v3
+      - name: �🏯 Buildx setup
         uses: docker/setup-buildx-action@v3
         with:
           install: true
