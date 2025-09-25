@@ -87,8 +87,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: v${{ env.VERSION }}
-      - name: 🏰 QEMU setup
-        uses: docker/setup-qemu-action@v3
       - name: 🏯 Buildx setup
         uses: docker/setup-buildx-action@v3
         with:
