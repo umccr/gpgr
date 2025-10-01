@@ -6,7 +6,7 @@ test_that("Function purple_cnv_som_gene_read() @ L18", {
   
   x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
   (p <- purple_cnv_som_gene_read(x))
-  expect_equal(colnames(p)[ncol(p)], "depthWindowCount")
+  expect_equal(colnames(p)[ncol(p)], "gcContent")
 })
 
 
