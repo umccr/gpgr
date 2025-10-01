@@ -6,4 +6,4 @@ channels:
   - bioconda
 
 dependencies:
-  - r-gpgr ==0.2.11 # versioned by bump2version
+  - r-gpgr ==2.2.11 # versioned by bump2version
