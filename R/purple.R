@@ -12,7 +12,7 @@
 #' x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
 #' (p <- purple_cnv_som_gene_read(x))
 #' @testexamples
-#' expect_equal(colnames(p)[ncol(p)], "depthWindowCount")
+#' expect_equal(colnames(p)[ncol(p)], "gcContent")
 #'
 #' @export
 purple_cnv_som_gene_read <- function(x) {
@@ -34,7 +34,8 @@ purple_cnv_som_gene_read <- function(x) {
     "minRegionEndSupport" = "c",
     "minRegionMethod" = "c",
     "minMinorAlleleCopyNumber" = "d",
-    "depthWindowCount" = "i"
+    "depthWindowCount" = "i",
+    "gcContent" = "d"
   )
 
   ctypes <- paste(nm, collapse = "")
@@ -699,7 +700,9 @@ purple_qc_read <- function(x) {
     "Contamination",
     "GermlineAberrations",
     "AmberMeanDepth",
-    "LohPercent"
+    "LohPercent",
+    "TincLevel",
+    "ChimerismPercentage"
   )
 
   assertthat::assert_that(all(purple_qc$key == nm))
