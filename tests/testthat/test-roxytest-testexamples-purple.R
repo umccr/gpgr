@@ -3,15 +3,13 @@
 # File R/purple.R: @testexamples
 
 test_that("Function purple_cnv_som_gene_read() @ L18", {
-  
   x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
   (p <- purple_cnv_som_gene_read(x))
   expect_equal(colnames(p)[ncol(p)], "gcContent")
 })
 
 
-test_that("Function purple_cnv_som_gene_process() @ L60", {
-  
+test_that("Function purple_cnv_som_gene_process() @ L72", {
   x <- system.file("extdata/purple/purple.cnv.gene.tsv", package = "gpgr")
   g <- system.file("extdata/ref/somatic_panel-v24.03.0.tsv", package = "gpgr")
   (pp <- purple_cnv_som_gene_process(x, g))
@@ -19,35 +17,30 @@ test_that("Function purple_cnv_som_gene_process() @ L60", {
 })
 
 
-test_that("Function purple_cnv_som_read() @ L449", {
-  
+test_that("Function purple_cnv_som_read() @ L550", {
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (p <- purple_cnv_som_read(x))
   expect_equal(colnames(p)[ncol(p)], "majorAlleleCopyNumber")
 })
 
 
-test_that("Function purple_cnv_som_process() @ L482", {
-  
+test_that("Function purple_cnv_som_process() @ L593", {
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (pp <- purple_cnv_som_process(x))
   expect_equal(colnames(pp$tab)[ncol(pp$tab)], "GC (windowCount)")
 })
 
 
-test_that("Function purple_qc_read() @ L550", {
-  
+test_that("Function purple_qc_read() @ L686", {
   x <- system.file("extdata/purple/purple.qc", package = "gpgr")
   (q <- purple_qc_read(x))
   expect_true(q$raw[1, "value", drop = TRUE] == "FAIL_CONTAMINATION")
 })
 
 
-test_that("Function purple_purity_read() @ L608", {
-  
+test_that("Function purple_purity_read() @ L779", {
   x <- system.file("extdata/purple/purple.purity.tsv", package = "gpgr")
   (p <- purple_purity_read(x))
   expect_equal(p$raw[1, "column", drop = TRUE], "purity")
   expect_equal(p$raw[nrow(p$raw), "column", drop = TRUE], "targeted")
 })
-
