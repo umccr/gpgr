@@ -31,7 +31,6 @@
 #' @param quiet Suppress log printing during rendering.
 #' @param bcftools_stats Path to `bcftools_stats.txt` file.
 #' @param dragen_hrd Path to DRAGEN `hrdscore.csv` file (optional).
-#' @param dragen_hrd Path to DRAGEN `hrdscore.csv` file.
 #' @param mutpat_dir Path to mutational patterns directory.
 #' @param hrdetect_file Path to HRDetect file.
 #' @param chord_file Path to CHORD file.
