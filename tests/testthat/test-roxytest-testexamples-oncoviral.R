@@ -10,7 +10,7 @@ test_that("Function virusbreakend_summary_read() @ L18", {
 })
 
 
-test_that("Function virusbreakend_vcf_read() @ L99", {
+test_that("Function virusbreakend_vcf_read() @ L107", {
   
   x <- system.file("extdata/virusbreakend/virusbreakend.vcf", package = "gpgr")
   (vb <- virusbreakend_vcf_read(x))

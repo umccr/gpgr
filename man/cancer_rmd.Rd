@@ -80,7 +80,7 @@ cancer_rmd(
 
 \item{tumor_name}{Name of tumor sample.}
 
-\item{dragen_hrd}{Path to DRAGEN \code{hrdscore.csv} file (optional).}
+\item{dragen_hrd}{Path to DRAGEN \code{hrdscore.csv} file.}
 
 \item{mutpat_dir}{Path to mutational patterns directory.}
 

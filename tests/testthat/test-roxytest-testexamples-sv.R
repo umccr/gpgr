@@ -20,7 +20,7 @@ test_that("Function split_double_col() @ L27", {
 })
 
 
-test_that("Function count_pieces() @ L77", {
+test_that("Function count_pieces() @ L86", {
   
   (a <- gpgr:::count_pieces("foo,bar,baz", sep = ","))
   (b <- gpgr:::count_pieces("foo", sep = ","))
@@ -34,7 +34,7 @@ test_that("Function count_pieces() @ L77", {
 })
 
 
-test_that("Function abbreviate_effect() @ L112", {
+test_that("Function abbreviate_effect() @ L121", {
   
   (e1 <- gpgr:::abbreviate_effect("3_prime_UTR_truncation&start_lost&splice_region_variant"))
   (e2 <- gpgr:::abbreviate_effect("duplication&foo&gene_fusion&BOOM&intron_variant"))
