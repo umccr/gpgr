@@ -138,31 +138,6 @@ canrep_add_args <- function(subp) {
     help = "Path to CHORD file.",
     required = FALSE
   )
-  canrep$add_argument("--af_global", help = "Path to `af_tumor.txt` file.", required = TRUE)
-  canrep$add_argument("--af_keygenes", help = "Path to `af_tumor_keygenes.txt` file.", required = TRUE)
-  canrep$add_argument("--batch_name", help = "Name of batch sample.", required = TRUE)
-  canrep$add_argument("--conda_list", help = "Path to `conda_pkg_list.txt` file.")
-  canrep$add_argument("--img_dir", help = "Path to directory containing PURPLE plots.", required = TRUE)
-  canrep$add_argument("--key_genes", help = "Path to UMCCR cancer gene file.", required = TRUE)
-  canrep$add_argument("--oncokb_genes", help = "Path to OncoKB database file.", required = TRUE)
-  canrep$add_argument("--somatic_snv_vcf", help = "Path to `somatic-PASS.vcf.gz` SNV VCF.", required = TRUE)
-  canrep$add_argument("--somatic_snv_summary", help = "Path to `somatic_snv_summary.json` JSON.", required = TRUE)
-  canrep$add_argument("--somatic_sv_tsv", help = "Path to `manta.tsv` TSV file.", required = TRUE)
-  canrep$add_argument("--somatic_sv_vcf", help = "Path to `manta.vcf.gz` VCF file.", required = TRUE)
-  canrep$add_argument("--purple_som_gene_cnv", help = "Path to `purple.cnv.gene.tsv`.", required = TRUE)
-  canrep$add_argument("--purple_som_cnv_ann", help = "Path to annotated and prioritised `purple.cnv.somatic.tsv`.", required = TRUE)
-  canrep$add_argument("--purple_som_cnv", help = "Path to `purple.cnv.somatic.tsv`.", required = TRUE)
-  canrep$add_argument("--purple_purity", help = "Path to `purple.purity.tsv`.", required = TRUE)
-  canrep$add_argument("--purple_qc", help = "Path to `purple.qc`.", required = TRUE)
-  canrep$add_argument("--purple_som_snv_vcf", help = "Path to `purple.somatic.vcf.gz`.", required = TRUE)
-  canrep$add_argument("--virusbreakend_tsv", help = "Path to VIRUSBreakend summary file.", required = TRUE)
-  canrep$add_argument("--virusbreakend_vcf", help = "Path to VIRUSBreakend VCF file.", required = TRUE)
-  canrep$add_argument("--dragen_hrd", help = "Path to DRAGEN HRD file")
-  canrep$add_argument("--bcftools_stats", help = "Path to bcftools stats file", required = TRUE)
-  canrep$add_argument("--out_file", help = "Path to output HTML file (needs '.html' suffix) [def: {tumor_name}_cancer_report.html].")
-  canrep$add_argument("--quiet", help = "Suppress log printing during rendering.", action = "store_true")
-  canrep$add_argument("--result_outdir", help = "Path to directory to write tidy JSON/TSV results.", required = TRUE)
-  canrep$add_argument("--tumor_name", help = "Name of tumor sample.", required = TRUE)
 }
 
 canrep_parse_args <- function(args) {
