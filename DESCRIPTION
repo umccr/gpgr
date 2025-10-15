@@ -39,11 +39,12 @@ Suggests:
     glue,
     kableExtra,
     knitr,
+    MutationalPatterns (>= 3.12.0),
     patchwork,
     purrr,
     rmarkdown,
     scales,
-    sigrap,
+    sigrap (>= 0.2.0),
     testthat (>= 3.0.0),
     tibble
 Roxygen: list(markdown = TRUE,
