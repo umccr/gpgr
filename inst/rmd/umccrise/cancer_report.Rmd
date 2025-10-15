@@ -880,7 +880,7 @@ The first BAF plot is based on PURPLE data and configuration files.
 </details>
 
 ```{r circos_baf_plot, out.width="80%"}
-knitr::include_graphics(file.path(base_dir, paste0(params$tumor_name, ".circos_baf.png")))
+knitr::include_graphics(file.path(img_dir, paste0(params$tumor_name, ".circos_baf.png")))
 ```
 
 ### SNVs/Indels, Total/Minor CN, SVs
