@@ -9,6 +9,8 @@ Authors@R:
            role = c("aut", "cre"),
            email = "peterdiakumis@gmail.com",
            comment = c(ORCID = "0000-0002-7502-7545"))
+Author: Peter Diakumis [aut, cre]
+Maintainer: Peter Diakumis <peterdiakumis@gmail.com>
 URL: https://umccr.github.io/gpgr/, https://github.com/umccr/gpgr
 BugReports: https://github.com/umccr/gpgr/issues
 License: MIT + file LICENSE

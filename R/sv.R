@@ -139,6 +139,7 @@ abbreviate_effect <- function(effects) {
 }
 
 sash_read_sv_tsv <- function(x) {
+  # fmt: skip
   tab <- dplyr::tribble(
     ~Column,
     ~Description,
@@ -582,10 +583,9 @@ process_sv <- function(x) {
 #' plot_bnd_sf_df_tot_lines(d)
 #' @export
 plot_bnd_sf_df_tot_lines <- function(
-  d,
-  title = "SF, DF and SF + DF  line plot for BNDs",
-  subtitle = "Events are sorted by decreasing total values."
-) {
+    d,
+    title = "SF, DF and SF + DF  line plot for BNDs",
+    subtitle = "Events are sorted by decreasing total values.") {
   assertthat::assert_that(all(c("Type", "SF_alt", "DF_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>
@@ -664,10 +664,9 @@ plot_bnd_sf_df_tot_lines <- function(
 #' plot_bnd_sf_df_tot_hist(d, "a title")
 #' @export
 plot_bnd_sf_df_tot_hist <- function(
-  d,
-  title = "SF, DF and SF + DF histogram for BNDs",
-  subtitle = "Values of 0 (NA) are not shown."
-) {
+    d,
+    title = "SF, DF and SF + DF histogram for BNDs",
+    subtitle = "Values of 0 (NA) are not shown.") {
   assertthat::assert_that(all(c("Type", "SF_alt", "DF_alt") %in% colnames(d)))
   dplot <- d |>
     dplyr::filter(.data$Type == "BND") |>

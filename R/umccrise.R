@@ -142,6 +142,7 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
   tab1 <-
     dplyr::bind_rows(
       hrdetect_res_tab,
+      # fmt: skip
       tibble::tribble(
         ~HRDetect,
         ~results_hrdetect,
