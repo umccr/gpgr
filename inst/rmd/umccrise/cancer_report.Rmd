@@ -374,7 +374,7 @@ hrd_summary <- list(
     out[is.na(val) | out == ""] <- "Missing"
     out
   },
-  #chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
+  chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
   hrdetect = hrdetect_res[, "Probability", drop = TRUE]
 )
 
