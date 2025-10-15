@@ -62,7 +62,6 @@ virusbreakend_summary_read <- function(x) {
       )
   }
 
-  # fmt: skip
   descr <- dplyr::tribble(
     ~Column,
     ~Description,
@@ -126,7 +125,6 @@ virusbreakend_vcf_read <- function(x) {
     virusbreakend_integrations <- tibble::tibble()
   }
 
-  # fmt: skip
   descr <- dplyr::tribble(
     ~Column,
     ~Description,

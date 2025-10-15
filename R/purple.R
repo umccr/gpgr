@@ -130,7 +130,6 @@ purple_cnv_som_gene_process <- function(x, g = NULL) {
       "minRegSupportStartEndMethod"
     )
 
-  # fmt: skip
   descr <- dplyr::tribble(
     ~Column,
     ~Description,
@@ -709,7 +708,6 @@ purple_qc_read <- function(x) {
   assertthat::assert_that(all(purple_qc$key == nm))
   q <- structure(purple_qc$value, names = purple_qc$key)
   # the n column is used for arranging the final summary table rows in the report
-  # fmt: skip
   summary <- dplyr::tribble(
     ~n,
     ~variable,
@@ -779,7 +777,6 @@ purple_qc_read <- function(x) {
 #'
 #' @export
 purple_purity_read <- function(x) {
-  # fmt: skip
   tab <- dplyr::tribble(
     ~column,
     ~type,
@@ -856,7 +853,6 @@ purple_purity_read <- function(x) {
 
   p <- structure(purple_purity$value, names = purple_purity$column)
 
-  # fmt: skip
   summary <- dplyr::tribble(
     ~n,
     ~variable,

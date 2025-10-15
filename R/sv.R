@@ -139,7 +139,6 @@ abbreviate_effect <- function(effects) {
 }
 
 sash_read_sv_tsv <- function(x) {
-  # fmt: skip
   tab <- dplyr::tribble(
     ~Column,
     ~Description,
