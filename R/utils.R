@@ -139,11 +139,12 @@ vcf_is_empty <- function(x) {
 #'
 #' @export
 tsv_is_empty <- function(
-    x,
-    comment = "##",
-    col_types = readr::cols(.default = "c"),
-    n_max = 1,
-    ...) {
+  x,
+  comment = "##",
+  col_types = readr::cols(.default = "c"),
+  n_max = 1,
+  ...
+) {
   readr::local_edition(1)
   d <- readr::read_tsv(
     file = x,
