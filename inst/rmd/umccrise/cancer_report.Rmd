@@ -34,6 +34,9 @@ params:
   somatic_sv_vcf: NULL
   title: "UMCCR Cancer Report"
   tumor_name: NULL
+  mutpat_dir: NULL
+  hrdetect_file: NULL
+  chord_file: NULL
 description: "Analysis of tumor/normal samples at UMCCR"
 title: "`r paste(params$batch_name, params$title)`"
 ---
@@ -68,6 +71,8 @@ library(IRanges, include.only = "IRanges")
 library(knitr)
 library(kableExtra, include.only = "kable_styling")
 library(patchwork)
+library(png)
+library(grid)
 library(purrr, include.only = "map")
 library(readr, include.only = "read_tsv")
 library(rmarkdown, include.only = "render")
@@ -111,77 +116,123 @@ sv_detail_table <- function(tab) {
     dplyr::left_join(sv_col_descr, by = "Column") %>%
     knitr::kable()
 }
+
+wrap_img <- function(path) {
+  grob <- rasterGrob(readPNG(path), interpolate = TRUE)
+  patchwork::wrap_elements(full = grob)
+}
 ```
 
 ```{r hrd_prep, results='hide'}
 #---- Homologous Recombination Deficiency ----#
 dragen_hrd_res <- gpgr::dragen_hrd(params$dragen_hrd)
-# chord_res <- sigrap::chord_run(
-#   vcf.snv = params$somatic_snv_vcf,
-#   vcf.sv = params$somatic_sv_vcf,
-#   sv.caller = "manta",
-#   sample.name = params$tumor_name,
-#   ref.genome = "hg38",
-#   verbose = TRUE
-# )
+if (is.null(params$chord_file)) {
+  chord_res <- sigrap::chord_run(
+    vcf.snv = params$somatic_snv_vcf,
+    vcf.sv = params$somatic_sv_vcf,
+    sv.caller = "gridss",
+    sample.name = params$tumor_name,
+    ref.genome = "hg38",
+    verbose = TRUE
+  )
+}else{
+  chord_res <- list(
+    context = tibble::tibble(),  # or set to NULL/NA if no context is available
+    prediction = readr::read_tsv(params$chord_file, col_types = readr::cols())
+  )
+}
 
-hrdetect_res <- NULL
-# HRDetect doesn't handle empty files
-if (gpgr::vcf_is_empty(params$somatic_sv_vcf) |
-  gpgr::vcf_is_empty(params$somatic_snv_vcf)) {
-  hrdetect_res <- tibble::tribble(
-    ~sample, ~Probability, ~intercept, ~del.mh.prop, ~SNV3, ~SV3, ~SV5, ~hrd, ~SNV8,
-    params$tumor_name, NA, NA, NA, NA, NA, NA, NA, NA
-  )
+if (is.null(params$hrdetect_file)) {
+  hrdetect_res <- NULL
+  # HRDetect doesn't handle empty files
+  if (gpgr::vcf_is_empty(params$somatic_sv_vcf) |
+    gpgr::vcf_is_empty(params$somatic_snv_vcf)) {
+    hrdetect_res <- tibble::tribble(
+      ~sample, ~Probability, ~intercept, ~del.mh.prop, ~SNV3, ~SV3, ~SV5, ~hrd, ~SNV8,
+      params$tumor_name, NA, NA, NA, NA, NA, NA, NA, NA
+    )
+  } else {
+    hrdetect_res <- sigrap::hrdetect_run(
+      nm = params$tumor_name,
+      snvindel_vcf = params$somatic_snv_vcf,
+      sv_vcf = params$somatic_sv_vcf,
+      cnv_tsv = params$purple_som_cnv,
+      genome = "hg38"
+    )
+  }
 } else {
-  hrdetect_res <- sigrap::hrdetect_run(
-    nm = params$tumor_name,
-    snvindel_vcf = params$somatic_snv_vcf,
-    sv_vcf = params$somatic_sv_vcf,
-    cnv_tsv = params$purple_som_cnv,
-    genome = "hg38"
-  )
+  hrdetect_res <- gpgr::convert_json_gz_to_tibble(params$hrdetect_file)
 }
 ```
 
 ```{r mutational_sigs_prep}
-mutpat_gr <- MutationalPatterns::read_vcfs_as_granges(
-  vcf_files = params$somatic_snv_vcf,
-  sample_names = params$tumor_name,
-  genome = ref_genome,
-  group = "auto+sex",
-  type = "all"
-)
 
-mp_snv <- sigrap::sig_count_snv(vcf_gr = mutpat_gr, ref_genome = ref_genome)
-mp_dbs <- sigrap::sig_count_dbs(vcf_gr = mutpat_gr)
-mp_indel <- sigrap::sig_count_indel(vcf_gr = mutpat_gr, ref_genome = ref_genome)
+if (is.null(params$mutpat_dir)) {
+  mutpat_gr <- MutationalPatterns::read_vcfs_as_granges(
+    vcf_files = params$somatic_snv_vcf,
+    sample_names = params$tumor_name,
+    genome = ref_genome,
+    group = "auto+sex",
+    type = "all"
+  )
 
-mp_snv_plots <- sigrap::sig_plot_snv(
-  gr_snv = mp_snv$gr_snv,
-  snv_counts = mp_snv$snv_counts,
-  ref_genome = ref_genome
-)
-mp_dbs_plots <- sigrap::sig_plot_dbs(dbs_counts = mp_dbs)
-mp_indel_plots <- sigrap::sig_plot_indel(indel_counts = mp_indel)
+  mp_snv <- sigrap::sig_count_snv(vcf_gr = mutpat_gr, ref_genome = ref_genome)
+  mp_dbs <- sigrap::sig_count_dbs(vcf_gr = mutpat_gr)
+  mp_indel <- sigrap::sig_count_indel(vcf_gr = mutpat_gr, ref_genome = ref_genome)
 
-sigs_snv_2015 <-
-  sigrap::cosmic_signatures_2015 %>%
-  sigrap::sig_contribution(mut_mat = mp_snv$snv_counts, signatures = .)
-sigs_snv_2020 <-
-  MutationalPatterns::get_known_signatures(muttype = "snv", incl_poss_artifacts = FALSE) %>%
-  sigrap::sig_contribution(mut_mat = mp_snv$snv_counts, signatures = .)
-sigs_dbs <-
-  MutationalPatterns::get_known_signatures(muttype = "dbs") %>%
-  sigrap::sig_contribution(mut_mat = mp_dbs, signatures = .)
-sigs_indel <-
-  MutationalPatterns::get_known_signatures(muttype = "indel") %>%
-  sigrap::sig_contribution(mut_mat = mp_indel, signatures = .)
+  mp_snv_plots <- sigrap::sig_plot_snv(
+    gr_snv = mp_snv$gr_snv,
+    snv_counts = mp_snv$snv_counts,
+    ref_genome = ref_genome
+  ) 
 
-gpgr::write_tsvjsongz(sigs_snv_2015, glue("sigs/{bnm}-snv_2015"), result_outdir)
-gpgr::write_tsvjsongz(sigs_snv_2020, glue("sigs/{bnm}-snv_2020"), result_outdir)
-gpgr::write_tsvjsongz(sigs_dbs, glue("sigs/{bnm}-dbs"), result_outdir)
-gpgr::write_tsvjsongz(sigs_indel, glue("sigs/{bnm}-indel"), result_outdir)
+  mp_dbs_plots <- sigrap::sig_plot_dbs(dbs_counts = mp_dbs)
+  mp_indel_plots <- sigrap::sig_plot_indel(indel_counts = mp_indel)
+  sigs_snv_2015 <-
+    sigrap::cosmic_signatures_2015 %>%
+    sigrap::sig_contribution(mut_mat = mp_snv$snv_counts, signatures = .)
+  sigs_snv_2020 <-
+    MutationalPatterns::get_known_signatures(muttype = "snv", incl_poss_artifacts = FALSE) %>%
+    sigrap::sig_contribution(mut_mat = mp_snv$snv_counts, signatures = .)
+  sigs_dbs <-
+    MutationalPatterns::get_known_signatures(muttype = "dbs") %>%
+    sigrap::sig_contribution(mut_mat = mp_dbs, signatures = .)
+  sigs_indel <-
+    MutationalPatterns::get_known_signatures(muttype = "indel") %>%
+    sigrap::sig_contribution(mut_mat = mp_indel, signatures = .)
+
+  gpgr::write_tsvjsongz(sigs_snv_2015, glue("sigs/{bnm}-snv_2015"), result_outdir)
+  gpgr::write_tsvjsongz(sigs_snv_2020, glue("sigs/{bnm}-snv_2020"), result_outdir)
+  gpgr::write_tsvjsongz(sigs_dbs, glue("sigs/{bnm}-dbs"), result_outdir)
+  gpgr::write_tsvjsongz(sigs_indel, glue("sigs/{bnm}-indel"), result_outdir)
+}else{
+  sigs_snv_2015 <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("sigs/snv2015.json.gz")))%>%
+  dplyr::select(Rank, Signature, Contribution, RelFreq)
+  sigs_snv_2020 <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("sigs/snv2020.json.gz")))%>%
+  dplyr::select(Rank, Signature, Contribution, RelFreq)
+  sigs_dbs        <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("sigs/dbs.json.gz")))%>%
+  dplyr::select(Rank, Signature, Contribution, RelFreq)
+  sigs_indel      <- gpgr::convert_json_gz_to_tibble(file.path(params$mutpat_dir, glue::glue("sigs/indel.json.gz")))%>%
+  dplyr::select(Rank, Signature, Contribution, RelFreq)
+  mp_indel_plots  <- list(
+    p_indel_main = wrap_img(file.path(params$mutpat_dir, glue::glue("plot/indel/p_indel_main.png"))),
+    p_indel_cont = wrap_img(file.path(params$mutpat_dir, glue::glue("plot/indel/p_indel_cont.png")))
+  )
+  mp_dbs_plots    <- list(
+    p_dbs_main =wrap_img( file.path(params$mutpat_dir, glue::glue("plot/dbs/p_dbs_main.png"))),
+    p_dbs_cont = wrap_img(file.path(params$mutpat_dir, glue::glue("plot/dbs/p_dbs_cont.png")))
+  )
+  mp_snv_plots <- list(
+    p_river = wrap_img(file.path(params$mutpat_dir, glue::glue("plot/snv/p_river.png"))),
+    p_heatmap = wrap_img(file.path(params$mutpat_dir, glue::glue("plot/snv/p_heatmap.png"))),
+    p_spectrum = wrap_img(file.path(params$mutpat_dir, glue::glue("plot/snv/p_spectrum.png"))),
+    p_96_profile = wrap_img(file.path(params$mutpat_dir, glue::glue("plot/snv/p_96_profile.png")))
+  )
+  mp_plot_bias1 <- wrap_img(file.path(params$mutpat_dir, glue::glue("plot/strand/p_transcriptional_bias.png")))
+  mp_plot_bias2 <- wrap_img(file.path(params$mutpat_dir, glue::glue("plot/strand/p_transcriptional_effect.png")))
+  mp_plot_bias3 <- wrap_img(file.path(params$mutpat_dir, glue::glue("plot/strand/p_replicative_bias.png")))
+  mp_plot_bias4 <- wrap_img(file.path(params$mutpat_dir, glue::glue("plot/strand/p_replicative_effect.png")))
+}
 ```
 
 ```{r sv_prep}
@@ -323,7 +374,7 @@ hrd_summary <- list(
     out[is.na(val) | out == ""] <- "Missing"
     out
   },
-  #chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
+  chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
   hrdetect = hrdetect_res[, "Probability", drop = TRUE]
 )
 
@@ -335,7 +386,7 @@ cnv_summary <-
     Max = round(max(CN), 2),
     N = dplyr::n(), .groups = "drop_last"
   ))
-
+no_sv_found <- gpgr::tsv_is_empty(params$somatic_sv_tsv)
 if (no_sv_found) {
   sv_summary <- tibble(unmelted = c(0), melted = c(0))
 } else {
@@ -363,8 +414,8 @@ qc_summary_all <- dplyr::tribble(
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
   "2020 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)",
-  6, "HRD", glue::glue("DRAGEN: {hrd_summary$dragen}; HRDetect: {hrd_summary$hrdetect}"),
-  "Homologous recombination deficiency score (DRAGEN) / probability (HRDetect).",
+  6, "HRD", glue::glue("DRAGEN: {hrd_summary$dragen}; CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"),
+  "Homologous recombination deficiency score (DRAGEN) / probability (CHORD, HRDetect).",
   20, "CNVs (Somatic)", glue::glue(
     "Min: {cnv_summary[['som']]$Min}; ",
     "Max: {cnv_summary[['som']]$Max}; ",
@@ -535,67 +586,67 @@ See [MutationalPatterns Strand Bias Analysis](http://bioconductor.org/packages/r
 </details>
 
 ```{r mutationalpatterns_strand_bias, fig.width=7, fig.height=7}
-## ---- Transcriptional ---- ##
-# Get known genes table from UCSC
-genes_list <- GenomicFeatures::genes(base::get(tx_ref_genome))
+if (is.null(params$mutpat_dir)) {
+        ## ---- Transcriptional ---- ##
+      # Get known genes table from UCSC
+      genes_list <- GenomicFeatures::genes(base::get(tx_ref_genome))
 
-# Mutation count matrix with strand info (4*6*4=96 -> 96*2=192)
-mutpat_gr_snv <- MutationalPatterns::get_mut_type(mutpat_gr, type = "snv")
-mut_mat_s <- MutationalPatterns::mut_matrix_stranded(
-  vcf_list = mutpat_gr_snv,
-  ref_genome = ref_genome,
-  ranges = genes_list,
-  mode = "transcription"
-)
+      # Mutation count matrix with strand info (4*6*4=96 -> 96*2=192)
+      mutpat_gr_snv <- MutationalPatterns::get_mut_type(mutpat_gr, type = "snv")
+      mut_mat_s <- MutationalPatterns::mut_matrix_stranded(
+        vcf_list = mutpat_gr_snv,
+        ref_genome = ref_genome,
+        ranges = genes_list,
+        mode = "transcription"
+      )
 
-# Mutation count per type and strand
-strand_counts <- MutationalPatterns::strand_occurrences(mut_mat_s, by = "all")
-# Poisson test for strand asymmetry significance testing
-strand_bias <- MutationalPatterns::strand_bias_test(strand_counts)
+      # Mutation count per type and strand
+      strand_counts <- MutationalPatterns::strand_occurrences(mut_mat_s, by = "all")
+      # Poisson test for strand asymmetry significance testing
+      strand_bias <- MutationalPatterns::strand_bias_test(strand_counts)
 
-# mutation spectrum with strand distinction
-mp_plot_bias1 <- MutationalPatterns::plot_strand(strand_counts, mode = "relative") +
-  ggplot2::ggtitle("Transcriptional Strand Bias")
-# effect size of strand bias
-mp_plot_bias2 <- MutationalPatterns::plot_strand_bias(strand_bias)
-
-
-## ---- Replicative ---- ##
-repli_file <- system.file("extdata/ReplicationDirectionRegions.bed",
-  package = "MutationalPatterns"
-)
-# start/stop contain scientific notation, so need to be doubles
-repli_strand <-
-  readr::read_tsv(repli_file, col_names = TRUE, col_types = "cddcc") %>%
-  dplyr::mutate_if(is.character, as.factor)
-repli_strand_granges <- GenomicRanges::GRanges(
-  seqnames = repli_strand$Chr,
-  ranges = IRanges::IRanges(
-    start = repli_strand$Start + 1,
-    end = repli_strand$Stop
-  ),
-  strand_info = repli_strand$Class
-)
-
-GenomeInfoDb::seqlevelsStyle(repli_strand_granges) <- GenomeInfoDb::seqlevelsStyle(base::get(ref_genome))
-
-mut_mat_s_rep <-
-  MutationalPatterns::mut_matrix_stranded(
-    vcf_list = mutpat_gr_snv,
-    ref_genome = ref_genome,
-    ranges = repli_strand_granges,
-    mode = "replication"
-  )
-# Mutation count per type and strand
-strand_counts_rep <- MutationalPatterns::strand_occurrences(mut_mat_s_rep, by = "all")
-# Poisson test for strand asymmetry significance testing
-strand_bias_rep <- MutationalPatterns::strand_bias_test(strand_counts_rep)
-
-mp_plot_bias3 <- MutationalPatterns::plot_strand(strand_counts_rep, mode = "relative") +
-  ggplot2::ggtitle("Replicative Strand Bias")
-mp_plot_bias4 <- MutationalPatterns::plot_strand_bias(strand_bias_rep)
+      # mutation spectrum with strand distinction
+      mp_plot_bias1 <- MutationalPatterns::plot_strand(strand_counts, mode = "relative") +
+        ggplot2::ggtitle("Transcriptional Strand Bias")
+      # effect size of strand bias
+      mp_plot_bias2 <- MutationalPatterns::plot_strand_bias(strand_bias)
 
 
+      ## ---- Replicative ---- ##
+      repli_file <- system.file("extdata/ReplicationDirectionRegions.bed",
+        package = "MutationalPatterns"
+      )
+      # start/stop contain scientific notation, so need to be doubles
+      repli_strand <-
+        readr::read_tsv(repli_file, col_names = TRUE, col_types = "cddcc") %>%
+        dplyr::mutate_if(is.character, as.factor)
+      repli_strand_granges <- GenomicRanges::GRanges(
+        seqnames = repli_strand$Chr,
+        ranges = IRanges::IRanges(
+          start = repli_strand$Start + 1,
+          end = repli_strand$Stop
+        ),
+        strand_info = repli_strand$Class
+      )
+
+      GenomeInfoDb::seqlevelsStyle(repli_strand_granges) <- GenomeInfoDb::seqlevelsStyle(base::get(ref_genome))
+
+      mut_mat_s_rep <-
+        MutationalPatterns::mut_matrix_stranded(
+          vcf_list = mutpat_gr_snv,
+          ref_genome = ref_genome,
+          ranges = repli_strand_granges,
+          mode = "replication"
+        )
+      # Mutation count per type and strand
+      strand_counts_rep <- MutationalPatterns::strand_occurrences(mut_mat_s_rep, by = "all")
+      # Poisson test for strand asymmetry significance testing
+      strand_bias_rep <- MutationalPatterns::strand_bias_test(strand_counts_rep)
+
+      mp_plot_bias3 <- MutationalPatterns::plot_strand(strand_counts_rep, mode = "relative") +
+        ggplot2::ggtitle("Replicative Strand Bias")
+      mp_plot_bias4 <- MutationalPatterns::plot_strand_bias(strand_bias_rep)
+}
 (mp_plot_bias1 / mp_plot_bias2) | (mp_plot_bias3 / mp_plot_bias4)
 ```
 
@@ -697,25 +748,30 @@ previous mutation, and is log10 transformed. Drop-downs from the plots indicate 
 "hotspots" of mutations.
 
 ```{r mutationalpatterns_rainfall, out.width="90%", fig.width=14}
-# When there is only 1 or lower number of variants on a chromosome,
-# MutationalPatterns::plot_rainfall will crash with an error. So need to check if it will work beforehand.
-chromosomes <- GenomeInfoDb::seqnames(base::get(ref_genome))[1:22]
-vcf <- mutpat_gr_snv[[1]]
-chr_subset <- vcf[GenomeInfoDb::seqnames(vcf) == chromosomes[1]]
-n <- length(chr_subset)
-will_work <- FALSE
-for (i in 1:length(chromosomes)) {
-  chr_subset <- vcf[GenomeInfoDb::seqnames(vcf) == chromosomes[i]]
+if (is.null(params$mutpat_dir)) {
+  # When there is only 1 or lower number of variants on a chromosome,
+  # MutationalPatterns::plot_rainfall will crash with an error. So need to check if it will work beforehand.
+  chromosomes <- GenomeInfoDb::seqnames(base::get(ref_genome))[1:22]
+  vcf <- mutpat_gr_snv[[1]]
+  chr_subset <- vcf[GenomeInfoDb::seqnames(vcf) == chromosomes[1]]
   n <- length(chr_subset)
-  if (n >= 2) {
-    will_work <- TRUE
+  will_work <- FALSE
+  for (i in 1:length(chromosomes)) {
+    chr_subset <- vcf[GenomeInfoDb::seqnames(vcf) == chromosomes[i]]
+    n <- length(chr_subset)
+    if (n >= 2) {
+      will_work <- TRUE
+    }
   }
-}
-if (will_work) {
-  MutationalPatterns::plot_rainfall(vcf,
-    chromosomes = GenomeInfoDb::seqnames(base::get(ref_genome))[1:22],
-    cex = 1.2, ylim = 1e+09
-  )
+  if (will_work) {
+    MutationalPatterns::plot_rainfall(vcf,
+      chromosomes = GenomeInfoDb::seqnames(base::get(ref_genome))[1:22],
+      cex = 1.2, ylim = 1e+09
+    )
+  }
+} else {
+  # Use pre-generated rainfall plot from PNG file
+  wrap_img(file.path(params$mutpat_dir, glue::glue("plot/snv/p_rainfall.png")))
 }
 ```
 
@@ -778,8 +834,8 @@ that includes HRDetect.
 </details>
 
 ```{r chord_hrdetect_dragen_res}
-hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, NULL, dragen_hrd_res)
-# gpgr::write_tsvjsongz(chord_res[["prediction"]], glue("hrd/{bnm}-chord"), result_outdir)
+hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, chord_res, dragen_hrd_res)
+gpgr::write_tsvjsongz(chord_res[["prediction"]], glue("hrd/{bnm}-chord"), result_outdir)
 gpgr::write_tsvjsongz(hrdetect_res, glue("hrd/{bnm}-hrdetect"), result_outdir)
 gpgr::write_tsvjsongz(dragen_hrd_res, glue("hrd/{bnm}-dragen"), result_outdir)
 hrd_results$hrd_results_gt
@@ -939,7 +995,7 @@ p2 <- gpgr::plot_bnd_sf_df_tot_hist(sv$map) + ggplot2::theme(legend.position = "
 
 #### Counts
 
-```{r sv_summary, eval=!no_sv_found}
+```{r sv_summary}
 d <-
   list(
     unmelted = sv$map %>% dplyr::select("Top Tier", Type),
