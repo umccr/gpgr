@@ -3,17 +3,18 @@ Title: Genomics Platform Group Reporting
 Version: 2.2.11
 Description: Reports and functions used in the Genomics Platform Group
              at the University of Melbourne Centre for Cancer Research.
-Authors@R: 
+Authors@R: c(
     person(given = "Peter",
-        family = "Diakumis",
-        role = c("aut"),
-        email = "peterdiakumis@gmail.com",
-        comment = c(ORCID = "0000-0002-7502-7545")),
+           family = "Diakumis",
+           role = c("aut"),
+           email = "peterdiakumis@gmail.com",
+           comment = c(ORCID = "0000-0002-7502-7545")),
     person(given = "Quentin",
-        family = "Clayssen",
-        role = c("cre", "aut"),
-    email = "quentin.clayssen@gmail.com",
-        comment = c(ORCID = "0000-0002-2574-073X"))
+           family = "Clayssen",
+           role = c("cre", "aut"),
+           email = "quentin.clayssen@gmail.com",
+           comment = c(ORCID = "0000-0002-2574-073X"))
+)
 Author: Peter Diakumis [aut]; Quentin Clayssen [cre, aut]
 Maintainer: Quentin Clayssen <quentin.clayssen@gmail.com>
 URL: https://umccr.github.io/gpgr/, https://github.com/umccr/gpgr

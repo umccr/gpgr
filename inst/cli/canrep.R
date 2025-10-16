@@ -143,7 +143,9 @@ canrep_add_args <- function(subp) {
 canrep_parse_args <- function(args) {
   cli::cli_h1("Start rendering UMCCR Cancer Report!")
   if (is.null(args$dragen_hrd)) {
-    cli::cli_warn("No DRAGEN HRD file supplied; the report will show DRAGEN HRD scores as missing.")
+    cli::cli_warn(
+      "No DRAGEN HRD file supplied; the report will show DRAGEN HRD scores as missing."
+    )
   }
   res <- gpgr::cancer_rmd(
     af_global = args$af_global,
