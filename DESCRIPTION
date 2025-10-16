@@ -14,7 +14,7 @@ Authors@R: c(
            role = c("cre", "aut"),
            email = "quentin.clayssen@gmail.com",
            comment = c(ORCID = "0000-0002-2574-073X"))
-)
+    )
 Author: Peter Diakumis [aut]; Quentin Clayssen [cre, aut]
 Maintainer: Quentin Clayssen <quentin.clayssen@gmail.com>
 URL: https://umccr.github.io/gpgr/, https://github.com/umccr/gpgr
