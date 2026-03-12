@@ -1,3 +1,11 @@
+# gpgr 2.3.0
+
+- :wrench: support for reading sigrap plots and data as inputs ([input-sigrap-data branch](https://github.com/umccr/gpgr/tree/input-sigrap-data))
+  - Add support for pre-generated sigrap mutational signature plots via PNG inputs
+  - Add new dependencies: `png` and `grid` packages for handling pre-generated plots
+  - Refactor mutational signatures section to support both live generation and pre-computed inputs
+  - Enable conditional logic to read from sigrap output directory when available
+  - Clarify CHORD/CHORD2 handling: CHORD outputs can now be provided as pre-computed input files (or produced via `{sigrap}`); gpgr will read and include CHORD results when available rather than attempting incompatible live computation. See [PR #91](https://github.com/umccr/gpgr/pull/91) for details.
 
 # gpgr 2.2.1
 
@@ -12,14 +20,6 @@
 - :package: add support for PURPLE 4.2 output files ([pr92](https://github.com/umccr/gpgr/pull/92))
   - Added `gcContent` column support in `purple_cnv_som_gene_read()` function for `{tumor_name}.purple.cnv.gene.tsv` files
   - Added `TincLevel` and `ChimerismPercentage` columns support in `purple_qc_read()` function for `{tumor_name}.purple.qc.tsv` files
-
-# gpgr 2.1.4
-
-- :wrench: support for reading sigrap plots and data as inputs ([input-sigrap-data branch](https://github.com/umccr/gpgr/tree/input-sigrap-data))
-  - Add support for pre-generated sigrap mutational signature plots via PNG inputs
-  - Add new dependencies: `png` and `grid` packages for handling pre-generated plots
-  - Refactor mutational signatures section to support both live generation and pre-computed inputs
-  - Enable conditional logic to read from sigrap output directory when available
 
 # gpgr 2.1.3
 
