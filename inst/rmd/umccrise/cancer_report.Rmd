@@ -303,8 +303,10 @@ summarise_sigs <- function(mut_sig_contr) {
 snv_summary_counts <- params$somatic_snv_summary |>
   jsonlite::read_json()
 
-# NOTE(QC): samples are considered hypermutated if they have more than 500k variant
-hypermutated <- snv_summary_counts$annotated > 500000
+# NOTE(QC): samples are considered hypermutated if they have more than 500k raw
+# DRAGEN variants. Using $dragen (not $annotated) because the hypermutation filter
+# runs before annotation, so $annotated is already reduced for hypermutated samples.
+hypermutated <- snv_summary_counts$dragen > 500000
 
 snv_summary <- snv_summary_counts |>
   unlist() |>
