@@ -1,3 +1,8 @@
+# gpgr 2.2.12
+
+- :bug: restore hypermutated cancer report logic for current released sash/Bolt behavior.
+  - revert the premature switch to `annotated > 500000`
+  - restore inference from divergence between `sage` and `annotated` SNV counts
 
 # gpgr 2.2.1
 
