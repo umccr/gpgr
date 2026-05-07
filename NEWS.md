@@ -6,6 +6,13 @@
   - Refactor mutational signatures section to support both live generation and pre-computed inputs
   - Enable conditional logic to read from sigrap output directory when available
   - Clarify CHORD/CHORD2 handling: CHORD outputs can now be provided as pre-computed input files (or produced via `{sigrap}`); gpgr will read and include CHORD results when available rather than attempting incompatible live computation. See [PR #91](https://github.com/umccr/gpgr/pull/91) for details.
+- :bug: read `is_hypermutated` directly from bolt variant counts JSON instead of indirect proxy
+
+# gpgr 2.2.12
+
+- :bug: restore hypermutated cancer report logic for current released sash/Bolt behavior.
+  - revert the premature switch to `annotated > 500000`
+  - restore inference from divergence between `sage` and `annotated` SNV counts
 
 # gpgr 2.2.1
 
