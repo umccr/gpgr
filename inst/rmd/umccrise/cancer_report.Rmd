@@ -356,7 +356,7 @@ snv_summary_counts <- params$somatic_snv_summary |>
 
 hypermutated <- snv_summary_counts$is_hypermutated
 
-snv_summary <- snv_summary_counts |>
+snv_summary <- snv_summary_counts[names(snv_summary_counts) != "is_hypermutated"] |>
   unlist() |>
   tibble::enframe() |>
   dplyr::mutate(
