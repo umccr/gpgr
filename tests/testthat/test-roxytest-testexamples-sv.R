@@ -3,7 +3,6 @@
 # File R/sv.R: @testexamples
 
 test_that("Function split_double_col() @ L27", {
-  
   x <- tibble::tibble(
     a = letters[1:11],
     b = c("0.4,0.8", paste0(round(runif(10), 2), ",", round(runif(10), 2))),
@@ -20,8 +19,7 @@ test_that("Function split_double_col() @ L27", {
 })
 
 
-test_that("Function count_pieces() @ L77", {
-  
+test_that("Function count_pieces() @ L86", {
   (a <- gpgr:::count_pieces("foo,bar,baz", sep = ","))
   (b <- gpgr:::count_pieces("foo", sep = ","))
   (k <- gpgr:::count_pieces("", sep = ","))
@@ -34,8 +32,7 @@ test_that("Function count_pieces() @ L77", {
 })
 
 
-test_that("Function abbreviate_effect() @ L112", {
-  
+test_that("Function abbreviate_effect() @ L121", {
   (e1 <- gpgr:::abbreviate_effect("3_prime_UTR_truncation&start_lost&splice_region_variant"))
   (e2 <- gpgr:::abbreviate_effect("duplication&foo&gene_fusion&BOOM&intron_variant"))
   (e3 <- gpgr:::abbreviate_effect("TF_binding_site_variant&TFBS_ablation"))
@@ -45,4 +42,3 @@ test_that("Function abbreviate_effect() @ L112", {
   expect_equal(e3, "TFBSDel, TFBSVar")
   expect_equal(e4, "badaboom, bar, foo, StopGain")
 })
-

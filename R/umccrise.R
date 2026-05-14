@@ -16,7 +16,8 @@ bcftools_stats_plot <- function(x = NULL) {
   d <- d1[3:length(d1)] |>
     I() |>
     readr::read_tsv(
-      col_names = cnames, col_types = readr::cols(.default = "d", "QUAL_dummy" = "c")
+      col_names = cnames,
+      col_types = readr::cols(.default = "d", "QUAL_dummy" = "c")
     ) |>
     dplyr::select(-"QUAL_dummy")
   if (nrow(d) == 0) {
@@ -30,16 +31,29 @@ bcftools_stats_plot <- function(x = NULL) {
   tot <- nrow(d)
   p <- d |>
     ggplot2::ggplot(ggplot2::aes(x = .data$qual)) +
-    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(.data$density)), binwidth = 4, fill = "lightblue") +
+    ggplot2::geom_histogram(
+      ggplot2::aes(y = ggplot2::after_stat(.data$density)),
+      binwidth = 4,
+      fill = "lightblue"
+    ) +
     ggplot2::geom_density(alpha = 0.6) +
-    ggplot2::geom_vline(xintercept = med, colour = "blue", linetype = "dashed") +
+    ggplot2::geom_vline(
+      xintercept = med,
+      colour = "blue",
+      linetype = "dashed"
+    ) +
     ggplot2::scale_x_continuous(n.breaks = 10) +
     ggplot2::annotate(
-      geom = "label", x = med + 1, y = +Inf, vjust = 2,
+      geom = "label",
+      x = med + 1,
+      y = +Inf,
+      vjust = 2,
       label = paste0("Median: ", med),
     ) +
     ggplot2::theme_bw() +
-    ggplot2::ggtitle(glue::glue("Small variant quality score distribution (total variants: {tot})"))
+    ggplot2::ggtitle(glue::glue(
+      "Small variant quality score distribution (total variants: {tot})"
+    ))
   p
 }
 
@@ -97,9 +111,8 @@ dragen_hrd <- function(x = NULL) {
 #'
 #' @export
 hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
-  # sn <- chord_res$prediction[, "sample", drop = T]
-  # assertthat::are_equal(hrdetect_res[, "sample", drop = T], sn)
-    sn <- hrdetect_res[, "sample", drop = TRUE]
+  sn <- chord_res$prediction[, "sample", drop = TRUE]
+  assertthat::are_equal(hrdetect_res[, "sample", drop = TRUE], sn)
 
   hrdetect_res_tab <-
     tibble::tibble(
@@ -108,12 +121,12 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
     ) |>
     dplyr::filter(.data$col != "sample")
 
-  # chord_res_tab <-
-  #   tibble::tibble(
-  #     col = colnames(chord_res$prediction),
-  #     val = unlist(chord_res$prediction[1, ])
-  #   ) |>
-  #   dplyr::filter(col != "sample")
+  chord_res_tab <-
+    tibble::tibble(
+      col = colnames(chord_res$prediction),
+      val = unlist(chord_res$prediction[1, ])
+    ) |>
+    dplyr::filter(.data$col != "sample")
 
   dragen_res_tab <-
     dragen_res |>
@@ -123,34 +136,33 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
 
   colnames(dragen_res_tab) <- c("DRAGEN", "results_dragen")
   colnames(hrdetect_res_tab) <- c("HRDetect", "results_hrdetect")
-  #colnames(chord_res_tab) <- c("CHORD", "results_chord")
+  colnames(chord_res_tab) <- c("CHORD", "results_chord")
 
   # idea is to make tibbles and cbind them
   tab1 <-
     dplyr::bind_rows(
       hrdetect_res_tab,
       tibble::tribble(
-        ~HRDetect, ~results_hrdetect,
-        " ", " "
+        ~HRDetect,
+        ~results_hrdetect,
+        " ",
+        " "
       )
     )
-  # tab2a <-
-  #   dplyr::bind_rows(
-  #     chord_res_tab[1:7, ],
-  #     tibble::tribble(
-  #       ~CHORD, ~results_chord,
-  #       " ", " ",
-  #       " ", " "
-  #     )
-  #   )
-  # tab2b <- chord_res_tab[8:16, ] |>
-  #   purrr::set_names(c("CHORD2", "results_chord2"))
+  tab2 <-
+    dplyr::bind_rows(
+      chord_res_tab,
+      tibble::tibble(
+        CHORD = rep(" ", max(0, 9 - nrow(chord_res_tab))),
+        results_chord = rep(" ", max(0, 9 - nrow(chord_res_tab)))
+      )
+    )
   tab3 <- dplyr::bind_rows(
     dragen_res_tab,
     tibble::tibble(DRAGEN = rep(" ", 5), results_dragen = rep(" ", 5))
   )
 
-  hrd_results_tab <- dplyr::bind_cols(tab3, tab1)
+  hrd_results_tab <- dplyr::bind_cols(tab3, tab2, tab1)
 
   hrd_results_gt <-
     hrd_results_tab |>
@@ -168,28 +180,25 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
       id = "id_hrdetect",
       columns = c("HRDetect", "results_hrdetect")
     ) |>
-    # gt::tab_spanner(
-    #   label = "CHORD",
-    #   id = "id_chord",
-    #   columns = c("CHORD", "results_chord", "CHORD2", "results_chord2")
-    # ) |>
+    gt::tab_spanner(
+      label = "CHORD",
+      id = "id_chord",
+      columns = c("CHORD", "results_chord")
+    ) |>
     gt::cols_label(
       DRAGEN = "",
       results_dragen = "",
+      CHORD = "",
+      results_chord = "",
       HRDetect = "",
-      results_hrdetect = "",
-      # CHORD = "",
-      # results_chord = "",
-      # CHORD2 = "",
-      # results_chord2 = ""
+      results_hrdetect = ""
     ) |>
     gt::tab_style(
       style = list(
         gt::cell_text(weight = "bold")
       ),
       locations = gt::cells_body(
-        #columns = c("DRAGEN", "HRDetect", "CHORD", "CHORD2")
-        columns = c("DRAGEN", "HRDetect")
+        columns = c("DRAGEN", "CHORD", "HRDetect")
       )
     ) |>
     gt::cols_align(
@@ -204,8 +213,7 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
         style = "solid"
       ),
       locations = gt::cells_body(
-        #columns = c("CHORD", "HRDetect"),
-        columns = c("HRDetect"),
+        columns = c("CHORD", "HRDetect"),
         rows = dplyr::everything()
       )
     ) |>
@@ -241,7 +249,9 @@ af_summary <- function(af_global_file, af_keygenes_file) {
 
   af_both <-
     dplyr::bind_rows(af_global, af_keygenes) |>
-    dplyr::mutate(set = factor(.data$set, levels = c("Global", "Key genes CDS")))
+    dplyr::mutate(
+      set = factor(.data$set, levels = c("Global", "Key genes CDS"))
+    )
 
   mode2 <- function(x) {
     ux <- unique(x)
@@ -280,7 +290,8 @@ af_summary <- function(af_global_file, af_keygenes_file) {
     ggplot2::scale_x_continuous(
       name = "Allele Frequency",
       breaks = seq(0, 1, by = 0.1),
-      limits = c(0, 1), expand = c(0, 0)
+      limits = c(0, 1),
+      expand = c(0, 0)
     ) +
     ggplot2::theme_bw() +
     ggplot2::theme(

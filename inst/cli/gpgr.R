@@ -7,8 +7,16 @@ suppressPackageStartupMessages(require(glue))
 
 prog_nm <- "gpgr.R"
 gpgr_version <- as.character(packageVersion("gpgr"))
-p <- argparse::ArgumentParser(description = "UMCCR Genomics Platform Group Reporting", prog = prog_nm)
-p$add_argument("-v", "--version", action = "version", version = glue::glue("{prog_nm} {gpgr_version}"))
+p <- argparse::ArgumentParser(
+  description = "UMCCR Genomics Platform Group Reporting",
+  prog = prog_nm
+)
+p$add_argument(
+  "-v",
+  "--version",
+  action = "version",
+  version = glue::glue("{prog_nm} {gpgr_version}")
+)
 subparser_name <- "subparser_name"
 subp <- p$add_subparsers(help = "sub-command help", dest = subparser_name)
 

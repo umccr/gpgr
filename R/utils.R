@@ -37,13 +37,21 @@ is_vcf <- function(x) {
   # COMMIT NOTE: FORMAT FIELD IS NOT MANDITORY
 
   vcf_cols <- c(
-    "#CHROM", "POS", "ID", "REF", "ALT", "QUAL",
-    "FILTER", "INFO"
+    "#CHROM",
+    "POS",
+    "ID",
+    "REF",
+    "ALT",
+    "QUAL",
+    "FILTER",
+    "INFO"
   )
   d_cols <- colnames(d)
 
-  if (!((length(d_cols) >= length(vcf_cols)) &
-    (all(d_cols[1:length(vcf_cols)] == vcf_cols)))) {
+  if (
+    !((length(d_cols) >= length(vcf_cols)) &
+      (all(d_cols[1:length(vcf_cols)] == vcf_cols)))
+  ) {
     message(glue::glue(
       "VCF main column names are incorrect. ",
       "They are:\n{paste(d_cols, collapse = ', ' )}.\n",
@@ -130,7 +138,13 @@ vcf_is_empty <- function(x) {
 #' expect_true(c)
 #'
 #' @export
-tsv_is_empty <- function(x, comment = "##", col_types = readr::cols(.default = "c"), n_max = 1, ...) {
+tsv_is_empty <- function(
+  x,
+  comment = "##",
+  col_types = readr::cols(.default = "c"),
+  n_max = 1,
+  ...
+) {
   readr::local_edition(1)
   d <- readr::read_tsv(
     file = x,
@@ -243,4 +257,35 @@ mixedrank <- function(x) {
     return(x)
   }
   order(gtools::mixedorder(x))
+}
+
+#' Convert JSON.gz to tibble
+#'
+#' Reads a gzipped JSON file and converts it into a tibble.
+#'
+#' @param json_gz_path Path to the JSON.gz file.
+#' @return A tibble containing the parsed JSON data.
+#' @examples
+#' \dontrun{
+#' df <- convert_json_gz_to_tibble("data.json.gz")
+#' print(df)
+#' }
+#' @export
+convert_json_gz_to_tibble <- function(json_gz_path) {
+  assertthat::assert_that(
+    file.exists(json_gz_path),
+    endsWith(json_gz_path, ".gz")
+  )
+
+  # Read the compressed JSON file
+  gz <- gzfile(json_gz_path, open = "r")
+  json_content <- readLines(gz, warn = FALSE)
+  close(gz)
+
+  # Parse the JSON content
+  parsed_json <- jsonlite::fromJSON(paste(json_content, collapse = ""))
+
+  # Convert to tibble
+  tibble_data <- tibble::as_tibble(parsed_json)
+  return(tibble_data)
 }

@@ -28,6 +28,9 @@ cancer_rmd(
   result_outdir,
   tumor_name,
   dragen_hrd = NULL,
+  mutpat_dir = NULL,
+  hrdetect_file = NULL,
+  chord_file = NULL,
   out_file = NULL,
   quiet = FALSE
 )
@@ -77,7 +80,13 @@ cancer_rmd(
 
 \item{tumor_name}{Name of tumor sample.}
 
-\item{dragen_hrd}{Path to DRAGEN \code{hrdscore.csv} file (optional).}
+\item{dragen_hrd}{Path to DRAGEN \code{hrdscore.csv} file.}
+
+\item{mutpat_dir}{Path to mutational patterns directory.}
+
+\item{hrdetect_file}{Path to HRDetect file.}
+
+\item{chord_file}{Path to CHORD file.}
 
 \item{out_file}{Path to output HTML file (needs '.html' suffix) (def: \verb{\{tumor_name\}_cancer_report.html}).}
 
