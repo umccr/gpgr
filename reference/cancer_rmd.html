@@ -22,7 +22,7 @@ return the path to the output HTML
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.2.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,6 +97,9 @@ return the path to the output HTML
 <span>  <span class="va">result_outdir</span>,</span>
 <span>  <span class="va">tumor_name</span>,</span>
 <span>  dragen_hrd <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mutpat_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  hrdetect_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  chord_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  out_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -193,7 +196,19 @@ return the path to the output HTML
 
 
 <dt>dragen_hrd</dt>
-<dd><p>Path to DRAGEN <code>hrdscore.csv</code> file (optional).</p></dd>
+<dd><p>Path to DRAGEN <code>hrdscore.csv</code> file.</p></dd>
+
+
+<dt>mutpat_dir</dt>
+<dd><p>Path to mutational patterns directory.</p></dd>
+
+
+<dt>hrdetect_file</dt>
+<dd><p>Path to HRDetect file.</p></dd>
+
+
+<dt>chord_file</dt>
+<dd><p>Path to CHORD file.</p></dd>
 
 
 <dt>out_file</dt>
@@ -216,7 +231,7 @@ return the path to the output HTML
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>.</p>
+  <p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>, Quentin Clayssen.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">gpgr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.2.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,19 @@
       <small>Source: <a href="https://github.com/umccr/gpgr/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.3.0" id="gpgr-230">gpgr 2.3.0<a class="anchor" aria-label="anchor" href="#gpgr-230"></a></h2>
+<ul><li>
+<span class="emoji" data-emoji="wrench">🔧</span> support for reading sigrap plots and data as inputs (<a href="https://github.com/umccr/gpgr/tree/input-sigrap-data" class="external-link">input-sigrap-data branch</a>)
+<ul><li>Add support for pre-generated sigrap mutational signature plots via PNG inputs</li>
+<li>Add new dependencies: <code>png</code> and <code>grid</code> packages for handling pre-generated plots</li>
+<li>Refactor mutational signatures section to support both live generation and pre-computed inputs</li>
+<li>Enable conditional logic to read from sigrap output directory when available</li>
+<li>Clarify CHORD/CHORD2 handling: CHORD outputs can now be provided as pre-computed input files (or produced via <code>{sigrap}</code>); gpgr will read and include CHORD results when available rather than attempting incompatible live computation. See <a href="https://github.com/umccr/gpgr/pull/91" class="external-link">PR </a><a href="https://github.com/umccr/gpgr/issues/91" class="external-link">#91</a> for details.</li>
+</ul></li>
+<li>
+<span class="emoji" data-emoji="bug">🐛</span> read <code>is_hypermutated</code> directly from bolt variant counts JSON instead of indirect proxy</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.2.12" id="gpgr-2212">gpgr 2.2.12<a class="anchor" aria-label="anchor" href="#gpgr-2212"></a></h2>
 <ul><li>
@@ -241,7 +254,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>.</p>
+  <p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>, Quentin Clayssen.</p>
 </div>
 
 <div class="pkgdown-footer-right">
