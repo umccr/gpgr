@@ -97,7 +97,7 @@ canrep_add_args <- function(subp) {
   canrep$add_argument(
     "--dragen_hrd",
     help = "Path to DRAGEN HRD file",
-    required = TRUE
+    required = FALSE
   )
   canrep$add_argument(
     "--bcftools_stats",
