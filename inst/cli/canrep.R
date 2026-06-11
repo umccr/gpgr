@@ -95,11 +95,6 @@ canrep_add_args <- function(subp) {
     required = TRUE
   )
   canrep$add_argument(
-    "--dragen_hrd",
-    help = "Path to DRAGEN HRD file",
-    required = FALSE
-  )
-  canrep$add_argument(
     "--bcftools_stats",
     help = "Path to bcftools stats file",
     required = TRUE
@@ -142,11 +137,6 @@ canrep_add_args <- function(subp) {
 
 canrep_parse_args <- function(args) {
   cli::cli_h1("Start rendering UMCCR Cancer Report!")
-  if (is.null(args$dragen_hrd)) {
-    cli::cli_warn(
-      "No DRAGEN HRD file supplied; the report will show DRAGEN HRD scores as missing."
-    )
-  }
   res <- gpgr::cancer_rmd(
     af_global = args$af_global,
     af_keygenes = args$af_keygenes,
@@ -167,7 +157,6 @@ canrep_parse_args <- function(args) {
     purple_som_snv_vcf = args$purple_som_snv_vcf,
     virusbreakend_tsv = args$virusbreakend_tsv,
     virusbreakend_vcf = args$virusbreakend_vcf,
-    dragen_hrd = args$dragen_hrd,
     bcftools_stats = args$bcftools_stats,
     out_file = args$out_file,
     quiet = args$quiet,

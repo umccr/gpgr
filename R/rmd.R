@@ -30,7 +30,6 @@
 #' @param out_file Path to output HTML file (needs '.html' suffix) (def: `{tumor_name}_cancer_report.html`).
 #' @param quiet Suppress log printing during rendering.
 #' @param bcftools_stats Path to `bcftools_stats.txt` file.
-#' @param dragen_hrd Path to DRAGEN `hrdscore.csv` file (optional).
 #' @param mutpat_dir Path to mutational patterns directory.
 #' @param hrdetect_file Path to HRDetect file.
 #' @param chord_file Path to CHORD file.
@@ -60,7 +59,6 @@ cancer_rmd <- function(
   somatic_sv_vcf,
   result_outdir,
   tumor_name,
-  dragen_hrd = NULL,
   mutpat_dir = NULL,
   hrdetect_file = NULL,
   chord_file = NULL,
@@ -95,7 +93,6 @@ cancer_rmd <- function(
     batch_name = batch_name,
     bcftools_stats = bcftools_stats,
     conda_list = conda_list,
-    dragen_hrd = dragen_hrd,
     img_dir = img_dir_b,
     key_genes = key_genes,
     oncokb_genes = oncokb_genes,

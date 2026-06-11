@@ -15,7 +15,6 @@ params:
   batch_name: NULL
   bcftools_stats: NULL
   conda_list: NULL
-  dragen_hrd: NULL
   img_dir: NULL
   key_genes: NULL
   oncokb_genes: NULL
@@ -125,7 +124,7 @@ wrap_img <- function(path) {
 
 ```{r hrd_prep, results='hide'}
 #---- Homologous Recombination Deficiency ----#
-dragen_hrd_res <- gpgr::dragen_hrd(params$dragen_hrd)
+dragen_hrd_res <- gpgr::dragen_hrd()
 if (is.null(params$chord_file)) {
   chord_res <- sigrap::chord_run(
     vcf.snv = params$somatic_snv_vcf,
@@ -356,7 +355,67 @@ snv_summary_counts <- params$somatic_snv_summary |>
 
 hypermutated <- snv_summary_counts$is_hypermutated
 
-snv_summary <- snv_summary_counts[names(snv_summary_counts) != "is_hypermutated"] |>
+# Extract PCGR status fields written by bolt (sash #52)
+pcgr_skipped <- isTRUE(snv_summary_counts$pcgr_skipped)
+pcgr_selection_applied <- isTRUE(snv_summary_counts$pcgr_selection_applied)
+
+# Parse "tier|impact|region:count, ..." into readable lines, e.g.
+#   "tier N / noncoding / other: 80,321 variants"
+pcgr_format_categories <- function(cats_str) {
+  cats_str <- paste(cats_str, collapse = "")
+  if (!nzchar(cats_str)) return("")
+  tier_labels   <- c("N"="non-coding", "1"="tier 1", "2"="tier 2", "3"="tier 3", "4"="tier 4")
+  impact_labels <- c("intergenic"="intergenic", "intronic"="intronic",
+                     "downstream"="downstream gene", "upstream"="upstream gene",
+                     "impacts_other"="other VEP consequence")
+  region_labels <- c("none"="outside GIAB/difficult regions", "difficult"="difficult region",
+                     "giab_conf"="GIAB confident region")
+  entries <- trimws(strsplit(cats_str, ",")[[1]])
+  lines <- vapply(entries, function(e) {
+    parts  <- strsplit(e, "\\|")[[1]]
+    tier   <- parts[[1]]
+    impact <- parts[[2]]
+    rc     <- strsplit(parts[[3]], ":")[[1]]
+    region <- rc[[1]]
+    count  <- format(as.integer(rc[[2]]), big.mark = ",", trim = TRUE)
+    tl <- tier_labels[[tier]]   %||% tier
+    il <- impact_labels[[impact]] %||% impact
+    rl <- region_labels[[region]] %||% region
+    glue::glue("- {tl} / {il} / {rl}: {count} variants")
+  }, character(1), USE.NAMES = FALSE)
+  paste(lines, collapse = "\n")
+}
+
+# Short label appended to snv_summary value
+pcgr_value_fragment <- ifelse(
+  pcgr_skipped, "PCGR skipped",
+  ifelse(pcgr_selection_applied,
+    glue::glue("PCGR filtered to {format(snv_summary_counts$pcgr_selection_output, big.mark = ',', trim = TRUE)}"),
+    "")
+)
+# Detailed breakdown shown in the details column of the SNVs row
+pcgr_details <- ifelse(
+  pcgr_skipped,
+  glue::glue("PCGR skipped: could not reduce variants below the 500K limit ({snv_summary_counts$pcgr_skip_reason})"),
+  ifelse(
+    pcgr_selection_applied,
+    glue::glue(
+      "PCGR 500K limit applied: {format(snv_summary_counts$pcgr_selection_filtered, big.mark = ',', trim = TRUE)}",
+      " variants dropped from {format(snv_summary_counts$pcgr_selection_output + snv_summary_counts$pcgr_selection_filtered, big.mark = ',', trim = TRUE)}",
+      " to {format(snv_summary_counts$pcgr_selection_output, big.mark = ',', trim = TRUE)}.",
+      "\nDropped categories:\n{pcgr_format_categories(unlist(snv_summary_counts$pcgr_selection_filters) %||% '')}"
+    ),
+    ""
+  )
+)
+hypermutated_details <- ifelse(
+  !hypermutated, "",
+  "More than 500K SNVs detected (including non-PASS), priority regions and/or variants selected for processing."
+)
+
+# Exclude bookkeeping keys from the SNV counts string (like is_hypermutated)
+pcgr_keys <- grep("^pcgr_", names(snv_summary_counts), value = TRUE)
+snv_summary <- snv_summary_counts[!names(snv_summary_counts) %in% c("is_hypermutated", pcgr_keys)] |>
   unlist() |>
   tibble::enframe() |>
   dplyr::mutate(
@@ -365,14 +424,11 @@ snv_summary <- snv_summary_counts[names(snv_summary_counts) != "is_hypermutated"
   ) |>
   dplyr::pull(x) |>
   paste(collapse = "; ")
+if (nzchar(pcgr_value_fragment)) {
+  snv_summary <- paste0(snv_summary, "; ", pcgr_value_fragment)
+}
 
 hrd_summary <- list(
-  dragen = {
-    val <- dragen_hrd_res[, "HRD", drop = TRUE]
-    out <- as.character(val)
-    out[is.na(val) | out == ""] <- "Missing"
-    out
-  },
   chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
   hrdetect = hrdetect_res[, "Probability", drop = TRUE]
 )
@@ -405,23 +461,19 @@ if (no_sv_found) {
 
 qc_summary_all <- dplyr::tribble(
   ~n, ~variable, ~value, ~details,
-  4, "Hypermutated", ifelse(hypermutated, "TRUE", "FALSE"),
-  ifelse(hypermutated, glue::glue(
-    "More than 500K SNVs detected (including non-PASS), priority regions and/or variants ",
-    "selected for processing.",
-  ), ""),
+  4, "Hypermutated", ifelse(hypermutated, "TRUE", "FALSE"), hypermutated_details,
   5, "MutSigs (Old)", glue::glue("{summarise_sigs(sigs_snv_2015)}"),
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
   "2020 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)",
-  6, "HRD", glue::glue("DRAGEN: {hrd_summary$dragen}; CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"),
-  "Homologous recombination deficiency score (DRAGEN) / probability (CHORD, HRDetect).",
+  6, "HRD", glue::glue("CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"),
+  "Homologous recombination deficiency probability (CHORD, HRDetect).",
   20, "CNVs (Somatic)", glue::glue(
     "Min: {cnv_summary[['som']]$Min}; ",
     "Max: {cnv_summary[['som']]$Max}; ",
     "N: {cnv_summary[['som']]$N} "
   ), "",
-  17, "SNVs (Somatic)", snv_summary, "Summary SNV counts across main processes, in order",
+  17, "SNVs (Somatic)", snv_summary, paste0("Summary SNV counts across main processes, in order.", ifelse(nzchar(pcgr_details), paste0("\n", pcgr_details), "")),
   18, "SVs (unmelted)", paste(rev(sv_summary$unmelted), collapse = ", "),
   "Summary of SVs as presented in raw VCF.",
   19, "SVs (melted)", paste(rev(sv_summary$melted), collapse = ", "),
@@ -833,7 +885,7 @@ that includes HRDetect.
 
 </details>
 
-```{r chord_hrdetect_dragen_res}
+```{r chord_hrdetect_res}
 hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, chord_res, dragen_hrd_res)
 gpgr::write_tsvjsongz(chord_res[["prediction"]], glue("hrd/{bnm}-chord"), result_outdir)
 gpgr::write_tsvjsongz(hrdetect_res, glue("hrd/{bnm}-hrdetect"), result_outdir)

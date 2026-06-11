@@ -16,7 +16,6 @@ params <- list(
     "{umccrised_dir}/sample_data/{tumor_name}.somatic.bcftools_stats.txt"
   ),
   conda_list = NULL,
-  dragen_hrd = glue("{umccrised_dir}/sample_data/{tumor_name}.hrdscore.csv"),
   img_dir = glue("{umccrised_dir}/output/img"),
   key_genes = normalizePath(
     "./inst/extdata/ref/umccr_cancer_genes_v24.03.0.tsv"

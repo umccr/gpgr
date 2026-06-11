@@ -1,6 +1,4 @@
 # Tests for canrep CLI argument parsing
-# Guards against regression where --dragen_hrd was accidentally marked required=TRUE
-# (introduced in 563f946, fixed in PR #94 and again in 2.3.1)
 
 canrep_parser <- function() {
   cli_path <- system.file("cli/canrep.R", package = "gpgr")
@@ -38,14 +36,16 @@ required_args <- function() {
   )
 }
 
-test_that("canrep parses without --dragen_hrd (optional)", {
+test_that("canrep parses required args without error", {
   p <- canrep_parser()
   args <- p$parse_args(required_args())
-  expect_null(args$dragen_hrd)
+  expect_equal(args$tumor_name, "x")
 })
 
-test_that("canrep parses with --dragen_hrd when provided", {
+test_that("canrep does not accept --dragen_hrd", {
   p <- canrep_parser()
-  args <- p$parse_args(c(required_args(), "--dragen_hrd", "sample.hrdscore.csv"))
-  expect_equal(args$dragen_hrd, "sample.hrdscore.csv")
+  expect_error(
+    p$parse_args(c(required_args(), "--dragen_hrd", "sample.hrdscore.csv")),
+    regexp = NULL
+  )
 })
