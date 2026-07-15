@@ -133,6 +133,11 @@ canrep_add_args <- function(subp) {
     help = "Path to CHORD file.",
     required = FALSE
   )
+  canrep$add_argument(
+    "--dragen_hrd",
+    help = "Path to DRAGEN HRD file. Omit when no DRAGEN output exists for this sample (e.g. OA-only mode) — the report omits the DRAGEN section entirely rather than showing it blank.",
+    required = FALSE
+  )
 }
 
 canrep_parse_args <- function(args) {
@@ -164,7 +169,8 @@ canrep_parse_args <- function(args) {
     tumor_name = args$tumor_name,
     mutpat_dir = args$mutpat_dir,
     hrdetect_file = args$hrdetect_file,
-    chord_file = args$chord_file
+    chord_file = args$chord_file,
+    dragen_hrd = args$dragen_hrd
   )
   cli::cli_h1("Finished rendering UMCCR Cancer Report!")
   cli::cli_alert_info("Path to HTML output:\n{res}")

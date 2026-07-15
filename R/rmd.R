@@ -33,6 +33,9 @@
 #' @param mutpat_dir Path to mutational patterns directory.
 #' @param hrdetect_file Path to HRDetect file.
 #' @param chord_file Path to CHORD file.
+#' @param dragen_hrd Path to DRAGEN `hrdscore.csv` file (optional). Leave `NULL`
+#'   when no DRAGEN output exists for the sample (e.g. OA-only mode) — the
+#'   report omits the DRAGEN section entirely rather than showing it blank.
 #'
 #' @return Path to rendered HTML report.
 #' @export
@@ -62,6 +65,7 @@ cancer_rmd <- function(
   mutpat_dir = NULL,
   hrdetect_file = NULL,
   chord_file = NULL,
+  dragen_hrd = NULL,
   out_file = NULL,
   quiet = FALSE
 ) {
@@ -112,7 +116,8 @@ cancer_rmd <- function(
     tumor_name = tumor_name,
     mutpat_dir = mutpat_dir,
     hrdetect_file = hrdetect_file,
-    chord_file = chord_file
+    chord_file = chord_file,
+    dragen_hrd = dragen_hrd
   )
 
   # suppress DT large size warning

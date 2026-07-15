@@ -15,6 +15,7 @@ params:
   batch_name: NULL
   bcftools_stats: NULL
   conda_list: NULL
+  dragen_hrd: NULL
   img_dir: NULL
   key_genes: NULL
   oncokb_genes: NULL
@@ -124,7 +125,8 @@ wrap_img <- function(path) {
 
 ```{r hrd_prep, results='hide'}
 #---- Homologous Recombination Deficiency ----#
-dragen_hrd_res <- gpgr::dragen_hrd()
+dragen_available <- !is.null(params$dragen_hrd)
+dragen_hrd_res <- gpgr::dragen_hrd(params$dragen_hrd)
 if (is.null(params$chord_file)) {
   chord_res <- sigrap::chord_run(
     vcf.snv = params$somatic_snv_vcf,
@@ -355,14 +357,26 @@ snv_summary_counts <- params$somatic_snv_summary |>
 
 hypermutated <- snv_summary_counts$is_hypermutated
 
-# Extract PCGR status fields written by bolt (sash #52)
+# Extract PCGR status fields written by bolt (sash #52). pcgr_skipped and
+# pcgr_selection_applied are mutually exclusive by construction on the bolt
+# side (a sample is either skipped, selection-applied, or neither).
 pcgr_skipped <- isTRUE(snv_summary_counts$pcgr_skipped)
 pcgr_selection_applied <- isTRUE(snv_summary_counts$pcgr_selection_applied)
+pcgr_state <- dplyr::case_when(
+  pcgr_skipped ~ "skipped",
+  pcgr_selection_applied ~ "selection_applied",
+  TRUE ~ "none"
+)
 
 # Parse "tier|impact|region:count, ..." into readable lines, e.g.
-#   "tier N / noncoding / other: 80,321 variants"
+#   "tier N / noncoding / other: 80,321 variants". Malformed entries (missing
+# a '|' or ':' field) are skipped rather than erroring, since this feeds a
+# clinical report and a single bad category shouldn't abort the whole render.
 pcgr_format_categories <- function(cats_str) {
-  cats_str <- paste(cats_str, collapse = "")
+  # bolt may write this as a single string or a multi-element vector; comma
+  # is the entry separator either way, so join on "," not "" (NOTE(QC): a
+  # no-separator join here previously fused adjacent entries together).
+  cats_str <- paste(cats_str, collapse = ",")
   if (!nzchar(cats_str)) return("")
   tier_labels   <- c("N"="non-coding", "1"="tier 1", "2"="tier 2", "3"="tier 3", "4"="tier 4")
   impact_labels <- c("intergenic"="intergenic", "intronic"="intronic",
@@ -370,43 +384,52 @@ pcgr_format_categories <- function(cats_str) {
                      "impacts_other"="other VEP consequence")
   region_labels <- c("none"="outside GIAB/difficult regions", "difficult"="difficult region",
                      "giab_conf"="GIAB confident region")
+  # `[[` errors on an unmatched name (unlike `[`), so look up via `[` +
+  # unname() to safely fall back to the raw code for unrecognised values
+  safe_lookup <- function(map, key) {
+    val <- unname(map[key])[1]
+    if (is.na(val)) key else val
+  }
   entries <- trimws(strsplit(cats_str, ",")[[1]])
+  entries <- entries[nzchar(entries)]
   lines <- vapply(entries, function(e) {
-    parts  <- strsplit(e, "\\|")[[1]]
+    parts <- strsplit(e, "\\|")[[1]]
+    if (length(parts) != 3) return(NA_character_)
+    rc <- strsplit(parts[[3]], ":")[[1]]
+    if (length(rc) != 2 || is.na(suppressWarnings(as.integer(rc[[2]])))) return(NA_character_)
     tier   <- parts[[1]]
     impact <- parts[[2]]
-    rc     <- strsplit(parts[[3]], ":")[[1]]
     region <- rc[[1]]
     count  <- format(as.integer(rc[[2]]), big.mark = ",", trim = TRUE)
-    tl <- tier_labels[[tier]]   %||% tier
-    il <- impact_labels[[impact]] %||% impact
-    rl <- region_labels[[region]] %||% region
+    tl <- safe_lookup(tier_labels, tier)
+    il <- safe_lookup(impact_labels, impact)
+    rl <- safe_lookup(region_labels, region)
     glue::glue("- {tl} / {il} / {rl}: {count} variants")
   }, character(1), USE.NAMES = FALSE)
-  paste(lines, collapse = "\n")
+  paste(lines[!is.na(lines)], collapse = "\n")
 }
 
-# Short label appended to snv_summary value
-pcgr_value_fragment <- ifelse(
-  pcgr_skipped, "PCGR skipped",
-  ifelse(pcgr_selection_applied,
-    glue::glue("PCGR filtered to {format(snv_summary_counts$pcgr_selection_output, big.mark = ',', trim = TRUE)}"),
-    "")
+# Short label appended to snv_summary value, and the detailed breakdown shown
+# in the SNVs row's details column — both derived from the single pcgr_state
+# above so the two can't drift out of sync with each other.
+pcgr_value_fragment <- switch(pcgr_state,
+  skipped = "PCGR skipped",
+  selection_applied = glue::glue(
+    "PCGR filtered to {format(snv_summary_counts$pcgr_selection_output, big.mark = ',', trim = TRUE)}"
+  ),
+  none = ""
 )
-# Detailed breakdown shown in the details column of the SNVs row
-pcgr_details <- ifelse(
-  pcgr_skipped,
-  glue::glue("PCGR skipped: could not reduce variants below the 500K limit ({snv_summary_counts$pcgr_skip_reason})"),
-  ifelse(
-    pcgr_selection_applied,
-    glue::glue(
-      "PCGR 500K limit applied: {format(snv_summary_counts$pcgr_selection_filtered, big.mark = ',', trim = TRUE)}",
-      " variants dropped from {format(snv_summary_counts$pcgr_selection_output + snv_summary_counts$pcgr_selection_filtered, big.mark = ',', trim = TRUE)}",
-      " to {format(snv_summary_counts$pcgr_selection_output, big.mark = ',', trim = TRUE)}.",
-      "\nDropped categories:\n{pcgr_format_categories(unlist(snv_summary_counts$pcgr_selection_filters) %||% '')}"
-    ),
-    ""
-  )
+pcgr_details <- switch(pcgr_state,
+  skipped = glue::glue(
+    "PCGR skipped: could not reduce variants below the 500K limit ({snv_summary_counts$pcgr_skip_reason})"
+  ),
+  selection_applied = glue::glue(
+    "PCGR 500K limit applied: {format(snv_summary_counts$pcgr_selection_filtered, big.mark = ',', trim = TRUE)} ",
+    "variants dropped from {format(snv_summary_counts$pcgr_selection_output + snv_summary_counts$pcgr_selection_filtered, big.mark = ',', trim = TRUE)} ",
+    "to {format(snv_summary_counts$pcgr_selection_output, big.mark = ',', trim = TRUE)}.\n",
+    "Dropped categories:\n{pcgr_format_categories(unlist(snv_summary_counts$pcgr_selection_filters) %||% '')}"
+  ),
+  none = ""
 )
 hypermutated_details <- ifelse(
   !hypermutated, "",
@@ -429,9 +452,27 @@ if (nzchar(pcgr_value_fragment)) {
 }
 
 hrd_summary <- list(
+  dragen = if (dragen_available) {
+    val <- dragen_hrd_res[, "HRD", drop = TRUE]
+    out <- as.character(val)
+    out[is.na(val) | out == ""] <- "Missing"
+    out
+  } else {
+    NULL
+  },
   chord = chord_res[["prediction"]][, "p_hrd", drop = TRUE],
   hrdetect = hrdetect_res[, "Probability", drop = TRUE]
 )
+hrd_row_text <- if (dragen_available) {
+  glue::glue("DRAGEN: {hrd_summary$dragen}; CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}")
+} else {
+  glue::glue("CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}")
+}
+hrd_row_details <- if (dragen_available) {
+  "Homologous recombination deficiency score (DRAGEN) / probability (CHORD, HRDetect)."
+} else {
+  "Homologous recombination deficiency probability (CHORD, HRDetect)."
+}
 
 cnv_summary <-
   list(som = purple_cnv_som$tab) %>%
@@ -466,8 +507,7 @@ qc_summary_all <- dplyr::tribble(
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
   "2020 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures)",
-  6, "HRD", glue::glue("CHORD: {hrd_summary$chord}; HRDetect: {hrd_summary$hrdetect}"),
-  "Homologous recombination deficiency probability (CHORD, HRDetect).",
+  6, "HRD", hrd_row_text, hrd_row_details,
   20, "CNVs (Somatic)", glue::glue(
     "Min: {cnv_summary[['som']]$Min}; ",
     "Max: {cnv_summary[['som']]$Max}; ",
@@ -832,14 +872,21 @@ if (is.null(params$mutpat_dir)) {
 <details>
 <summary>Description</summary>
 
-__DRAGEN__
-
-Following scores are shown:
-
-- HRD: homologous recombination deficiency
-- LOH: loss of heterozygosity
-- TAI: telomeric allelic imbalance
-- LST: large-scale state transitions
+```{r dragen_description, results='asis', echo=FALSE}
+if (dragen_available) {
+  cat(
+    "__DRAGEN__\n\n",
+    "Following scores are shown:\n\n",
+    "- HRD: homologous recombination deficiency\n",
+    "- LOH: loss of heterozygosity\n",
+    "- TAI: telomeric allelic imbalance\n",
+    "- LST: large-scale state transitions\n",
+    sep = ""
+  )
+} else {
+  cat("__DRAGEN__: *not available for this sample — no DRAGEN output was provided (e.g. OA-only mode).*\n")
+}
+```
 
 __CHORD__
 
@@ -886,10 +933,15 @@ that includes HRDetect.
 </details>
 
 ```{r chord_hrdetect_res}
-hrd_results <- gpgr::hrd_results_tabs(hrdetect_res, chord_res, dragen_hrd_res)
+hrd_results <- gpgr::hrd_results_tabs(
+  hrdetect_res, chord_res,
+  dragen_res = if (dragen_available) dragen_hrd_res else NULL
+)
 gpgr::write_tsvjsongz(chord_res[["prediction"]], glue("hrd/{bnm}-chord"), result_outdir)
 gpgr::write_tsvjsongz(hrdetect_res, glue("hrd/{bnm}-hrdetect"), result_outdir)
-gpgr::write_tsvjsongz(dragen_hrd_res, glue("hrd/{bnm}-dragen"), result_outdir)
+if (dragen_available) {
+  gpgr::write_tsvjsongz(dragen_hrd_res, glue("hrd/{bnm}-dragen"), result_outdir)
+}
 hrd_results$hrd_results_gt
 ```
 

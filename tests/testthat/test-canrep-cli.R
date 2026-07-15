@@ -36,16 +36,17 @@ required_args <- function() {
   )
 }
 
-test_that("canrep parses required args without error", {
+# Guards against regression where --dragen_hrd was accidentally marked required=TRUE
+# (introduced in 563f946, fixed in PR #94 and again in 2.3.1)
+
+test_that("canrep parses without --dragen_hrd (optional)", {
   p <- canrep_parser()
   args <- p$parse_args(required_args())
-  expect_equal(args$tumor_name, "x")
+  expect_null(args$dragen_hrd)
 })
 
-test_that("canrep does not accept --dragen_hrd", {
+test_that("canrep parses with --dragen_hrd when provided", {
   p <- canrep_parser()
-  expect_error(
-    p$parse_args(c(required_args(), "--dragen_hrd", "sample.hrdscore.csv")),
-    regexp = NULL
-  )
+  args <- p$parse_args(c(required_args(), "--dragen_hrd", "sample.hrdscore.csv"))
+  expect_equal(args$dragen_hrd, "sample.hrdscore.csv")
 })

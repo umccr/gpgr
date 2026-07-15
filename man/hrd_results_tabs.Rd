@@ -4,14 +4,17 @@
 \alias{hrd_results_tabs}
 \title{HRDetect and CHORD Summary Table}
 \usage{
-hrd_results_tabs(hrdetect_res, chord_res, dragen_res)
+hrd_results_tabs(hrdetect_res, chord_res, dragen_res = NULL)
 }
 \arguments{
 \item{hrdetect_res}{Result from running \code{\link[sigrap:hrdetect_run]{sigrap::hrdetect_run()}}.}
 
 \item{chord_res}{Result from running \code{\link[sigrap:chord_run]{sigrap::chord_run()}}.}
 
-\item{dragen_res}{Result from running \code{\link[=dragen_hrd]{dragen_hrd()}}.}
+\item{dragen_res}{Result from running \code{\link[=dragen_hrd]{dragen_hrd()}}. Pass \code{NULL}
+(e.g. when no DRAGEN output exists for this sample) to omit the DRAGEN
+column from the results table entirely, rather than showing it filled
+with placeholder/NA values.}
 }
 \value{
 A list with a tibble and a gt_tbl object (see \code{\link[gt:gt]{gt::gt()}}).

@@ -88,7 +88,10 @@ dragen_hrd <- function(x = NULL) {
 #'
 #' @param chord_res Result from running [sigrap::chord_run()].
 #' @param hrdetect_res Result from running [sigrap::hrdetect_run()].
-#' @param dragen_res Result from running [gpgr::dragen_hrd()].
+#' @param dragen_res Result from running [gpgr::dragen_hrd()]. Pass `NULL`
+#'   (e.g. when no DRAGEN output exists for this sample) to omit the DRAGEN
+#'   column from the results table entirely, rather than showing it filled
+#'   with placeholder/NA values.
 #'
 #' @return A list with a tibble and a gt_tbl object (see [gt::gt()]).
 #'
@@ -110,7 +113,7 @@ dragen_hrd <- function(x = NULL) {
 #' }
 #'
 #' @export
-hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
+hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res = NULL) {
   sn <- chord_res$prediction[, "sample", drop = TRUE]
   assertthat::are_equal(hrdetect_res[, "sample", drop = TRUE], sn)
 
@@ -128,13 +131,6 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
     ) |>
     dplyr::filter(.data$col != "sample")
 
-  dragen_res_tab <-
-    dragen_res |>
-    dplyr::select("HRD", "LOH", "TAI", "LST") |>
-    unlist() |>
-    tibble::enframe(name = "col", value = "val")
-
-  colnames(dragen_res_tab) <- c("DRAGEN", "results_dragen")
   colnames(hrdetect_res_tab) <- c("HRDetect", "results_hrdetect")
   colnames(chord_res_tab) <- c("CHORD", "results_chord")
 
@@ -157,24 +153,45 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
         results_chord = rep(" ", max(0, 9 - nrow(chord_res_tab)))
       )
     )
-  tab3 <- dplyr::bind_rows(
-    dragen_res_tab,
-    tibble::tibble(DRAGEN = rep(" ", 5), results_dragen = rep(" ", 5))
-  )
 
-  hrd_results_tab <- dplyr::bind_cols(tab3, tab2, tab1)
+  has_dragen <- !is.null(dragen_res)
+  if (has_dragen) {
+    dragen_res_tab <-
+      dragen_res |>
+      dplyr::select("HRD", "LOH", "TAI", "LST") |>
+      unlist() |>
+      tibble::enframe(name = "col", value = "val")
+    colnames(dragen_res_tab) <- c("DRAGEN", "results_dragen")
+    tab3 <- dplyr::bind_rows(
+      dragen_res_tab,
+      tibble::tibble(DRAGEN = rep(" ", 5), results_dragen = rep(" ", 5))
+    )
+    hrd_results_tab <- dplyr::bind_cols(tab3, tab2, tab1)
+  } else {
+    hrd_results_tab <- dplyr::bind_cols(tab2, tab1)
+  }
 
   hrd_results_gt <-
     hrd_results_tab |>
     gt::gt() |>
     gt::tab_header(
       title = glue::glue("HRD Results for {sn}")
-    ) |>
-    gt::tab_spanner(
-      label = "DRAGEN",
-      id = "id_dragen",
-      columns = c("DRAGEN", "results_dragen")
-    ) |>
+    )
+  if (has_dragen) {
+    hrd_results_gt <- hrd_results_gt |>
+      gt::tab_spanner(
+        label = "DRAGEN",
+        id = "id_dragen",
+        columns = c("DRAGEN", "results_dragen")
+      ) |>
+      gt::cols_label(DRAGEN = "", results_dragen = "") |>
+      gt::tab_style(
+        style = list(gt::cell_text(weight = "bold")),
+        locations = gt::cells_body(columns = "DRAGEN")
+      ) |>
+      gt::cols_align(align = "right", columns = "results_dragen")
+  }
+  hrd_results_gt <- hrd_results_gt |>
     gt::tab_spanner(
       label = "HRDetect",
       id = "id_hrdetect",
@@ -186,8 +203,6 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
       columns = c("CHORD", "results_chord")
     ) |>
     gt::cols_label(
-      DRAGEN = "",
-      results_dragen = "",
       CHORD = "",
       results_chord = "",
       HRDetect = "",
@@ -198,14 +213,18 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
         gt::cell_text(weight = "bold")
       ),
       locations = gt::cells_body(
-        columns = c("DRAGEN", "CHORD", "HRDetect")
+        columns = c("CHORD", "HRDetect")
       )
     ) |>
     gt::cols_align(
       align = "right",
-      columns = c("results_hrdetect", "results_dragen")
+      columns = "results_hrdetect"
     ) |>
     gt::tab_style(
+      # left border is a visual divider from the preceding column group;
+      # when DRAGEN is absent CHORD is the leftmost group, so it must not
+      # get a divider against a group that isn't there (NOTE(QC): fixes a
+      # stray outer-edge border that otherwise appeared in OA-only reports)
       style = gt::cell_borders(
         sides = "left",
         color = "#BBBBBB",
@@ -213,7 +232,7 @@ hrd_results_tabs <- function(hrdetect_res, chord_res, dragen_res) {
         style = "solid"
       ),
       locations = gt::cells_body(
-        columns = c("CHORD", "HRDetect"),
+        columns = if (has_dragen) c("CHORD", "HRDetect") else "HRDetect",
         rows = dplyr::everything()
       )
     ) |>
