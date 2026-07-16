@@ -324,3 +324,74 @@ af_summary <- function(af_global_file, af_keygenes_file) {
     af_plot = af_plot
   )
 }
+
+#' Format PCGR Selection-Filtered Categories
+#'
+#' Parses a `"tier|impact|region:count, ..."` string (or vector of such
+#' entries) written by bolt (sash #52) into readable lines, e.g.
+#' `"- tier N / noncoding / other: 80,321 variants"`. Malformed entries
+#' (missing a `|` or `:` field) are skipped rather than erroring, since this
+#' feeds a clinical report and a single bad category shouldn't abort the
+#' whole render.
+#'
+#' @param cats_str A single `"tier|impact|region:count"` string, a
+#' comma-separated string of multiple such entries, or a character vector of
+#' entries (bolt may write this either way).
+#'
+#' @return A newline-separated string of formatted category lines, or `""`
+#' if `cats_str` is empty.
+#'
+#' @examples
+#' (y <- pcgr_format_categories("N|intronic|difficult:80321"))
+#' (z <- pcgr_format_categories(c("N|intronic|difficult:80321", "2|impacts_other|giab_conf:5000")))
+#' @testexamples
+#' expect_true(grepl("non-coding", y))
+#' expect_equal(length(strsplit(z, "\n")[[1]]), 2)
+#'
+#' @export
+pcgr_format_categories <- function(cats_str) {
+  # bolt may write this as a single string or a multi-element vector; comma
+  # is the entry separator either way, so join on "," not "" (NOTE(QC): a
+  # no-separator join here previously fused adjacent entries together).
+  cats_str <- paste(cats_str, collapse = ",")
+  if (!nzchar(cats_str)) {
+    return("")
+  }
+  tier_labels <- c("N" = "non-coding", "1" = "tier 1", "2" = "tier 2", "3" = "tier 3", "4" = "tier 4")
+  impact_labels <- c(
+    "intergenic" = "intergenic", "intronic" = "intronic",
+    "downstream" = "downstream gene", "upstream" = "upstream gene",
+    "impacts_other" = "other VEP consequence"
+  )
+  region_labels <- c(
+    "none" = "outside GIAB/difficult regions", "difficult" = "difficult region",
+    "giab_conf" = "GIAB confident region"
+  )
+  # `[[` errors on an unmatched name (unlike `[`), so look up via `[` +
+  # unname() to safely fall back to the raw code for unrecognised values
+  safe_lookup <- function(map, key) {
+    val <- unname(map[key])[1]
+    if (is.na(val)) key else val
+  }
+  entries <- trimws(strsplit(cats_str, ",")[[1]])
+  entries <- entries[nzchar(entries)]
+  lines <- vapply(entries, function(e) {
+    parts <- strsplit(e, "\\|")[[1]]
+    if (length(parts) != 3) {
+      return(NA_character_)
+    }
+    rc <- strsplit(parts[[3]], ":")[[1]]
+    if (length(rc) != 2 || is.na(suppressWarnings(as.integer(rc[[2]])))) {
+      return(NA_character_)
+    }
+    tier <- parts[[1]]
+    impact <- parts[[2]]
+    region <- rc[[1]]
+    count <- format(as.integer(rc[[2]]), big.mark = ",", trim = TRUE)
+    tl <- safe_lookup(tier_labels, tier)
+    il <- safe_lookup(impact_labels, impact)
+    rl <- safe_lookup(region_labels, region)
+    glue::glue("- {tl} / {il} / {rl}: {count} variants")
+  }, character(1), USE.NAMES = FALSE)
+  paste(lines[!is.na(lines)], collapse = "\n")
+}

@@ -1,38 +1,9 @@
-# Tests for pcgr_format_categories() logic in cancer_report.Rmd (sash #52).
-# Logic lives inline in the Rmd (can't be sourced directly), so it's
-# reimplemented here to get coverage — same pattern as test-hypermutated.R.
-
-pcgr_format_categories <- function(cats_str) {
-  cats_str <- paste(cats_str, collapse = ",")
-  if (!nzchar(cats_str)) return("")
-  tier_labels   <- c("N"="non-coding", "1"="tier 1", "2"="tier 2", "3"="tier 3", "4"="tier 4")
-  impact_labels <- c("intergenic"="intergenic", "intronic"="intronic",
-                     "downstream"="downstream gene", "upstream"="upstream gene",
-                     "impacts_other"="other VEP consequence")
-  region_labels <- c("none"="outside GIAB/difficult regions", "difficult"="difficult region",
-                     "giab_conf"="GIAB confident region")
-  safe_lookup <- function(map, key) {
-    val <- unname(map[key])[1]
-    if (is.na(val)) key else val
-  }
-  entries <- trimws(strsplit(cats_str, ",")[[1]])
-  entries <- entries[nzchar(entries)]
-  lines <- vapply(entries, function(e) {
-    parts <- strsplit(e, "\\|")[[1]]
-    if (length(parts) != 3) return(NA_character_)
-    rc <- strsplit(parts[[3]], ":")[[1]]
-    if (length(rc) != 2 || is.na(suppressWarnings(as.integer(rc[[2]])))) return(NA_character_)
-    tier   <- parts[[1]]
-    impact <- parts[[2]]
-    region <- rc[[1]]
-    count  <- format(as.integer(rc[[2]]), big.mark = ",", trim = TRUE)
-    tl <- safe_lookup(tier_labels, tier)
-    il <- safe_lookup(impact_labels, impact)
-    rl <- safe_lookup(region_labels, region)
-    glue::glue("- {tl} / {il} / {rl}: {count} variants")
-  }, character(1), USE.NAMES = FALSE)
-  paste(lines[!is.na(lines)], collapse = "\n")
-}
+# Tests for pcgr_format_categories() (sash #52).
+# Previously this logic lived inline in cancer_report.Rmd and was
+# reimplemented here just to get coverage. It's now extracted into
+# R/umccrise.R and exported by gpgr, so these tests exercise the real
+# function directly (see also the roxytest-generated
+# test-roxytest-testexamples-umccrise.R, which covers its @examples).
 
 test_that("pcgr_format_categories parses a single category", {
   out <- pcgr_format_categories("N|intronic|difficult:80321")

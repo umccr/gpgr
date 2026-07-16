@@ -368,46 +368,13 @@ pcgr_state <- dplyr::case_when(
   TRUE ~ "none"
 )
 
-# Parse "tier|impact|region:count, ..." into readable lines, e.g.
-#   "tier N / noncoding / other: 80,321 variants". Malformed entries (missing
-# a '|' or ':' field) are skipped rather than erroring, since this feeds a
-# clinical report and a single bad category shouldn't abort the whole render.
-pcgr_format_categories <- function(cats_str) {
-  # bolt may write this as a single string or a multi-element vector; comma
-  # is the entry separator either way, so join on "," not "" (NOTE(QC): a
-  # no-separator join here previously fused adjacent entries together).
-  cats_str <- paste(cats_str, collapse = ",")
-  if (!nzchar(cats_str)) return("")
-  tier_labels   <- c("N"="non-coding", "1"="tier 1", "2"="tier 2", "3"="tier 3", "4"="tier 4")
-  impact_labels <- c("intergenic"="intergenic", "intronic"="intronic",
-                     "downstream"="downstream gene", "upstream"="upstream gene",
-                     "impacts_other"="other VEP consequence")
-  region_labels <- c("none"="outside GIAB/difficult regions", "difficult"="difficult region",
-                     "giab_conf"="GIAB confident region")
-  # `[[` errors on an unmatched name (unlike `[`), so look up via `[` +
-  # unname() to safely fall back to the raw code for unrecognised values
-  safe_lookup <- function(map, key) {
-    val <- unname(map[key])[1]
-    if (is.na(val)) key else val
-  }
-  entries <- trimws(strsplit(cats_str, ",")[[1]])
-  entries <- entries[nzchar(entries)]
-  lines <- vapply(entries, function(e) {
-    parts <- strsplit(e, "\\|")[[1]]
-    if (length(parts) != 3) return(NA_character_)
-    rc <- strsplit(parts[[3]], ":")[[1]]
-    if (length(rc) != 2 || is.na(suppressWarnings(as.integer(rc[[2]])))) return(NA_character_)
-    tier   <- parts[[1]]
-    impact <- parts[[2]]
-    region <- rc[[1]]
-    count  <- format(as.integer(rc[[2]]), big.mark = ",", trim = TRUE)
-    tl <- safe_lookup(tier_labels, tier)
-    il <- safe_lookup(impact_labels, impact)
-    rl <- safe_lookup(region_labels, region)
-    glue::glue("- {tl} / {il} / {rl}: {count} variants")
-  }, character(1), USE.NAMES = FALSE)
-  paste(lines[!is.na(lines)], collapse = "\n")
-}
+# pcgr_format_categories() parses "tier|impact|region:count, ..." into
+# readable lines, e.g. "tier N / noncoding / other: 80,321 variants".
+# Malformed entries (missing a '|' or ':' field) are skipped rather than
+# erroring, since this feeds a clinical report and a single bad category
+# shouldn't abort the whole render. Defined in R/umccrise.R (exported by
+# gpgr, loaded above) so it has real test coverage instead of living only
+# inside this Rmd chunk.
 
 # Short label appended to snv_summary value, and the detailed breakdown shown
 # in the SNVs row's details column — both derived from the single pcgr_state
@@ -427,7 +394,7 @@ pcgr_details <- switch(pcgr_state,
     "PCGR 500K limit applied: {format(snv_summary_counts$pcgr_selection_filtered, big.mark = ',', trim = TRUE)} ",
     "variants dropped from {format(snv_summary_counts$pcgr_selection_output + snv_summary_counts$pcgr_selection_filtered, big.mark = ',', trim = TRUE)} ",
     "to {format(snv_summary_counts$pcgr_selection_output, big.mark = ',', trim = TRUE)}.\n",
-    "Dropped categories:\n{pcgr_format_categories(unlist(snv_summary_counts$pcgr_selection_filters) %||% '')}"
+    "Dropped categories:\n{gpgr::pcgr_format_categories(rlang::`%||%`(unlist(snv_summary_counts$pcgr_selection_filters), ''))}"
   ),
   none = ""
 )
