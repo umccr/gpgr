@@ -407,7 +407,7 @@ qc_summary_all <- dplyr::tribble(
   ~n, ~variable, ~value, ~details,
   4, "Hypermutated", ifelse(hypermutated, "TRUE", "FALSE"),
   ifelse(hypermutated, glue::glue(
-    "More than 500K SNVs detected (including non-PASS), priority regions and/or variants ",
+    "More than 450K SNVs detected (including non-PASS), priority regions and/or variants ",
     "selected for processing.",
   ), ""),
   5, "MutSigs (Old)", glue::glue("{summarise_sigs(sigs_snv_2015)}"),
