@@ -30,10 +30,12 @@
 #' @param out_file Path to output HTML file (needs '.html' suffix) (def: `{tumor_name}_cancer_report.html`).
 #' @param quiet Suppress log printing during rendering.
 #' @param bcftools_stats Path to `bcftools_stats.txt` file.
-#' @param dragen_hrd Path to DRAGEN `hrdscore.csv` file (optional).
 #' @param mutpat_dir Path to mutational patterns directory.
 #' @param hrdetect_file Path to HRDetect file.
 #' @param chord_file Path to CHORD file.
+#' @param dragen_hrd Path to DRAGEN `hrdscore.csv` file (optional). Leave `NULL`
+#'   when no DRAGEN output exists for the sample (e.g. OA-only mode) — the
+#'   report omits the DRAGEN section entirely rather than showing it blank.
 #'
 #' @return Path to rendered HTML report.
 #' @export
@@ -60,10 +62,10 @@ cancer_rmd <- function(
   somatic_sv_vcf,
   result_outdir,
   tumor_name,
-  dragen_hrd = NULL,
   mutpat_dir = NULL,
   hrdetect_file = NULL,
   chord_file = NULL,
+  dragen_hrd = NULL,
   out_file = NULL,
   quiet = FALSE
 ) {
@@ -95,7 +97,6 @@ cancer_rmd <- function(
     batch_name = batch_name,
     bcftools_stats = bcftools_stats,
     conda_list = conda_list,
-    dragen_hrd = dragen_hrd,
     img_dir = img_dir_b,
     key_genes = key_genes,
     oncokb_genes = oncokb_genes,
@@ -115,7 +116,8 @@ cancer_rmd <- function(
     tumor_name = tumor_name,
     mutpat_dir = mutpat_dir,
     hrdetect_file = hrdetect_file,
-    chord_file = chord_file
+    chord_file = chord_file,
+    dragen_hrd = dragen_hrd
   )
 
   # suppress DT large size warning
