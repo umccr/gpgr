@@ -737,43 +737,6 @@ Following scores are shown:
 - TAI: telomeric allelic imbalance
 - LST: large-scale state transitions
 
-__CHORD__
-
-For more details see <https://github.com/UMCUGenetics/CHORD>.
-
-__Probabilities__
-
-CHORD outputs the probability of:
-
-* HRD: `p_hrd`
-* BRCA1-type HRD: `p_BRCA1`
-* BRCA2-type HRD: `p_BRCA2`
-
-__HR status and type__
-
-`hr_status` tells us if a sample is HR deficient (`p_hrd >= 0.5`) or proficient.
-If a sample is HRD, then `hrd_type` will tell us if the sample has BRCA1-type HRD
-or BRCA2-type HRD (=`max(p_BRCA1, p_BRCA2)`).
-
-__Pre-requisites for accurate HRD prediction__
-
-* CHORD requires `>=50` indels to accurately determine whether a sample is HRD
-
-If this criterion is not met, `hr_status` will be `cannot_be_determined` and `remarks_hr_status` will be
-`<50 indels`.
-
-* CHORD cannot be applied to MSI samples
-
-If an MSI sample is detected, `hr_status` will be `cannot_be_determined` and `remarks_hr_status` will be
-`Has MSI (>14000 indel.rep)`.
-
-* If a sample is HRD, CHORD requires `>=30` SVs to accurately determine HRD subtype
-
-If this criterion is not met, `hrd_type` will be `cannot_be_determined`, and `remarks_hr_status` will be `<30 SVs`.
-
-The user may of course ignore these remarks and proceed with using the raw probabilities output by CHORD
-(`p_hrd` and/or `p_BRCA1/pBRCA2`).
-
 __HRDetect__
 
 See https://github.com/Nik-Zainal-Group/signature.tools.lib for the R package
