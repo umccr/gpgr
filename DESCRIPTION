@@ -1,9 +1,9 @@
 Package: gpgr
 Title: Genomics Platform Group Reporting
-Version: 2.2.12
+Version: 2.2.13.9000
 Description: Reports and functions used in the Genomics Platform Group
              at the University of Melbourne Centre for Cancer Research.
-Authors@R: 
+Authors@R:
     person(given = "Peter",
            family = "Diakumis",
            role = c("aut", "cre"),
