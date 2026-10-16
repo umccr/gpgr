@@ -303,13 +303,21 @@ summarise_sigs <- function(mut_sig_contr) {
 snv_summary_counts <- params$somatic_snv_summary |>
   jsonlite::read_json()
 
-# NOTE(SW): hypermutated status is determine indirectly by different counts between 'sage' and
-# 'annotated' since this indicates that the bolt hypermutated logic evaluated as true and applied
-# variant selection
+hypermutated <- snv_summary_counts$is_hypermutated
 
-hypermutated <- snv_summary_counts$sage != snv_summary_counts$annotated
+filtering_type <- snv_summary_counts$filtering_type
+if (is.null(filtering_type)) filtering_type <- "none"
 
-snv_summary <- snv_summary_counts |>
+filtering_type_labels <- c(
+  "none" = "None",
+  "max_variants_non_pass" = "Only passing DRAGEN variants included",
+  "max_variants_gnomad" = "Common population variants excluded",
+  "max_variants_non_cancer_genes" = "Only cancer gene variants included",
+  "unresolved" = "No viable filtering strategy available"
+)
+filtering_type_display <- unname(filtering_type_labels[filtering_type])
+
+snv_summary <- snv_summary_counts[!names(snv_summary_counts) %in% c("is_hypermutated", "filtering_type")] |>
   unlist() |>
   tibble::enframe() |>
   dplyr::mutate(
@@ -358,11 +366,11 @@ if (no_sv_found) {
 
 qc_summary_all <- dplyr::tribble(
   ~n, ~variable, ~value, ~details,
-  4, "Hypermutated", ifelse(hypermutated, "TRUE", "FALSE"),
-  ifelse(hypermutated, glue::glue(
-    "More than 500K SNVs detected (including non-PASS), priority regions and/or variants ",
-    "selected for processing.",
-  ), ""),
+  # 3.5/3.75 sort between Ploidy (3) and PURPLE Gender (4) so the filter follows the flag.
+  3.5, "Hypermutated flag", ifelse(hypermutated, "TRUE", "FALSE"),
+  ifelse(hypermutated, "More than 500K DRAGEN raw PASS and SAGE novel variants detected.", "500K or fewer DRAGEN raw PASS and SAGE novel variants detected."),
+  3.75, "PCGR annotation filter", filtering_type_display,
+  "Filtering applied to bring the number of variants given to the PCGR annotation step under the 500K processing limit.",
   5, "MutSigs (Old)", glue::glue("{summarise_sigs(sigs_snv_2015)}"),
   "2015 COSMIC (https://cancer.sanger.ac.uk/cosmic/signatures_v2.tt)",
   5, "MutSigs (New)", glue::glue("{summarise_sigs(sigs_snv_2020)}"),
@@ -374,7 +382,7 @@ qc_summary_all <- dplyr::tribble(
     "Max: {cnv_summary[['som']]$Max}; ",
     "N: {cnv_summary[['som']]$N} "
   ), "",
-  17, "SNVs (Somatic)", snv_summary, "Summary SNV counts across main processes, in order",
+  17, "SNVs (Somatic)", snv_summary, "Summary SNV counts through the small-variant process.",
   18, "SVs (unmelted)", paste(rev(sv_summary$unmelted), collapse = ", "),
   "Summary of SVs as presented in raw VCF.",
   19, "SVs (melted)", paste(rev(sv_summary$melted), collapse = ", "),
@@ -418,7 +426,17 @@ qc_summary_all %>%
     ),
     locations = gt::cells_body(
       columns = value,
-      rows = grepl("TRUE", value) & variable == "Hypermutated"
+      rows = grepl("TRUE", value) & variable == "Hypermutated flag"
+    )
+  ) %>%
+  gt::tab_style(
+    style = list(
+      gt::cell_fill(color = orange),
+      gt::cell_text(weight = "bold")
+    ),
+    locations = gt::cells_body(
+      columns = value,
+      rows = value != "None" & variable == "PCGR annotation filter"
     )
   ) %>%
   gt::tab_style(
